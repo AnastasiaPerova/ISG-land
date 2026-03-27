@@ -45,148 +45,130 @@
   </div>
   </div>
 
-  <!-- Block 2: values + feature (Pencil: OlGFw) -->
+  <!-- Block 2: values + feature — липкая сцена и слайды как isg-quality-content__sticky (пример: 3 кадра из quality) -->
   <div class="isg-about-content-block">
-    <div class="isg-about-horizontal">
-      <div class="isg-about-values">
-        <div class="isg-subtitle">
-          <!-- ACF: about_values_kicker -->
-          <p class="isg-subtitle__text">PRODUCT RANGE</p>
-          <span class="isg-subtitle__swatch" aria-hidden="true"></span>
-        </div>
-        <div class="isg-about-values__list">
-          <!-- ACF: about_values_items (repeater) sub: title, state: active|inactive|muted -->
-          <div class="isg-about-value-item isg-about-value-item--active">
-            <h3 class="isg-about-value-item__title">Digital coordination</h3>
-          </div>
-          <div class="isg-about-value-item isg-about-value-item--inactive">
-            <h3 class="isg-about-value-item__title">Practical efficiency</h3>
-          </div>
-          <div class="isg-about-value-item isg-about-value-item--muted">
-            <h3 class="isg-about-value-item__title">Modern manufacturing</h3>
-          </div>
-        </div>
+    <div class="isg-about-content__track" data-isg-about-scroll aria-label="Company values">
+      <div class="isg-about-markers" aria-hidden="true">
+        <span class="isg-about-marker" data-isg-about-marker="0"></span>
+        <span class="isg-about-marker" data-isg-about-marker="1"></span>
+        <span class="isg-about-marker" data-isg-about-marker="2"></span>
       </div>
-      <!-- ACF: about_feature_background -->
-      <div class="isg-about-feature-card" style="background-image: url('');">
-        <div class="isg-about-feature-card__inner">
-          <span class="isg-about-feature-card__icon" aria-hidden="true"></span>
-          <!-- ACF: about_feature_text -->
-          <p class="isg-body isg-about-feature-card__text">
-            We use advanced production technologies and proven manufacturing processes to ensure reliable quality and compliance with technical requirements.
-          </p>
+      <div class="isg-about-content__sticky">
+        <div class="isg-about-row">
+          <div class="isg-about-values">
+            <div class="isg-subtitle">
+              <!-- ACF: about_values_kicker -->
+              <p class="isg-subtitle__text">PRODUCT RANGE</p>
+              <span class="isg-subtitle__swatch" aria-hidden="true"></span>
+            </div>
+            <div class="isg-about-values__list">
+              <!-- ACF: about_values_items (repeater) — по одному пункту на слайд: title + текст/картинка в паре -->
+              <button type="button" class="isg-about-value-item isg-about-value-item--active" data-isg-about-index="0" aria-pressed="true">
+                <h3 class="isg-about-value-item__title">Digital coordination</h3>
+              </button>
+              <button type="button" class="isg-about-value-item" data-isg-about-index="1" aria-pressed="false">
+                <h3 class="isg-about-value-item__title">Practical efficiency</h3>
+              </button>
+              <button type="button" class="isg-about-value-item" data-isg-about-index="2" aria-pressed="false">
+                <h3 class="isg-about-value-item__title">Modern manufacturing</h3>
+              </button>
+            </div>
+          </div>
+          <div class="isg-about-feature-card">
+            <div class="isg-about-feature-card__layers" aria-hidden="true">
+              <div class="isg-about-feature-card__layer isg-about-feature-card__layer--active" data-isg-about-slide="0">
+                <div class="isg-about-feature-card__bg" style="background-image: url('assets/img/isg-quality-content-1.jpg');"></div>
+              </div>
+              <div class="isg-about-feature-card__layer" data-isg-about-slide="1">
+                <div class="isg-about-feature-card__bg" style="background-image: url('assets/img/isg-quality-content-2.jpg');"></div>
+              </div>
+              <div class="isg-about-feature-card__layer" data-isg-about-slide="2">
+                <div class="isg-about-feature-card__bg" style="background-image: url('assets/img/isg-quality-content-3.jpg');"></div>
+              </div>
+            </div>
+            <div class="isg-about-feature-card__inner">
+              <div class="isg-about-feature-card__content-stack">
+                <div
+                  class="isg-about-feature-card__content-slide isg-about-feature-card__content-slide--active"
+                  data-isg-about-content-slide="0"
+                >
+                  <span class="isg-about-feature-card__icon" aria-hidden="true">
+                    <img src="assets/img/icons/agriculture.svg" width="40" height="40" alt="" />
+                  </span>
+                  <p class="isg-body isg-about-feature-card__text">
+                    Digital coordination ties planning, production, and quality data into one clear workflow—so teams respond faster and every stage stays traceable.
+                  </p>
+                </div>
+                <div class="isg-about-feature-card__content-slide" data-isg-about-content-slide="1">
+                  <span class="isg-about-feature-card__icon" aria-hidden="true">
+                    <img src="assets/img/icons/construction.svg" width="40" height="40" alt="" />
+                  </span>
+                  <p class="isg-body isg-about-feature-card__text">
+                    Practical efficiency means lean routines on the shop floor: less waste, predictable throughput, and consistent output without compromising safety or compliance.
+                  </p>
+                </div>
+                <div class="isg-about-feature-card__content-slide" data-isg-about-content-slide="2">
+                  <span class="isg-about-feature-card__icon" aria-hidden="true">
+                    <img src="assets/img/icons/industry.svg" width="40" height="40" alt="" />
+                  </span>
+                  <p class="isg-body isg-about-feature-card__text">
+                    Modern manufacturing combines advanced equipment with disciplined processes—delivering large-diameter pipe that meets strict specs and partner expectations.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Block 3: team + certifications (Pencil: c12Qq) -->
+  <!-- Block 3: team + certifications — макет Pencil «Product Range content» (PNDFj): pad 128/64/96, колонки 579 + слайдер, ряд сертификатов 581 + список -->
   <div class="isg-about-team-block">
-    <div class="isg-title-group isg-title-group--align-start">
-      <div class="isg-subtitle">
-        <p class="isg-subtitle__text">our position</p>
-        <span class="isg-subtitle__swatch" aria-hidden="true"></span>
-      </div>
-      <div class="isg-product-content__row">
-        <div class="isg-product-content__col isg-product-content__col--wide">
-          <h2 class="isg-h2">Our team comprises seasoned professionals with extensive experience in steel pipe manufacturing and distribution</h2>
-        </div>
-      </div>
-    </div>
-    <div class="isg-product-content__row">
-      <div class="isg-product-content__col">
-        <p class="isg-body">
-          With a deep understanding of industry intricacies and cutting-edge technologies, our experts deliver uncompromising quality and reliability for your projects
-        </p>
-      </div>
-      <div class="isg-product-content__col isg-product-content__col--wide">
-        <div class="isg-slider" data-isg-slider>
-          <div class="isg-slider__track">
-            <!-- ACF: about_team_slides (repeater) sub: image, name, role -->
-            <div class="isg-slider__item">
-              <div class="isg-slider-item__img" style="background-image: url('');"></div>
-              <div class="isg-slider-item__caption">
-                <p class="isg-slider-item__name">Oleksandr Bryk</p>
-                <p class="isg-slider-item__role">CEO</p>
-              </div>
-            </div>
-            <div class="isg-slider__item">
-              <div class="isg-slider-item__img" style="background-image: url('');"></div>
-              <div class="isg-slider-item__caption">
-                <p class="isg-slider-item__name">Name</p>
-                <p class="isg-slider-item__role">Role</p>
-              </div>
-            </div>
-            <div class="isg-slider__item">
-              <div class="isg-slider-item__img" style="background-image: url('');"></div>
-              <div class="isg-slider-item__caption">
-                <p class="isg-slider-item__name">Name</p>
-                <p class="isg-slider-item__role">Role</p>
-              </div>
-            </div>
-          </div>
-          <div class="isg-slider-nav" aria-hidden="true">
-            <div class="isg-slider-nav__line"></div>
-            <div class="isg-slider-nav__thumb"></div>
-            <div class="isg-slider-nav__line"></div>
-          </div>
-          <button type="button" class="isg-slider__btn isg-slider__btn--prev" aria-label="Previous slide">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-            </svg>
-          </button>
-          <button type="button" class="isg-slider__btn isg-slider__btn--next" aria-label="Next slide">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-            </svg>
-          </button>
-        </div>
-      </div>
-    </div>
-    <div class="isg-product-content__row isg-product-content__row--divider">
-      <div class="isg-product-content__col">
-        <p class="isg-body">Typical steel grades include:</p>
-      </div>
-      <div class="isg-product-content__col isg-product-content__col--wide">
-        <div class="isg-filled-items isg-filled-items--wide isg-about-certs">
-          <!-- ACF: about_cert_badges (repeater) -->
-          <div class="isg-filled-item isg-filled-item--about"><span>ISO 9001</span></div>
-          <div class="isg-filled-item isg-filled-item--about"><span>ISO 14001</span></div>
-          <div class="isg-filled-item isg-filled-item--about"><span>CE</span></div>
-          <div class="isg-filled-item isg-filled-item--about"><span>API</span></div>
-          <div class="isg-filled-item isg-filled-item--about"><span>EN 10219</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Block 4: gallery (Pencil: S8pif) -->
-  <div class="isg-about-gallery-block">
-    <div class="container">
-      <div class="isg-title-group isg-title-group--align-start">
+    <div class="isg-about-team-block__inner">
+      <header class="isg-title-group isg-title-group--align-start isg-about-team-block__header">
         <div class="isg-subtitle">
-          <p class="isg-subtitle__text">Gallery</p>
+          <p class="isg-subtitle__text">our position</p>
           <span class="isg-subtitle__swatch" aria-hidden="true"></span>
         </div>
-        <div class="isg-product-content__row">
-          <div class="isg-product-content__col isg-product-content__col--wide">
+        <div class="isg-about-team-block__title-row">
+          <div class="isg-about-team-block__title-col">
             <h2 class="isg-h2">Our team comprises seasoned professionals with extensive experience in steel pipe manufacturing and distribution</h2>
           </div>
         </div>
-      </div>
-      <div class="isg-product-content__row">
-        <div class="isg-product-content__col isg-product-content__col--wide">
-          <div class="isg-slider" data-isg-slider="gallery">
+      </header>
+
+      <div class="isg-about-team-block__main">
+        <div class="isg-about-team-block__lead">
+          <p class="isg-body">
+            With a deep understanding of industry intricacies and cutting-edge technologies, our experts deliver uncompromising quality and reliability for your projects
+          </p>
+        </div>
+        <div class="isg-about-team-block__slider-wrap">
+          <div class="isg-slider isg-slider--mode-center isg-about-team-block__slider" data-isg-slider="team">
             <div class="isg-slider__track">
-              <!-- ACF: gallery_slides (repeater) sub: image, caption -->
-              <div class="isg-slider__item isg-slider__item--wide">
-                <div class="isg-slider-item__img" style="background-image: url('');"></div>
+              <!-- ACF: about_team_slides (repeater) sub: image, name, role -->
+              <div class="isg-slider__item">
+                <!-- Карточка без лайтбокса; ACF: фон / <img> по полю image -->
+                <div class="isg-slider-item__img" style="background-image: url('assets/img/isg-quality-content-1.jpg');"></div>
+                <div class="isg-slider-item__caption">
+                  <p class="isg-slider-item__name">Oleksandr Bryk</p>
+                  <p class="isg-slider-item__role">CEO</p>
+                </div>
               </div>
-              <div class="isg-slider__item isg-slider__item--wide">
-                <div class="isg-slider-item__img" style="background-image: url('');"></div>
+              <div class="isg-slider__item">
+                <div class="isg-slider-item__img" style="background-image: url('assets/img/isg-quality-content-2.jpg');"></div>
+                <div class="isg-slider-item__caption">
+                  <p class="isg-slider-item__name">Name</p>
+                  <p class="isg-slider-item__role">Role</p>
+                </div>
               </div>
-              <div class="isg-slider__item isg-slider__item--wide">
-                <div class="isg-slider-item__img" style="background-image: url('');"></div>
+              <div class="isg-slider__item">
+                <div class="isg-slider-item__img" style="background-image: url('assets/img/isg-quality-content-3.jpg');"></div>
+                <div class="isg-slider-item__caption">
+                  <p class="isg-slider-item__name">Name</p>
+                  <p class="isg-slider-item__role">Role</p>
+                </div>
               </div>
             </div>
             <div class="isg-slider-nav" aria-hidden="true">
@@ -206,6 +188,95 @@
             </button>
           </div>
         </div>
+      </div>
+
+      <div class="isg-about-team-block__certs isg-product-content__row isg-product-content__row--divider">
+        <div class="isg-about-team-block__certs-lead">
+          <p class="isg-body">Typical steel grades include:</p>
+        </div>
+        <div class="isg-about-team-block__certs-list">
+            <div class="isg-filled-items isg-filled-items--wide isg-about-certs">
+            <!-- ACF: about_cert_badges (repeater): label + cert_image URL в data-isg-lightbox -->
+            <button type="button" class="isg-filled-item isg-filled-item--about" data-isg-lightbox="assets/img/isg-quality-content-4.jpg" aria-label="View certificate: ISO 9001">
+              <span class="isg-filled-item__text">ISO 9001</span>
+              <span class="isg-filled-item__go" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M14 3h7v7M10 14L21 3M21 14v7h-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </button>
+            <button type="button" class="isg-filled-item isg-filled-item--about" data-isg-lightbox="assets/img/isg-quality-content-5.jpg" aria-label="View certificate: ISO 14001">
+              <span class="isg-filled-item__text">ISO 14001</span>
+              <span class="isg-filled-item__go" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M14 3h7v7M10 14L21 3M21 14v7h-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </button>
+            <button type="button" class="isg-filled-item isg-filled-item--about" data-isg-lightbox="assets/img/img-test-1.jpg" aria-label="View certificate: CE">
+              <span class="isg-filled-item__text">CE</span>
+              <span class="isg-filled-item__go" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M14 3h7v7M10 14L21 3M21 14v7h-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </button>
+            <button type="button" class="isg-filled-item isg-filled-item--about" data-isg-lightbox="assets/img/img-test-2.jpg" aria-label="View certificate: API">
+              <span class="isg-filled-item__text">API</span>
+              <span class="isg-filled-item__go" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M14 3h7v7M10 14L21 3M21 14v7h-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </button>
+            <button type="button" class="isg-filled-item isg-filled-item--about" data-isg-lightbox="assets/img/digits-img.jpg" aria-label="View certificate: EN 10219">
+              <span class="isg-filled-item__text">EN 10219</span>
+              <span class="isg-filled-item__go" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M14 3h7v7M10 14L21 3M21 14v7h-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Block 4: gallery — макет Gallery: заголовок в .container, слайдер на всю ширину вьюпорта без боковых падингов -->
+  <div class="isg-about-gallery-block">
+    <div class="container">
+      <div class="isg-title-group isg-title-group--align-start">
+        <div class="isg-subtitle">
+          <p class="isg-subtitle__text">Gallery</p>
+          <span class="isg-subtitle__swatch" aria-hidden="true"></span>
+        </div>
+        <div class="isg-product-content__row">
+          <div class="isg-product-content__col isg-product-content__col--wide">
+            <h2 class="isg-h2">Our team comprises seasoned professionals with extensive experience in steel pipe manufacturing and distribution</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="isg-about-gallery-block__slider-bleed">
+      <div class="isg-slider isg-slider--gallery" data-isg-slider="gallery">
+        <div class="isg-slider__track">
+          <!-- ACF: gallery_slides (repeater): фон + data-isg-lightbox на том же URL -->
+          <div class="isg-slider__item isg-slider__item--wide">
+            <button type="button" class="isg-slider-item__img isg-slider-item__img--lightbox" style="background-image: url('assets/img/advantages_1.jpg');" data-isg-lightbox="assets/img/advantages_1.jpg" aria-label="Open gallery image"></button>
+          </div>
+          <div class="isg-slider__item isg-slider__item--wide">
+            <button type="button" class="isg-slider-item__img isg-slider-item__img--lightbox" style="background-image: url('assets/img/product-range-intro.jpg');" data-isg-lightbox="assets/img/product-range-intro.jpg" aria-label="Open gallery image"></button>
+          </div>
+          <div class="isg-slider__item isg-slider__item--wide">
+            <button type="button" class="isg-slider-item__img isg-slider-item__img--lightbox" style="background-image: url('assets/img/guality-control-intro.jpg');" data-isg-lightbox="assets/img/guality-control-intro.jpg" aria-label="Open gallery image"></button>
+          </div>
+        </div>
+        <div class="isg-slider-nav" aria-hidden="true">
+          <div class="isg-slider-nav__line"></div>
+          <div class="isg-slider-nav__thumb"></div>
+          <div class="isg-slider-nav__line"></div>
+        </div>
+        <button type="button" class="isg-slider__btn isg-slider__btn--prev" aria-label="Previous slide">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </button>
+        <button type="button" class="isg-slider__btn isg-slider__btn--next" aria-label="Next slide">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </button>
       </div>
     </div>
   </div>

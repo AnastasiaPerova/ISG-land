@@ -1,4 +1,4 @@
-import { initLenisSmoothScroll } from "./blocks/smooth-scroll.js";
+import { initLenisSmoothScroll, getLenis } from "./blocks/smooth-scroll.js";
 import { initAccordions } from "./blocks/accordion.js";
 import { initSliders } from "./blocks/sliders.js";
 import { initScrollReveal } from "./blocks/scroll-reveal.js";
@@ -7,14 +7,16 @@ import { initNavPillSliders, syncNavPillSliders } from "./blocks/nav-pill-slider
 import { initHeaderDrawer } from "./blocks/header-drawer.js";
 import { initLangNav } from "./blocks/lang-nav.js";
 import { initDigitsFeatured } from "./blocks/digits-featured.js";
-import { initHeroStickyReveal } from "./blocks/hero-sticky-reveal.js";
 import { initApplicationScroll } from "./blocks/application-scroll.js";
+import { initQualityScroll } from "./blocks/quality-scroll.js";
+import { initAboutScroll } from "./blocks/about-scroll.js";
 import { initIntroSectionScroll } from "./blocks/intro-section-scroll.js";
 import { initIntroBgEntranceScale } from "./blocks/intro-bg-entrance-scale.js";
 import { initIntroExitBlur } from "./blocks/intro-exit-blur.js";
 import { initRfqIntroButtonHover } from "./blocks/rfq-intro-btn-hover.js";
 import { initSpecCardsReveal } from "./blocks/spec-cards-reveal.js";
 import { initSectionAnchors } from "./blocks/section-anchors.js";
+import { initLightbox } from "./blocks/lightbox.js";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const PARTIALS = [
@@ -48,25 +50,27 @@ function disposeInternals() {
  * Полное обновление интерактива после подмены DOM (Barba.js hooks).
  * @param {ParentNode} root — контейнер с блоками [data-isg-block]
  */
-export function initIsgPage(root = document.body) {
+export async function initIsgPage(root = document.body) {
   disposeInternals();
   disposers.push(initLenisSmoothScroll());
   disposers.push(initAccordions(root));
-  disposers.push(initSliders(root));
+  disposers.push(await initSliders(root));
   disposers.push(initScrollReveal(root));
   disposers.push(initToTop(root));
   disposers.push(initNavPillSliders(root));
   disposers.push(initHeaderDrawer(root));
   disposers.push(initLangNav(root));
   disposers.push(initDigitsFeatured(root));
-  disposers.push(initHeroStickyReveal(root));
   disposers.push(initApplicationScroll(root));
+  disposers.push(initSectionAnchors(root));
+  disposers.push(initQualityScroll(root, { getLenis }));
+  disposers.push(initAboutScroll(root, { getLenis }));
   disposers.push(initIntroSectionScroll(root));
   disposers.push(initIntroBgEntranceScale(root));
   disposers.push(initIntroExitBlur(root));
   disposers.push(initRfqIntroButtonHover(root));
   disposers.push(initSpecCardsReveal(root));
-  disposers.push(initSectionAnchors(root));
+  disposers.push(initLightbox(root));
   ScrollTrigger.refresh();
 }
 
@@ -96,7 +100,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
-  initIsgPage(main);
+  await initIsgPage(main);
 });
 
 window.ISG = { initIsgPage, destroyIsgPage, syncNavPillSliders };

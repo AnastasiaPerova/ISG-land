@@ -4,12 +4,10 @@
   class="isg-app isg-app--scroll"
   data-isg-block="application"
   data-isg-app-scroll
-  data-isg-hero-reveal-next
 >
   <!-- Хвост .isg-app__post задаёт длину scrub; без .isg-app__pre — иначе видна пустая тёмная полоса перед видео -->
   <div class="isg-app__scene">
-    <!-- Внутренний слой: hero-reveal анимирует transform здесь, не на .isg-app__scene (иначе ломается sticky) -->
-    <div class="isg-app__scene-reveal" data-isg-hero-scene-reveal>
+    <div class="isg-app__scene-reveal">
     <!-- ACF: app_video_file — положите test.mp4 в тему или укажите URL -->
     <div class="isg-app__media" aria-hidden="true">
       <video

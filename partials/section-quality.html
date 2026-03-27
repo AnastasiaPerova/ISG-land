@@ -17,34 +17,100 @@
     </div>
   </section>
   <div class="isg-quality-content">
-    <div class="isg-quality-row">
-      <div class="isg-quality-list-wrap">
-        <div class="isg-quality-list">
-          <!-- ACF: quality_list (repeater) sub: text -->
-          <div class="isg-quality-list-item">
-            <span class="isg-quality-list-item__icon" aria-hidden="true"></span>
-            <p class="isg-quality-list-item__text">Dimensional inspection</p>
+    <!-- Длина скролла = фазы смены слайдов (как scroll-driven slides на Relats) -->
+    <div class="isg-quality-content__track" data-isg-quality-scroll aria-label="Quality control focus areas">
+      <!-- Якоря для scrollTo (как .markers .item у Relats toptier) -->
+      <div class="isg-quality-markers" aria-hidden="true">
+        <span class="isg-quality-marker" data-isg-quality-marker="0"></span>
+        <span class="isg-quality-marker" data-isg-quality-marker="1"></span>
+        <span class="isg-quality-marker" data-isg-quality-marker="2"></span>
+        <span class="isg-quality-marker" data-isg-quality-marker="3"></span>
+        <span class="isg-quality-marker" data-isg-quality-marker="4"></span>
+      </div>
+      <div class="isg-quality-content__sticky">
+        <div class="isg-quality-row">
+          <div class="isg-quality-list-wrap">
+            <!-- ACF: quality_list_label -->
+            <div class="isg-subtitle isg-quality-list-wrap__label">
+              <p class="isg-subtitle__text">Focus areas</p>
+              <span class="isg-subtitle__swatch" aria-hidden="true"></span>
+            </div>
+            <div class="isg-quality-list">
+              <!-- ACF: quality_list (repeater) sub: text, image для слайда по индексу -->
+              <button type="button" class="isg-quality-list-item isg-quality-label--plain isg-quality-list-item--active" data-isg-quality-index="0" aria-pressed="true">
+                <span class="isg-quality-list-item__icon" aria-hidden="true">
+                  <img src="assets/img/icons/agriculture.svg" width="48" height="48" alt="" />
+                </span>
+                <span class="isg-quality-list-item__text">Dimensional inspection</span>
+              </button>
+              <button type="button" class="isg-quality-list-item isg-quality-label--plain" data-isg-quality-index="1" aria-pressed="false">
+                <span class="isg-quality-list-item__icon" aria-hidden="true">
+                  <img src="assets/img/icons/construction.svg" width="48" height="48" alt="" />
+                </span>
+                <span class="isg-quality-list-item__text">Traceability</span>
+              </button>
+              <button type="button" class="isg-quality-list-item isg-quality-label--plain" data-isg-quality-index="2" aria-pressed="false">
+                <span class="isg-quality-list-item__icon" aria-hidden="true">
+                  <img src="assets/img/icons/industry.svg" width="48" height="48" alt="" />
+                </span>
+                <span class="isg-quality-list-item__text">Laboratory testing</span>
+              </button>
+              <button type="button" class="isg-quality-list-item isg-quality-label--plain" data-isg-quality-index="3" aria-pressed="false">
+                <span class="isg-quality-list-item__icon" aria-hidden="true">
+                  <img src="assets/img/icons/infrastructure.svg" width="48" height="48" alt="" />
+                </span>
+                <span class="isg-quality-list-item__text">Documentation</span>
+              </button>
+              <button type="button" class="isg-quality-list-item isg-quality-label--plain" data-isg-quality-index="4" aria-pressed="false">
+                <span class="isg-quality-list-item__icon" aria-hidden="true">
+                  <img src="assets/img/icons/oil-gas.svg" width="48" height="48" alt="" />
+                </span>
+                <span class="isg-quality-list-item__text">Third-party inspection</span>
+              </button>
+            </div>
           </div>
-          <div class="isg-quality-list-item">
-            <span class="isg-quality-list-item__icon" aria-hidden="true"></span>
-            <p class="isg-quality-list-item__text">Traceability</p>
-          </div>
-          <div class="isg-quality-list-item">
-            <span class="isg-quality-list-item__icon" aria-hidden="true"></span>
-            <p class="isg-quality-list-item__text">Laboratory testing</p>
-          </div>
-          <div class="isg-quality-list-item">
-            <span class="isg-quality-list-item__icon" aria-hidden="true"></span>
-            <p class="isg-quality-list-item__text">Documentation</p>
-          </div>
-          <div class="isg-quality-list-item">
-            <span class="isg-quality-list-item__icon" aria-hidden="true"></span>
-            <p class="isg-quality-list-item__text">Third-party inspection</p>
+          <div class="isg-quality-visual">
+            <div class="isg-quality-visual__slides">
+              <!-- ACF: quality_slide_1 … quality_slide_5 -->
+              <div
+                class="isg-quality-visual__slide isg-quality-content--1 isg-quality-visual__slide--active"
+                data-isg-quality-slide="0"
+                style="background-image: url('assets/img/isg-quality-content-1.jpg');"
+                role="img"
+                aria-label="Dimensional inspection"
+              ></div>
+              <div
+                class="isg-quality-visual__slide isg-quality-content--2"
+                data-isg-quality-slide="1"
+                style="background-image: url('assets/img/isg-quality-content-2.jpg');"
+                role="img"
+                aria-label="Traceability"
+              ></div>
+              <div
+                class="isg-quality-visual__slide isg-quality-content--3"
+                data-isg-quality-slide="2"
+                style="background-image: url('assets/img/isg-quality-content-3.jpg');"
+                role="img"
+                aria-label="Laboratory testing"
+              ></div>
+              <div
+                class="isg-quality-visual__slide isg-quality-content--4"
+                data-isg-quality-slide="3"
+                style="background-image: url('assets/img/isg-quality-content-4.jpg');"
+                role="img"
+                aria-label="Documentation"
+              ></div>
+              <div
+                class="isg-quality-visual__slide isg-quality-content--5"
+                data-isg-quality-slide="4"
+                style="background-image: url('assets/img/isg-quality-content-5.jpg');"
+                role="img"
+                aria-label="Third-party inspection"
+              ></div>
+            </div>
           </div>
         </div>
       </div>
-      <!-- ACF: quality_side_image -->
-      <div class="isg-quality-images" style="background-image: url('');" role="img" aria-label=""></div>
     </div>
   </div>
 </div>

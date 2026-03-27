@@ -216,11 +216,8 @@ export function initApplicationScroll(root = document) {
 
     applyInitialFrame();
 
-    const heroReveal =
-      section.hasAttribute("data-isg-hero-reveal-next") &&
-      root.querySelector("[data-isg-hero-reveal]");
-    const scrollTriggerEl = heroReveal && heroReveal.isConnected ? heroReveal : scene;
-    const scrollStart = heroReveal ? "bottom top" : "top top";
+    const scrollTriggerEl = scene;
+    const scrollStart = "top top";
 
     const st = ScrollTrigger.create({
       trigger: scrollTriggerEl,

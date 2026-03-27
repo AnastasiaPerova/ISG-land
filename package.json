@@ -8,7 +8,8 @@
     "dev": "concurrently -k -n scss,web -c yellow,cyan \"npm run watch:css\" \"npm run dev:serve\""
   },
   "dependencies": {
-    "gsap": "^3.12.5"
+    "gsap": "^3.12.5",
+    "tiny-slider": "^2.9.4"
   },
   "devDependencies": {
     "browser-sync": "^3.0.3",
