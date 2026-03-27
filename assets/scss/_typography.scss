@@ -1,0 +1,167 @@
+// =============================================================================
+// ISG UI Kit — типографика
+// =============================================================================
+// Все кегли в относительных единицах (rem / vw). Исключение: верхний предел
+// display — px (стабильный «потолок» ~120px при fluid root на html).
+//
+// Иерархия (крупное → мелкое):
+//   display       — герой, .isg-display
+//   headline      — заголовок секции, .isg-h2
+//   featured-title — подзаголовок в featured (тот же vw, меньший max)
+//   title-lg      — крупные заголовки в карточках / блоках
+//   title         — заголовки аккордеона, слайдера, футера
+//   title-sm      — строки в спецификациях, навигация drawer
+//   lead          — лид, .isg-lead
+//   body-lg       — таблицы, лейблы полей, крупные строки
+//   body          — основной текст
+//   body-sm       — вторичный абзац
+//   caption       — мелкие подписи
+//   button        — кнопки
+//   nav           — пункты навигации по секциям (clamp)
+//   stat          — крупное число в digit-card / spec (~64px max)
+//   stat-label    — подпись к числу (отдельный clamp, мельче lead)
+//
+// Рычаги «общего темпа»:
+//   $isg-type-vw-display / headline / lead / stat-label — stat делит vw с headline
+//   $isg-type-scale-* — дискретная шкала rem от тела текста
+// =============================================================================
+
+// --- VW-группы (один параметр на семейство fluid-заголовков) ---------------
+$isg-type-vw-display: 7.5vw;
+$isg-type-vw-headline: 3.7vw;
+$isg-type-vw-lead: 1.85vw;
+
+// --- Дискретная шкала rem (ступени от мелкого к крупному фикс-кеглю) -------
+$isg-type-scale-75: 1.1rem;
+$isg-type-scale-100: 1.3rem;
+$isg-type-scale-150: 1.15rem;
+$isg-type-scale-200: 1.5rem;
+$isg-type-scale-300: 1.65rem;
+$isg-type-scale-400: 1.85rem;
+$isg-type-scale-500: 2.1rem;
+$isg-type-scale-600: 2.2rem;
+$isg-type-scale-700: 2.6rem;
+$isg-type-scale-800: 2.95rem;
+
+// --- Семантика → шкала или clamp -------------------------------------------
+
+// Display (clamp)
+$isg-type-display-min: 2.25rem;
+$isg-type-display-fluid: $isg-type-vw-display;
+$isg-type-display-max: 120px;
+/** Потолок кегля display в fullscreen-интро (product / quality / about / rfq) */
+$isg-type-display-intro-max: 110px;
+
+// Headline = секционный H2 (clamp)
+$isg-type-headline-min: $isg-type-scale-400;
+$isg-type-headline-fluid: $isg-type-vw-headline;
+$isg-type-headline-max: 7.35rem;
+
+// Featured / врезанный крупный заголовок: тот же рост vw, ниже потолок rem
+$isg-type-featured-title-max: 3.2rem;
+
+// Lead (clamp)
+$isg-type-lead-min: $isg-type-scale-150;
+$isg-type-lead-fluid: $isg-type-vw-lead;
+$isg-type-lead-max: $isg-type-scale-800;
+
+// Фиксированные уровни из шкалы
+$isg-type-caption: $isg-type-scale-75;
+$isg-type-body-sm: $isg-type-scale-100;
+$isg-type-body: $isg-type-scale-200;
+$isg-type-body-md: $isg-type-scale-300;
+$isg-type-body-lg: $isg-type-scale-500;
+$isg-type-title-sm: $isg-type-scale-150;
+$isg-type-title: $isg-type-scale-400;
+$isg-type-title-lg: $isg-type-scale-700;
+$isg-type-button: $isg-type-scale-400;
+
+// Stat (clamp) — в макете digit/spec ~64px на десктопе; fluid тянется к потолку 64px
+$isg-type-stat-min: 2rem;
+$isg-type-stat-fluid: 4.444vw;
+$isg-type-stat-max: 64px;
+
+// Stat label — подпись к числу (~32px в макете), не путать с lead
+$isg-type-vw-stat-label: 1.4vw;
+$isg-type-stat-label-min: 1.05rem;
+$isg-type-stat-label-fluid: $isg-type-vw-stat-label;
+$isg-type-stat-label-max: 2rem;
+
+// Nav (clamp)
+$isg-type-nav-min: $isg-type-scale-75;
+$isg-type-nav-fluid: 0.98vw;
+$isg-type-nav-max: 1.55rem;
+
+// =============================================================================
+// Обратная совместимость (старые имена = алиасы к UI kit)
+// =============================================================================
+$isg-display-min: $isg-type-display-min;
+$isg-display-fluid: $isg-type-display-fluid;
+$isg-display-max: $isg-type-display-max;
+
+$isg-h2-min: $isg-type-headline-min;
+$isg-h2-fluid: $isg-type-headline-fluid;
+$isg-h2-max: $isg-type-headline-max;
+
+$isg-lead-min: $isg-type-lead-min;
+$isg-lead-fluid: $isg-type-lead-fluid;
+$isg-lead-max: $isg-type-lead-max;
+
+$isg-body-lg-size: $isg-type-body-lg;
+
+$isg-font-block-20: $isg-type-title-sm;
+$isg-font-block-32: $isg-type-title;
+$isg-font-block-45: $isg-type-title-lg;
+
+$isg-featured-title-max: $isg-type-featured-title-max;
+
+$isg-digit-card-value-min: $isg-type-stat-min;
+$isg-digit-card-value-fluid: $isg-type-stat-fluid;
+$isg-digit-card-value-max: $isg-type-stat-max;
+$isg-digit-card-label-min: $isg-type-stat-label-min;
+$isg-digit-card-label-fluid: $isg-type-stat-label-fluid;
+$isg-digit-card-label-max: $isg-type-stat-label-max;
+
+$isg-font-size-xs: $isg-type-caption;
+$isg-font-size-sm: $isg-type-body-sm;
+$isg-font-size-base: $isg-type-body;
+$isg-font-size-md: $isg-type-body-md;
+$isg-font-size-lg: $isg-type-scale-600;
+$isg-font-size-xl: $isg-type-scale-800;
+
+$isg-btn-font-size: $isg-type-button;
+
+$isg-nav-section-font-min: $isg-type-nav-min;
+$isg-nav-section-font-fluid: $isg-type-nav-fluid;
+$isg-nav-section-font-max: $isg-type-nav-max;
+
+// Миксин: единый вид clamp для любого уровня (удобно в кастомных блоках)
+@mixin isg-type-fluid($min, $vw, $max) {
+  font-size: clamp(#{$min}, #{$vw}, #{$max});
+}
+
+// --- Интерлиньяж и трекинг (привязка к уровням UI kit) -----------------------
+$isg-line-height-html: 100%;
+$isg-line-height-tight: 1.21875;
+$isg-line-height-body: 1.5;
+$isg-line-height-lead: 1.3125;
+
+$isg-letter-display: -0.048em;
+$isg-letter-h2: -0.02em;
+$isg-letter-featured-title: -0.018em;
+$isg-letter-title-lg: -0.022em;
+$isg-letter-title: -0.015em;
+$isg-letter-title-sm: -0.012em;
+$isg-letter-stat: $isg-letter-h2;
+$isg-letter-lead: -0.002em;
+$isg-letter-body-lg: -0.01em;
+$isg-letter-mono: 0.023em;
+$isg-letter-button: -0.0125em;
+
+// Крупная цифра: один стиль для .isg-digit-card__value и .isg-spec-card__value
+@mixin isg-stat-figure-type {
+  font-size: var(--isg-type-stat);
+  font-weight: 500;
+  letter-spacing: $isg-letter-stat;
+  line-height: 1.15;
+}

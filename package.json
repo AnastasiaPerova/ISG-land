@@ -1,0 +1,19 @@
+{
+  "name": "isg-theme-static",
+  "private": true,
+  "scripts": {
+    "build:css": "sass assets/scss/main.scss assets/css/main.css --no-source-map --style=expanded",
+    "watch:css": "sass --watch assets/scss/main.scss assets/css/main.css --no-source-map --style=expanded",
+    "dev:serve": "browser-sync start --server . --startPath /preview.html --files assets/css/main.css --files preview.html --files assets/js --files partials --no-notify --port 5173",
+    "dev": "concurrently -k -n scss,web -c yellow,cyan \"npm run watch:css\" \"npm run dev:serve\""
+  },
+  "dependencies": {
+    "gsap": "^3.12.5"
+  },
+  "devDependencies": {
+    "browser-sync": "^3.0.3",
+    "concurrently": "^9.1.2",
+    "lenis": "^1.1.18",
+    "sass": "^1.85.0"
+  }
+}

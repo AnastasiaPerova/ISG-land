@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ISG — static preview (WordPress + ACF template-parts)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@500&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <link rel="stylesheet" href="assets/css/lenis.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "gsap": "https://esm.sh/gsap@3.12.5",
+          "gsap/ScrollTrigger": "https://esm.sh/gsap@3.12.5/ScrollTrigger",
+          "lenis": "https://esm.sh/lenis@1.1.18"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <!--
+      Локальный просмотр: из каталога wp-theme-isg выполните npm run dev
+      (SCSS watch + сервер на http://localhost:5173 с автообновлением).
+      fetch() для partials не работает с file://.
+    -->
+    <main id="isg-main"></main>
+    <script type="module" src="assets/js/main.js"></script>
+  </body>
+</html>

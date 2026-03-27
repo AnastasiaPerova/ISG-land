@@ -1,0 +1,44 @@
+<!-- Flexible Content layout: hero; обёртка + spacer — длина sticky «под reveal» application -->
+<div class="isg-hero-reveal" data-isg-hero-reveal>
+<section
+  id="isg-hero"
+  class="isg-hero isg-hero--sticky-reveal"
+  data-isg-block="hero"
+  style="background-image: url('assets/img/img-test-1.jpg');"
+  aria-label="Hero"
+>
+  <!-- ACF: hero_background (image URL) -->
+  <div class="isg-hero__conteiner">
+    <div class="isg-hero__content">
+      <div class="isg-title-group">
+        <div class="isg-subtitle">
+          <!-- ACF: hero_kicker -->
+          <p class="isg-subtitle__text">Application Areas</p>
+          <span class="isg-subtitle__swatch" aria-hidden="true"></span>
+        </div>
+        <!-- ACF: hero_title -->
+        <h1 class="isg-display isg-text-center">
+          Large-Diameter <br />
+          Spiral-Welded Pipes
+        </h1>
+        <!-- ACF: hero_subtitle -->
+        <p class="isg-lead isg-text-center">Infrastructure &amp; industrial projects</p>
+      </div>
+      <div class="isg-btn-group isg-btn-group--spread">
+        <div class="isg-btn-group">
+          <a class="isg-btn isg-btn--blur" href="#">Download catalogue</a>
+        </div>
+        <div class="isg-btn-group">
+          <span class="isg-btn__media" aria-hidden="true">
+            <svg class="isg-btn__media-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+          </span>
+          <a class="isg-btn isg-btn--blur" href="#">Download catalogue</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+  <div class="isg-hero-reveal__spacer" aria-hidden="true"></div>
+</div>

@@ -1,0 +1,87 @@
+<!-- Flexible Content layout: digits — структура как component--featured (relats.com): .scroll > .inner > .image + .cards -->
+<section
+  id="isg-digits"
+  class="isg-digits-section component component--featured"
+  data-component="featured"
+  data-isg-block="digits"
+>
+  <div class="scroll" data-isg-featured-scroll>
+    <div class="inner" data-isg-featured-inner>
+      <!-- ACF: digits_background_image -->
+      <!-- ACF: выведите <img> внутрь .image при необходимости (как на relats.com) -->
+      <div class="image isg-digits-featured__image" role="img" aria-label="">
+        <div
+          class="isg-digits-featured__image-media"
+          style="background-image: url('assets/img/digits-img.jpg');"
+          aria-hidden="true"
+        ></div>
+      </div>
+      <div class="cards" data-isg-featured-cards>
+        <div class="center">
+          <!-- ACF: digits_section_title -->
+          <h2 class="title title--large isg-h2">Title</h2>
+          <div class="columns columns--start">
+            <!-- ACF: digits_items (repeater): value, label, card_background — текст как в макете Digits content (.pen) -->
+            <div class="columns__item">
+              <!-- ACF: digits_items (repeater) card_background -->
+              <article
+                class="card card--featured isg-digit-card"
+                style="background-image: url('assets/img/advantages_1.jpg');"
+              >
+                <div class="isg-digit-card__shade" aria-hidden="true"></div>
+                <div class="isg-digit-card__container">
+                  <div class="isg-digit-card__inner">
+                    <p class="isg-digit-card__value">3 0,000+</p>
+                    <p class="isg-digit-card__label">tons/month</p>
+                  </div>
+                </div>
+              </article>
+            </div>
+            <div class="columns__item">
+              <article
+                class="card card--featured isg-digit-card"
+                style="background-image: url('assets/img/advantages_1.jpg');"
+              >
+                <div class="isg-digit-card__shade" aria-hidden="true"></div>
+                <div class="isg-digit-card__container">
+                  <div class="isg-digit-card__inner">
+                    <p class="isg-digit-card__value">15,000</p>
+                    <p class="isg-digit-card__label">m² facility</p>
+                  </div>
+                </div>
+              </article>
+            </div>
+            <div class="columns__item">
+              <article
+                class="card card--featured isg-digit-card"
+                style="background-image: url('assets/img/advantages_1.jpg');"
+              >
+                <div class="isg-digit-card__shade" aria-hidden="true"></div>
+                <div class="isg-digit-card__container">
+                  <div class="isg-digit-card__inner">
+                    <p class="isg-digit-card__value">24/7</p>
+                    <p class="isg-digit-card__label">QC lab</p>
+                  </div>
+                </div>
+              </article>
+            </div>
+            <div class="columns__item">
+              <article
+                class="card card--featured isg-digit-card"
+                style="background-image: url('assets/img/advantages_1.jpg');"
+              >
+                <div class="isg-digit-card__shade" aria-hidden="true"></div>
+                <div class="isg-digit-card__container">
+                  <div class="isg-digit-card__inner">
+                    <p class="isg-digit-card__value">A1</p>
+                    <p class="isg-digit-card__label">highway access</p>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

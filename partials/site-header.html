@@ -1,0 +1,80 @@
+<!-- Site header (общий с hero; в превью идёт первым в #isg-main) -->
+<header class="isg-site-header isg-hero__header" data-isg-sticky-header>
+  <div class="isg-hero__logo">
+    <!-- ACF: hero_logo -->
+    <img src="" alt="" width="107" height="33" loading="eager" />
+  </div>
+  <button
+    type="button"
+    class="isg-burger"
+    data-isg-burger
+    aria-controls="isg-nav-drawer"
+    aria-expanded="false"
+    aria-label="Open menu"
+  >
+    <span class="isg-burger__bars" aria-hidden="true"></span>
+  </button>
+  <div class="isg-hero__nav-wrap isg-header-desktop-only">
+    <nav class="isg-nav-pill" aria-label="Primary">
+      <div class="isg-nav-pill__inner">
+        <div
+          class="isg-nav-pill__row isg-nav-pill__row--slider isg-nav-pill__row--sections isg-nav-pill__row--hover-slider isg-nav-pill__row--slider--init"
+          data-isg-hover-slider
+          data-isg-section-nav
+        >
+          <span class="isg-nav-pill__slider" aria-hidden="true"></span>
+          <a class="isg-btn isg-btn--ghost-dark" href="#isg-application">Application</a>
+          <a class="isg-btn isg-btn--ghost-dark" href="#isg-application">Solutions</a>
+          <a class="isg-btn isg-btn--ghost-dark" href="#isg-product">Product range</a>
+          <a class="isg-btn isg-btn--ghost-dark" href="#isg-quality">Quality</a>
+          <a class="isg-btn isg-btn--ghost-dark" href="#isg-about">About</a>
+          <a class="isg-btn isg-btn--ghost-dark" href="#isg-rfq">Engineering</a>
+          <a class="isg-btn isg-btn--ghost-dark" href="#isg-video">3D video</a>
+          <a class="isg-btn isg-btn--ghost-dark" href="#isg-footer">Contact</a>
+        </div>
+      </div>
+    </nav>
+  </div>
+  <div class="isg-hero__lang isg-header-desktop-only">
+    <div class="isg-nav-pill isg-lang-pill">
+      <div class="isg-nav-pill__inner">
+        <div
+          class="isg-nav-pill__row isg-nav-pill__row--slider isg-lang-pill__row isg-nav-pill__row--slider--init"
+          data-isg-nav-slider
+          data-isg-lang-nav
+        >
+          <span class="isg-nav-pill__slider" aria-hidden="true"></span>
+          <a class="isg-btn isg-btn--ghost-dark isg-btn--active" href="#" data-isg-lang="en" aria-current="true">EN</a>
+          <a class="isg-btn isg-btn--ghost-dark" href="#" data-isg-lang="pl">PL</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="isg-nav-drawer" class="isg-nav-drawer" aria-hidden="true">
+    <button type="button" class="isg-nav-drawer__backdrop" data-isg-drawer-close tabindex="-1" aria-label="Close menu"></button>
+    <div class="isg-nav-drawer__panel">
+      <nav class="isg-nav-drawer__nav" aria-label="Primary mobile" data-isg-section-nav>
+        <a class="isg-btn isg-btn--ghost-dark" href="#isg-application">Application</a>
+        <a class="isg-btn isg-btn--ghost-dark" href="#isg-application">Solutions</a>
+        <a class="isg-btn isg-btn--ghost-dark" href="#isg-product">Product range</a>
+        <a class="isg-btn isg-btn--ghost-dark" href="#isg-quality">Quality</a>
+        <a class="isg-btn isg-btn--ghost-dark" href="#isg-about">About</a>
+        <a class="isg-btn isg-btn--ghost-dark" href="#isg-rfq">Engineering</a>
+        <a class="isg-btn isg-btn--ghost-dark" href="#isg-video">3D video</a>
+        <a class="isg-btn isg-btn--ghost-dark" href="#isg-footer">Contact</a>
+      </nav>
+      <div class="isg-nav-drawer__lang" data-isg-lang-nav>
+        <span class="isg-nav-drawer__lang-label">Language</span>
+        <div
+          class="isg-nav-drawer__lang-row isg-nav-pill__row isg-nav-pill__row--slider isg-nav-pill__row--slider--init"
+          data-isg-nav-slider
+          data-isg-lang-nav
+        >
+          <span class="isg-nav-pill__slider" aria-hidden="true"></span>
+          <a class="isg-btn isg-btn--ghost-dark isg-btn--active" href="#" data-isg-lang="en" aria-current="true">EN</a>
+          <a class="isg-btn isg-btn--ghost-dark" href="#" data-isg-lang="pl">PL</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>

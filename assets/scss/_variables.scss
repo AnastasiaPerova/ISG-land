@@ -1,0 +1,111 @@
+// -----------------------------------------------------------------------------
+// Типографика и отступы по мотивам Yucca Packaging (https://yucca.co.za/)
+// Источники: theme dist/style.css — :root (--gap, --header-height, --container-width),
+// fluid html font-size (vw), body (шкала как на Yucca).
+// -----------------------------------------------------------------------------
+
+// ——— Fluid root (как на Yucca): 1rem масштабируется с шириной вьюпорта ———
+$yucca-fs-html-default: 0.5787037037vw;
+$yucca-fs-html-1439: 0.641025641vw;
+$yucca-fs-html-1099: 1.3513513514vw;
+$yucca-fs-html-499: 2.6666666667vw;
+
+$yucca-bp-1439: 1439px;
+$yucca-bp-1099: 1099px;
+$yucca-bp-499: 499px;
+
+// ——— Шрифты (макет ISG) ———
+$isg-font-body: "Plus Jakarta Sans", system-ui, sans-serif;
+$isg-font-ui: "Plus Jakarta Sans", system-ui, sans-serif;
+$isg-font-mono: "DM Mono", ui-monospace, monospace;
+
+@import "typography";
+
+// ——— Отступы Yucca: --gap 1.6rem (desktop) / 1.2rem (≤1099px) ———
+$isg-gap: 1.6rem;
+$isg-gap-mobile: 1.2rem;
+
+$isg-space-3xs: 0.4rem;
+$isg-space-2xs: 0.8rem;
+$isg-space-xs: 1rem;
+$isg-space-sm: 1.2rem;
+$isg-space-md: 1.6rem;
+$isg-space-lg: 2.4rem;
+$isg-space-xl: 4rem;
+$isg-space-2xl: 8rem;
+
+$isg-header-height: 9.6rem;
+$isg-header-height-mobile: 5.6rem;
+
+// Сетка / контейнер (Yucca --container-width: 136rem)
+$isg-container-max: 1920px;
+$isg-container-width-yucca: 136rem;
+$isg-gutter: $isg-space-md;
+// Брейкпоинты сетки 12 колонок (как в Bootstrap 5)
+$isg-bp-sm: 576px;
+$isg-bp-md: 768px;
+$isg-bp-lg: 992px;
+$isg-bp-xl: 1200px;
+$isg-bp-xxl: 1400px;
+// Макс. ширина .container по ступеням (опционально, узкий «канал» контента)
+$isg-container-bs-sm: 540px;
+$isg-container-bs-md: 720px;
+$isg-container-bs-lg: 960px;
+$isg-container-bs-xl: 1140px;
+$isg-container-bs-xxl: 1320px;
+$isg-section-pad-x: 6.4rem;
+$isg-section-pad-x-mobile: $isg-space-md;
+$isg-section-pad-y-xl: 10.8rem;
+$isg-section-pad-y-bottom-xl: 18.8rem;
+$isg-section-inner-gap: 9.6rem;
+$isg-section-inner-gap-lg: 12.8rem;
+
+// Герой / крупные секции (из типичных padding в теме Yucca: 8rem, 4rem…)
+$isg-hero-pad-y-top: 8rem;
+$isg-hero-pad-y-bottom: 12.8rem;
+$isg-hero-pad-y-top-mobile: 4.8rem;
+$isg-hero-pad-y-bottom-mobile: 6.4rem;
+$isg-hero-gap-outer: 12.8rem;
+$isg-hero-gap-inner: 9.6rem;
+$isg-hero-gap-outer-mobile: 6.4rem;
+$isg-hero-gap-inner-mobile: 6.4rem;
+// Fixed header: отступ от верха вьюпорта (плюс env(safe-area) в CSS)
+$isg-sticky-header-viewport-inset: 1.75rem;
+// Hero: дополнительный зазор контейнера под нижним краем шапки
+$isg-hero-container-below-header: 1.6rem;
+
+// Прочее UI
+$isg-btn-pad-y: 1.6rem;
+$isg-btn-pad-x: 2.4rem;
+// CTA как .button на https://toptier.relats.com/ (основа + ховер --main)
+$isg-btn-relats-dark: #1d1d1d;
+$isg-btn-relats-hover-bg: #ff5710;
+$isg-btn-relats-ease: cubic-bezier(0.16, 1, 0.3, 1);
+$isg-btn-relats-duration: 0.6s;
+$isg-nav-pill-gap: 4.8rem;
+$isg-nav-pill-pad: 0.8rem;
+$isg-nav-row-height: 5.4rem;
+$isg-nav-section-link-pad-y: 1.4rem;
+$isg-nav-section-link-pad-x: 1.6rem;
+$isg-subtitle-gap: 3.2rem;
+$isg-title-group-gap: 2.4rem;
+$isg-pill-gap: 1rem;
+$isg-pill-pad-y: 0.4rem;
+$isg-pill-pad-x: 2.4rem;
+$isg-nav-pill-inner-gap: 1rem;
+$isg-header-pad-y: 1.2rem;
+$isg-header-pad-x: $isg-section-pad-x;
+$isg-header-gap: $isg-space-lg;
+$isg-drawer-pad-top: 8.8rem;
+$isg-drawer-pad-x: $isg-space-lg;
+$isg-drawer-pad-bottom: $isg-space-xl;
+$isg-drawer-nav-gap: $isg-space-2xs;
+$isg-drawer-lang-label-mb: 1rem;
+$isg-lang-pill-gap: $isg-space-2xs;
+$isg-lang-btn-pad-y: 1.6rem;
+$isg-lang-btn-pad-x: 2rem;
+// Цвета (существующие токены темы)
+$isg-color-text: #111111;
+$isg-color-light: #ffffff;
+$isg-color-muted: #6e6e6e;
+$isg-color-accent: #1925aa;

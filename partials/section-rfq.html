@@ -1,0 +1,112 @@
+<!-- Flexible Content layout: rfq -->
+<div id="isg-rfq" class="isg-rfq-section" data-isg-block="rfq">
+  <section
+    class="isg-rfq-intro"
+    style="background-image: url('assets/img/engenereeng-intro.jpg');"
+    data-isg-intro-scroll
+  >
+    <!-- ACF: rfq_intro_background -->
+    <div class="isg-rfq-intro__conteiner">
+      <div class="isg-rfq-intro__content isg-text-light">
+        <div class="isg-title-group">
+          <div class="isg-subtitle">
+            <!-- ACF: rfq_intro_kicker -->
+            <p class="isg-subtitle__text">ENGINEERING &amp; CUSTOM ORDERS</p>
+            <span class="isg-subtitle__swatch" aria-hidden="true"></span>
+          </div>
+          <!-- ACF: rfq_intro_title -->
+          <h2 class="isg-display isg-text-center">We offer flexible manufacturing tailored to project needs</h2>
+        </div>
+        <div class="isg-rfq-intro__split">
+          <!-- ACF: rfq_intro_body -->
+          <p class="isg-rfq-intro__lead">
+            Production parameters can be adapted to technical specifications, including diameter, wall thickness, steel grade, pipe length, applicable standards and documentation. Custom orders are manufactured in accordance with customer specifications.
+          </p>
+          <div class="isg-btn-group isg-btn-group--spread">
+            <div class="isg-btn-group">
+              <a class="isg-btn isg-btn--blur" href="#">Download catalogue</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="isg-rfq-content">
+    <div class="isg-rfq-row">
+      <aside class="isg-rfq-aside">
+        <div class="isg-rfq-aside__text">
+          <div class="isg-subtitle">
+            <p class="isg-subtitle__text">PRODUCT RANGE</p>
+            <span class="isg-subtitle__swatch" aria-hidden="true"></span>
+          </div>
+          <!-- ACF: rfq_aside_text -->
+          <h2 class="isg-rfq-aside__title">
+            Please send your project specifications for review. Our team will assess the requirements and prepare a quotation based on the provided information.
+          </h2>
+        </div>
+      </aside>
+      <div class="isg-rfq-form-wrap">
+        <form class="isg-rfq-form" data-isg-rfq-form>
+          <div class="isg-rfq-inputs">
+            <div class="isg-rfq-inputs-row">
+              <!-- ACF: rfq_field_company -->
+              <label class="isg-field">
+                <span class="isg-field__label">company name</span>
+                <input class="isg-field__control" type="text" name="company" autocomplete="organization" />
+              </label>
+            </div>
+            <div class="isg-rfq-inputs-row">
+              <label class="isg-field">
+                <span class="isg-field__label">* email address</span>
+                <input class="isg-field__control" type="email" name="email" autocomplete="email" required />
+              </label>
+              <label class="isg-field">
+                <span class="isg-field__label">* phone number</span>
+                <input class="isg-field__control" type="tel" name="phone" autocomplete="tel" required />
+              </label>
+            </div>
+            <div class="isg-rfq-inputs-row">
+              <label class="isg-field">
+                <span class="isg-field__label">project type</span>
+                <input class="isg-field__control" type="text" name="project_type" />
+              </label>
+            </div>
+            <div class="isg-rfq-inputs-row">
+              <label class="isg-field">
+                <span class="isg-field__label">pipe diameter</span>
+                <input class="isg-field__control" type="text" name="diameter" />
+              </label>
+              <label class="isg-field">
+                <span class="isg-field__label">wall thickness</span>
+                <input class="isg-field__control" type="text" name="wall_thickness" />
+              </label>
+            </div>
+            <div class="isg-rfq-inputs-row">
+              <label class="isg-field">
+                <span class="isg-field__label">steel grade</span>
+                <input class="isg-field__control" type="text" name="steel_grade" />
+              </label>
+              <label class="isg-field">
+                <span class="isg-field__label">quantity</span>
+                <input class="isg-field__control" type="text" name="quantity" />
+              </label>
+            </div>
+            <div class="isg-rfq-inputs-row">
+              <label class="isg-field">
+                <span class="isg-field__label">delivery location</span>
+                <input class="isg-field__control" type="text" name="delivery" />
+              </label>
+            </div>
+          </div>
+          <div class="isg-checkbox-row">
+            <input class="isg-checkbox" type="checkbox" name="terms" id="rfq-terms" value="1" required />
+            <label class="isg-checkbox-label" for="rfq-terms">I have read and accept the Terms &amp; Conditions.</label>
+          </div>
+          <div class="isg-btn-group">
+            <button class="isg-btn" type="submit">Submit form</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

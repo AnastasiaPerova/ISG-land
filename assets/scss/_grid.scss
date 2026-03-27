@@ -1,0 +1,163 @@
+// -----------------------------------------------------------------------------
+// Адаптивная сетка 12 колонок (Bootstrap-подобный API: .container, .row, .col-*)
+// -----------------------------------------------------------------------------
+
+@use "sass:math";
+
+.container-fluid {
+  width: 100%;
+  max-width: 100%;
+}
+
+.container {
+  width: 100%;
+  max-width: $isg-container-max;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: calc(#{$isg-gutter} * 0.5);
+  padding-right: calc(#{$isg-gutter} * 0.5);
+}
+
+// Узкий контейнер как у Bootstrap (не шире фиксированных шагов и не шире $isg-container-max)
+.container--bs {
+  max-width: 100%;
+  @media (min-width: $isg-bp-sm) {
+    max-width: min($isg-container-bs-sm, $isg-container-max);
+  }
+  @media (min-width: $isg-bp-md) {
+    max-width: min($isg-container-bs-md, $isg-container-max);
+  }
+  @media (min-width: $isg-bp-lg) {
+    max-width: min($isg-container-bs-lg, $isg-container-max);
+  }
+  @media (min-width: $isg-bp-xl) {
+    max-width: min($isg-container-bs-xl, $isg-container-max);
+  }
+  @media (min-width: $isg-bp-xxl) {
+    max-width: min($isg-container-bs-xxl, $isg-container-max);
+  }
+}
+
+@media (min-width: $isg-bp-md) {
+  .container,
+  .container--bs {
+    padding-left: $isg-section-pad-x;
+    padding-right: $isg-section-pad-x;
+  }
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: calc(#{$isg-gutter} * -0.5);
+  margin-right: calc(#{$isg-gutter} * -0.5);
+}
+
+.row--nowrap {
+  flex-wrap: nowrap;
+}
+
+.row--align-center {
+  align-items: center;
+}
+
+.row--justify-between {
+  justify-content: space-between;
+}
+
+.row--justify-end {
+  justify-content: flex-end;
+}
+
+.row--gap-lg {
+  row-gap: $isg-section-inner-gap;
+}
+
+@mixin isg-col-padding {
+  padding-left: calc(#{$isg-gutter} * 0.5);
+  padding-right: calc(#{$isg-gutter} * 0.5);
+}
+
+// База: колонки в .row (не цепляем сторонние классы с подстрокой col-)
+.row > [class*="col-"] {
+  box-sizing: border-box;
+  max-width: 100%;
+  @include isg-col-padding;
+}
+
+@for $i from 1 through 12 {
+  $w: math.div($i, 12) * 100%;
+
+  .col-#{$i} {
+    flex: 0 0 $w;
+    max-width: $w;
+  }
+}
+
+@media (min-width: $isg-bp-sm) {
+  @for $i from 1 through 12 {
+    $w: math.div($i, 12) * 100%;
+
+    .col-sm-#{$i} {
+      flex: 0 0 $w;
+      max-width: $w;
+    }
+  }
+}
+
+@media (min-width: $isg-bp-md) {
+  @for $i from 1 through 12 {
+    $w: math.div($i, 12) * 100%;
+
+    .col-md-#{$i} {
+      flex: 0 0 $w;
+      max-width: $w;
+    }
+  }
+}
+
+@media (min-width: $isg-bp-lg) {
+  @for $i from 1 through 12 {
+    $w: math.div($i, 12) * 100%;
+
+    .col-lg-#{$i} {
+      flex: 0 0 $w;
+      max-width: $w;
+    }
+  }
+}
+
+@media (min-width: $isg-bp-xl) {
+  @for $i from 1 through 12 {
+    $w: math.div($i, 12) * 100%;
+
+    .col-xl-#{$i} {
+      flex: 0 0 $w;
+      max-width: $w;
+    }
+  }
+}
+
+@media (min-width: $isg-bp-xxl) {
+  @for $i from 1 through 12 {
+    $w: math.div($i, 12) * 100%;
+
+    .col-xxl-#{$i} {
+      flex: 0 0 $w;
+      max-width: $w;
+    }
+  }
+}
+
+.col {
+  flex: 1 1 0;
+  min-width: 0;
+  @include isg-col-padding;
+}
+
+.col-auto {
+  flex: 0 0 auto;
+  width: auto;
+  max-width: 100%;
+  @include isg-col-padding;
+}
