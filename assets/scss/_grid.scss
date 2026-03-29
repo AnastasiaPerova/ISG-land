@@ -16,6 +16,11 @@
   margin-right: auto;
   padding-left: calc(#{$isg-gutter} * 0.5);
   padding-right: calc(#{$isg-gutter} * 0.5);
+
+  @media (max-width: ($isg-bp-md - 1px)) {
+    padding-left: $isg-section-pad-x-mobile;
+    padding-right: $isg-section-pad-x-mobile;
+  }
 }
 
 // Узкий контейнер как у Bootstrap (не шире фиксированных шагов и не шире $isg-container-max)

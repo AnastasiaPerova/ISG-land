@@ -5,8 +5,11 @@
 // display — px (стабильный «потолок» ~120px при fluid root на html).
 //
 // Иерархия (крупное → мелкое):
-//   display       — герой, .isg-display
-//   headline      — заголовок секции, .isg-h2
+//   display       — герой, .isg-display (без intro-reveal)
+//   headline      — секционный заголовок; CSS --isg-type-headline (= --isg-type-h2 по смыслу)
+//   h2 (токен)    — .isg-intro-reveal__title (побуквенное интро): var(--isg-type-h2) = headline
+//   h3 (токен)    — .isg-h2.isg-title-anim: var(--isg-type-h3), чуть меньше headline
+//   h4 (токен)    — списки качества/ценности, .isg-rfq-aside__title: var(--isg-type-h4)
 //   featured-title — подзаголовок в featured (тот же vw, меньший max)
 //   title-lg      — крупные заголовки в карточках / блоках
 //   title         — заголовки аккордеона, слайдера, футера
@@ -56,6 +59,21 @@ $isg-type-display-intro-max: 110px;
 $isg-type-headline-min: $isg-type-scale-400;
 $isg-type-headline-fluid: $isg-type-vw-headline;
 $isg-type-headline-max: 7.35rem;
+
+// H2 (визуальный): совпадает с headline — интро .isg-intro-reveal__title (перебивает .isg-display)
+$isg-type-h2-min: $isg-type-headline-min;
+$isg-type-h2-fluid: $isg-type-headline-fluid;
+$isg-type-h2-max: $isg-type-headline-max;
+
+// H3: .isg-h2.isg-title-anim — между headline и title-lg, адаптивный clamp
+$isg-type-vw-h3: 3.25vw;
+$isg-type-h3-min: 1.72rem;
+$isg-type-h3-max: 5.25rem;
+
+// H4: пункты списков quality/about, заголовок aside RFQ (раньше были разные clamp — сведены)
+$isg-type-vw-h4: 2.45vw;
+$isg-type-h4-min: 1.4rem;
+$isg-type-h4-max: 3.5rem;
 
 // Featured / врезанный крупный заголовок: тот же рост vw, ниже потолок rem
 $isg-type-featured-title-max: 3.2rem;
@@ -148,10 +166,12 @@ $isg-line-height-lead: 1.3125;
 
 $isg-letter-display: -0.048em;
 $isg-letter-h2: -0.02em;
+$isg-letter-h3: -0.019em;
 $isg-letter-featured-title: -0.018em;
 $isg-letter-title-lg: -0.022em;
 $isg-letter-title: -0.015em;
 $isg-letter-title-sm: -0.012em;
+$isg-letter-h4: $isg-letter-title;
 $isg-letter-stat: $isg-letter-h2;
 $isg-letter-lead: -0.002em;
 $isg-letter-body-lg: -0.01em;

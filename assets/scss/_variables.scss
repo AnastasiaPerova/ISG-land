@@ -23,7 +23,7 @@ $isg-font-mono: "DM Mono", ui-monospace, monospace;
 
 // ——— Отступы Yucca: --gap 1.6rem (desktop) / 1.2rem (≤1099px) ———
 $isg-gap: 1.4rem;
-$isg-gap-mobile: 1.2rem;
+$isg-gap-mobile: 1.55rem;
 
 $isg-space-3xs: 0.4rem;
 $isg-space-2xs: 0.8rem;
@@ -54,7 +54,8 @@ $isg-container-bs-lg: 960px;
 $isg-container-bs-xl: 1140px;
 $isg-container-bs-xxl: 1320px;
 $isg-section-pad-x: 6.4rem;
-$isg-section-pad-x-mobile: $isg-space-md;
+/* Мобильные поля контента (реф. relats.com — больше воздуха по бокам) */
+$isg-section-pad-x-mobile: clamp(1.85rem, 6.25vw, 2.85rem);
 $isg-section-pad-y-xl: 10.8rem;
 $isg-section-pad-y-bottom-xl: 18.8rem;
 $isg-section-inner-gap: 9.6rem;
@@ -144,5 +145,10 @@ $isg-radius-3xl: 28px;
 $isg-radius-pill: 55px;
 $isg-radius-section-top: 64px 64px 0 0;
 $isg-radius-visual: 64px;
+/* Планшеты/телефоны — чуть мягче углы (реф. relats.com) */
+$isg-radius-lg-m: 20px;
+$isg-radius-xl-m: 26px;
+$isg-radius-2xl-m: 32px;
+$isg-radius-section-top-m: 48px 48px 0 0;
 $isg-radius-circle: 50%;
 $isg-radius-none: 0;

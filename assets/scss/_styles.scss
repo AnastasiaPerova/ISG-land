@@ -27,13 +27,14 @@ html {
 
 @media (max-width: $yucca-bp-1099) {
   html {
-    font-size: $yucca-fs-html-1099;
+    /* Чистый vw давал root <11px на ширинах ~500–800px; нижняя граница как на yucca.co.za */
+    font-size: clamp(13px, 1.38vw, 16px);
   }
 }
 
 @media (max-width: $yucca-bp-499) {
   html {
-    font-size: $yucca-fs-html-499;
+    font-size: clamp(15px, 4.1vw, 18px);
   }
 }
 
@@ -78,6 +79,11 @@ html {
   --isg-type-title-sm: #{$isg-type-title-sm};
   --isg-type-button: #{$isg-type-button};
   --isg-font-size-base: var(--isg-type-body);
+
+  /* Семантика заголовков (см. _typography.scss): h2 = headline; h3/h4 — отдельные clamp */
+  --isg-type-h2: var(--isg-type-headline);
+  --isg-type-h3: #{clamp(#{$isg-type-h3-min}, #{$isg-type-vw-h3}, #{$isg-type-h3-max})};
+  --isg-type-h4: #{clamp(#{$isg-type-h4-min}, #{$isg-type-vw-h4}, #{$isg-type-h4-max})};
 }
 .isg-text-light{
   color: $isg-color-light;
@@ -229,6 +235,12 @@ select {
   color: $isg-color-text;
 }
 
+/* Секции с title-anim: визуальный H3 (чуть меньше базового .isg-h2) */
+.isg-h2.isg-title-anim {
+  font-size: var(--isg-type-h3);
+  letter-spacing: $isg-letter-h3;
+}
+
 /* Заголовки: scroll-driven reveal — маска по строкам (title-anim.js) */
 .isg-title-anim {
   .isg-title-anim__line-mask {
@@ -298,6 +310,18 @@ select {
 .isg-ui-type-headline {
   font-size: var(--isg-type-headline);
   letter-spacing: $isg-letter-h2;
+}
+.isg-ui-type-h2 {
+  font-size: var(--isg-type-h2);
+  letter-spacing: $isg-letter-h2;
+}
+.isg-ui-type-h3 {
+  font-size: var(--isg-type-h3);
+  letter-spacing: $isg-letter-h3;
+}
+.isg-ui-type-h4 {
+  font-size: var(--isg-type-h4);
+  letter-spacing: $isg-letter-h4;
 }
 .isg-ui-type-featured-title {
   font-size: var(--isg-type-featured-title);
@@ -2306,6 +2330,12 @@ body.isg-nav-drawer-open {
   color: transparent;
 }
 
+/* Побуквенное интро: кегль H2 (headline), не .isg-display */
+.isg-display.isg-intro-reveal__title {
+  font-size: var(--isg-type-h2);
+  letter-spacing: $isg-letter-h2;
+}
+
 .isg-intro-reveal__chars {
   display: block;
   width: 100%;
@@ -3183,7 +3213,8 @@ body.isg-nav-drawer-open {
 
 .isg-quality-list-wrap .isg-quality-list-item__text {
   color: #ffffff;
-  font-size: clamp(1.35rem, 2.3vw, 52px);
+  font-size: var(--isg-type-h4);
+  letter-spacing: $isg-letter-h4;
   display: block;
   transform: scale(0.92);
   transform-origin: center center;
@@ -3392,11 +3423,10 @@ $isg-quality-icon-ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .isg-quality-list-item__text {
-  /* ~30px на крупных экранах */
-  font-size: clamp(1.35rem, 2.3vw, 52px);
+  font-size: var(--isg-type-h4);
   font-weight: 500;
   line-height: 1.2;
-  letter-spacing: $isg-letter-title;
+  letter-spacing: $isg-letter-h4;
   margin: 0;
   color: #000000;
 }
@@ -3684,8 +3714,8 @@ $isg-quality-icon-ease: cubic-bezier(0.22, 1, 0.36, 1);
 
 .isg-about-values .isg-about-value-item__title {
   color: #ffffff;
-  letter-spacing: $isg-letter-title;
-  font-size: clamp(1.35rem, 2.3vw, 52px);
+  letter-spacing: $isg-letter-h4;
+  font-size: var(--isg-type-h4);
   display: block;
   transform: scale(0.92);
   transform-origin: center center;
@@ -3757,10 +3787,9 @@ $isg-quality-icon-ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .isg-about-value-item__title {
-  /* ~40px на крупных экранах */
-  font-size: clamp(1.35rem, 2.1vw, 40px);
+  font-size: var(--isg-type-h4);
   font-weight: 500;
-  letter-spacing: $isg-letter-title-lg;
+  letter-spacing: $isg-letter-h4;
   line-height: 1.2;
   margin: 0;
   color: #000000;
@@ -4724,9 +4753,9 @@ button.isg-slider-item__img,
 
 .isg-rfq-aside__title {
   margin: 0;
-  font-size: clamp(1.35rem, 2.3vw, 52px);
+  font-size: var(--isg-type-h4);
   font-weight: 400;
-  letter-spacing: -0.02em;
+  letter-spacing: $isg-letter-h4;
   line-height: 1.25;
   color: #ffffff;
   max-width: 42ch;
@@ -5438,7 +5467,43 @@ button.isg-slider-item__img,
 
 @media (max-width: 767px) {
   .isg-to-top {
-    right: 24px;
+    right: $isg-section-pad-x-mobile;
     bottom: 6.4rem;
   }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Мобильная плотность: yucca.co.za — читаемый кегль; relats.com — поля и скругления */
+/* -------------------------------------------------------------------------- */
+@media (max-width: $yucca-bp-1099) {
+  .isg-title-group {
+    gap: clamp(2rem, 5.5vw, #{$isg-title-group-gap});
+  }
+
+  .isg-digit-card,
+  .isg-filled-item--about,
+  .isg-spec-card {
+    border-radius: $isg-radius-xl-m;
+  }
+
+  .isg-slider-item__img,
+  .isg-slider-item__caption,
+  .isg-app-left,
+  .isg-quality-list-wrap,
+  .isg-about-values,
+  .isg-about-feature-card,
+  .isg-about-feature-card__content-stack,
+  .isg-about-feature-card__content-slide,
+  .isg-rfq-aside,
+  .isg-accordion__media {
+    border-radius: $isg-radius-2xl-m;
+  }
+
+  .isg-product-content,
+  .isg-about-text-grid,
+  .isg-about-gallery-block,
+  .isg-rfq-content {
+    border-radius: $isg-radius-section-top-m;
+  }
+
 }

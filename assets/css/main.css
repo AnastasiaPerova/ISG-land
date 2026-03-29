@@ -1,11 +1,13 @@
 @charset "UTF-8";
 /** Потолок кегля display в fullscreen-интро (product / quality / about / rfq) */
+/* Мобильные поля контента (реф. relats.com — больше воздуха по бокам) */
 /* Высота внешнего блока пилюли в хедере (padding + ряд кнопок) */
 /* #1925AA — акцент, hover «Download catalogue» в hero и др. */
 /* Подложка блока карточек (digits featured .cards) — полупрозрачная над фото */
 /* Панели .isg-quality-list-wrap и .isg-about-values — одинаковый внутренний отступ */
 /* Расстояние между .isg-quality-list-item в колонке */
 /* Иконка — надпись: как в макете ~8–12px; меньше $isg-quality-list-gap */
+/* Планшеты/телефоны — чуть мягче углы (реф. relats.com) */
 @import "../css/vendor/tiny-slider.css";
 .container-fluid {
   width: 100%;
@@ -19,6 +21,12 @@
   margin-right: auto;
   padding-left: calc(1.6rem * 0.5);
   padding-right: calc(1.6rem * 0.5);
+}
+@media (max-width: 767px) {
+  .container {
+    padding-left: clamp(1.85rem, 6.25vw, 2.85rem);
+    padding-right: clamp(1.85rem, 6.25vw, 2.85rem);
+  }
 }
 
 .container--bs {
@@ -444,12 +452,13 @@ html {
 }
 @media (max-width: 1099px) {
   html {
-    font-size: 1.3513513514vw;
+    /* Чистый vw давал root <11px на ширинах ~500–800px; нижняя граница как на yucca.co.za */
+    font-size: clamp(13px, 1.38vw, 16px);
   }
 }
 @media (max-width: 499px) {
   html {
-    font-size: 2.6666666667vw;
+    font-size: clamp(15px, 4.1vw, 18px);
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -483,6 +492,10 @@ html {
   --isg-type-title-sm: 1.15rem;
   --isg-type-button: 1.85rem;
   --isg-font-size-base: var(--isg-type-body);
+  /* Семантика заголовков (см. _typography.scss): h2 = headline; h3/h4 — отдельные clamp */
+  --isg-type-h2: var(--isg-type-headline);
+  --isg-type-h3: clamp(1.72rem, 3.25vw, 5.25rem);
+  --isg-type-h4: clamp(1.4rem, 2.45vw, 3.5rem);
 }
 
 .isg-text-light {
@@ -491,7 +504,7 @@ html {
 
 @media (max-width: 1099px) {
   :root {
-    --isg-gap: 1.2rem;
+    --isg-gap: 1.55rem;
     --isg-header-height: 5.6rem;
   }
 }
@@ -627,6 +640,12 @@ select {
   color: #111111;
 }
 
+/* Секции с title-anim: визуальный H3 (чуть меньше базового .isg-h2) */
+.isg-h2.isg-title-anim {
+  font-size: var(--isg-type-h3);
+  letter-spacing: -0.019em;
+}
+
 /* Заголовки: scroll-driven reveal — маска по строкам (title-anim.js) */
 .isg-title-anim .isg-title-anim__line-mask {
   display: block;
@@ -694,6 +713,21 @@ select {
 .isg-ui-type-headline {
   font-size: var(--isg-type-headline);
   letter-spacing: -0.02em;
+}
+
+.isg-ui-type-h2 {
+  font-size: var(--isg-type-h2);
+  letter-spacing: -0.02em;
+}
+
+.isg-ui-type-h3 {
+  font-size: var(--isg-type-h3);
+  letter-spacing: -0.019em;
+}
+
+.isg-ui-type-h4 {
+  font-size: var(--isg-type-h4);
+  letter-spacing: -0.015em;
 }
 
 .isg-ui-type-featured-title {
@@ -1801,14 +1835,14 @@ body.isg-nav-drawer-open {
 
 @media (max-width: 1023px) {
   .isg-site-header.isg-hero__header {
-    padding: 1.2rem 1.6rem;
+    padding: 1.2rem clamp(1.85rem, 6.25vw, 2.85rem);
   }
   .isg-site-header__chrome {
     flex-wrap: nowrap;
     gap: 1.6rem;
   }
   .isg-hero {
-    padding: 0 1.6rem 6.4rem;
+    padding: 0 clamp(1.85rem, 6.25vw, 2.85rem) 6.4rem;
     gap: 6.4rem;
     min-height: 100dvh;
     min-height: 100svh;
@@ -2060,7 +2094,7 @@ body.isg-nav-drawer-open {
     min-height: auto;
     margin-left: 0;
     will-change: auto;
-    padding: min(8vw, 5.5rem) 1.6rem min(10vw, 3rem);
+    padding: min(8vw, 5.5rem) clamp(1.85rem, 6.25vw, 2.85rem) min(10vw, 3rem);
   }
   .isg-digits-section.component--featured .scroll .inner .cards .center {
     width: 100%;
@@ -2337,8 +2371,8 @@ body.isg-nav-drawer-open {
     overflow: visible;
   }
   .isg-app__inner {
-    padding-left: 1.6rem;
-    padding-right: 1.6rem;
+    padding-left: clamp(1.85rem, 6.25vw, 2.85rem);
+    padding-right: clamp(1.85rem, 6.25vw, 2.85rem);
     height: auto;
     max-height: none;
     min-height: 100svh;
@@ -2581,6 +2615,12 @@ body.isg-nav-drawer-open {
 .isg-intro-reveal__title {
   margin: 0;
   color: transparent;
+}
+
+/* Побуквенное интро: кегль H2 (headline), не .isg-display */
+.isg-display.isg-intro-reveal__title {
+  font-size: var(--isg-type-h2);
+  letter-spacing: -0.02em;
 }
 
 .isg-intro-reveal__chars {
@@ -3428,7 +3468,8 @@ body.isg-nav-drawer-open {
 
 .isg-quality-list-wrap .isg-quality-list-item__text {
   color: #ffffff;
-  font-size: clamp(1.35rem, 2.3vw, 52px);
+  font-size: var(--isg-type-h4);
+  letter-spacing: -0.015em;
   display: block;
   transform: scale(0.92);
   transform-origin: center center;
@@ -3624,8 +3665,7 @@ body.isg-nav-drawer-open {
   }
 }
 .isg-quality-list-item__text {
-  /* ~30px на крупных экранах */
-  font-size: clamp(1.35rem, 2.3vw, 52px);
+  font-size: var(--isg-type-h4);
   font-weight: 500;
   line-height: 1.2;
   letter-spacing: -0.015em;
@@ -3677,7 +3717,7 @@ body.isg-nav-drawer-open {
     --isg-quality-content-pad-top: 2.4rem;
     --isg-quality-content-pad-bottom: var(--isg-quality-content-pad-top);
     padding-top: var(--isg-quality-content-pad-top);
-    padding-inline: 1.6rem;
+    padding-inline: clamp(1.85rem, 6.25vw, 2.85rem);
     padding-bottom: var(--isg-quality-content-pad-bottom);
   }
   .isg-quality-content__track {
@@ -3889,7 +3929,7 @@ body.isg-nav-drawer-open {
 .isg-about-values .isg-about-value-item__title {
   color: #ffffff;
   letter-spacing: -0.015em;
-  font-size: clamp(1.35rem, 2.3vw, 52px);
+  font-size: var(--isg-type-h4);
   display: block;
   transform: scale(0.92);
   transform-origin: center center;
@@ -3959,10 +3999,9 @@ body.isg-nav-drawer-open {
 }
 
 .isg-about-value-item__title {
-  /* ~40px на крупных экранах */
-  font-size: clamp(1.35rem, 2.1vw, 40px);
+  font-size: var(--isg-type-h4);
   font-weight: 500;
-  letter-spacing: -0.022em;
+  letter-spacing: -0.015em;
   line-height: 1.2;
   margin: 0;
   color: #000000;
@@ -4109,7 +4148,7 @@ body.isg-nav-drawer-open {
     --isg-about-content-pad-top: 2.4rem;
     --isg-about-content-pad-bottom: var(--isg-about-content-pad-top);
     padding-top: var(--isg-about-content-pad-top);
-    padding-inline: 1.6rem;
+    padding-inline: clamp(1.85rem, 6.25vw, 2.85rem);
     padding-bottom: var(--isg-about-content-pad-bottom);
   }
   .isg-about-content__track {
@@ -4233,7 +4272,7 @@ body.isg-nav-drawer-open {
 
 @media (max-width: 1023px) {
   .isg-about-team-block {
-    padding: 10.8rem 1.6rem 9.6rem;
+    padding: 10.8rem clamp(1.85rem, 6.25vw, 2.85rem) 9.6rem;
   }
   .isg-about-team-block__inner {
     gap: 12.8rem;
@@ -4901,9 +4940,9 @@ button.isg-slider-item__img,
 
 .isg-rfq-aside__title {
   margin: 0;
-  font-size: clamp(1.35rem, 2.3vw, 52px);
+  font-size: var(--isg-type-h4);
   font-weight: 400;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.015em;
   line-height: 1.25;
   color: #ffffff;
   max-width: 42ch;
@@ -5585,7 +5624,38 @@ button.isg-slider-item__img,
 
 @media (max-width: 767px) {
   .isg-to-top {
-    right: 24px;
+    right: clamp(1.85rem, 6.25vw, 2.85rem);
     bottom: 6.4rem;
+  }
+}
+/* -------------------------------------------------------------------------- */
+/* Мобильная плотность: yucca.co.za — читаемый кегль; relats.com — поля и скругления */
+/* -------------------------------------------------------------------------- */
+@media (max-width: 1099px) {
+  .isg-title-group {
+    gap: clamp(2rem, 5.5vw, 2.4rem);
+  }
+  .isg-digit-card,
+  .isg-filled-item--about,
+  .isg-spec-card {
+    border-radius: 26px;
+  }
+  .isg-slider-item__img,
+  .isg-slider-item__caption,
+  .isg-app-left,
+  .isg-quality-list-wrap,
+  .isg-about-values,
+  .isg-about-feature-card,
+  .isg-about-feature-card__content-stack,
+  .isg-about-feature-card__content-slide,
+  .isg-rfq-aside,
+  .isg-accordion__media {
+    border-radius: 32px;
+  }
+  .isg-product-content,
+  .isg-about-text-grid,
+  .isg-about-gallery-block,
+  .isg-rfq-content {
+    border-radius: 48px 48px 0 0;
   }
 }
