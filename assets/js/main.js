@@ -9,7 +9,6 @@ import { initLangNav } from "./blocks/lang-nav.js";
 import { initDigitsFeatured } from "./blocks/digits-featured.js";
 import { initApplicationScroll } from "./blocks/application-scroll.js";
 import { initQualityScroll } from "./blocks/quality-scroll.js";
-import { initAboutScroll } from "./blocks/about-scroll.js";
 import { initIntroSectionScroll } from "./blocks/intro-section-scroll.js";
 import { initIntroBgEntranceScale } from "./blocks/intro-bg-entrance-scale.js";
 import { initIntroExitBlur } from "./blocks/intro-exit-blur.js";
@@ -68,7 +67,6 @@ export async function initIsgPage(root = document.body) {
   disposers.push(initSectionAnchors(root));
   disposers.push(initFooterReveal(root));
   disposers.push(initQualityScroll(root, { getLenis }));
-  disposers.push(initAboutScroll(root, { getLenis }));
   disposers.push(initIntroSectionScroll(root));
   disposers.push(initIntroBgEntranceScale(root));
   disposers.push(initIntroExitBlur(root));
@@ -97,6 +95,51 @@ async function fetchPartialsInto(target) {
   }
 }
 
+/**
+ * Ждёт decode всех <img> в контейнере (в т.ч. после вставки partials).
+ * @param {ParentNode} root
+ * @param {number} [perImageCapMs]
+ */
+function waitForImages(root, perImageCapMs = 12000) {
+  const images = root.querySelectorAll("img");
+  if (!images.length) return Promise.resolve();
+  return Promise.all(
+    [...images].map((img) =>
+      Promise.race([
+        img.complete
+          ? Promise.resolve()
+          : new Promise((resolve) => {
+              img.addEventListener("load", resolve, { once: true });
+              img.addEventListener("error", resolve, { once: true });
+            }),
+        new Promise((resolve) => setTimeout(resolve, perImageCapMs)),
+      ]),
+    ),
+  );
+}
+
+async function waitForFonts() {
+  try {
+    if (document.fonts?.ready) await document.fonts.ready;
+  } catch (_) {
+    /* noop */
+  }
+}
+
+async function hidePreloader() {
+  const el = document.getElementById("isg-preloader");
+  if (!el) {
+    document.body.classList.remove("isg-preloader-active");
+    return;
+  }
+  el.setAttribute("aria-busy", "false");
+  el.classList.add("isg-preloader--done");
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  await new Promise((r) => setTimeout(r, reduced ? 0 : 460));
+  document.body.classList.remove("isg-preloader-active");
+  el.remove();
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
   const main = document.getElementById("isg-main");
   if (!main) return;
@@ -107,10 +150,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error(e);
     main.innerHTML =
       "<p style=\"padding:2rem;font-family:sans-serif\">Запустите локальный сервер из папки темы (<code>npx serve .</code>), чтобы partials подгружались через fetch.</p>";
+    await hidePreloader();
     return;
   }
 
-  await initIsgPage(main);
+  try {
+    await initIsgPage(main);
+    await waitForFonts();
+    await waitForImages(main);
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+  } catch (e) {
+    console.error(e);
+  } finally {
+    await hidePreloader();
+  }
 });
 
 window.ISG = { initIsgPage, destroyIsgPage, syncNavPillSliders };

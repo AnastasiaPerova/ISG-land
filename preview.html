@@ -24,12 +24,25 @@
     <!-- tiny-slider: CJS-сборка задаёт глобальный tns(); ES import часто падает в браузере -->
     <script src="assets/js/vendor/tiny-slider.min.js"></script>
   </head>
-  <body>
+  <body class="isg-preloader-active">
     <!--
       Локальный просмотр: из каталога wp-theme-isg выполните npm run dev
       (SCSS watch + сервер на http://localhost:5173 с автообновлением).
       fetch() для partials не работает с file://.
     -->
+    <div
+      id="isg-preloader"
+      class="isg-preloader"
+      role="status"
+      aria-live="polite"
+      aria-busy="true"
+      aria-label="Loading page"
+    >
+      <div class="isg-preloader__inner">
+        <span class="isg-preloader__mark" aria-hidden="true"></span>
+        <span class="isg-preloader__sr">Loading…</span>
+      </div>
+    </div>
     <main id="isg-main"></main>
     <script type="module" src="assets/js/main.js"></script>
   </body>

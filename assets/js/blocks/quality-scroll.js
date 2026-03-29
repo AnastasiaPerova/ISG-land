@@ -3,8 +3,10 @@ import gsap from "gsap";
 /**
  * Quality slides по принципу блока slides на https://toptier.relats.com/ :
  * — длинный трек, липкая сцена;
- * — прогресс 0…1 от document scrollY вдоль трека (корректно с Lenis);
+ * — прогресс 0…1 вдоль трека: при Lenis — lenis.scroll + только lenis «scroll» (без дубля window);
  * — клик по пункту (аналог .bottom .label): lenis.scrollTo(маркер, { offset: -1, … }).
+ *
+ * About (`data-isg-quality-about` на треке): те же маски для фото + стек `.isg-about-feature-card__content-stack` (yPercent).
  *
  * ScrollTrigger не используем: с Lenis без scrollerProxy scrub/onUpdate часто расходятся с реальным скроллом.
  */
@@ -13,14 +15,54 @@ function clamp01(x) {
   return Math.min(1, Math.max(0, x));
 }
 
+/**
+ * Плавное раскрытие маски: smootherstep (Ken Perlin) — нулевые 1-я и 2-я производные на 0/1,
+ * мягче, чем ease-in-out cubic/quint, при той же длительности фазы.
+ */
+function smootherstep(t) {
+  const x = clamp01(t);
+  return x * x * x * (x * (x * 6 - 15) + 10);
+}
+
+/** Соответствует $isg-radius-2xl — скругление в clip-path: inset(… round …) */
+const ISG_QUALITY_SLIDE_CLIP_RADIUS = 18;
+
+/**
+ * Прогресс стека 0…(n−1): строго линейно от p — наезд картинок 1:1 со скроллом (в т.ч. со сглаживанием Lenis).
+ */
+function slideTFromProgress01(pFloat, n) {
+  const maxT = Math.max(1, n - 1);
+  return clamp01(pFloat) * maxT;
+}
+
+/** Согласовать с min-height трека и со sticky (svh/dvh в CSS) */
+function getViewportHeight() {
+  if (typeof window !== "undefined" && window.visualViewport?.height) {
+    return window.visualViewport.height;
+  }
+  return window.innerHeight;
+}
+
 function progressForIndex(index, n) {
   if (n <= 1) return 0;
   return clamp01(index / (n - 1));
 }
 
-/** Согласован с getBoundingClientRect(): только DOM scroll, не lenis.scroll */
+/** Нативный scroll (без Lenis) */
 function getScrollY() {
   return window.pageYOffset ?? document.documentElement.scrollTop ?? 0;
+}
+
+/**
+ * Текущая позиция скролла: с Lenis — lenis.scroll (animatedScroll), иначе DOM.
+ * Так trackProgress01 совпадает с тем, что реально отрисовано при сглаженном скролле.
+ */
+function getScrollYForProgress(getLenis) {
+  const lenis = typeof getLenis === "function" ? getLenis() : null;
+  if (lenis && typeof lenis.scroll === "number") {
+    return lenis.scroll;
+  }
+  return getScrollY();
 }
 
 /** Как `section-anchors` / `scroll-margin`: низ фикс. хедера (px) */
@@ -33,17 +75,16 @@ function getHeaderScrollOffset() {
 }
 
 /**
- * @param {ParentNode} [root]
+ * Один трек `[data-isg-quality-scroll]`.
+ * @param {Element} track
  * @param {{ getLenis?: () => { on: Function; off: Function; scrollTo: Function } | null }} [options]
  */
-export function initQualityScroll(root = document, options = {}) {
+function initOneQualityScrollTrack(track, options = {}) {
   const getLenis =
     typeof options.getLenis === "function" ? options.getLenis : () => null;
 
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const mq = window.matchMedia("(min-width: 1100px)");
-  const track = root.querySelector("[data-isg-quality-scroll]");
-  if (!track) return () => {};
 
   const items = Array.from(track.querySelectorAll("[data-isg-quality-index]"));
   const slides = Array.from(track.querySelectorAll("[data-isg-quality-slide]"));
@@ -51,6 +92,19 @@ export function initQualityScroll(root = document, options = {}) {
   const n = slides.length;
   if (n === 0 || items.length !== n) {
     return () => {};
+  }
+
+  const aboutTrack = track.hasAttribute("data-isg-quality-about");
+  let contentStackSlides = [];
+  if (aboutTrack) {
+    contentStackSlides = Array.from(
+      track.querySelectorAll(
+        ".isg-about-feature-card__content-stack [data-isg-about-content-slide]",
+      ),
+    );
+    if (contentStackSlides.length !== n) {
+      contentStackSlides = [];
+    }
   }
 
   /** @type {(() => void)[]} */
@@ -89,9 +143,9 @@ export function initQualityScroll(root = document, options = {}) {
     }
     /**
      * Нужно: span = end − start = (H − vh + header) = (n − 1) × vh (ровно n−1 «экрана» скролла).
-     * При H = n×vh получалось span = (n−1)×vh + header — лишняя прокрутка после последнего слайда.
+     * vh — тот же источник, что в trackProgress01 (visualViewport при наличии).
      */
-    const vh = window.innerHeight;
+    const vh = getViewportHeight();
     const header = getHeaderScrollOffset();
     const h = Math.max(0, n * vh - header);
     track.style.minHeight = `${Math.max(vh, h)}px`;
@@ -100,7 +154,7 @@ export function initQualityScroll(root = document, options = {}) {
   const layoutMarkers = () => {
     if (markers.length !== n) return;
     const trackH = track.offsetHeight;
-    const vh = window.innerHeight;
+    const vh = getViewportHeight();
     const header = getHeaderScrollOffset();
     const span = Math.max(1, trackH - vh + header);
     markers.forEach((el, i) => {
@@ -114,11 +168,11 @@ export function initQualityScroll(root = document, options = {}) {
    * до момента, когда низ трека — у низа вьюпорта (как на Relats), без лишнего хвоста.
    */
   const trackProgress01 = () => {
-    const sy = getScrollY();
+    const sy = getScrollYForProgress(getLenis);
     const rect = track.getBoundingClientRect();
     const trackTop = rect.top + sy;
     const trackBottom = rect.bottom + sy;
-    const vh = window.innerHeight;
+    const vh = getViewportHeight();
     const header = getHeaderScrollOffset();
     const start = trackTop - header;
     const end = trackBottom - vh;
@@ -127,24 +181,69 @@ export function initQualityScroll(root = document, options = {}) {
     return clamp01((sy - start) / span);
   };
 
-  const setSlidesStack = (pFloat) => {
-    const t = clamp01(pFloat) * Math.max(1, n - 1);
+  const setSlidesStackFromT = (t) => {
     slides.forEach((el, i) => {
-      const yPercent = i === 0 ? 0 : 100 * clamp01(i - t);
-      const below = yPercent >= 99.5;
+      const raw = i === 0 ? 0 : clamp01(i - t);
+      const eased = reduced ? raw : smootherstep(raw);
+      const reveal = i === 0 ? 0 : 100 * eased;
+      const below = reveal >= 99.98;
+      /** Маска снизу + скругление (round), плавность через smootherstep на raw */
+      const clipPath =
+        i === 0
+          ? "none"
+          : `inset(0 0 ${reveal}% 0 round ${ISG_QUALITY_SLIDE_CLIP_RADIUS}px)`;
       gsap.set(el, {
-        yPercent,
+        yPercent: 0,
+        clipPath,
         zIndex: i + 1,
-        opacity: 1,
+        opacity: below ? 0 : 1,
         visibility: below ? "hidden" : "visible",
         force3D: true,
       });
     });
   };
 
-  const setActiveItem = (pFloat) => {
-    const t = clamp01(pFloat) * Math.max(1, n - 1);
-    const active = Math.round(t);
+  /** Стеклянная панель About: yPercent, как в прежнем about-scroll */
+  /** Стеклянная панель About: смена сверху вниз (yPercent −100→0), ушедший слайд вниз (100). */
+  const setContentStackFromT = (t) => {
+    if (!contentStackSlides.length) return;
+    contentStackSlides.forEach((el, i) => {
+      if (i === 0) {
+        gsap.set(el, {
+          yPercent: 0,
+          zIndex: i + 1,
+          opacity: 1,
+          visibility: "visible",
+          force3D: true,
+        });
+        return;
+      }
+      if (t > i) {
+        gsap.set(el, {
+          yPercent: 100,
+          zIndex: i + 1,
+          opacity: 0,
+          visibility: "hidden",
+          force3D: true,
+        });
+        return;
+      }
+      const raw = clamp01(i - t);
+      const eased = reduced ? raw : smootherstep(raw);
+      const yPercent = -100 * eased;
+      const farAbove = yPercent <= -99.98;
+      gsap.set(el, {
+        yPercent,
+        zIndex: i + 1,
+        opacity: farAbove ? 0 : 1,
+        visibility: farAbove ? "hidden" : "visible",
+        force3D: true,
+      });
+    });
+  };
+
+  const setActiveItemFromT = (t) => {
+    const active = Math.min(n - 1, Math.max(0, Math.round(t)));
     items.forEach((el, i) => {
       const on = i === active;
       el.classList.toggle("isg-quality-list-item--active", on);
@@ -153,13 +252,22 @@ export function initQualityScroll(root = document, options = {}) {
     slides.forEach((el, i) => {
       el.classList.toggle("isg-quality-visual__slide--active", i === active);
     });
+    contentStackSlides.forEach((el, i) => {
+      el.classList.toggle("isg-about-feature-card__content-slide--active", i === active);
+    });
+  };
+
+  const setActiveItem = (pFloat) => {
+    setActiveItemFromT(slideTFromProgress01(pFloat, n));
   };
 
   const applyFrame = (progress) => {
     const p = clamp01(progress);
-    setActiveItem(p);
+    const t = slideTFromProgress01(p, n);
+    setActiveItemFromT(t);
     if (!mq.matches) return;
-    setSlidesStack(p);
+    setSlidesStackFromT(t);
+    setContentStackFromT(t);
   };
 
   const syncFromScroll = () => {
@@ -186,9 +294,9 @@ export function initQualityScroll(root = document, options = {}) {
     if (lenis && marker) {
       lenis.scrollTo(marker, {
         offset: -getHeaderScrollOffset(),
-        duration: 1.15,
+        duration: 1.35,
         force: true,
-        easing: (t) => 1 - (1 - t) ** 3,
+        easing: (x) => 1 - (1 - x) ** 4,
         onComplete: () => {
           applyFrame(trackProgress01());
         },
@@ -196,7 +304,7 @@ export function initQualityScroll(root = document, options = {}) {
       return;
     }
     if (marker) {
-      const sy = getScrollY();
+      const sy = getScrollYForProgress(getLenis);
       const rect = marker.getBoundingClientRect();
       const y = Math.max(0, rect.top + sy - getHeaderScrollOffset());
       window.scrollTo({ top: y, behavior: reduced ? "auto" : "smooth" });
@@ -254,6 +362,9 @@ export function initQualityScroll(root = document, options = {}) {
 
     if (reduced || !mq.matches) {
       slides.forEach((el) => {
+        gsap.set(el, { clearProps: "transform,clipPath,opacity,visibility,zIndex" });
+      });
+      contentStackSlides.forEach((el) => {
         gsap.set(el, { clearProps: "transform,opacity,visibility,zIndex" });
       });
       items.forEach((el, i) => {
@@ -262,6 +373,9 @@ export function initQualityScroll(root = document, options = {}) {
       });
       slides.forEach((el, i) => {
         el.classList.toggle("isg-quality-visual__slide--active", i === 0);
+      });
+      contentStackSlides.forEach((el, i) => {
+        el.classList.toggle("isg-about-feature-card__content-slide--active", i === 0);
       });
       if (!mq.matches) {
         setupMobileSlidesScroll();
@@ -277,12 +391,12 @@ export function initQualityScroll(root = document, options = {}) {
     if (lenis) {
       lenis.on("scroll", syncFromScroll);
       desktopOff.push(() => lenis.off("scroll", syncFromScroll));
+    } else {
+      window.addEventListener("scroll", syncFromScroll, { passive: true });
+      desktopOff.push(() =>
+        window.removeEventListener("scroll", syncFromScroll),
+      );
     }
-    /* Резерв: нативный scroll (Lenis всё равно двигает documentElement; часть окружений не эмитит то же, что нужно для синка) */
-    window.addEventListener("scroll", syncFromScroll, { passive: true });
-    desktopOff.push(() =>
-      window.removeEventListener("scroll", syncFromScroll),
-    );
 
     const onResize = () => {
       layoutTrackHeight();
@@ -291,6 +405,13 @@ export function initQualityScroll(root = document, options = {}) {
     };
     window.addEventListener("resize", onResize);
     desktopOff.push(() => window.removeEventListener("resize", onResize));
+
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", onResize);
+      desktopOff.push(() =>
+        window.visualViewport.removeEventListener("resize", onResize),
+      );
+    }
 
     const ro = new ResizeObserver(onResize);
     ro.observe(track);
@@ -320,6 +441,9 @@ export function initQualityScroll(root = document, options = {}) {
     clearMobile();
     track.style.minHeight = "";
     slides.forEach((el) =>
+      gsap.set(el, { clearProps: "transform,clipPath,opacity,visibility,zIndex" }),
+    );
+    contentStackSlides.forEach((el) =>
       gsap.set(el, { clearProps: "transform,opacity,visibility,zIndex" }),
     );
   });
@@ -332,5 +456,22 @@ export function initQualityScroll(root = document, options = {}) {
 
   return () => {
     disposers.forEach((fn) => fn());
+  };
+}
+
+/**
+ * Все треки `[data-isg-quality-scroll]` внутри root (Quality + About values).
+ * @param {ParentNode} [root]
+ * @param {{ getLenis?: () => { on: Function; off: Function; scrollTo: Function } | null }} [options]
+ */
+export function initQualityScroll(root = document, options = {}) {
+  const tracks = root.querySelectorAll("[data-isg-quality-scroll]");
+  if (!tracks.length) return () => {};
+  const offs = [];
+  tracks.forEach((track) => {
+    offs.push(initOneQualityScrollTrack(track, options));
+  });
+  return () => {
+    offs.forEach((off) => off());
   };
 }

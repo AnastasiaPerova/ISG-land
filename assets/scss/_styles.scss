@@ -1530,6 +1530,18 @@ body.isg-nav-drawer-open {
     );
     padding-bottom: 0;
   }
+
+  /* Компактнее пилюля с логотипом (мобильный хедер) */
+  .isg-site-header__chrome .isg-hero__logo {
+    min-height: 4.2rem;
+    height: auto;
+    padding: 0.4rem 0.65rem;
+  }
+
+  .isg-site-header__chrome .isg-hero__logo .isg-hero__logo-img {
+    max-width: 5.25rem;
+    max-height: 2.6rem;
+  }
 }
 /*
  * Digits featured: фон на всю .scroll (липкий кадр), .cards абсолютно справа и уезжают вливо (только GSAP x).
@@ -2467,6 +2479,7 @@ body.isg-nav-drawer-open {
 
 .isg-product-content,
 .isg-quality-content,
+.isg-about-content-block,
 .isg-about-text-grid,
 .isg-about-gallery-block,
 .isg-rfq-content {
@@ -3358,21 +3371,28 @@ body.isg-nav-drawer-open {
   width: 100%;
 }
 
-/* Quality white block + scroll-driven слайды (макет: 884px список | gap 24 | медиа fill) */
-.isg-quality-content {
+/* Quality + About: scroll-driven блок (макет quality: список | gap | медиа; те же токены и липкая сцена) */
+.isg-quality-content,
+.isg-about-content-block {
   /* Внутри липкой сцены: одинаковый зазор сверху/снизу у ряда */
   --isg-quality-gap-header: clamp(1.2rem, 2.2vw, 3rem);
   /* Белый блок: низ = верх (≤1099 задаётся в медиазапросе) */
-  --isg-quality-content-pad-top: 6.4rem;
-  --isg-quality-content-pad-bottom: var(--isg-quality-content-pad-top);
+  --isg-quality-content-pad-top: #{$isg-section-inner-gap-lg};
+  --isg-quality-content-pad-bottom: #{$isg-section-inner-gap-lg};
   position: relative;
-  background: #e8e6e0;
+  background: #111;
   border-radius: $isg-radius-section-top;
   padding-top: var(--isg-quality-content-pad-top);
   padding-inline: $isg-section-pad-x;
   padding-bottom: var(--isg-quality-content-pad-bottom);
   margin-top: -60px;
   overflow-x: clip;
+}
+
+.isg-about-content-block {
+  --isg-about-gap-header: var(--isg-quality-gap-header);
+  --isg-about-content-pad-top: var(--isg-quality-content-pad-top);
+  --isg-about-content-pad-bottom: var(--isg-quality-content-pad-bottom);
 }
 
 .isg-quality-content__track {
@@ -3410,8 +3430,7 @@ body.isg-nav-drawer-open {
   top: var(--isg-sticky-header-offset, 88px);
   z-index: 2;
   box-sizing: border-box;
-  padding-top: var(--isg-quality-gap-header, clamp(1.2rem, 2.2vw, 3rem));
-  padding-bottom: var(--isg-quality-gap-header, clamp(1.2rem, 2.2vw, 3rem));
+
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -3442,7 +3461,13 @@ body.isg-nav-drawer-open {
         var(--isg-quality-content-pad-top)
     );
   }
+}
 
+@media (min-width: 1100px) {
+  .isg-quality-row {
+    border-radius: $isg-radius-2xl;
+    box-sizing: border-box;
+  }
 }
 
 /* Как .isg-rfq-row: полная ширина контентной области, wrap, без max-width на ряду */
@@ -3474,30 +3499,57 @@ body.isg-nav-drawer-open {
 }
 
 .isg-quality-list-wrap .isg-quality-list-wrap__label .isg-subtitle__text {
-  color: #ffffff;
+  color: #e8e6e0;
 }
 
 .isg-quality-list-wrap .isg-subtitle__swatch {
-  background: rgba(255, 255, 255, 0.45);
+  background: #e8e6e0;
 }
 
 .isg-quality-list-wrap .isg-quality-list-item__text {
-  color: #ffffff;
   font-size: var(--isg-type-h4);
   letter-spacing: $isg-letter-h4;
   display: block;
-  transform: scale(0.92);
-  transform-origin: center center;
-  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Неактивные строки светлее за счёт прозрачности */
+  opacity: 0.4;
+
+  /* Буквы «заливаются» градиентом сверху вниз (актив — верхняя половина) */
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  background-image: linear-gradient(180deg, #e8e6e0 50%, #383838 50%);
+  background-size: 100% 200%;
+  background-position: 0 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  transition:
+    transform 0.12s cubic-bezier(0.22, 1, 0.36, 1),
+    background-position 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.2s ease;
 }
 
 .isg-quality-list-wrap .isg-quality-list-item--active .isg-quality-list-item__text {
+  opacity: 1;
+  background-position: 0 0;
   transform: scale(1);
 }
 
+@supports not ((-webkit-background-clip: text) or (background-clip: text)) {
+  .isg-quality-list-wrap .isg-quality-list-item__text {
+    background: none;
+    color: #383838;
+    -webkit-text-fill-color: unset;
+    opacity: 0.5;
+  }
+
+  .isg-quality-list-wrap .isg-quality-list-item--active .isg-quality-list-item__text {
+    color: #e8e6e0;
+    opacity: 1;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .isg-quality-list-wrap .isg-quality-list-item__text,
-  .isg-about-values .isg-about-value-item__title {
+  .isg-quality-list-wrap .isg-quality-list-item__text {
     transition-duration: 0.01ms;
   }
 }
@@ -3561,6 +3613,15 @@ body.isg-nav-drawer-open {
   display: flex;
   align-items: center;
   justify-content: center;
+  /* Не тянуть opacity с .isg-quality-list-item (0.38→0.58 на hover) — иначе «плывёт» заливка текста */
+  opacity: 1;
+  transition: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .isg-quality-list-wrap .isg-quality-list-item:hover {
+    opacity: 1;
+  }
 }
 
 .isg-quality-list-wrap .isg-quality-list-item__inner {
@@ -3574,6 +3635,12 @@ body.isg-nav-drawer-open {
   padding-left: calc(52px + #{$isg-quality-list-icon-text-gap});
   padding-right: calc(52px + #{$isg-quality-list-icon-text-gap});
   box-sizing: border-box;
+}
+
+/* About: пункты без иконки — симметричные поля (класс --text-only на кнопке) */
+.isg-about-content-block .isg-quality-list-item--text-only .isg-quality-list-item__inner {
+  padding-left: clamp(1.25rem, 3.5vw, 2.75rem);
+  padding-right: clamp(1.25rem, 3.5vw, 2.75rem);
 }
 
 .isg-quality-list-item--active {
@@ -3631,7 +3698,7 @@ body.isg-nav-drawer-open {
   }
 }
 
-/* Синяя панель: иконка слева от текста в слоте — absolute, без сдвига надписи */
+/* Панель списка: иконка слева от текста в слоте — absolute, без сдвига надписи */
 $isg-quality-icon-ease: cubic-bezier(0.22, 1, 0.36, 1);
 
 .isg-quality-list-wrap .isg-quality-list-item__icon {
@@ -3655,13 +3722,12 @@ $isg-quality-icon-ease: cubic-bezier(0.22, 1, 0.36, 1);
   background-color: transparent;
   border: 0;
   transition:
-    opacity 0.4s $isg-quality-icon-ease,
-    transform 0.45s $isg-quality-icon-ease;
+    opacity 0.12s $isg-quality-icon-ease,
+    transform 0.12s $isg-quality-icon-ease;
 }
 
 .isg-quality-list-wrap .isg-quality-list-item__icon img {
   filter: brightness(0) invert(1);
-  opacity: 1;
   transition: filter 0.2s ease;
 }
 
@@ -3675,7 +3741,6 @@ $isg-quality-icon-ease: cubic-bezier(0.22, 1, 0.36, 1);
 
 .isg-quality-list-wrap .isg-quality-list-item--active .isg-quality-list-item__icon img {
   filter: brightness(0) invert(1);
-  opacity: 1;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -3732,7 +3797,7 @@ $isg-quality-icon-ease: cubic-bezier(0.22, 1, 0.36, 1);
   overflow: hidden;
 }
 
-/* transform только из GSAP (quality-scroll.js), иначе правила ниже перебивают анимацию */
+/* clip-path / слой из GSAP (quality-scroll.js) — маска снизу вверх */
 .isg-quality-visual__slide {
   position: absolute;
   inset: 0;
@@ -3742,15 +3807,16 @@ $isg-quality-icon-ease: cubic-bezier(0.22, 1, 0.36, 1);
   background-position: center;
   opacity: 1;
   pointer-events: none;
-  will-change: transform;
+  will-change: clip-path;
 }
 
 @media (max-width: 1099px) {
-  /* Горизонтальная лента «две коробки» (как .boxes на toptier.relats.com) */
-  .isg-quality-content {
+  /* Горизонтальная лента «две коробки» (как .boxes на toptier.relats.com); About — те же отступы оболочки */
+  .isg-quality-content,
+  .isg-about-content-block {
     --isg-quality-gap-header: #{$isg-space-md};
-    --isg-quality-content-pad-top: #{$isg-space-lg};
-    --isg-quality-content-pad-bottom: var(--isg-quality-content-pad-top);
+    --isg-quality-content-pad-top: #{$isg-section-inner-gap-lg};
+    --isg-quality-content-pad-bottom: #{$isg-section-inner-gap-lg};
     padding-top: var(--isg-quality-content-pad-top);
     padding-inline: $isg-section-pad-x-mobile;
     padding-bottom: var(--isg-quality-content-pad-bottom);
@@ -3805,6 +3871,7 @@ $isg-quality-icon-ease: cubic-bezier(0.22, 1, 0.36, 1);
     box-sizing: border-box;
     overflow-x: auto;
     overflow-y: hidden;
+    scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-x: contain;
     scroll-snap-type: x mandatory;
@@ -3838,6 +3905,7 @@ $isg-quality-icon-ease: cubic-bezier(0.22, 1, 0.36, 1);
     overflow: hidden;
     pointer-events: auto;
     will-change: auto;
+    clip-path: none;
   }
 
   .isg-quality-visual__caption {
@@ -3865,6 +3933,7 @@ $isg-quality-icon-ease: cubic-bezier(0.22, 1, 0.36, 1);
 
 @media (max-width: 1099px) and (prefers-reduced-motion: reduce) {
   .isg-quality-visual__slides {
+    scroll-behavior: auto;
     scroll-snap-type: none;
   }
 
@@ -3987,196 +4056,7 @@ $isg-quality-icon-ease: cubic-bezier(0.22, 1, 0.36, 1);
   }
 }
 
-/* About: тот же scroll-driven трек и липкая высота, что у .isg-quality-content */
-.isg-about-content-block {
-  --isg-about-gap-header: clamp(1.2rem, 2.2vw, 3rem);
-  --isg-about-content-pad-top: 6.4rem;
-  --isg-about-content-pad-bottom: var(--isg-about-content-pad-top);
-  position: relative;
-  background: #e8e6e0;
-  // padding-top: var(--isg-about-content-pad-top);
-  padding-inline: $isg-section-pad-x;
-  // padding-bottom: var(--isg-about-content-pad-bottom);
-  overflow-x: clip;
-}
-
-.isg-about-content__track {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  pointer-events: auto;
-  min-height: 100vh;
-}
-
-.isg-about-markers {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 0;
-  height: 100%;
-  pointer-events: none;
-  visibility: hidden;
-  overflow: visible;
-}
-
-.isg-about-marker {
-  position: absolute;
-  left: 0;
-  width: 1px;
-  height: 1px;
-}
-
-.isg-about-content__sticky {
-  position: sticky;
-  top: var(--isg-sticky-header-offset, 88px);
-  z-index: 2;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: flex-start;
-  width: 100%;
-}
-
-@media (min-width: 1100px) {
-  .isg-about-content__sticky {
-    min-height: calc(
-      100svh - var(--isg-sticky-header-offset, 88px) - env(safe-area-inset-bottom, 0px) -
-        var(--isg-about-content-pad-top)
-    );
-    max-height: calc(
-      100svh - var(--isg-sticky-header-offset, 88px) - env(safe-area-inset-bottom, 0px) -
-        var(--isg-about-content-pad-top)
-    );
-    min-height: calc(
-      100dvh - var(--isg-sticky-header-offset, 88px) - env(safe-area-inset-bottom, 0px) -
-        var(--isg-about-content-pad-top)
-    );
-    max-height: calc(
-      100dvh - var(--isg-sticky-header-offset, 88px) - env(safe-area-inset-bottom, 0px) -
-        var(--isg-about-content-pad-top)
-    );
-  }
-}
-
-/* Как .isg-rfq-row */
-.isg-about-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: $isg-space-lg;
-  width: 100%;
-  align-items: stretch;
-  flex: 1;
-  min-height: 0;
-}
-
-.isg-about-values {
-  flex: 1 1 400px;
-  width: 100%;
-  max-width: 883px;
-  border-radius: $isg-radius-2xl;
-  background: #111111;
-  color: #ffffff;
-  padding: $isg-values-panel-pad;
-  display: flex;
-  flex-direction: column;
-  align-self: stretch;
-  min-height: 0;
-  box-sizing: border-box;
-
-}
-
-.isg-about-values .isg-subtitle__text {
-  color: #ffffff;
-}
-
-.isg-about-values .isg-subtitle__swatch {
-  background: rgba(255, 255, 255, 0.45);
-}
-
-.isg-about-values .isg-about-value-item__title {
-  color: #ffffff;
-  letter-spacing: $isg-letter-h4;
-  font-size: var(--isg-type-h4);
-  display: block;
-  transform: scale(0.92);
-  transform-origin: center center;
-  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.isg-about-values .isg-about-value-item--active .isg-about-value-item__title {
-  transform: scale(1);
-}
-
-.isg-about-values .isg-about-value-item:focus-visible {
-  outline-color: #ffffff;
-}
-
-.isg-about-values__list {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: $isg-quality-list-gap;
-  flex: 1;
-  min-height: 0;
-}
-
-.isg-about-value-item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  border: none;
-  background: transparent;
-  font: inherit;
-  color: inherit;
-  text-align: left;
-  cursor: pointer;
-  appearance: none;
-  transition: opacity 0.3s ease, color 0.35s ease;
-  opacity: 0.38;
-}
-
-/* Как .isg-quality-list-wrap: центр, без иконки */
-.isg-about-values .isg-about-value-item {
-  text-align: center;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .isg-about-value-item:hover {
-    opacity: 0.58;
-  }
-
-  .isg-about-value-item--active:hover {
-    opacity: 1;
-  }
-}
-
-.isg-about-value-item:focus-visible {
-  outline: 2px solid #1925aa;
-  outline-offset: 4px;
-  border-radius: $isg-radius-sm;
-}
-
-.isg-about-value-item--active {
-  opacity: 1;
-}
-
-.isg-about-values .isg-about-value-item--active {
-  pointer-events: none;
-}
-
-.isg-about-value-item__title {
-  font-size: var(--isg-type-h4);
-  font-weight: 500;
-  letter-spacing: $isg-letter-h4;
-  line-height: 1.2;
-  margin: 0;
-  color: #000000;
-}
-
+/* Карточка About: isg-quality-visual (clip-path) + абсолютный content-stack */
 .isg-about-feature-card {
   flex: 1 1 400px;
   min-width: 0;
@@ -4186,6 +4066,9 @@ $isg-quality-icon-ease: cubic-bezier(0.22, 1, 0.36, 1);
   border-radius: $isg-radius-2xl;
   overflow: hidden;
   box-sizing: border-box;
+  /* Иначе .isg-quality-visual с абсолютными слайдами даёт высоту 0 — фото не видно */
+  display: flex;
+  flex-direction: column;
 }
 
 @media (min-width: 1100px) {
@@ -4194,37 +4077,43 @@ $isg-quality-icon-ease: cubic-bezier(0.22, 1, 0.36, 1);
   }
 }
 
-.isg-about-feature-card__layers {
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  overflow: hidden;
+.isg-about-feature-card > .isg-quality-visual {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
-/* Слой в GSAP — только фон; подложка с текстом фиксирована поверх */
-.isg-about-feature-card__layer {
+/* Обёртка стеклянной панели — поверх фото, не участвует в расчёте высоты */
+.isg-about-feature-card__inner {
   position: absolute;
   inset: 0;
-  box-sizing: border-box;
+  z-index: 2;
   pointer-events: none;
-  will-change: transform;
-}
+  color: #ffffff;
 
-.isg-about-feature-card__bg {
-  position: absolute;
-  inset: 0;
-  background-color: #6e6e6e;
-  background-size: cover;
-  background-position: center;
-  border-radius: inherit;
-}
+  .isg-about-feature-card__text {
+    color: #ffffff;
+  }
 
-/* Футер слайда (заголовок + стеклянная панель) — только мобильный слайдер (десктоп: скрыто) */
-.isg-about-feature-card__slide-footer {
-  display: none;
-}
+  .isg-about-feature-card__icon {
+    background: transparent;
+    border: none;
+    border-radius: $isg-radius-none;
+    width: auto;
+    height: auto;
+    max-width: none;
+    max-height: none;
+    padding: 0;
+  }
 
-/* __inner — только обёртка в разметке; позиция панели — у stack, оформление — у content-slide */
+  .isg-about-feature-card__icon img {
+    width: 40px;
+    height: 40px;
+    filter: brightness(0) invert(1);
+  }
+}
 
 /* Область слайдов: позиция в карточке + высота под GSAP yPercent */
 .isg-about-feature-card__content-stack {
@@ -4297,67 +4186,8 @@ $isg-quality-icon-ease: cubic-bezier(0.22, 1, 0.36, 1);
   filter: brightness(0) invert(58%);
 }
 
-.isg-about-feature-card__inner {
-  color: #ffffff;
-
-  .isg-about-feature-card__text {
-    color: #ffffff;
-  }
-
-  .isg-about-feature-card__icon {
-    background: transparent;
-    border: none;
-    border-radius: $isg-radius-none;
-    width: auto;
-    height: auto;
-    max-width: none;
-    max-height: none;
-    padding: 0;
-  }
-
-  .isg-about-feature-card__icon img {
-    width: 40px;
-    height: 40px;
-    filter: brightness(0) invert(1);
-  }
-}
-
 @media (max-width: 1099px) {
-  .isg-about-content-block {
-    --isg-about-gap-header: #{$isg-space-md};
-    --isg-about-content-pad-top: #{$isg-space-lg};
-    --isg-about-content-pad-bottom: var(--isg-about-content-pad-top);
-    padding-top: var(--isg-about-content-pad-top);
-    padding-inline: $isg-section-pad-x-mobile;
-    padding-bottom: var(--isg-about-content-pad-bottom);
-    overflow-x: visible;
-  }
-
-  .isg-about-content__track {
-    min-height: 0;
-  }
-
-  .isg-about-content__sticky {
-    position: relative;
-    top: auto;
-    min-height: 0;
-    padding-top: var(--isg-about-gap-header);
-    padding-bottom: var(--isg-about-gap-header);
-  }
-
-  /* Панель values скрыта; слайдер — фото с заголовком и стеклянной панелью на каждом кадре */
-  .isg-about-values {
-    display: none;
-  }
-
-  .isg-about-row {
-    display: block;
-    margin-inline: 0;
-    padding-inline: 0;
-    overflow: visible;
-    padding-bottom: 0;
-  }
-
+  /* Лента фото — общие правила .isg-quality-visual__slides; панель content-stack только на десктопе */
   .isg-about-feature-card {
     width: 100%;
     max-width: none;
@@ -4365,126 +4195,8 @@ $isg-quality-icon-ease: cubic-bezier(0.22, 1, 0.36, 1);
     aspect-ratio: auto;
   }
 
-  .isg-about-feature-card__layers {
-    position: relative;
-    inset: auto;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    align-items: stretch;
-    gap: clamp(0.75rem, 3vw, 1.125rem);
-    width: 100%;
-    margin-inline: calc(-1 * #{$isg-section-pad-x-mobile});
-    padding-inline: $isg-section-pad-x-mobile;
-    padding-bottom: 6px;
-    box-sizing: border-box;
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior-x: contain;
-    scroll-snap-type: x mandatory;
-    scroll-padding-inline: $isg-section-pad-x-mobile;
-    scrollbar-width: thin;
-    border-radius: $isg-radius-2xl-m;
-    touch-action: pan-x;
-  }
-
-  .isg-about-feature-card__layers::-webkit-scrollbar {
-    height: 4px;
-  }
-
-  .isg-about-feature-card__layers::-webkit-scrollbar-thumb {
-    background: rgba(17, 17, 17, 0.2);
-    border-radius: 4px;
-  }
-
-  .isg-about-feature-card__layer {
-    position: relative;
-    inset: auto;
-    flex: 0 0 min(88vw, 420px);
-    width: min(88vw, 420px);
-    min-width: min(88vw, 420px);
-    max-width: min(88vw, 420px);
-    aspect-ratio: 16 / 10;
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
-    border-radius: $isg-radius-2xl-m;
-    overflow: hidden;
-    pointer-events: auto;
-    will-change: auto;
-  }
-
-  /* Текст и иконка — на фото в каждом слайде; десктопный стек в .inner скрыт */
   .isg-about-feature-card__inner {
     display: none;
-  }
-
-  .isg-about-feature-card__slide-footer {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    align-items: stretch;
-    gap: 0.75rem;
-    position: absolute;
-    inset: 0;
-    padding: 1rem 1.25rem;
-    padding-top: 2.5rem;
-    background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.5) 38%, rgba(0, 0, 0, 0.72) 100%);
-    pointer-events: none;
-    z-index: 2;
-    box-sizing: border-box;
-  }
-
-  .isg-about-feature-card__slide-footer .isg-about-feature-card__slide-title {
-    margin: 0;
-    order: 2;
-    color: #ffffff;
-    font-size: var(--isg-type-h4);
-    font-weight: 500;
-    letter-spacing: $isg-letter-h4;
-    line-height: 1.2;
-  }
-
-  .isg-about-feature-card__slide-footer .isg-about-feature-card__content-slide--on-layer {
-    order: 1;
-    position: relative;
-    inset: auto;
-    flex: 0 0 auto;
-    width: 100%;
-    max-width: none;
-    min-height: 0;
-    height: auto;
-    margin: 0;
-    padding: $isg-space-md;
-    pointer-events: none;
-    will-change: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    gap: 1rem;
-    border-radius: $isg-radius-2xl-m;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(23px);
-    -webkit-backdrop-filter: blur(23px);
-  }
-
-  .isg-about-feature-card__slide-footer .isg-about-feature-card__text {
-    color: #ffffff;
-  }
-
-  .isg-about-feature-card__slide-footer .isg-about-feature-card__icon img {
-    filter: brightness(0) invert(1);
-  }
-}
-
-@media (max-width: 1099px) and (prefers-reduced-motion: reduce) {
-  .isg-about-feature-card__layers {
-    scroll-snap-type: none;
-  }
-
-  .isg-about-feature-card__layer {
-    scroll-snap-align: none;
   }
 }
 
@@ -4894,8 +4606,8 @@ button.isg-slider-item__img,
   position: absolute;
   top: 40%;
   transform: translateY(-60%);
-  width: 64px;
-  height: 64px;
+  width: 56px;
+  height: 56px;
   border-radius: $isg-radius-pill;
   border: 0;
   background: rgba(28, 28, 28, 0.1);
@@ -5295,19 +5007,30 @@ button.isg-slider-item__img,
   min-height: 0;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: flex-start;
   gap: $isg-space-xl;
 }
 
-.isg-rfq-aside__title {
+.isg-rfq-aside__heading {
   margin: 0;
-  font-size: var(--isg-type-h4);
+  font-size: var(--isg-type-h3);
   font-weight: 400;
-  letter-spacing: $isg-letter-h4;
-  line-height: 1.25;
+  letter-spacing: $isg-letter-h3;
+  line-height: 1.2;
   color: #ffffff;
   max-width: 42ch;
+}
+
+.isg-rfq-aside__footer {
+  margin: 0;
+  margin-top: auto;
+  font-size: var(--isg-type-body-lg);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  color: rgba(255, 255, 255, 0.88);
+  max-width: 32ch;
 }
 
 .isg-rfq-form-wrap {
@@ -6053,7 +5776,6 @@ button.isg-slider-item__img,
   .isg-slider-item__caption,
   .isg-app-left,
   .isg-quality-list-wrap,
-  .isg-about-values,
   .isg-about-feature-card,
   .isg-about-feature-card__content-stack,
   .isg-about-feature-card__content-slide,
@@ -6069,4 +5791,73 @@ button.isg-slider-item__img,
     border-radius: $isg-radius-section-top-m;
   }
 
+}
+
+/* -------------------------------------------------------------------------- */
+/* Прелоадер: пока подгружаются partials, скрипты и изображения */
+/* -------------------------------------------------------------------------- */
+body.isg-preloader-active {
+  overflow: hidden;
+}
+
+.isg-preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e8e6e0;
+  transition: opacity 0.45s ease, visibility 0.45s ease;
+}
+
+.isg-preloader--done {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.isg-preloader__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.isg-preloader__mark {
+  width: 48px;
+  height: 48px;
+  border: 3px solid rgba(25, 37, 170, 0.18);
+  border-top-color: $isg-color-accent;
+  border-radius: 50%;
+  animation: isg-preloader-spin 0.85s linear infinite;
+}
+
+@keyframes isg-preloader-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.isg-preloader__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .isg-preloader__mark {
+    animation: none;
+    border-top-color: rgba(25, 37, 170, 0.45);
+  }
+
+  .isg-preloader {
+    transition-duration: 0.01ms;
+  }
 }

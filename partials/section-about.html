@@ -45,87 +45,80 @@
   </div>
   </div>
 
-  <!-- Block 2: values + feature — липкая сцена и слайды как isg-quality-content__sticky (пример: 3 кадра из quality) -->
+  <!-- Block 2: та же логика scroll + clip-path, что Quality; стеклянная панель — isg-about-feature-card__content-stack -->
   <div class="isg-about-content-block">
-    <div class="isg-about-content__track" data-isg-about-scroll aria-label="Company values">
-      <div class="isg-about-markers" aria-hidden="true">
-        <span class="isg-about-marker" data-isg-about-marker="0"></span>
-        <span class="isg-about-marker" data-isg-about-marker="1"></span>
-        <span class="isg-about-marker" data-isg-about-marker="2"></span>
+    <div
+      class="isg-quality-content__track"
+      data-isg-quality-scroll
+      data-isg-quality-about
+      aria-label="Company values"
+    >
+      <div class="isg-quality-markers" aria-hidden="true">
+        <span class="isg-quality-marker" data-isg-quality-marker="0"></span>
+        <span class="isg-quality-marker" data-isg-quality-marker="1"></span>
+        <span class="isg-quality-marker" data-isg-quality-marker="2"></span>
       </div>
-      <div class="isg-about-content__sticky">
-        <div class="isg-about-row">
-          <div class="isg-about-values">
-            <div class="isg-subtitle">
-              <!-- ACF: about_values_kicker -->
+      <div class="isg-quality-content__sticky">
+        <div class="isg-quality-row">
+          <div class="isg-quality-list-wrap">
+            <!-- ACF: about_values_kicker -->
+            <div class="isg-subtitle isg-quality-list-wrap__label">
               <p class="isg-subtitle__text">PRODUCT RANGE</p>
               <span class="isg-subtitle__swatch" aria-hidden="true"></span>
             </div>
-            <div class="isg-about-values__list">
-              <!-- ACF: about_values_items (repeater) — по одному пункту на слайд: title + текст/картинка в паре -->
-              <button type="button" class="isg-about-value-item isg-about-value-item--active" data-isg-about-index="0" aria-pressed="true">
-                <h3 class="isg-about-value-item__title">Digital coordination</h3>
+            <div class="isg-quality-list">
+              <!-- ACF: about_values_items — без иконок у пунктов -->
+              <button type="button" class="isg-quality-list-item isg-quality-label--plain isg-quality-list-item--text-only isg-quality-list-item--active" data-isg-quality-index="0" aria-pressed="true">
+                <span class="isg-quality-list-item__inner">
+                  <span class="isg-quality-list-item__text">Digital coordination</span>
+                </span>
               </button>
-              <button type="button" class="isg-about-value-item" data-isg-about-index="1" aria-pressed="false">
-                <h3 class="isg-about-value-item__title">Practical efficiency</h3>
+              <button type="button" class="isg-quality-list-item isg-quality-label--plain isg-quality-list-item--text-only" data-isg-quality-index="1" aria-pressed="false">
+                <span class="isg-quality-list-item__inner">
+                  <span class="isg-quality-list-item__text">Practical efficiency</span>
+                </span>
               </button>
-              <button type="button" class="isg-about-value-item" data-isg-about-index="2" aria-pressed="false">
-                <h3 class="isg-about-value-item__title">Modern manufacturing</h3>
+              <button type="button" class="isg-quality-list-item isg-quality-label--plain isg-quality-list-item--text-only" data-isg-quality-index="2" aria-pressed="false">
+                <span class="isg-quality-list-item__inner">
+                  <span class="isg-quality-list-item__text">Modern manufacturing</span>
+                </span>
               </button>
             </div>
           </div>
           <div class="isg-about-feature-card">
-            <div
-              class="isg-about-feature-card__layers"
-              data-isg-about-mobile-slider
-              data-lenis-prevent
-              aria-hidden="true"
-            >
-              <div class="isg-about-feature-card__layer isg-about-feature-card__layer--active" data-isg-about-slide="0">
-                <div class="isg-about-feature-card__bg" style="background-image: url('assets/img/isg-quality-content-1.jpg');"></div>
-                <div class="isg-about-feature-card__slide-footer">
-                  <h3 class="isg-about-feature-card__slide-title">Digital coordination</h3>
-                  <div
-                    class="isg-about-feature-card__content-slide isg-about-feature-card__content-slide--active isg-about-feature-card__content-slide--on-layer"
-                  >
-                    <span class="isg-about-feature-card__icon" aria-hidden="true">
-                      <img src="assets/img/icons/agriculture.svg" width="40" height="40" alt="" />
-                    </span>
-                    <p class="isg-body isg-about-feature-card__text">
-                      Digital coordination ties planning, production, and quality data into one clear workflow—so teams respond faster and every stage stays traceable.
-                    </p>
+            <div class="isg-quality-visual">
+              <div class="isg-quality-visual__slides" data-isg-quality-mobile-slider data-lenis-prevent>
+                <div
+                  class="isg-quality-visual__slide isg-quality-visual__slide--active"
+                  data-isg-quality-slide="0"
+                  style="background-image: url('assets/img/isg-quality-content-1.jpg');"
+                  role="img"
+                  aria-label="Digital coordination"
+                >
+                  <div class="isg-quality-visual__caption">
+                    <h3 class="isg-quality-visual__caption-title">Digital coordination</h3>
                   </div>
                 </div>
-              </div>
-              <div class="isg-about-feature-card__layer" data-isg-about-slide="1">
-                <div class="isg-about-feature-card__bg" style="background-image: url('assets/img/isg-quality-content-2.jpg');"></div>
-                <div class="isg-about-feature-card__slide-footer">
-                  <h3 class="isg-about-feature-card__slide-title">Practical efficiency</h3>
-                  <div
-                    class="isg-about-feature-card__content-slide isg-about-feature-card__content-slide--active isg-about-feature-card__content-slide--on-layer"
-                  >
-                    <span class="isg-about-feature-card__icon" aria-hidden="true">
-                      <img src="assets/img/icons/construction.svg" width="40" height="40" alt="" />
-                    </span>
-                    <p class="isg-body isg-about-feature-card__text">
-                      Practical efficiency means lean routines on the shop floor: less waste, predictable throughput, and consistent output without compromising safety or compliance.
-                    </p>
+                <div
+                  class="isg-quality-visual__slide"
+                  data-isg-quality-slide="1"
+                  style="background-image: url('assets/img/isg-quality-content-2.jpg');"
+                  role="img"
+                  aria-label="Practical efficiency"
+                >
+                  <div class="isg-quality-visual__caption">
+                    <h3 class="isg-quality-visual__caption-title">Practical efficiency</h3>
                   </div>
                 </div>
-              </div>
-              <div class="isg-about-feature-card__layer" data-isg-about-slide="2">
-                <div class="isg-about-feature-card__bg" style="background-image: url('assets/img/isg-quality-content-3.jpg');"></div>
-                <div class="isg-about-feature-card__slide-footer">
-                  <h3 class="isg-about-feature-card__slide-title">Modern manufacturing</h3>
-                  <div
-                    class="isg-about-feature-card__content-slide isg-about-feature-card__content-slide--active isg-about-feature-card__content-slide--on-layer"
-                  >
-                    <span class="isg-about-feature-card__icon" aria-hidden="true">
-                      <img src="assets/img/icons/industry.svg" width="40" height="40" alt="" />
-                    </span>
-                    <p class="isg-body isg-about-feature-card__text">
-                      Modern manufacturing combines advanced equipment with disciplined processes—delivering large-diameter pipe that meets strict specs and partner expectations.
-                    </p>
+                <div
+                  class="isg-quality-visual__slide"
+                  data-isg-quality-slide="2"
+                  style="background-image: url('assets/img/isg-quality-content-3.jpg');"
+                  role="img"
+                  aria-label="Modern manufacturing"
+                >
+                  <div class="isg-quality-visual__caption">
+                    <h3 class="isg-quality-visual__caption-title">Modern manufacturing</h3>
                   </div>
                 </div>
               </div>

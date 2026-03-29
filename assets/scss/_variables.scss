@@ -125,8 +125,14 @@ $isg-color-accent: #1925aa;
 $isg-color-cards-bg: rgba(243, 242, 238, 0.82);
 /* Панели .isg-quality-list-wrap и .isg-about-values — одинаковый внутренний отступ */
 $isg-values-panel-pad: clamp(1.75rem, 3vw, 3.5rem);
-/* Расстояние между .isg-quality-list-item в колонке */
-$isg-quality-list-gap: clamp(1.75rem, 3vw, 2.75rem);
+/* Панели .isg-quality-list-wrap / .isg-about-values; чёрный ряд-обёртка на десктопе (min-width: 1100px) */
+$isg-values-panel-bg-gray: #e8e6e0;
+$isg-scroll-row-bg: #0a0a0a;
+$isg-scroll-row-pad-y: 3.2rem;
+/* Расстояние между .isg-quality-list-item в колонке (плотнее) */
+$isg-quality-list-gap: clamp(1.15rem, 2.25vw, 2rem);
+/* About values: прежний шаг между пунктами */
+$isg-about-values-list-gap: clamp(1.75rem, 3vw, 2.75rem);
 /* Иконка — надпись: как в макете ~8–12px; меньше $isg-quality-list-gap */
 $isg-quality-list-icon-text-gap: clamp(0.5rem, 1.25vw, 0.75rem);
 
