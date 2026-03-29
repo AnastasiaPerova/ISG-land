@@ -43,7 +43,9 @@ export function initAboutScroll(root = document, options = {}) {
   const items = Array.from(track.querySelectorAll("[data-isg-about-index]"));
   const bgSlides = Array.from(track.querySelectorAll("[data-isg-about-slide]"));
   const contentSlides = Array.from(
-    track.querySelectorAll("[data-isg-about-content-slide]"),
+    track.querySelectorAll(
+      ".isg-about-feature-card__inner [data-isg-about-content-slide]",
+    ),
   );
   const markers = Array.from(track.querySelectorAll("[data-isg-about-marker]"));
   const n = bgSlides.length;
@@ -55,6 +57,8 @@ export function initAboutScroll(root = document, options = {}) {
   const disposers = [];
   /** @type {(() => void)[]} */
   let desktopOff = [];
+  /** @type {(() => void)[]} */
+  let mobileOff = [];
 
   const clearDesktop = () => {
     while (desktopOff.length) {
@@ -65,6 +69,18 @@ export function initAboutScroll(root = document, options = {}) {
       }
     }
   };
+
+  const clearMobile = () => {
+    while (mobileOff.length) {
+      try {
+        mobileOff.pop()();
+      } catch (_) {
+        /* noop */
+      }
+    }
+  };
+
+  const layersEl = track.querySelector("[data-isg-about-mobile-slider]");
 
   const layoutTrackHeight = () => {
     if (reduced || !mq.matches) {
@@ -140,6 +156,7 @@ export function initAboutScroll(root = document, options = {}) {
   const applyFrame = (progress) => {
     const p = clamp01(progress);
     setActiveItem(p);
+    if (!mq.matches) return;
     setSlidesStack(bgSlides, p);
     setSlidesStack(contentSlides, p);
   };
@@ -153,6 +170,14 @@ export function initAboutScroll(root = document, options = {}) {
     const idx = Math.max(0, Math.min(n - 1, Number(index)));
     if (reduced || !mq.matches) {
       applyFrame(progressForIndex(idx, n));
+      const slide = bgSlides[idx];
+      if (!mq.matches && layersEl && slide) {
+        slide.scrollIntoView({
+          behavior: reduced ? "auto" : "smooth",
+          block: "nearest",
+          inline: "center",
+        });
+      }
       return;
     }
     const marker = markers[idx];
@@ -180,23 +205,56 @@ export function initAboutScroll(root = document, options = {}) {
     applyFrame(progressForIndex(idx, n));
   };
 
+  const syncActiveFromLayersScroll = () => {
+    if (!layersEl || bgSlides.length === 0) return;
+    const root = layersEl.getBoundingClientRect();
+    const centerX = root.left + root.width / 2;
+    let best = 0;
+    let bestDist = Infinity;
+    bgSlides.forEach((slide, i) => {
+      const r = slide.getBoundingClientRect();
+      const cx = r.left + r.width / 2;
+      const d = Math.abs(cx - centerX);
+      if (d < bestDist) {
+        bestDist = d;
+        best = i;
+      }
+    });
+    setActiveItem(progressForIndex(best, n));
+  };
+
+  const setupMobileLayersScroll = () => {
+    clearMobile();
+    if (!layersEl || mq.matches) return;
+
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        ticking = false;
+        syncActiveFromLayersScroll();
+      });
+    };
+
+    layersEl.addEventListener("scroll", onScroll, { passive: true });
+    mobileOff.push(() => layersEl.removeEventListener("scroll", onScroll));
+
+    const onResize = () => syncActiveFromLayersScroll();
+    window.addEventListener("resize", onResize);
+    mobileOff.push(() => window.removeEventListener("resize", onResize));
+
+    requestAnimationFrame(() => syncActiveFromLayersScroll());
+  };
+
   const build = () => {
     clearDesktop();
+    clearMobile();
 
     if (reduced || !mq.matches) {
-      const resetStack = (elements) => {
-        elements.forEach((el, i) => {
-          gsap.set(el, {
-            yPercent: i === 0 ? 0 : 100,
-            zIndex: i + 1,
-            opacity: 1,
-            visibility: i === 0 ? "visible" : "hidden",
-            force3D: true,
-          });
-        });
-      };
-      resetStack(bgSlides);
-      resetStack(contentSlides);
+      [...bgSlides, ...contentSlides].forEach((el) => {
+        gsap.set(el, { clearProps: "transform,opacity,visibility,zIndex" });
+      });
       items.forEach((el, i) => {
         el.classList.toggle("isg-about-value-item--active", i === 0);
         el.setAttribute("aria-pressed", i === 0 ? "true" : "false");
@@ -207,6 +265,9 @@ export function initAboutScroll(root = document, options = {}) {
       contentSlides.forEach((el, i) => {
         el.classList.toggle("isg-about-feature-card__content-slide--active", i === 0);
       });
+      if (!mq.matches) {
+        setupMobileLayersScroll();
+      }
       return;
     }
 
@@ -257,6 +318,7 @@ export function initAboutScroll(root = document, options = {}) {
 
   disposers.push(() => {
     clearDesktop();
+    clearMobile();
     track.style.minHeight = "";
     [...bgSlides, ...contentSlides].forEach((el) =>
       gsap.set(el, { clearProps: "transform,opacity,visibility,zIndex" }),

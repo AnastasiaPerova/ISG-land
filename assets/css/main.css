@@ -1,5 +1,8 @@
 @charset "UTF-8";
 /** Потолок кегля display в fullscreen-интро (product / quality / about / rfq) */
+/* Контентный канал: product __inner, about text-grid / team, quality/about rows */
+/* Общий лёгкий сдвиг основного контента вправо (ряды product, about text-grid / team) */
+/* 12 колонок: левая зона подписи 4, правая — контент 8 */
 /* Мобильные поля контента (реф. relats.com — больше воздуха по бокам) */
 /* Высота внешнего блока пилюли в хедере (padding + ряд кнопок) */
 /* #1925AA — акцент, hover «Download catalogue» в hero и др. */
@@ -480,7 +483,7 @@ html {
   --isg-type-headline: clamp(1.85rem, 3.7vw, 7.35rem);
   --isg-type-featured-title: clamp(1.85rem, 3.7vw, 3.2rem);
   --isg-type-lead: clamp(1.15rem, 1.85vw, 2.95rem);
-  --isg-type-stat: clamp(1.875rem, 4.15vw, 60px);
+  --isg-type-stat: clamp(1.35rem, 2.85vw, 40px);
   --isg-type-stat-label: clamp(1.05rem, 1.4vw, 2rem);
   --isg-type-nav: clamp(1.1rem, 0.98vw, 1.55rem);
   --isg-type-body-lg: 2.1rem;
@@ -494,8 +497,9 @@ html {
   --isg-font-size-base: var(--isg-type-body);
   /* Семантика заголовков (см. _typography.scss): h2 = headline; h3/h4 — отдельные clamp */
   --isg-type-h2: var(--isg-type-headline);
-  --isg-type-h3: clamp(1.85rem, 3.55vw, 5.85rem);
-  --isg-type-h4: clamp(1.5rem, 2.7vw, 3.85rem);
+  --isg-type-intro-reveal: clamp(1.55rem, 3.15vw, 6.25rem);
+  --isg-type-h3: clamp(1.95rem, 3.75vw, 6.15rem);
+  --isg-type-h4: clamp(1.58rem, 2.85vw, 4rem);
 }
 
 .isg-text-light {
@@ -595,7 +599,7 @@ select {
 }
 
 [data-isg-intro-scroll] .isg-title-group > .isg-display {
-  font-size: clamp(2.25rem, 7.5vw, 110px);
+  font-size: clamp(2.25rem, 7.5vw, 84px);
 }
 
 /* Интро: заголовки не на всю ширину экрана (десктоп) */
@@ -606,7 +610,7 @@ select {
   .isg-rfq-intro .isg-title-group,
   .isg-hero .isg-hero__content > .isg-title-group,
   .isg-title-group.isg-app-scroll__stage-intro {
-    max-width: min(100%, 126rem);
+    max-width: min(100%, 130rem);
     width: 100%;
     box-sizing: border-box;
     margin-left: auto;
@@ -647,6 +651,12 @@ select {
 }
 
 /* Заголовки: scroll-driven reveal — маска по строкам (title-anim.js) */
+.isg-title-anim {
+  width: 100%;
+  max-width: min(100%, 130rem);
+  box-sizing: border-box;
+  text-wrap: wrap;
+}
 .isg-title-anim .isg-title-anim__line-mask {
   display: block;
   overflow: hidden;
@@ -717,6 +727,11 @@ select {
 
 .isg-ui-type-h2 {
   font-size: var(--isg-type-h2);
+  letter-spacing: -0.02em;
+}
+
+.isg-ui-type-intro-reveal {
+  font-size: var(--isg-type-intro-reveal);
   letter-spacing: -0.02em;
 }
 
@@ -816,7 +831,7 @@ select {
   min-height: max(0.44in, min(3.333vw, 3.99pc));
   padding: 0 max(1.76pc, min(2.222vw, 2.66pc));
   border: 1px solid #ffffff;
-  border-radius: max(9.9pt, min(1.042vw, 19.95px));
+  border-radius: max(8pt, min(0.95vw, 17px));
   background: #ffffff;
   color: #1d1d1d;
   font-family: var(--isg-font-ui);
@@ -880,7 +895,7 @@ select {
     min-height: min(10.256vw, 46px);
     line-height: min(10.256vw, 46px);
     font-size: min(3.59vw, 12.075pt);
-    border-radius: min(3.846vw, 17.25px);
+    border-radius: min(3.2vw, 14px);
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -937,7 +952,7 @@ select {
   min-width: var(--isg-btn-media-side);
   height: var(--isg-btn-media-side);
   aspect-ratio: 1/1;
-  border-radius: max(9.9pt, min(1.042vw, 19.95px));
+  border-radius: max(8pt, min(0.95vw, 17px));
   border: 1px solid #ffffff;
   background: #ffffff;
   overflow: hidden;
@@ -963,7 +978,7 @@ select {
 @media (max-width: 1099px) {
   .isg-btn__media {
     --isg-btn-media-side: min(10.256vw, 46px);
-    border-radius: min(3.846vw, 17.25px);
+    border-radius: min(3.2vw, 14px);
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -978,9 +993,9 @@ select {
 }
 
 .isg-subtitle__swatch {
-  width: 13.3px;
-  height: 13.3px;
-  border-radius: 13.3px;
+  width: 11px;
+  height: 11px;
+  border-radius: 11px;
   background: #1925aa;
   flex-shrink: 0;
   box-shadow: none;
@@ -1015,7 +1030,7 @@ select {
   justify-content: center;
   gap: 1rem;
   padding: 0.4rem 2.4rem;
-  border-radius: 16px;
+  border-radius: 13px;
   background: #fff;
   font-family: var(--isg-font-mono);
   font-size: var(--isg-type-body);
@@ -1034,7 +1049,7 @@ select {
   align-items: center;
   gap: 4.8rem;
   padding: 0.8rem;
-  border-radius: 24px;
+  border-radius: 18px;
   background: rgba(28, 28, 28, 0.06);
   backdrop-filter: blur(23px);
   -webkit-backdrop-filter: blur(23px);
@@ -1058,7 +1073,7 @@ select {
 .isg-nav-pill__row .isg-btn {
   flex: 1;
   min-width: 0;
-  border-radius: 16px;
+  border-radius: 13px;
   padding: 1.6rem 2.4rem;
   height: 100%;
 }
@@ -1076,7 +1091,7 @@ select {
   z-index: 0;
   height: 100%;
   width: var(--nav-slider-w, 0px);
-  border-radius: 16px;
+  border-radius: 13px;
   pointer-events: none;
   opacity: 0;
   background: rgba(0, 0, 0, 0.5);
@@ -1195,7 +1210,7 @@ select {
   align-items: center;
   gap: 0.8rem;
   padding: 0.8rem;
-  border-radius: 24px;
+  border-radius: 18px;
   background: rgba(28, 28, 28, 0.06);
   backdrop-filter: blur(23px);
   -webkit-backdrop-filter: blur(23px);
@@ -1210,7 +1225,7 @@ select {
   align-items: stretch;
   gap: 0;
   height: 5.4rem;
-  border-radius: 16px;
+  border-radius: 13px;
   padding: 0;
   background: transparent;
 }
@@ -1218,7 +1233,7 @@ select {
 .isg-lang-pill__row .isg-btn {
   flex: 1 1 0;
   min-width: 0;
-  border-radius: 16px;
+  border-radius: 13px;
   padding: 1.6rem 2rem;
   height: 100%;
 }
@@ -1238,7 +1253,7 @@ select {
   margin: 0;
   padding: 0;
   border: 0;
-  border-radius: 16px;
+  border-radius: 13px;
   background: rgba(28, 28, 28, 0.08);
   color: #111111;
   cursor: pointer;
@@ -1343,7 +1358,7 @@ select {
   width: 100%;
   justify-content: flex-start;
   text-align: left;
-  border-radius: 16px;
+  border-radius: 13px;
 }
 
 .isg-nav-drawer__lang-label {
@@ -1366,7 +1381,7 @@ select {
   position: relative;
   isolation: isolate;
   height: 5.4rem;
-  border-radius: 16px;
+  border-radius: 13px;
   margin-top: 1.2rem;
 }
 
@@ -1451,6 +1466,11 @@ body.isg-nav-drawer-open {
   text-shadow: 0 0.06em 0.35em rgba(0, 0, 0, 0.45);
 }
 
+/* Как у интро [data-isg-intro-scroll] .isg-title-group > .isg-display — не 120px, а intro-max */
+.isg-hero__title.isg-display {
+  font-size: clamp(2.25rem, 7.5vw, 84px);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .isg-hero__video-media,
   .isg-hero-watch-btn__preview {
@@ -1469,6 +1489,9 @@ body.isg-nav-drawer-open {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  min-height: 2.75rem;
+  line-height: 1.3;
+  padding: 0.5rem 1.35rem;
 }
 
 .isg-hero .isg-btn-group--hero-actions > .isg-hero-watch-btn {
@@ -1496,10 +1519,10 @@ body.isg-nav-drawer-open {
 .isg-hero-watch-btn {
   display: inline-flex;
   align-items: center;
-  gap: 14px;
-  padding: 8px 22px 8px 8px;
+  gap: 10px;
+  padding: 6px 14px 6px 6px;
   margin: 0;
-  border-radius: max(9.9pt, min(1.042vw, 19.95px));
+  border-radius: max(8pt, min(0.95vw, 17px));
   cursor: pointer;
   font-family: var(--isg-font-ui);
   font-size: max(9.9pt, min(1.042vw, 19.95px));
@@ -1532,9 +1555,9 @@ body.isg-nav-drawer-open {
 
 .isg-hero-watch-btn__thumb {
   position: relative;
-  width: 56px;
-  height: 56px;
-  border-radius: 14px;
+  width: 48px;
+  height: 48px;
+  border-radius: 11px;
   overflow: hidden;
   flex-shrink: 0;
   background: #1a1a1a;
@@ -1570,7 +1593,7 @@ body.isg-nav-drawer-open {
 
 @media (max-width: 1099px) {
   .isg-hero-watch-btn {
-    border-radius: min(3.846vw, 17.25px);
+    border-radius: min(3.2vw, 14px);
   }
 }
 .isg-hero__conteiner {
@@ -1659,7 +1682,7 @@ body.isg-nav-drawer-open {
   min-height: 7rem;
   height: 7rem;
   padding: 0.8rem 1rem;
-  border-radius: 24px;
+  border-radius: 18px;
   background: rgba(255, 255, 255, 0.3);
   -webkit-backdrop-filter: blur(23px);
   backdrop-filter: blur(23px);
@@ -1733,7 +1756,7 @@ body.isg-nav-drawer-open {
 .isg-hero__logo-link:focus-visible {
   outline: 2px solid #1925aa;
   outline-offset: 4px;
-  border-radius: 4px;
+  border-radius: 3px;
 }
 
 .isg-site-header__chrome .isg-hero__logo-link:focus-visible {
@@ -1943,21 +1966,29 @@ body.isg-nav-drawer-open {
   min-height: min(100vh, 1080px);
   z-index: 2;
   margin-left: 0;
-  align-items: center;
   display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  overflow: hidden;
   box-sizing: border-box;
   background-color: rgba(243, 242, 238, 0.82);
   box-shadow: -20px 0 48px rgba(0, 0, 0, 0.1);
   will-change: transform;
-  padding: 0 0 0 6.4rem;
+  padding: 12.8rem 6.4rem;
 }
 .isg-digits-section.component--featured .scroll .inner .cards .center {
   width: 100%;
   max-width: 100%;
-  padding: 12.8rem 6.4rem 12.8rem 0;
+  min-height: 0;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   box-sizing: border-box;
 }
 .isg-digits-section.component--featured .scroll .inner .cards .center > .title {
+  flex-shrink: 0;
   margin: 0 0 9.6rem;
   color: #111111;
   max-width: 28ch;
@@ -1973,11 +2004,17 @@ body.isg-nav-drawer-open {
   padding: 0;
   width: 100%;
   min-width: 0;
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
   box-sizing: border-box;
 }
 .isg-digits-section.component--featured .columns--start .columns__item {
   flex: 1 1 0;
   min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
   padding: 0;
   margin: 0;
 }
@@ -1987,11 +2024,13 @@ body.isg-nav-drawer-open {
 .isg-digits-section.component--featured .card.card--featured.isg-digit-card {
   position: relative;
   display: block;
+  flex: 1 1 auto;
   width: 100%;
   max-width: none;
-  aspect-ratio: 3/4;
   min-height: 0;
-  border-radius: 20px;
+  max-height: 100%;
+  aspect-ratio: 3/4;
+  border-radius: 16px;
   padding: 0;
   margin: 0;
   overflow: hidden;
@@ -2005,7 +2044,7 @@ body.isg-nav-drawer-open {
 
 /* Классы title--large: размер как у крупного заголовка секции */
 .isg-digit-card {
-  border-radius: 20px;
+  border-radius: 16px;
 }
 
 .isg-digit-card__shade {
@@ -2032,6 +2071,8 @@ body.isg-nav-drawer-open {
   padding: 2.4rem;
   box-sizing: border-box;
   pointer-events: none;
+  overflow: hidden;
+  min-width: 0;
 }
 
 .isg-digit-card__inner {
@@ -2041,6 +2082,7 @@ body.isg-nav-drawer-open {
   align-items: flex-start;
   gap: 1.6rem;
   max-width: 100%;
+  min-width: 0;
 }
 
 .isg-digit-card__value {
@@ -2050,6 +2092,9 @@ body.isg-nav-drawer-open {
   line-height: 1.15;
   margin: 0;
   color: #ffffff;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .isg-digit-card__label {
@@ -2060,6 +2105,7 @@ body.isg-nav-drawer-open {
   line-height: 1.3;
   color: rgba(255, 255, 255, 0.88);
   max-width: 18ch;
+  overflow-wrap: anywhere;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2069,14 +2115,37 @@ body.isg-nav-drawer-open {
   }
 }
 @media (max-width: 1100px) {
+  /* Секция выше следующего #isg-product (.isg-product-content имеет z-index: 2) — не даём перекрывать карточки */
+  #isg-digits {
+    position: relative;
+    z-index: 3;
+  }
+  /* Иначе overflow-x: clip на .scroll режет полосу с отриц. margin (как на relats.com) */
+  .isg-digits-section.component--featured {
+    overflow-x: visible;
+  }
+  .isg-digits-section.component--featured .scroll {
+    overflow-x: visible;
+  }
   .isg-digits-section.component--featured .scroll .inner {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
     height: auto;
     max-height: none;
     min-height: 0;
+    isolation: isolate;
   }
   .isg-digits-section.component--featured .scroll .inner > .image {
     position: relative;
     inset: auto;
+    left: auto;
+    right: auto;
+    top: auto;
+    bottom: auto;
+    flex: 0 0 auto;
+    z-index: 0;
     width: 100%;
     max-width: none;
     height: min(90dvh, 720px);
@@ -2086,7 +2155,11 @@ body.isg-nav-drawer-open {
   .isg-digits-section.component--featured .scroll .inner .cards {
     position: relative;
     left: auto;
+    right: auto;
     top: auto;
+    bottom: auto;
+    flex: 0 0 auto;
+    z-index: 1;
     width: 100%;
     min-width: 0;
     max-width: 100%;
@@ -2095,20 +2168,89 @@ body.isg-nav-drawer-open {
     margin-left: 0;
     will-change: auto;
     padding: min(8vw, 5.5rem) clamp(1.85rem, 6.25vw, 2.85rem) min(10vw, 3rem);
+    padding-right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    /* Иначе обрезается горизонтальная лента с отриц. margin — карточки не «уезжают» за край */
+    overflow-x: visible;
+    overflow-y: visible;
+    /* На мобильной — сплошная подложка (без полупрозрачности как на десктопе поверх фото) */
+    background-color: #f3f2ee;
   }
   .isg-digits-section.component--featured .scroll .inner .cards .center {
     width: 100%;
     max-width: none;
+    padding: 0;
+    padding-right: clamp(1.85rem, 6.25vw, 2.85rem);
+    box-sizing: border-box;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow-x: visible;
+    overflow-y: visible;
   }
+  .isg-digits-section.component--featured .scroll .inner .cards .center > .title {
+    padding-inline: 0;
+  }
+  /*
+   * Карточки как на relats.com (моб.): горизонтальный скролл, «peek» справа до края экрана.
+   * Слева — выравнивание с текстом; справа — без поля (только safe-area), карточки визуально уходят за край.
+   */
   .isg-digits-section.component--featured .columns--start {
-    flex-wrap: wrap;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: clamp(0.75rem, 3vw, 1.125rem);
     width: 100%;
+    min-width: 0;
+    margin: 0;
+    margin-left: calc(-1 * clamp(1.85rem, 6.25vw, 2.85rem));
+    margin-right: calc(-1 * clamp(1.85rem, 6.25vw, 2.85rem));
+    padding: 0;
+    padding-left: clamp(1.85rem, 6.25vw, 2.85rem);
+    padding-right: env(safe-area-inset-right, 0px);
+    padding-bottom: 6px;
+    box-sizing: border-box;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-left: clamp(1.85rem, 6.25vw, 2.85rem);
+    scroll-padding-right: env(safe-area-inset-right, 0px);
+    scrollbar-width: thin;
+  }
+  .isg-digits-section.component--featured .columns--start::-webkit-scrollbar {
+    height: 4px;
+  }
+  .isg-digits-section.component--featured .columns--start::-webkit-scrollbar-thumb {
+    background: rgba(17, 17, 17, 0.2);
+    border-radius: 4px;
+  }
+  .isg-digits-section.component--featured .columns--start .columns__item {
+    flex: 0 0 min(82vw, 360px);
+    width: min(82vw, 360px);
+    min-width: min(82vw, 360px);
+    max-width: min(82vw, 360px);
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
   }
   .isg-digits-section.component--featured .card.card--featured.isg-digit-card {
     width: 100%;
     max-width: none;
     aspect-ratio: 3/4;
     min-height: 0;
+    border-radius: 20px;
+  }
+}
+@media (max-width: 1100px) and (prefers-reduced-motion: reduce) {
+  .isg-digits-section.component--featured .columns--start {
+    scroll-snap-type: none;
+  }
+  .isg-digits-section.component--featured .columns--start .columns__item {
+    scroll-snap-align: none;
   }
 }
 /* Application: sticky .isg-app__scene + .isg-app__post (высота хвоста = длина scrub, задаётся JS) */
@@ -2330,7 +2472,7 @@ body.isg-nav-drawer-open {
 .isg-app-left {
   grid-column: span 5;
   min-width: 0;
-  border-radius: 24px;
+  border-radius: 18px;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(23px);
   -webkit-backdrop-filter: blur(23px);
@@ -2529,7 +2671,7 @@ body.isg-nav-drawer-open {
 .isg-accordion__media {
   position: relative;
   width: 100%;
-  border-radius: 16px;
+  border-radius: 13px;
   overflow: hidden;
   isolation: isolate;
 }
@@ -2589,7 +2731,7 @@ body.isg-nav-drawer-open {
   max-width: 100%;
   min-height: 200px;
   height: 300px;
-  border-radius: 16px;
+  border-radius: 13px;
   background: #555;
   background-size: cover;
   background-position: center;
@@ -2617,9 +2759,9 @@ body.isg-nav-drawer-open {
   color: transparent;
 }
 
-/* Побуквенное интро: кегль H2 (headline), не .isg-display */
+/* Побуквенное интро: меньше секционного headline */
 .isg-display.isg-intro-reveal__title {
-  font-size: var(--isg-type-h2);
+  font-size: var(--isg-type-intro-reveal);
   letter-spacing: -0.02em;
 }
 
@@ -2754,20 +2896,17 @@ body.isg-nav-drawer-open {
 
 .isg-spec-cards {
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
   gap: 2.4rem;
   width: 100%;
-  perspective: 1200px;
-  transform-style: preserve-3d;
 }
 
 .isg-spec-card {
   width: 100%;
   max-width: 429px;
-  min-height: 300px;
+  min-height: 200px;
   padding: 2.4rem;
-  border-radius: 16px;
+  border-radius: 13px;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(23px);
   -webkit-backdrop-filter: blur(23px);
@@ -2775,8 +2914,6 @@ body.isg-nav-drawer-open {
   flex-direction: column;
   justify-content: space-between;
   gap: 79px;
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
 }
 
 .isg-spec-card__head {
@@ -2838,11 +2975,87 @@ body.isg-nav-drawer-open {
   color: #ffffff;
 }
 
+/* Product intro: карточки спецификаций — на мобильной горизонтальный скролл как .columns--start (digits featured) */
+@media (max-width: 1100px) {
+  .isg-product-intro[data-isg-intro-scroll] {
+    overflow: visible;
+  }
+  .isg-product-intro__conteiner,
+  .isg-product-intro__content {
+    overflow-x: visible;
+    min-width: 0;
+  }
+  /* Справа без поля секции — лента до края экрана; отступ только у заголовка (как .cards + .center у digits) */
+  .isg-product-intro {
+    padding-left: clamp(1.85rem, 6.25vw, 2.85rem);
+    padding-right: env(safe-area-inset-right, 0px);
+  }
+  .isg-product-intro__content {
+    align-items: stretch;
+  }
+  .isg-product-intro .isg-title-group {
+    width: 100%;
+    max-width: none;
+    box-sizing: border-box;
+    padding-right: clamp(1.85rem, 6.25vw, 2.85rem);
+  }
+  .isg-spec-cards {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: clamp(0.75rem, 3vw, 1.125rem);
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    margin-left: calc(-1 * clamp(1.85rem, 6.25vw, 2.85rem));
+    padding: 0;
+    padding-left: clamp(1.85rem, 6.25vw, 2.85rem);
+    padding-right: env(safe-area-inset-right, 0px);
+    padding-bottom: 6px;
+    box-sizing: border-box;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-left: clamp(1.85rem, 6.25vw, 2.85rem);
+    scroll-padding-right: env(safe-area-inset-right, 0px);
+    scrollbar-width: thin;
+  }
+  .isg-spec-cards::-webkit-scrollbar {
+    height: 4px;
+  }
+  .isg-spec-cards::-webkit-scrollbar-thumb {
+    background: rgba(17, 17, 17, 0.2);
+    border-radius: 4px;
+  }
+  .isg-product-intro .isg-spec-card {
+    flex: 0 0 min(82vw, 360px);
+    width: min(82vw, 360px);
+    min-width: min(82vw, 360px);
+    max-width: min(82vw, 360px);
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+  .isg-product-intro .isg-spec-card__head {
+    gap: clamp(0.75rem, 3vw, 2rem);
+  }
+}
+@media (max-width: 1100px) and (prefers-reduced-motion: reduce) {
+  .isg-spec-cards {
+    scroll-snap-type: none;
+  }
+  .isg-product-intro .isg-spec-card {
+    scroll-snap-align: none;
+  }
+}
 /* Product Range content — макет Pencil «Product Range content» (padding 128/64, ряды 1789, колонки 581 / 379×3) */
 .isg-product-content {
   position: relative;
   background: #e8e6e0;
-  border-radius: 64px 64px 0 0;
+  border-radius: 48px 48px 0 0;
   padding: 12.8rem 6.4rem;
   margin-top: -60px;
 }
@@ -2854,10 +3067,8 @@ body.isg-nav-drawer-open {
   max-width: 1810px;
   margin: 0 auto;
   width: 100%;
-}
-
-.isg-product-content .isg-product-content__row--title {
-  margin-bottom: 9.6rem;
+  padding-left: 1.2rem;
+  box-sizing: border-box;
 }
 
 .isg-product-content .isg-product-content__row--grades {
@@ -2868,78 +3079,120 @@ body.isg-nav-drawer-open {
   font-weight: 400;
 }
 
+/* Лейбл и заголовок — стек, каждый на всю ширину 12 колонок */
 .isg-product-content__title-group {
-  display: flex;
-  flex-direction: column;
-  gap: 2.4rem;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: 2.4rem;
+  row-gap: 2.4rem;
+  width: 100%;
+  margin-bottom: 9.6rem;
+}
+
+.isg-product-content__title-group > .isg-subtitle,
+.isg-product-content__title-group > .isg-product-content__row--title {
+  grid-column: 1/-1;
+  min-width: 0;
+}
+
+.isg-product-content__title-group > .isg-product-content__row--title {
+  margin: 0;
   width: 100%;
 }
 
 .isg-product-content__row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2.4rem;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: 2.4rem;
+  row-gap: 2.4rem;
   width: 100%;
+  align-items: start;
 }
 
 .isg-product-content__col {
-  flex: 1 1 280px;
+  min-width: 0;
 }
 
 .isg-product-content__col--wide {
-  flex: 1 1 1187px;
+  grid-column: 1/-1;
   max-width: 100%;
 }
 
 .isg-product-content .isg-product-content__row,
 .isg-about-gallery-block .isg-product-content__row {
-  align-items: flex-start;
-}
-
-.isg-product-content .isg-product-content__row--title,
-.isg-about-gallery-block .isg-product-content__row--title {
-  flex-wrap: nowrap;
+  align-items: start;
 }
 
 .isg-product-content .isg-product-content__col--wide,
 .isg-about-gallery-block .isg-product-content__col--wide {
-  flex: 0 1 1187px;
-  max-width: 1187px;
+  grid-column: 1/-1;
+  max-width: none;
+  width: 100%;
+}
+
+/* Галерея about: лейбл и заголовок — стек на всю ширину 12 колонок */
+.isg-about-gallery-block .isg-title-group.isg-title-group--align-start {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: 2.4rem;
+  row-gap: 2.4rem;
+  width: 100%;
+}
+
+.isg-about-gallery-block .isg-title-group > .isg-subtitle,
+.isg-about-gallery-block .isg-title-group > .isg-product-content__row--title {
+  grid-column: 1/-1;
+  min-width: 0;
+}
+
+.isg-about-gallery-block .isg-title-group > .isg-product-content__row--title {
+  margin: 0;
   width: 100%;
 }
 
 /* Уже мера строки для текста в колонках (таблицы и сетка чипов без изменений) */
 .isg-product-content .isg-product-content__col .isg-body,
-.isg-product-content .isg-product-content__col .isg-h2,
-.isg-about-gallery-block .isg-product-content__col .isg-h2,
 .isg-about-team-block__lead .isg-body {
+  max-width: min(100%, 30ch);
+}
+
+.isg-product-content .isg-product-content__col .isg-h2:not(.isg-title-anim),
+.isg-about-gallery-block .isg-product-content__col .isg-h2:not(.isg-title-anim) {
   max-width: min(100%, 30ch);
 }
 
 /* About text grid: левая колонка — шире мера строки */
 .isg-about-text-grid__left .isg-body {
-  max-width: min(100%, 41ch);
+  max-width: min(100%, 34ch);
 }
 
-.isg-product-content__row--grades {
-  display: grid;
-  grid-template-columns: minmax(0, 581px) minmax(0, 379px) minmax(0, 379px) minmax(0, 380px);
-  gap: 2.4rem;
-  align-items: start;
+.isg-product-content__row--grades,
+.isg-product-content__row--sizes {
   padding-bottom: 0;
 }
 
 .isg-product-content__col--grades-intro {
-  flex: 0 0 581px;
+  grid-column: 1/5;
   max-width: 100%;
+  min-width: 0;
+}
+
+/* Правая зона 8 колонок: три стека по равной доле */
+.isg-product-content__grades-stacks {
+  grid-column: 5/13;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2.4rem;
+  min-width: 0;
+  align-items: start;
 }
 
 .isg-product-content__col--grades-stack {
-  flex: 0 1 379px;
   max-width: 100%;
   display: flex;
   flex-direction: column;
   gap: 2.4rem;
+  min-width: 0;
 }
 
 .isg-product-content__col--grades-stack--wide {
@@ -2955,7 +3208,7 @@ body.isg-nav-drawer-open {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
   width: 100%;
-  max-width: 379px;
+  max-width: 100%;
 }
 
 .isg-filled-items {
@@ -2975,7 +3228,7 @@ body.isg-nav-drawer-open {
   align-items: center;
   gap: 2.4rem;
   padding: 16px 24px;
-  border-radius: 16px;
+  border-radius: 13px;
   background: rgba(255, 255, 255, 0.568627451);
   min-width: 0;
   transition: background 0.25s ease, color 0.25s ease;
@@ -3019,9 +3272,11 @@ body.isg-nav-drawer-open {
   padding: 0;
   margin: 0;
   width: 100%;
-  flex: 1 1 100%;
-  align-self: stretch;
   min-width: 0;
+}
+
+.isg-product-content__row--rule .isg-rule {
+  grid-column: 1/-1;
 }
 
 /* Под .isg-rule до контента нижнего ряда: 1rem */
@@ -3029,23 +3284,17 @@ body.isg-nav-drawer-open {
   margin-top: 1.6rem;
 }
 
-.isg-product-content__row--sizes {
-  display: grid;
-  grid-template-columns: minmax(0, 579px) minmax(0, 1fr);
-  gap: 2.4rem;
-  align-items: start;
-}
-
-.isg-product-content__col--size-lead {
-  flex: 0 0 579px;
-  max-width: 100%;
-}
-
-.isg-product-content__col--size-panel {
-  flex: 1 1 0;
+.isg-product-content__row--sizes .isg-product-content__col--size-panel {
+  grid-column: 5/13;
   min-width: 0;
   display: flex;
   justify-content: flex-end;
+}
+
+.isg-product-content__col--size-lead {
+  grid-column: 1/5;
+  min-width: 0;
+  max-width: 100%;
 }
 
 /* Две колонки без горизонтального скролла: равные доли ширины панели */
@@ -3268,25 +3517,19 @@ body.isg-nav-drawer-open {
   }
 }
 @media (max-width: 900px) {
-  .isg-product-content .isg-product-content__row--title,
-  .isg-about-gallery-block .isg-product-content__row--title {
-    flex-wrap: wrap;
+  .isg-product-content__row--grades .isg-product-content__col--grades-intro,
+  .isg-product-content__row--grades .isg-product-content__grades-stacks {
+    grid-column: 1/-1;
   }
-  .isg-product-content__row--grades {
-    display: flex;
-    flex-direction: column;
+  .isg-product-content__grades-stacks {
+    grid-template-columns: 1fr;
   }
-  .isg-product-content__row--sizes {
-    display: flex;
-    flex-direction: column;
-  }
-  .isg-product-content .isg-product-content__col--grades-intro,
-  .isg-product-content .isg-product-content__col--grades-stack,
-  .isg-product-content .isg-product-content__col--grades-stack--wide,
-  .isg-product-content .isg-product-content__col--size-lead {
-    flex: 1 1 100%;
+  .isg-product-content__row--sizes .isg-product-content__col--size-lead,
+  .isg-product-content__row--sizes .isg-product-content__col--size-panel {
+    grid-column: 1/-1;
   }
   .isg-product-content .isg-product-content__col--size-panel {
+    width: 100%;
     justify-content: flex-start;
   }
   .isg-product-content .isg-size-tables {
@@ -3300,6 +3543,10 @@ body.isg-nav-drawer-open {
   }
   .isg-product-content .isg-size-tables--single {
     grid-column: 1/-1;
+  }
+  /* Вторая колонка под первой — дублировать подписи не нужно */
+  .isg-product-content .isg-size-tables__pair:nth-child(2) .isg-size-spec__head {
+    display: none;
   }
   .isg-size-table--quad thead tr:first-child th,
   .isg-size-table--quad tbody td {
@@ -3366,7 +3613,7 @@ body.isg-nav-drawer-open {
   --isg-quality-content-pad-bottom: var(--isg-quality-content-pad-top);
   position: relative;
   background: #e8e6e0;
-  border-radius: 64px 64px 0 0;
+  border-radius: 48px 48px 0 0;
   padding-top: var(--isg-quality-content-pad-top);
   padding-inline: 6.4rem;
   padding-bottom: var(--isg-quality-content-pad-bottom);
@@ -3430,23 +3677,22 @@ body.isg-nav-drawer-open {
     max-height: calc(100dvh - var(--isg-sticky-header-offset, 88px) - env(safe-area-inset-bottom, 0px) - var(--isg-quality-content-pad-top));
   }
 }
+/* Как .isg-rfq-row: полная ширина контентной области, wrap, без max-width на ряду */
 .isg-quality-row {
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   gap: 2.4rem;
   width: 100%;
-  max-width: 1810px;
-  margin: 0 auto;
   align-items: stretch;
-  flex: 1 1 auto;
+  flex: 1;
   min-height: 0;
 }
 
 .isg-quality-list-wrap {
-  flex: 0 1 884px;
+  flex: 1 1 400px;
   width: 100%;
-  max-width: 884px;
-  border-radius: 24px;
+  max-width: 883px;
+  border-radius: 18px;
   background: #1925aa;
   color: #ffffff;
   padding: clamp(1.75rem, 3vw, 3.5rem);
@@ -3529,7 +3775,7 @@ body.isg-nav-drawer-open {
 .isg-quality-list-item:focus-visible {
   outline: 2px solid #1925aa;
   outline-offset: 4px;
-  border-radius: 8px;
+  border-radius: 6px;
 }
 
 .isg-quality-list-wrap .isg-quality-list-item:focus-visible {
@@ -3573,7 +3819,7 @@ body.isg-nav-drawer-open {
   height: 6rem;
   max-width: 64px;
   max-height: 64px;
-  border-radius: max(9.9pt, min(1.042vw, 19.95px));
+  border-radius: max(8pt, min(0.95vw, 17px));
   overflow: hidden;
   box-sizing: border-box;
   background-color: #e8e8e9;
@@ -3674,13 +3920,13 @@ body.isg-nav-drawer-open {
 }
 
 .isg-quality-visual {
-  flex: 1 1 0;
+  flex: 1 1 400px;
   min-width: 0;
   min-height: 320px;
   align-self: stretch;
   position: relative;
   /* Как у .isg-quality-content (верх секции 64px) */
-  border-radius: 24px;
+  border-radius: 18px;
   overflow: hidden;
   box-sizing: border-box;
 }
@@ -3689,6 +3935,10 @@ body.isg-nav-drawer-open {
   /* Не фиксировать 320px — иначе ряд не влезает в calc-высоту липкой сцены */
   .isg-quality-visual {
     min-height: 0;
+  }
+  /* Подписи на фото только для мобильного слайдера */
+  .isg-quality-visual__caption {
+    display: none;
   }
 }
 .isg-quality-visual__slides {
@@ -3712,6 +3962,7 @@ body.isg-nav-drawer-open {
 }
 
 @media (max-width: 1099px) {
+  /* Горизонтальная лента «две коробки» (как .boxes на toptier.relats.com) */
   .isg-quality-content {
     --isg-quality-gap-header: 1.6rem;
     --isg-quality-content-pad-top: 2.4rem;
@@ -3719,6 +3970,7 @@ body.isg-nav-drawer-open {
     padding-top: var(--isg-quality-content-pad-top);
     padding-inline: clamp(1.85rem, 6.25vw, 2.85rem);
     padding-bottom: var(--isg-quality-content-pad-bottom);
+    overflow-x: visible;
   }
   .isg-quality-content__track {
     min-height: 0;
@@ -3730,19 +3982,97 @@ body.isg-nav-drawer-open {
     padding-top: var(--isg-quality-gap-header);
     padding-bottom: var(--isg-quality-gap-header);
   }
-  .isg-quality-row {
-    flex-direction: column;
-    flex-wrap: wrap;
-    max-width: 100%;
-  }
+  /* Список «Focus areas» скрыт; горизонтальный слайдер — только фото с подписями */
   .isg-quality-list-wrap {
-    flex: 1 1 auto;
-    max-width: 100%;
+    display: none;
+  }
+  .isg-quality-row {
+    display: block;
+    margin-inline: 0;
+    padding-inline: 0;
+    overflow: visible;
+    padding-bottom: 0;
   }
   .isg-quality-visual {
-    flex: 1 1 auto;
-    min-height: min(72vw, 420px);
+    width: 100%;
+    max-width: none;
+    min-height: 0;
+    aspect-ratio: auto;
+  }
+  .isg-quality-visual__slides {
+    position: relative;
+    inset: auto;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: clamp(0.75rem, 3vw, 1.125rem);
+    width: 100%;
+    max-width: none;
+    margin-inline: calc(-1 * clamp(1.85rem, 6.25vw, 2.85rem));
+    padding-inline: clamp(1.85rem, 6.25vw, 2.85rem);
+    padding-bottom: 6px;
+    box-sizing: border-box;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: clamp(1.85rem, 6.25vw, 2.85rem);
+    scrollbar-width: thin;
+    border-radius: 24px;
+    touch-action: pan-x;
+  }
+  .isg-quality-visual__slides::-webkit-scrollbar {
+    height: 4px;
+  }
+  .isg-quality-visual__slides::-webkit-scrollbar-thumb {
+    background: rgba(17, 17, 17, 0.2);
+    border-radius: 4px;
+  }
+  .isg-quality-visual__slide {
+    position: relative;
+    inset: auto;
+    flex: 0 0 min(88vw, 420px);
+    width: min(88vw, 420px);
+    min-width: min(88vw, 420px);
+    max-width: min(88vw, 420px);
+    min-height: 0;
     aspect-ratio: 16/10;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    border-radius: 24px;
+    overflow: hidden;
+    pointer-events: auto;
+    will-change: auto;
+  }
+  .isg-quality-visual__caption {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+    position: absolute;
+    inset: 0;
+    padding: 1rem 1.25rem;
+    background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.55) 100%);
+    pointer-events: none;
+    z-index: 2;
+    box-sizing: border-box;
+  }
+  .isg-quality-visual__caption-title {
+    font-size: var(--isg-type-h4);
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    color: #ffffff;
+    margin: 0;
+  }
+}
+@media (max-width: 1099px) and (prefers-reduced-motion: reduce) {
+  .isg-quality-visual__slides {
+    scroll-snap-type: none;
+  }
+  .isg-quality-visual__slide {
+    scroll-snap-align: none;
   }
 }
 .isg-about-intro-block {
@@ -3791,7 +4121,7 @@ body.isg-nav-drawer-open {
 .isg-about-text-grid {
   position: relative;
   background: #e8e6e0;
-  border-radius: 64px 64px 0 0;
+  border-radius: 48px 48px 0 0;
   padding: 10.8rem 6.4rem;
   display: flex;
   flex-direction: column;
@@ -3801,24 +4131,29 @@ body.isg-nav-drawer-open {
 }
 
 .isg-about-text-grid__row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2.4rem;
-  max-width: 1789px;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: 2.4rem;
+  row-gap: 2.4rem;
+  max-width: 1810px;
   margin: 0 auto;
   width: 100%;
+  padding-left: 1.2rem;
+  box-sizing: border-box;
+  align-items: start;
 }
 
 .isg-about-text-grid__left {
-  flex: 1 1 460px;
-  max-width: min(100%, 640px);
+  grid-column: 1/5;
+  min-width: 0;
+  max-width: 100%;
   display: flex;
   flex-direction: column;
   gap: 32px;
 }
 
 .isg-about-text-grid__right {
-  flex: 1.15 1 480px;
+  grid-column: 5/13;
   min-width: 0;
   display: flex;
   flex-direction: column;
@@ -3827,13 +4162,26 @@ body.isg-nav-drawer-open {
 }
 
 .isg-about-text-grid__right .isg-h2 {
-  max-width: 100%;
+  max-width: min(100%, 130rem);
+  hyphens: none;
+  overflow-wrap: break-word;
+  /* Не balance: title-anim.js группирует слова по offsetTop — balance даёт «лесенку» и одиночные слова в строке */
 }
 
 .isg-about-text-grid__right .isg-body-lg {
   max-width: min(100%, 52ch);
 }
 
+@media (max-width: 1023px) {
+  .isg-about-text-grid {
+    padding-left: clamp(1.85rem, 6.25vw, 2.85rem);
+    padding-right: clamp(1.85rem, 6.25vw, 2.85rem);
+  }
+  .isg-about-text-grid__left,
+  .isg-about-text-grid__right {
+    grid-column: 1/-1;
+  }
+}
 /* About: тот же scroll-driven трек и липкая высота, что у .isg-quality-content */
 .isg-about-content-block {
   --isg-about-gap-header: clamp(1.2rem, 2.2vw, 3rem);
@@ -3891,23 +4239,22 @@ body.isg-nav-drawer-open {
     max-height: calc(100dvh - var(--isg-sticky-header-offset, 88px) - env(safe-area-inset-bottom, 0px) - var(--isg-about-content-pad-top));
   }
 }
+/* Как .isg-rfq-row */
 .isg-about-row {
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   gap: 2.4rem;
   width: 100%;
-  max-width: 1810px;
-  margin: 0 auto;
   align-items: stretch;
-  flex: 1 1 auto;
+  flex: 1;
   min-height: 0;
 }
 
 .isg-about-values {
-  flex: 0 1 884px;
+  flex: 1 1 400px;
   width: 100%;
-  max-width: 884px;
-  border-radius: 24px;
+  max-width: 883px;
+  border-radius: 18px;
   background: #111111;
   color: #ffffff;
   padding: clamp(1.75rem, 3vw, 3.5rem);
@@ -3987,7 +4334,7 @@ body.isg-nav-drawer-open {
 .isg-about-value-item:focus-visible {
   outline: 2px solid #1925aa;
   outline-offset: 4px;
-  border-radius: 8px;
+  border-radius: 6px;
 }
 
 .isg-about-value-item--active {
@@ -4008,12 +4355,12 @@ body.isg-nav-drawer-open {
 }
 
 .isg-about-feature-card {
-  flex: 1 1 0;
+  flex: 1 1 400px;
   min-width: 0;
   min-height: 320px;
   align-self: stretch;
   position: relative;
-  border-radius: 24px;
+  border-radius: 18px;
   overflow: hidden;
   box-sizing: border-box;
 }
@@ -4048,6 +4395,11 @@ body.isg-nav-drawer-open {
   border-radius: inherit;
 }
 
+/* Футер слайда (заголовок + стеклянная панель) — только мобильный слайдер (десктоп: скрыто) */
+.isg-about-feature-card__slide-footer {
+  display: none;
+}
+
 /* __inner — только обёртка в разметке; позиция панели — у stack, оформление — у content-slide */
 /* Область слайдов: позиция в карточке + высота под GSAP yPercent */
 .isg-about-feature-card__content-stack {
@@ -4060,7 +4412,7 @@ body.isg-nav-drawer-open {
   height: clamp(13.5rem, 32vh, 20rem);
   min-height: clamp(13.5rem, 32vh, 20rem);
   overflow: hidden;
-  border-radius: 24px;
+  border-radius: 18px;
   pointer-events: none;
   box-sizing: border-box;
 }
@@ -4080,7 +4432,7 @@ body.isg-nav-drawer-open {
   pointer-events: none;
   will-change: transform;
   backface-visibility: hidden;
-  border-radius: 24px;
+  border-radius: 18px;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(23px);
   -webkit-backdrop-filter: blur(23px);
@@ -4106,7 +4458,7 @@ body.isg-nav-drawer-open {
   height: 4rem;
   max-width: 64px;
   max-height: 64px;
-  border-radius: 14px;
+  border-radius: 11px;
   background-color: #e8e8e9;
   border: 1px solid rgba(0, 0, 0, 0.05);
   box-sizing: border-box;
@@ -4150,6 +4502,7 @@ body.isg-nav-drawer-open {
     padding-top: var(--isg-about-content-pad-top);
     padding-inline: clamp(1.85rem, 6.25vw, 2.85rem);
     padding-bottom: var(--isg-about-content-pad-bottom);
+    overflow-x: visible;
   }
   .isg-about-content__track {
     min-height: 0;
@@ -4161,19 +4514,132 @@ body.isg-nav-drawer-open {
     padding-top: var(--isg-about-gap-header);
     padding-bottom: var(--isg-about-gap-header);
   }
-  .isg-about-row {
-    flex-direction: column;
-    flex-wrap: wrap;
-    max-width: 100%;
-  }
+  /* Панель values скрыта; слайдер — фото с заголовком и стеклянной панелью на каждом кадре */
   .isg-about-values {
-    flex: 1 1 auto;
-    max-width: 100%;
+    display: none;
+  }
+  .isg-about-row {
+    display: block;
+    margin-inline: 0;
+    padding-inline: 0;
+    overflow: visible;
+    padding-bottom: 0;
   }
   .isg-about-feature-card {
-    flex: 1 1 auto;
-    min-height: min(72vw, 420px);
+    width: 100%;
+    max-width: none;
+    min-height: 0;
+    aspect-ratio: auto;
+  }
+  .isg-about-feature-card__layers {
+    position: relative;
+    inset: auto;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: clamp(0.75rem, 3vw, 1.125rem);
+    width: 100%;
+    margin-inline: calc(-1 * clamp(1.85rem, 6.25vw, 2.85rem));
+    padding-inline: clamp(1.85rem, 6.25vw, 2.85rem);
+    padding-bottom: 6px;
+    box-sizing: border-box;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: clamp(1.85rem, 6.25vw, 2.85rem);
+    scrollbar-width: thin;
+    border-radius: 24px;
+    touch-action: pan-x;
+  }
+  .isg-about-feature-card__layers::-webkit-scrollbar {
+    height: 4px;
+  }
+  .isg-about-feature-card__layers::-webkit-scrollbar-thumb {
+    background: rgba(17, 17, 17, 0.2);
+    border-radius: 4px;
+  }
+  .isg-about-feature-card__layer {
+    position: relative;
+    inset: auto;
+    flex: 0 0 min(88vw, 420px);
+    width: min(88vw, 420px);
+    min-width: min(88vw, 420px);
+    max-width: min(88vw, 420px);
     aspect-ratio: 16/10;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    border-radius: 24px;
+    overflow: hidden;
+    pointer-events: auto;
+    will-change: auto;
+  }
+  /* Текст и иконка — на фото в каждом слайде; десктопный стек в .inner скрыт */
+  .isg-about-feature-card__inner {
+    display: none;
+  }
+  .isg-about-feature-card__slide-footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: stretch;
+    gap: 0.75rem;
+    position: absolute;
+    inset: 0;
+    padding: 1rem 1.25rem;
+    padding-top: 2.5rem;
+    background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.5) 38%, rgba(0, 0, 0, 0.72) 100%);
+    pointer-events: none;
+    z-index: 2;
+    box-sizing: border-box;
+  }
+  .isg-about-feature-card__slide-footer .isg-about-feature-card__slide-title {
+    margin: 0;
+    order: 2;
+    color: #ffffff;
+    font-size: var(--isg-type-h4);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+  }
+  .isg-about-feature-card__slide-footer .isg-about-feature-card__content-slide--on-layer {
+    order: 1;
+    position: relative;
+    inset: auto;
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: none;
+    min-height: 0;
+    height: auto;
+    margin: 0;
+    padding: 1.6rem;
+    pointer-events: none;
+    will-change: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 1rem;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(23px);
+    -webkit-backdrop-filter: blur(23px);
+  }
+  .isg-about-feature-card__slide-footer .isg-about-feature-card__text {
+    color: #ffffff;
+  }
+  .isg-about-feature-card__slide-footer .isg-about-feature-card__icon img {
+    filter: brightness(0) invert(1);
+  }
+}
+@media (max-width: 1099px) and (prefers-reduced-motion: reduce) {
+  .isg-about-feature-card__layers {
+    scroll-snap-type: none;
+  }
+  .isg-about-feature-card__layer {
+    scroll-snap-align: none;
   }
 }
 /* About team — макет Pencil PNDFj: padding 128 64 96, gap 96, текст 579px | слайдер вправо, трек↔нав 64px, карточка 430×458 */
@@ -4189,35 +4655,64 @@ body.isg-nav-drawer-open {
   display: flex;
   flex-direction: column;
   gap: 9.6rem;
+  padding-left: 1.2rem;
+  box-sizing: border-box;
+}
+
+/* Лейбл и заголовок — друг под другом, каждый на 12 колонок */
+.isg-about-team-block__header {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: 2.4rem;
+  row-gap: 2.4rem;
+  width: 100%;
+}
+
+.isg-about-team-block__header > .isg-subtitle,
+.isg-about-team-block__header > .isg-about-team-block__title-row {
+  grid-column: 1/-1;
+  min-width: 0;
+}
+
+.isg-about-team-block__header > .isg-about-team-block__title-row {
+  margin: 0;
+  width: 100%;
 }
 
 .isg-about-team-block__title-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2.4rem;
+  display: block;
   width: 100%;
 }
 
 .isg-about-team-block__title-col {
-  flex: 0 1 1187px;
-  max-width: min(100%, 1187px);
+  max-width: none;
+  width: 100%;
+  min-width: 0;
+}
+
+.isg-about-team-block__title-col .isg-h2 {
+  width: 100%;
+  max-width: min(100%, 130rem);
+  min-width: 0;
 }
 
 .isg-about-team-block__main {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  gap: 2.4rem;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: 2.4rem;
+  row-gap: 2.4rem;
+  align-items: start;
   width: 100%;
 }
 
 .isg-about-team-block__lead {
-  flex: 0 0 579px;
+  grid-column: 1/5;
   max-width: 100%;
+  min-width: 0;
 }
 
 .isg-about-team-block__slider-wrap {
-  flex: 1 1 0;
+  grid-column: 5/13;
   min-width: 0;
   display: flex;
   justify-content: flex-end;
@@ -4237,7 +4732,7 @@ body.isg-nav-drawer-open {
 
 .isg-about-team-block .isg-slider-item__img {
   aspect-ratio: 430/458;
-  border-radius: 24px;
+  border-radius: 18px;
 }
 
 /* Галерея: высота от aspect-ratio, без фиксированного vh */
@@ -4249,25 +4744,38 @@ body.isg-nav-drawer-open {
 
 .isg-slider--gallery .isg-slider-item__img,
 .isg-slider--gallery button.isg-slider-item__img {
-  aspect-ratio: 10/8;
+  aspect-ratio: 16/9;
   height: auto;
   max-height: none;
   min-height: 0;
 }
 
 .isg-about-team-block__certs {
-  align-items: flex-start;
-  gap: 2.4rem;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: 2.4rem;
+  row-gap: 2.4rem;
+  align-items: start;
+  width: 100%;
 }
 
 .isg-about-team-block__certs-lead {
-  flex: 0 0 581px;
+  grid-column: 1/5;
   max-width: 100%;
+  min-width: 0;
 }
 
 .isg-about-team-block__certs-list {
-  flex: 1 1 0;
+  grid-column: 5/13;
   min-width: 0;
+}
+
+.isg-about-team-block__certs-list .isg-filled-items {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  max-width: none;
+  width: 100%;
 }
 
 @media (max-width: 1023px) {
@@ -4277,28 +4785,24 @@ body.isg-nav-drawer-open {
   .isg-about-team-block__inner {
     gap: 12.8rem;
   }
-  .isg-about-team-block__main {
-    flex-direction: column;
-  }
-  .isg-about-team-block__lead {
-    flex: 1 1 auto;
+  .isg-about-team-block__lead,
+  .isg-about-team-block__slider-wrap {
+    grid-column: 1/-1;
   }
   .isg-about-team-block__slider-wrap {
     justify-content: flex-start;
     width: 100%;
   }
-  .isg-about-team-block__certs {
-    flex-direction: column;
-  }
-  .isg-about-team-block__certs-lead {
-    flex: 1 1 auto;
+  .isg-about-team-block__certs-lead,
+  .isg-about-team-block__certs-list {
+    grid-column: 1/-1;
   }
 }
 .isg-about-gallery-block {
   position: relative;
   background: #111111;
   color: #ffffff;
-  border-radius: 64px 64px 0 0;
+  border-radius: 48px 48px 0 0;
   display: flex;
   flex-direction: column;
   gap: 9.6rem;
@@ -4435,7 +4939,7 @@ body.isg-nav-drawer-open {
 .isg-slider-item__img {
   width: 100%;
   aspect-ratio: 4/5;
-  border-radius: 24px;
+  border-radius: 18px;
   background: #ccc;
   background-size: cover;
   background-position: center;
@@ -4464,7 +4968,7 @@ button.isg-slider-item__img,
 .isg-slider-item__caption {
   margin-top: 0.8rem;
   padding: 1.2rem 2.4rem;
-  border-radius: 24px;
+  border-radius: 18px;
   background: #1925aa;
   color: #ffffff;
   display: flex;
@@ -4511,7 +5015,7 @@ button.isg-slider-item__img,
   top: 50%;
   transform: translateY(-50%);
   height: 1px;
-  border-radius: 28px;
+  border-radius: 22px;
   background: #ebebeb;
   pointer-events: none;
 }
@@ -4528,7 +5032,7 @@ button.isg-slider-item__img,
   align-self: center;
   transition: margin-left 0.35s ease;
   flex-shrink: 0;
-  border-radius: 28px;
+  border-radius: 22px;
   z-index: 1;
 }
 
@@ -4538,7 +5042,7 @@ button.isg-slider-item__img,
   transform: translateY(-60%);
   width: 64px;
   height: 64px;
-  border-radius: 55px;
+  border-radius: 42px;
   border: 0;
   background: rgba(28, 28, 28, 0.1);
   backdrop-filter: blur(23px);
@@ -4580,7 +5084,7 @@ button.isg-slider-item__img,
 }
 .isg-filled-item--about {
   position: relative;
-  border-radius: 20px;
+  border-radius: 16px;
   width: 100%;
   max-width: 580px;
   justify-content: space-between;
@@ -4705,7 +5209,7 @@ button.isg-slider-item__img,
   width: auto;
   height: auto;
   object-fit: contain;
-  border-radius: 16px;
+  border-radius: 13px;
   box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45);
 }
 
@@ -4714,7 +5218,7 @@ button.isg-slider-item__img,
   max-height: min(78vh, 860px);
   width: auto;
   height: auto;
-  border-radius: 16px;
+  border-radius: 13px;
   box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45);
   background: #000;
 }
@@ -4869,7 +5373,7 @@ button.isg-slider-item__img,
 .isg-rfq-content {
   position: relative;
   background: #fff;
-  border-radius: 64px 64px 0 0;
+  border-radius: 48px 48px 0 0;
   padding: 10.8rem 6.4rem;
   display: flex;
   flex-direction: column;
@@ -4903,7 +5407,7 @@ button.isg-slider-item__img,
 .isg-rfq-aside {
   flex: 1 1 400px;
   max-width: 883px;
-  border-radius: 24px;
+  border-radius: 18px;
   background: #1925aa;
   padding: clamp(1.75rem, 3vw, 3.5rem);
   display: flex;
@@ -4952,7 +5456,7 @@ button.isg-slider-item__img,
   flex: 1 1 400px;
   min-width: 0;
   min-height: 0;
-  border-radius: 24px;
+  border-radius: 18px;
   background: #e8e6e0;
   padding: clamp(2.4rem, 5vw, 5.2rem) clamp(2rem, 4.2vw, 4.8rem);
   display: flex;
@@ -5025,6 +5529,18 @@ button.isg-slider-item__img,
   min-width: 0;
 }
 
+@media (max-width: 1099px) {
+  .isg-rfq-inputs-row {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+  }
+  .isg-rfq-form .isg-field {
+    flex: 1 1 100%;
+    width: 100%;
+    max-width: 100%;
+  }
+}
 .isg-rfq-form .isg-field--float {
   position: relative;
   display: block;
@@ -5142,7 +5658,7 @@ button.isg-slider-item__img,
   padding: 0;
   overflow: hidden;
   background: #ffffff;
-  border-radius: 14px;
+  border-radius: 11px;
   box-shadow: 0 4px 24px rgba(17, 17, 17, 0.12), 0 0 1px rgba(17, 17, 17, 0.08);
   box-sizing: border-box;
 }
@@ -5160,7 +5676,7 @@ button.isg-slider-item__img,
   margin: 0;
   padding: 0.65rem 0.75rem;
   border: 1px solid #d8d6d0;
-  border-radius: 8px;
+  border-radius: 6px;
   background: #ffffff;
   font: inherit;
   font-size: var(--isg-type-body);
@@ -5203,7 +5719,7 @@ button.isg-slider-item__img,
   margin: 0;
   padding: 0.85rem 1.1rem;
   border: 0;
-  border-radius: 8px;
+  border-radius: 6px;
   background: transparent;
   font: inherit;
   font-size: var(--isg-type-body-lg);
@@ -5308,7 +5824,7 @@ button.isg-slider-item__img,
   width: 32px;
   height: 32px;
   margin: 0;
-  border-radius: 8px;
+  border-radius: 6px;
   border: 0;
   outline: none;
   flex-shrink: 0;
@@ -5516,7 +6032,7 @@ button.isg-slider-item__img,
   justify-content: center;
   padding: 0.5rem;
   margin: -0.5rem;
-  border-radius: 16px;
+  border-radius: 13px;
   background: transparent;
   color: #444;
   transition: color 0.22s ease, transform 0.22s ease;
@@ -5589,7 +6105,7 @@ button.isg-slider-item__img,
   bottom: 6.4rem;
   width: 55px;
   height: 55px;
-  border-radius: 16px;
+  border-radius: 13px;
   background: #1925aa;
   border: 0;
   cursor: pointer;
@@ -5638,7 +6154,7 @@ button.isg-slider-item__img,
   .isg-digit-card,
   .isg-filled-item--about,
   .isg-spec-card {
-    border-radius: 26px;
+    border-radius: 20px;
   }
   .isg-slider-item__img,
   .isg-slider-item__caption,
@@ -5650,12 +6166,12 @@ button.isg-slider-item__img,
   .isg-about-feature-card__content-slide,
   .isg-rfq-aside,
   .isg-accordion__media {
-    border-radius: 32px;
+    border-radius: 24px;
   }
   .isg-product-content,
   .isg-about-text-grid,
   .isg-about-gallery-block,
   .isg-rfq-content {
-    border-radius: 48px 48px 0 0;
+    border-radius: 36px 36px 0 0;
   }
 }

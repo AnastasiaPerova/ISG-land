@@ -19,7 +19,7 @@ $isg-font-body: "Plus Jakarta Sans", system-ui, sans-serif;
 $isg-font-ui: "Plus Jakarta Sans", system-ui, sans-serif;
 $isg-font-mono: "DM Mono", ui-monospace, monospace;
 
- @import "typography";
+@import "typography";
 
 // ——— Отступы Yucca: --gap 1.6rem (desktop) / 1.2rem (≤1099px) ———
 $isg-gap: 1.4rem;
@@ -53,6 +53,13 @@ $isg-container-bs-md: 720px;
 $isg-container-bs-lg: 960px;
 $isg-container-bs-xl: 1140px;
 $isg-container-bs-xxl: 1320px;
+/* Контентный канал: product __inner, about text-grid / team, quality/about rows */
+$isg-content-inner-max: 1810px;
+/* Общий лёгкий сдвиг основного контента вправо (ряды product, about text-grid / team) */
+$isg-content-inner-nudge-x: 1.2rem;
+/* 12 колонок: левая зона подписи 4, правая — контент 8 */
+$isg-content-grid-columns: repeat(12, minmax(0, 1fr));
+$isg-content-grid-gap: $isg-space-lg;
 $isg-section-pad-x: 6.4rem;
 /* Мобильные поля контента (реф. relats.com — больше воздуха по бокам) */
 $isg-section-pad-x-mobile: clamp(1.85rem, 6.25vw, 2.85rem);
@@ -131,24 +138,24 @@ $isg-quality-list-icon-text-gap: clamp(0.5rem, 1.25vw, 0.75rem);
 // 5) $isg-radius-lg … $isg-radius-xl — карточки, инпуты, крупные плитки
 // 6) $isg-radius-2xl … $isg-radius-pill — панели, навигационные капсулы
 // 7) $isg-radius-section-top / $isg-radius-visual — секции и медиа
-$isg-radius-btn: max(9.9pt, min(1.042vw, 19.95px));
-$isg-radius-btn-sm: min(3.846vw, 17.25px);
+$isg-radius-btn: max(8pt, min(0.95vw, 17px));
+$isg-radius-btn-sm: min(3.2vw, 14px);
 $isg-radius-hairline: 1px;
-$isg-radius-xs: 4px;
-$isg-radius-sm: 8px;
-$isg-radius-md: 14px;
-$isg-radius-swatch: 13.3px;
-$isg-radius-lg: 16px;
-$isg-radius-xl: 20px;
-$isg-radius-2xl: 24px;
-$isg-radius-3xl: 28px;
-$isg-radius-pill: 55px;
-$isg-radius-section-top: 64px 64px 0 0;
-$isg-radius-visual: 64px;
+$isg-radius-xs: 3px;
+$isg-radius-sm: 6px;
+$isg-radius-md: 11px;
+$isg-radius-swatch: 11px;
+$isg-radius-lg: 13px;
+$isg-radius-xl: 16px;
+$isg-radius-2xl: 18px;
+$isg-radius-3xl: 22px;
+$isg-radius-pill: 42px;
+$isg-radius-section-top: 48px 48px 0 0;
+$isg-radius-visual: 48px;
 /* Планшеты/телефоны — чуть мягче углы (реф. relats.com) */
-$isg-radius-lg-m: 20px;
-$isg-radius-xl-m: 26px;
-$isg-radius-2xl-m: 32px;
-$isg-radius-section-top-m: 48px 48px 0 0;
+$isg-radius-lg-m: 16px;
+$isg-radius-xl-m: 20px;
+$isg-radius-2xl-m: 24px;
+$isg-radius-section-top-m: 36px 36px 0 0;
 $isg-radius-circle: 50%;
 $isg-radius-none: 0;

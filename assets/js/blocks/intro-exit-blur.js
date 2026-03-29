@@ -22,7 +22,8 @@ const CONTENT_SHIFT_RATIO = 0.26;
 const CONTENT_SHIFT_CAP_PX = 160;
 
 /**
- * Intro + hero: по мере скролла фон (или object-position у видео) и контент смещаются вверх; после порога — размытие.
+ * Intro + hero: по мере скролла фон (или object-position у видео) и контент смещаются вверх.
+ * Размытие — только у intro-блоков; hero без filter:blur (в т.ч. при скролле назад вверх).
  */
 export function initIntroExitBlur(root = document) {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -40,13 +41,13 @@ export function initIntroExitBlur(root = document) {
     const bgMedia = el.querySelector(":scope > .isg-intro-bg-media");
     const videoMedia = isHero ? el.querySelector(".isg-hero__video-media") : null;
     const bgTarget = bgMedia || el;
-    return { el, inner, bgTarget, videoMedia };
+    return { el, inner, bgTarget, videoMedia, isHero };
   });
 
   const span = 1 - BLUR_SCROLL_START;
 
   const tick = () => {
-    pairs.forEach(({ el, inner, bgTarget, videoMedia }) => {
+    pairs.forEach(({ el, inner, bgTarget, videoMedia, isHero }) => {
       const rect = el.getBoundingClientRect();
       const blockH = rect.height || 1;
       const pastTop = Math.max(0, -rect.top);
@@ -83,11 +84,20 @@ export function initIntroExitBlur(root = document) {
         inner.style.willChange = "transform";
       }
 
+      const bgWill = videoMedia ? "object-position" : "background-position";
+      const bgEl = videoMedia || bgTarget;
+
+      /* Hero: без blur при скролле (в т.ч. при возврате вверх) — только параллакс видео и сдвиг контента */
+      if (isHero) {
+        el.style.removeProperty("filter");
+        el.style.removeProperty("will-change");
+        bgEl.style.setProperty("will-change", bgWill);
+        return;
+      }
+
       const u =
         span > 0 ? clamp01((scrolled - BLUR_SCROLL_START) / span) : scrolled >= BLUR_SCROLL_START ? 1 : 0;
       const px = u * MAX_BLUR_PX;
-      const bgWill = videoMedia ? "object-position" : "background-position";
-      const bgEl = videoMedia || bgTarget;
       if (px > 0.35) {
         el.style.filter = `blur(${px.toFixed(2)}px)`;
         el.style.setProperty("will-change", "filter");

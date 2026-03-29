@@ -7,7 +7,7 @@
 // Иерархия (крупное → мелкое):
 //   display       — герой, .isg-display (без intro-reveal)
 //   headline      — секционный заголовок; CSS --isg-type-headline (= --isg-type-h2 по смыслу)
-//   h2 (токен)    — .isg-intro-reveal__title (побуквенное интро): var(--isg-type-h2) = headline
+//   h2 (токен)    — var(--isg-type-h2) = headline; интро — var(--isg-type-intro-reveal)
 //   h3 (токен)    — .isg-h2.isg-title-anim: var(--isg-type-h3), чуть меньше headline
 //   h4 (токен)    — списки качества/ценности, .isg-rfq-aside__title: var(--isg-type-h4)
 //   featured-title — подзаголовок в featured (тот же vw, меньший max)
@@ -53,27 +53,32 @@ $isg-type-display-min: 2.25rem;
 $isg-type-display-fluid: $isg-type-vw-display;
 $isg-type-display-max: 120px;
 /** Потолок кегля display в fullscreen-интро (product / quality / about / rfq) */
-$isg-type-display-intro-max: 110px;
+$isg-type-display-intro-max: 84px;
 
 // Headline = секционный H2 (clamp)
 $isg-type-headline-min: $isg-type-scale-400;
 $isg-type-headline-fluid: $isg-type-vw-headline;
 $isg-type-headline-max: 7.35rem;
 
-// H2 (визуальный): совпадает с headline — интро .isg-intro-reveal__title (перебивает .isg-display)
+// H2 (визуальный): совпадает с headline (.isg-ui-type-h2, семантика)
 $isg-type-h2-min: $isg-type-headline-min;
 $isg-type-h2-fluid: $isg-type-headline-fluid;
 $isg-type-h2-max: $isg-type-headline-max;
 
+// Побуквенное интро — меньше секционного headline (см. --isg-type-intro-reveal)
+$isg-type-vw-intro-reveal: 3.15vw;
+$isg-type-intro-reveal-min: 1.55rem;
+$isg-type-intro-reveal-max: 6.25rem;
+
 // H3: .isg-h2.isg-title-anim — между headline и title-lg, адаптивный clamp
-$isg-type-vw-h3: 3.55vw;
-$isg-type-h3-min: 1.85rem;
-$isg-type-h3-max: 5.85rem;
+$isg-type-vw-h3: 3.75vw;
+$isg-type-h3-min: 1.95rem;
+$isg-type-h3-max: 6.15rem;
 
 // H4: пункты списков quality/about, заголовок aside RFQ (раньше были разные clamp — сведены)
-$isg-type-vw-h4: 2.7vw;
-$isg-type-h4-min: 1.5rem;
-$isg-type-h4-max: 3.85rem;
+$isg-type-vw-h4: 2.85vw;
+$isg-type-h4-min: 1.58rem;
+$isg-type-h4-max: 4rem;
 
 // Featured / врезанный крупный заголовок: тот же рост vw, ниже потолок rem
 $isg-type-featured-title-max: 3.2rem;
@@ -94,10 +99,10 @@ $isg-type-title: $isg-type-scale-400;
 $isg-type-title-lg: $isg-type-scale-700;
 $isg-type-button: $isg-type-scale-400;
 
-// Stat (clamp) — digit/spec; fluid к потолку ~60px
-$isg-type-stat-min: 1.875rem;
-$isg-type-stat-fluid: 4.15vw;
-$isg-type-stat-max: 60px;
+// Stat (clamp) — digit/spec
+$isg-type-stat-min: 1.35rem;
+$isg-type-stat-fluid: 2.85vw;
+$isg-type-stat-max: 40px;
 
 // Stat label — подпись к числу (~32px в макете), не путать с lead
 $isg-type-vw-stat-label: 1.4vw;

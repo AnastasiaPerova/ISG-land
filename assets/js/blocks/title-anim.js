@@ -18,6 +18,12 @@ function doubleRaf(fn) {
   });
 }
 
+function doubleRafPromise() {
+  return new Promise((resolve) => {
+    doubleRaf(resolve);
+  });
+}
+
 /**
  * Разбивает текст на строки по фактическому переносу (offsetTop слов), затем строит маски.
  */
@@ -27,6 +33,8 @@ function splitHeadingIntoLines(heading) {
     return [];
   }
   const words = raw.split(" ");
+  /* До измерения — тот же шрифт, что у финального .isg-h2.isg-title-anim (H3), иначе переносы считаются по headline и ломаются при меньшем размере. */
+  heading.classList.add("isg-title-anim");
   heading.textContent = "";
 
   words.forEach((w, i) => {
@@ -41,6 +49,7 @@ function splitHeadingIntoLines(heading) {
 
   const spans = Array.from(heading.querySelectorAll(`.${M}`));
   if (!spans.length) {
+    heading.classList.remove("isg-title-anim");
     return [];
   }
 
@@ -75,7 +84,6 @@ function splitHeadingIntoLines(heading) {
     lineInners.push(inner);
   });
 
-  heading.classList.add("isg-title-anim");
   return lineInners;
 }
 
@@ -104,7 +112,7 @@ export function initTitleAnim(root = document) {
   /** @type {gsap.core.Tween[]} */
   const tweens = [];
 
-  headings.forEach((h2) => {
+  function wireHeading(h2) {
     const origHtml = h2.innerHTML;
     originals.set(h2, origHtml);
     const lineInners = splitHeadingIntoLines(h2);
@@ -149,15 +157,26 @@ export function initTitleAnim(root = document) {
 
     observers.push(obs);
     doubleRaf(() => obs.observe(h2));
-  });
-
-  if (document.fonts?.ready) {
-    document.fonts.ready.then(() => {
-      headings.forEach((h2) => {
-        void h2.offsetHeight;
-      });
-    });
   }
+
+  const start = () => {
+    headings.forEach(wireHeading);
+  };
+
+  /** После загрузки шрифтов и стабилизации ширины — иначе переносы «слова в одну строку» считаются неверно. */
+  const run = async () => {
+    if (document.fonts?.ready) {
+      try {
+        await document.fonts.ready;
+      } catch {
+        /* ignore */
+      }
+    }
+    await doubleRafPromise();
+    start();
+  };
+
+  void run();
 
   return () => {
     observers.forEach((o) => o.disconnect());

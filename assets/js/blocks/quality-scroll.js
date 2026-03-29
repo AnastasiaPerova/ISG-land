@@ -57,6 +57,8 @@ export function initQualityScroll(root = document, options = {}) {
   const disposers = [];
   /** @type {(() => void)[]} */
   let desktopOff = [];
+  /** @type {(() => void)[]} */
+  let mobileOff = [];
 
   const clearDesktop = () => {
     while (desktopOff.length) {
@@ -67,6 +69,18 @@ export function initQualityScroll(root = document, options = {}) {
       }
     }
   };
+
+  const clearMobile = () => {
+    while (mobileOff.length) {
+      try {
+        mobileOff.pop()();
+      } catch (_) {
+        /* noop */
+      }
+    }
+  };
+
+  const slidesScrollEl = track.querySelector("[data-isg-quality-mobile-slider]");
 
   const layoutTrackHeight = () => {
     if (reduced || !mq.matches) {
@@ -144,6 +158,7 @@ export function initQualityScroll(root = document, options = {}) {
   const applyFrame = (progress) => {
     const p = clamp01(progress);
     setActiveItem(p);
+    if (!mq.matches) return;
     setSlidesStack(p);
   };
 
@@ -156,6 +171,14 @@ export function initQualityScroll(root = document, options = {}) {
     const idx = Math.max(0, Math.min(n - 1, Number(index)));
     if (reduced || !mq.matches) {
       applyFrame(progressForIndex(idx, n));
+      const slide = slides[idx];
+      if (!mq.matches && slidesScrollEl && slide) {
+        slide.scrollIntoView({
+          behavior: reduced ? "auto" : "smooth",
+          block: "nearest",
+          inline: "center",
+        });
+      }
       return;
     }
     const marker = markers[idx];
@@ -183,18 +206,55 @@ export function initQualityScroll(root = document, options = {}) {
     applyFrame(progressForIndex(idx, n));
   };
 
+  const syncActiveFromSlidesScroll = () => {
+    if (!slidesScrollEl || slides.length === 0) return;
+    const root = slidesScrollEl.getBoundingClientRect();
+    const centerX = root.left + root.width / 2;
+    let best = 0;
+    let bestDist = Infinity;
+    slides.forEach((slide, i) => {
+      const r = slide.getBoundingClientRect();
+      const cx = r.left + r.width / 2;
+      const d = Math.abs(cx - centerX);
+      if (d < bestDist) {
+        bestDist = d;
+        best = i;
+      }
+    });
+    setActiveItem(progressForIndex(best, n));
+  };
+
+  const setupMobileSlidesScroll = () => {
+    clearMobile();
+    if (!slidesScrollEl || mq.matches) return;
+
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        ticking = false;
+        syncActiveFromSlidesScroll();
+      });
+    };
+
+    slidesScrollEl.addEventListener("scroll", onScroll, { passive: true });
+    mobileOff.push(() => slidesScrollEl.removeEventListener("scroll", onScroll));
+
+    const onResize = () => syncActiveFromSlidesScroll();
+    window.addEventListener("resize", onResize);
+    mobileOff.push(() => window.removeEventListener("resize", onResize));
+
+    requestAnimationFrame(() => syncActiveFromSlidesScroll());
+  };
+
   const build = () => {
     clearDesktop();
+    clearMobile();
 
     if (reduced || !mq.matches) {
-      slides.forEach((el, i) => {
-        gsap.set(el, {
-          yPercent: i === 0 ? 0 : 100,
-          zIndex: i + 1,
-          opacity: 1,
-          visibility: i === 0 ? "visible" : "hidden",
-          force3D: true,
-        });
+      slides.forEach((el) => {
+        gsap.set(el, { clearProps: "transform,opacity,visibility,zIndex" });
       });
       items.forEach((el, i) => {
         el.classList.toggle("isg-quality-list-item--active", i === 0);
@@ -203,6 +263,9 @@ export function initQualityScroll(root = document, options = {}) {
       slides.forEach((el, i) => {
         el.classList.toggle("isg-quality-visual__slide--active", i === 0);
       });
+      if (!mq.matches) {
+        setupMobileSlidesScroll();
+      }
       return;
     }
 
@@ -254,6 +317,7 @@ export function initQualityScroll(root = document, options = {}) {
 
   disposers.push(() => {
     clearDesktop();
+    clearMobile();
     track.style.minHeight = "";
     slides.forEach((el) =>
       gsap.set(el, { clearProps: "transform,opacity,visibility,zIndex" }),
