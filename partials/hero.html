@@ -1,6 +1,6 @@
 <!-- Flexible Content layout: hero -->
 <section id="isg-hero" class="isg-hero" data-isg-block="hero" aria-label="Hero">
-  <!-- ACF: hero_video_mp4 — положите hero-video.mp4 в assets/video/ -->
+  <!-- Фоновое видео: CDN (не хранить тяжёлый mp4 в репозитории). ACF: hero_video_url -->
   <div class="isg-hero__video" aria-hidden="true">
     <video
       class="isg-hero__video-media"
@@ -10,7 +10,7 @@
       playsinline
       poster="assets/img/img-test-1.jpg"
     >
-      <source src="assets/video/hero-video.mp4" type="video/mp4" />
+      <source src="https://res.cloudinary.com/dfuh3h6e5/video/upload/v1774773307/hero-video_cwxqya.mp4" type="video/mp4" />
     </video>
   </div>
   <div class="isg-hero__conteiner">
@@ -29,7 +29,7 @@
         <button
           type="button"
           class="isg-hero-watch-btn"
-          data-isg-lightbox="assets/video/hero-video.mp4"
+          data-isg-lightbox="https://res.cloudinary.com/dfuh3h6e5/video/upload/v1774773307/hero-video_cwxqya.mp4"
           data-isg-lightbox-kind="video"
           aria-label="Watch video"
         >
@@ -43,7 +43,7 @@
               preload="metadata"
               poster="assets/img/img-test-1.jpg"
             >
-              <source src="assets/video/hero-video.mp4" type="video/mp4" />
+              <source src="https://res.cloudinary.com/dfuh3h6e5/video/upload/v1774773307/hero-video_cwxqya.mp4" type="video/mp4" />
             </video>
             <span class="isg-hero-watch-btn__play">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">

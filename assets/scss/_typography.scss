@@ -66,14 +66,14 @@ $isg-type-h2-fluid: $isg-type-headline-fluid;
 $isg-type-h2-max: $isg-type-headline-max;
 
 // H3: .isg-h2.isg-title-anim — между headline и title-lg, адаптивный clamp
-$isg-type-vw-h3: 3.25vw;
-$isg-type-h3-min: 1.72rem;
-$isg-type-h3-max: 5.25rem;
+$isg-type-vw-h3: 3.55vw;
+$isg-type-h3-min: 1.85rem;
+$isg-type-h3-max: 5.85rem;
 
 // H4: пункты списков quality/about, заголовок aside RFQ (раньше были разные clamp — сведены)
-$isg-type-vw-h4: 2.45vw;
-$isg-type-h4-min: 1.4rem;
-$isg-type-h4-max: 3.5rem;
+$isg-type-vw-h4: 2.7vw;
+$isg-type-h4-min: 1.5rem;
+$isg-type-h4-max: 3.85rem;
 
 // Featured / врезанный крупный заголовок: тот же рост vw, ниже потолок rem
 $isg-type-featured-title-max: 3.2rem;

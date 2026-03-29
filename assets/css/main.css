@@ -494,8 +494,8 @@ html {
   --isg-font-size-base: var(--isg-type-body);
   /* Семантика заголовков (см. _typography.scss): h2 = headline; h3/h4 — отдельные clamp */
   --isg-type-h2: var(--isg-type-headline);
-  --isg-type-h3: clamp(1.72rem, 3.25vw, 5.25rem);
-  --isg-type-h4: clamp(1.4rem, 2.45vw, 3.5rem);
+  --isg-type-h3: clamp(1.85rem, 3.55vw, 5.85rem);
+  --isg-type-h4: clamp(1.5rem, 2.7vw, 3.85rem);
 }
 
 .isg-text-light {
