@@ -1,7 +1,10 @@
 /**
  * Лайтбокс: data-isg-lightbox="<url>". Альбом = все такие элементы в том же
  * [data-isg-slider] или в .isg-about-certs. Стрелки, ←/→, зацикливание.
+ * Открытие/закрытие: GSAP (backdrop + panel + медиа).
  */
+
+import gsap from "gsap";
 
 const LB_ID = "isg-lightbox";
 
@@ -14,11 +17,162 @@ function normalizeSrcAttr(s) {
 }
 
 /** @param {string} src */
-function isAllowedImageSrc(src) {
+function isAllowedLightboxSrc(src) {
   if (!src || typeof src !== "string") return false;
   const t = src.trim();
   if (t.startsWith("javascript:") || t.startsWith("data:")) return false;
   return t.startsWith("assets/") || t.startsWith("./assets/") || t.startsWith("/");
+}
+
+function isVideoSrc(src) {
+  return /\.(mp4|webm|ogg)(\?.*)?$/i.test(src.trim());
+}
+
+function prefersReducedMotion() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+/** @param {HTMLElement} overlay */
+function killLbTweens(overlay) {
+  const nodes = overlay.querySelectorAll(
+    ".isg-lightbox__backdrop, .isg-lightbox__panel, .isg-lightbox__img, .isg-lightbox__video, .isg-lightbox__counter, .isg-lightbox__nav",
+  );
+  gsap.killTweensOf(nodes);
+  if (overlay._isgLbTl) {
+    overlay._isgLbTl.kill();
+    overlay._isgLbTl = null;
+  }
+}
+
+/** @param {HTMLElement} overlay */
+function waitActiveMedia(overlay) {
+  const img = overlay.querySelector(".isg-lightbox__img");
+  const vid = overlay.querySelector(".isg-lightbox__video");
+  if (img && !img.hidden && img.src) {
+    if (img.complete && img.naturalWidth > 0) return Promise.resolve();
+    return new Promise((resolve) => {
+      const done = () => resolve();
+      img.addEventListener("load", done, { once: true });
+      img.addEventListener("error", done, { once: true });
+    });
+  }
+  if (vid && !vid.hidden && vid.src) return Promise.resolve();
+  return Promise.resolve();
+}
+
+/**
+ * Таймлайн открытия (paused): вызовите .play() после снятия --inactive и загрузки медиа.
+ * @param {HTMLElement} overlay
+ * @returns {gsap.core.Timeline}
+ */
+function createOpenTimeline(overlay) {
+  const backdrop = overlay.querySelector(".isg-lightbox__backdrop");
+  const panel = overlay.querySelector(".isg-lightbox__panel");
+  const img = overlay.querySelector(".isg-lightbox__img");
+  const vid = overlay.querySelector(".isg-lightbox__video");
+  const reduce = prefersReducedMotion();
+
+  /** @type {Element | null} */
+  let media = null;
+  if (img && !img.hidden) media = img;
+  else if (vid && !vid.hidden) media = vid;
+
+  gsap.set(backdrop, { opacity: 0 });
+  gsap.set(panel, {
+    opacity: 0,
+    scale: reduce ? 1 : 0.9,
+    y: reduce ? 0 : 32,
+    transformOrigin: "50% 50%",
+    force3D: true,
+  });
+  if (media) {
+    const isVid = media.tagName === "VIDEO";
+    gsap.set(media, {
+      opacity: 0,
+      scale: reduce ? 1 : 0.93,
+      transformOrigin: "50% 50%",
+      force3D: true,
+      ...(!isVid && !reduce ? { filter: "blur(14px)" } : {}),
+    });
+  }
+
+  const durPanel = reduce ? 0.2 : 0.58;
+  const durBackdrop = reduce ? 0.18 : 0.5;
+  const ease = "power3.out";
+
+  const tl = gsap.timeline({
+    paused: true,
+    onComplete: () => {
+      if (backdrop) gsap.set(backdrop, { clearProps: "opacity" });
+      if (panel) gsap.set(panel, { clearProps: "opacity,transform" });
+      if (media && media.tagName === "IMG") gsap.set(media, { clearProps: "opacity,transform,filter" });
+      if (media && media.tagName === "VIDEO") gsap.set(media, { clearProps: "opacity,transform" });
+    },
+  });
+
+  tl.to(backdrop, { opacity: 1, duration: durBackdrop, ease: "power2.out" }, 0);
+  tl.to(panel, { opacity: 1, scale: 1, y: 0, duration: durPanel, ease }, reduce ? 0 : "-=0.34");
+  if (media && !reduce) {
+    const isVid = media.tagName === "VIDEO";
+    tl.to(
+      media,
+      isVid
+        ? { opacity: 1, scale: 1, duration: 0.45, ease: "power2.out" }
+        : { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.48, ease: "power2.out" },
+      "-=0.4",
+    );
+  } else if (media) {
+    tl.to(media, { opacity: 1, duration: 0.15 }, "-=0.08");
+  }
+
+  overlay._isgLbTl = tl;
+  return tl;
+}
+
+/**
+ * @param {HTMLElement} overlay
+ * @param {() => void} onComplete
+ */
+function playCloseTimeline(overlay, onComplete) {
+  const backdrop = overlay.querySelector(".isg-lightbox__backdrop");
+  const panel = overlay.querySelector(".isg-lightbox__panel");
+  const img = overlay.querySelector(".isg-lightbox__img");
+  const vid = overlay.querySelector(".isg-lightbox__video");
+  const reduce = prefersReducedMotion();
+
+  /** @type {Element | null} */
+  let media = null;
+  if (img && !img.hidden) media = img;
+  else if (vid && !vid.hidden) media = vid;
+
+  killLbTweens(overlay);
+
+  if (reduce) {
+    onComplete();
+    return;
+  }
+
+  const tl = gsap.timeline({
+    onComplete: () => {
+      if (backdrop) gsap.set(backdrop, { clearProps: "opacity" });
+      if (panel) gsap.set(panel, { clearProps: "opacity,transform" });
+      if (media) gsap.set(media, { clearProps: "opacity,transform,filter" });
+      onComplete();
+    },
+  });
+
+  tl.to(panel, { opacity: 0, scale: 0.94, y: 20, duration: 0.36, ease: "power2.in" }, 0);
+  if (media) {
+    tl.to(
+      media,
+      media.tagName === "VIDEO"
+        ? { opacity: 0, scale: 0.96, duration: 0.28, ease: "power2.in" }
+        : { opacity: 0, scale: 0.96, filter: "blur(8px)", duration: 0.3, ease: "power2.in" },
+      0.02,
+    );
+  }
+  tl.to(backdrop, { opacity: 0, duration: 0.34, ease: "power1.in" }, 0.12);
+  overlay._isgLbTl = tl;
 }
 
 /** @param {Element} anchor */
@@ -34,30 +188,52 @@ function collectAlbum(anchor) {
   const out = [];
   for (const el of nodes) {
     const raw = el.getAttribute("data-isg-lightbox");
-    if (!raw || !isAllowedImageSrc(raw)) continue;
+    if (!raw || !isAllowedLightboxSrc(raw)) continue;
     const src = normalizeSrcAttr(raw);
     const alt =
       el.getAttribute("aria-label") ||
       el.querySelector(".isg-filled-item__text")?.textContent?.trim() ||
       "";
-    out.push({ src, alt });
+    const kindAttr = el.getAttribute("data-isg-lightbox-kind");
+    const kind = kindAttr === "video" || isVideoSrc(src) ? "video" : "image";
+    out.push({ src, alt, kind });
   }
   return out;
 }
 
+function patchOverlayAttrs(el) {
+  el.classList.add("isg-lightbox--inactive");
+  el.removeAttribute("hidden");
+  el.setAttribute("aria-hidden", "true");
+  /* fixed у предка с transform (GSAP на .panel) ломает позицию — кнопка должна быть снаружи панели */
+  const closeInPanel = el.querySelector(".isg-lightbox__panel .isg-lightbox__close");
+  if (closeInPanel) {
+    const backdrop = el.querySelector(".isg-lightbox__backdrop");
+    backdrop?.insertAdjacentElement("afterend", closeInPanel);
+  }
+}
+
 function ensureOverlay() {
   let el = document.getElementById(LB_ID);
-  if (el) return el;
+  if (el) {
+    patchOverlayAttrs(el);
+    return el;
+  }
 
   el = document.createElement("div");
   el.id = LB_ID;
-  el.className = "isg-lightbox";
-  el.setAttribute("hidden", "");
+  el.className = "isg-lightbox isg-lightbox--inactive";
   el.setAttribute("role", "dialog");
   el.setAttribute("aria-modal", "true");
-  el.setAttribute("aria-label", "Image gallery");
+  el.setAttribute("aria-label", "Gallery");
+  el.setAttribute("aria-hidden", "true");
   el.innerHTML = `
     <button type="button" class="isg-lightbox__backdrop" aria-label="Close"></button>
+    <button type="button" class="isg-lightbox__close" aria-label="Close">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
     <div class="isg-lightbox__panel">
       <button type="button" class="isg-lightbox__nav isg-lightbox__nav--prev" aria-label="Previous image" hidden>
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -66,16 +242,12 @@ function ensureOverlay() {
       </button>
       <div class="isg-lightbox__stage">
         <img class="isg-lightbox__img" alt="" decoding="async" />
+        <video class="isg-lightbox__video" controls playsinline preload="none" hidden></video>
         <span class="isg-lightbox__counter" aria-live="polite" hidden></span>
       </div>
       <button type="button" class="isg-lightbox__nav isg-lightbox__nav--next" aria-label="Next image" hidden>
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-        </svg>
-      </button>
-      <button type="button" class="isg-lightbox__close" aria-label="Close">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
         </svg>
       </button>
     </div>
@@ -90,6 +262,7 @@ function bindOverlayOnce(overlay) {
   overlay.dataset.isgBound = "1";
 
   const img = overlay.querySelector(".isg-lightbox__img");
+  const vid = overlay.querySelector(".isg-lightbox__video");
   const btnPrev = overlay.querySelector(".isg-lightbox__nav--prev");
   const btnNext = overlay.querySelector(".isg-lightbox__nav--next");
   const counter = overlay.querySelector(".isg-lightbox__counter");
@@ -100,8 +273,42 @@ function bindOverlayOnce(overlay) {
     const n = album.length;
     overlay._isgIndex = ((i % n) + n) % n;
     const item = album[overlay._isgIndex];
-    img.src = item.src;
-    img.alt = item.alt || "";
+    const isVideo = item.kind === "video";
+
+    if (isVideo && vid) {
+      img.removeAttribute("src");
+      img.alt = "";
+      img.hidden = true;
+      vid.hidden = false;
+      vid.src = item.src;
+      vid.setAttribute("aria-label", item.alt || "Video");
+      try {
+        vid.load();
+        const p = vid.play();
+        if (p && typeof p.catch === "function") p.catch(() => {});
+      } catch (_) {
+        /* noop */
+      }
+    } else {
+      if (vid) {
+        try {
+          vid.pause();
+        } catch (_) {
+          /* noop */
+        }
+        vid.removeAttribute("src");
+        try {
+          vid.load();
+        } catch (_) {
+          /* noop */
+        }
+        vid.hidden = true;
+      }
+      img.hidden = false;
+      img.src = item.src;
+      img.alt = item.alt || "";
+    }
+
     const single = n <= 1;
     if (btnPrev) btnPrev.hidden = single;
     if (btnNext) btnNext.hidden = single;
@@ -112,11 +319,28 @@ function bindOverlayOnce(overlay) {
   };
   overlay._isgShowAt = showAt;
 
-  const close = () => {
-    overlay.setAttribute("hidden", "");
+  const finalizeClose = () => {
+    killLbTweens(overlay);
+    overlay.classList.add("isg-lightbox--inactive");
+    overlay.setAttribute("aria-hidden", "true");
     if (img) {
       img.removeAttribute("src");
       img.alt = "";
+      img.hidden = false;
+    }
+    if (vid) {
+      try {
+        vid.pause();
+      } catch (_) {
+        /* noop */
+      }
+      vid.removeAttribute("src");
+      try {
+        vid.load();
+      } catch (_) {
+        /* noop */
+      }
+      vid.hidden = true;
     }
     overlay._isgAlbum = null;
     overlay._isgIndex = 0;
@@ -128,6 +352,12 @@ function bindOverlayOnce(overlay) {
     }
     document.body.style.overflow = "";
     document.removeEventListener("keydown", onKey);
+  };
+  overlay._isgFinalizeClose = finalizeClose;
+
+  const close = () => {
+    if (overlay.classList.contains("isg-lightbox--inactive")) return;
+    playCloseTimeline(overlay, finalizeClose);
   };
 
   const onKey = (e) => {
@@ -178,15 +408,28 @@ export function openLightbox(anchor) {
   let start = album.findIndex((x) => x.src === targetSrc);
   if (start < 0) start = 0;
 
+  killLbTweens(overlay);
+  if (!overlay.classList.contains("isg-lightbox--inactive")) {
+    overlay._isgFinalizeClose?.();
+  }
+
   overlay._isgAlbum = album;
 
   const hk = overlay._isgLightboxOnKey;
   if (hk) document.removeEventListener("keydown", hk);
 
   overlay._isgShowAt(start);
-  overlay.removeAttribute("hidden");
+
+  const tl = createOpenTimeline(overlay);
+
+  overlay.classList.remove("isg-lightbox--inactive");
+  overlay.setAttribute("aria-hidden", "false");
   document.body.style.overflow = "hidden";
   if (hk) document.addEventListener("keydown", hk);
+
+  waitActiveMedia(overlay).then(() => {
+    requestAnimationFrame(() => tl.play());
+  });
 }
 
 const DRAG_PX = 14;
@@ -214,7 +457,7 @@ export function initLightbox(root = document.body) {
     const moved = Math.hypot(e.clientX - ptr.x, e.clientY - ptr.y);
     if (moved <= DRAG_PX) {
       const src = ptr.t.getAttribute("data-isg-lightbox");
-      if (src && isAllowedImageSrc(src)) openLightbox(ptr.t);
+      if (src && isAllowedLightboxSrc(src)) openLightbox(ptr.t);
     }
     ptr = null;
   };

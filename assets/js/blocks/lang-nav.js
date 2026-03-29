@@ -1,7 +1,7 @@
 import { syncNavPillSliders } from "./nav-pill-slider.js";
 
 /**
- * Синхронизация EN/PL между десктопом и drawer + обновление слайдера языка.
+ * Синхронизация EN / PL / DE между десктопом и drawer + обновление слайдера языка.
  */
 export function initLangNav(root = document) {
   const onClick = (e) => {

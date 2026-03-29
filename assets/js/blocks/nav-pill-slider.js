@@ -1,6 +1,7 @@
 /**
  * Скользящая подложка под пунктами навигации.
  * Режим `data-isg-hover-slider`: подложка только при hover/focus внутри ряда, не следует за активным пунктом при клике/скролле.
+ * На пункте под слайдером выставляется `isg-nav-pill__link--slider-target` (белый текст на чёрной подложке).
  * Обычный `data-isg-nav-slider`: hover + возврат к активному (для редких случаев без hover-only).
  */
 function getActiveLink(row) {
@@ -105,7 +106,8 @@ export function initNavPillSliders(root = document) {
     const showForTarget = (t) => {
       if (!links().includes(t)) return;
       lastHoverTarget = t;
-      placeSlider(row, t, { withTargetClasses: false, opacity: "1" });
+      /* slider-target на пункте под слайдером — белый текст на чёрной подложке (как у языка) */
+      placeSlider(row, t, { withTargetClasses: true, opacity: "1" });
     };
 
     const onEnter = (e) => {
@@ -163,7 +165,7 @@ export function initNavPillSliders(root = document) {
     const ro = new ResizeObserver(() => {
       if (hoverOnly) {
         if (lastHoverTarget && row.contains(lastHoverTarget)) {
-          placeSlider(row, lastHoverTarget, { withTargetClasses: false, opacity: "1" });
+          placeSlider(row, lastHoverTarget, { withTargetClasses: true, opacity: "1" });
         }
         return;
       }
@@ -174,7 +176,7 @@ export function initNavPillSliders(root = document) {
     const onWin = () => {
       if (hoverOnly) {
         if (lastHoverTarget && row.contains(lastHoverTarget)) {
-          placeSlider(row, lastHoverTarget, { withTargetClasses: false, opacity: "1" });
+          placeSlider(row, lastHoverTarget, { withTargetClasses: true, opacity: "1" });
         }
         return;
       }

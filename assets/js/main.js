@@ -13,10 +13,14 @@ import { initAboutScroll } from "./blocks/about-scroll.js";
 import { initIntroSectionScroll } from "./blocks/intro-section-scroll.js";
 import { initIntroBgEntranceScale } from "./blocks/intro-bg-entrance-scale.js";
 import { initIntroExitBlur } from "./blocks/intro-exit-blur.js";
-import { initRfqIntroButtonHover } from "./blocks/rfq-intro-btn-hover.js";
+import { initProductContentLineDraw } from "./blocks/product-content-line-draw.js";
+import { initIsgButtonHover } from "./blocks/rfq-intro-btn-hover.js";
+import { initRfqCustomSelects } from "./blocks/rfq-custom-select.js";
 import { initSpecCardsReveal } from "./blocks/spec-cards-reveal.js";
 import { initSectionAnchors } from "./blocks/section-anchors.js";
+import { initFooterReveal } from "./blocks/footer-reveal.js";
 import { initLightbox } from "./blocks/lightbox.js";
+import { initTitleAnim } from "./blocks/title-anim.js";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const PARTIALS = [
@@ -28,7 +32,6 @@ const PARTIALS = [
   "partials/section-quality.html",
   "partials/section-about.html",
   "partials/section-rfq.html",
-  "partials/section-video-3d.html",
   "partials/footer.html",
 ];
 
@@ -63,15 +66,22 @@ export async function initIsgPage(root = document.body) {
   disposers.push(initDigitsFeatured(root));
   disposers.push(initApplicationScroll(root));
   disposers.push(initSectionAnchors(root));
+  disposers.push(initFooterReveal(root));
   disposers.push(initQualityScroll(root, { getLenis }));
   disposers.push(initAboutScroll(root, { getLenis }));
   disposers.push(initIntroSectionScroll(root));
   disposers.push(initIntroBgEntranceScale(root));
   disposers.push(initIntroExitBlur(root));
-  disposers.push(initRfqIntroButtonHover(root));
+  disposers.push(initProductContentLineDraw(root));
+  disposers.push(initIsgButtonHover(root));
+  disposers.push(initRfqCustomSelects(root));
   disposers.push(initSpecCardsReveal(root));
   disposers.push(initLightbox(root));
+  disposers.push(initTitleAnim(root));
   ScrollTrigger.refresh();
+  requestAnimationFrame(() => {
+    ScrollTrigger.refresh();
+  });
 }
 
 export function destroyIsgPage() {

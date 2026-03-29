@@ -12,8 +12,8 @@ export function getLenis() {
 }
 
 /**
- * Плавный скролл Lenis + синхронизация с GSAP ScrollTrigger (рекомендация Lenis).
- * При prefers-reduced-motion не подключается — остаётся нативная прокрутка.
+ * Плавный скролл Lenis + ScrollTrigger.update.
+ * Без scrollerProxy: Lenis обновляет rootElement.scrollTop — ScrollTrigger остаётся на нативном скролле.
  */
 export function initLenisSmoothScroll() {
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -34,7 +34,6 @@ export function initLenisSmoothScroll() {
 
   lenisInstance = lenis;
 
-  /* Не используем глобальный scrollerProxy: он даёт лаги и конфликты у многосоставных pin/scrub (digits, featured). */
   lenis.on("scroll", ScrollTrigger.update);
 
   const tickerCb = (time) => {

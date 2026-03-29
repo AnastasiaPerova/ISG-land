@@ -2,7 +2,7 @@
  * Слайдеры .isg-slider на tiny-slider (`tns` из assets/js/vendor/tiny-slider.min.js).
  * Загрузка через ensureTinySlider() — не обязательно вручную ставить <script> перед main.js.
  * — team: Center (демо ganlanyuan.github.io/tiny-slider/demo/)
- * — gallery: Fixedwidth-edgepadding
+ * — gallery: full-viewport + fixedWidth + edgePadding (края обрезаны, как демо fixedWidth-edgePadding / Responsive на ganlanyuan.github.io/tiny-slider/demo/)
  */
 
 import { ensureTinySlider } from "../vendor/tiny-slider-load.js";
@@ -66,8 +66,8 @@ function optionsGallery(track, prev, next) {
     center: false,
     items: 1,
     slideBy: 1,
-    fixedWidth: 885,
-    edgePadding: 72,
+    fixedWidth: 560,
+    edgePadding: 120,
     gutter: 24,
     speed: 400,
     loop: true,
@@ -81,10 +81,11 @@ function optionsGallery(track, prev, next) {
     preventScrollOnTouch: "auto",
     freezable: false,
     responsive: {
-      0: { fixedWidth: 300, edgePadding: 16, gutter: 12 },
-      520: { fixedWidth: 400, edgePadding: 24, gutter: 16 },
-      768: { fixedWidth: 640, edgePadding: 48, gutter: 20 },
-      1100: { fixedWidth: 885, edgePadding: 72, gutter: 24 },
+      0: { fixedWidth: 280, edgePadding: 20, gutter: 12 },
+      480: { fixedWidth: 320, edgePadding: 36, gutter: 14 },
+      768: { fixedWidth: 420, edgePadding: 64, gutter: 18 },
+      1024: { fixedWidth: 480, edgePadding: 96, gutter: 22 },
+      1400: { fixedWidth: 560, edgePadding: 120, gutter: 24 },
     },
   };
 }

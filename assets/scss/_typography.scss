@@ -76,10 +76,10 @@ $isg-type-title: $isg-type-scale-400;
 $isg-type-title-lg: $isg-type-scale-700;
 $isg-type-button: $isg-type-scale-400;
 
-// Stat (clamp) — в макете digit/spec ~64px на десктопе; fluid тянется к потолку 64px
-$isg-type-stat-min: 2rem;
-$isg-type-stat-fluid: 4.444vw;
-$isg-type-stat-max: 64px;
+// Stat (clamp) — digit/spec; fluid к потолку ~60px
+$isg-type-stat-min: 1.875rem;
+$isg-type-stat-fluid: 4.15vw;
+$isg-type-stat-max: 60px;
 
 // Stat label — подпись к числу (~32px в макете), не путать с lead
 $isg-type-vw-stat-label: 1.4vw;

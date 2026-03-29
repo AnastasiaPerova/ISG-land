@@ -16,7 +16,8 @@ function smootherstep01(u) {
  */
 const RANGE_START_FRAC = 1.1;
 const RANGE_END_FRAC = -0.1;
-const SCALE_FROM = 1.11;
+/** Стартовый масштаб фона (выше = заметнее «зум» к финальному 1) */
+const SCALE_FROM = 1.22;
 
 const BG_MEDIA_CLASS = "isg-intro-bg-media";
 

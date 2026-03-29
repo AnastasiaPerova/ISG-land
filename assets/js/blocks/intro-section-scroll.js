@@ -73,24 +73,40 @@ export function splitHeadingIntoChars(h2) {
   line.className = "isg-intro-reveal__chars";
   line.setAttribute("aria-hidden", "true");
 
-  for (let i = 0; i < raw.length; i += 1) {
-    const ch = raw[i];
-    if (ch === "\n" || ch === "\r") continue;
+  const words = raw.split(" ");
+
+  const appendChar = (parent, ch, isSpace) => {
     const wrap = document.createElement("span");
     wrap.className = "isg-intro-char";
-    if (ch === " ") wrap.classList.add("isg-intro-char--ws");
+    if (isSpace) wrap.classList.add("isg-intro-char--ws");
 
     const ghost = document.createElement("span");
     ghost.className = "isg-intro-char__ghost";
     const solid = document.createElement("span");
     solid.className = "isg-intro-char__solid";
-    const displayCh = ch === " " ? "\u00a0" : ch;
+    const displayCh = isSpace ? "\u00a0" : ch;
     ghost.textContent = displayCh;
     solid.textContent = displayCh;
 
     wrap.appendChild(ghost);
     wrap.appendChild(solid);
-    line.appendChild(wrap);
+    parent.appendChild(wrap);
+  };
+
+  for (let w = 0; w < words.length; w += 1) {
+    const wordText = words[w];
+    const wordEl = document.createElement("span");
+    wordEl.className = "isg-intro-word";
+
+    for (let i = 0; i < wordText.length; i += 1) {
+      appendChar(wordEl, wordText[i], false);
+    }
+
+    line.appendChild(wordEl);
+
+    if (w < words.length - 1) {
+      appendChar(line, " ", true);
+    }
   }
 
   h2.appendChild(line);

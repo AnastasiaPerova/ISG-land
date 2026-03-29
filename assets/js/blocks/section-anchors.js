@@ -1,5 +1,6 @@
 import { CLOSE_EVENT } from "./header-drawer.js";
 import { getLenis } from "./smooth-scroll.js";
+import { syncNavPillSliders } from "./nav-pill-slider.js";
 
 const SECTION_IDS = [
   "isg-hero",
@@ -9,7 +10,7 @@ const SECTION_IDS = [
   "isg-quality",
   "isg-about",
   "isg-rfq",
-  "isg-video",
+  "isg-rfq-content",
   "isg-footer",
 ];
 
@@ -44,10 +45,26 @@ function setActiveSectionLinkAll(root, id) {
       else a.removeAttribute("aria-current");
     });
   });
+  syncNavPillSliders(root);
 }
 
-function firstSectionNav(root) {
-  return root.querySelector("[data-isg-section-nav]");
+/** Пока Lenis/браузер крутит страницу к якорю после клика — не затирать активный пункт старым scroll-spy. */
+let anchorNavLockId = null;
+let anchorNavLockTimer = null;
+
+function lockAnchorNavigation(id) {
+  anchorNavLockId = id;
+  clearTimeout(anchorNavLockTimer);
+  anchorNavLockTimer = setTimeout(() => {
+    anchorNavLockId = null;
+    anchorNavLockTimer = null;
+  }, 2200);
+}
+
+function clearAnchorNavigationLock() {
+  anchorNavLockId = null;
+  clearTimeout(anchorNavLockTimer);
+  anchorNavLockTimer = null;
 }
 
 /**
@@ -68,6 +85,8 @@ export function initSectionAnchors(root = document) {
       lenis.scrollTo(`#${id}`, {
         offset: -getScrollOffset(),
         immediate: instant,
+        duration: instant ? 0 : 1.28,
+        easing: (t) => 1 - (1 - t) ** 3,
       });
     } else {
       const top = el.getBoundingClientRect().top + window.scrollY - getScrollOffset();
@@ -85,11 +104,20 @@ export function initSectionAnchors(root = document) {
   };
 
   const navHrefIdSet = () => {
-    const nav0 = firstSectionNav(root);
-    if (!nav0) return null;
-    return new Set(
-      Array.from(nav0.querySelectorAll('a[href^="#"]')).map((a) => a.getAttribute("href").slice(1)),
-    );
+    const ids = new Set();
+    sectionNavs(root).forEach((nav) => {
+      nav.querySelectorAll('a[href^="#"]').forEach((a) => {
+        const id = a.getAttribute("href").slice(1);
+        if (id) ids.add(id);
+      });
+    });
+    return ids.size ? ids : null;
+  };
+
+  /** Верх секции в координатах документа (offsetTop у вложенных блоков — неверный) */
+  const getSectionDocumentTop = (el) => {
+    if (!el) return -Infinity;
+    return el.getBoundingClientRect().top + window.scrollY;
   };
 
   const applyActiveFromScroll = () => {
@@ -100,7 +128,7 @@ export function initSectionAnchors(root = document) {
     for (const id of SECTION_IDS) {
       const el = document.getElementById(id);
       if (!el) continue;
-      if (el.offsetTop <= probe) scrollId = id;
+      if (getSectionDocumentTop(el) <= probe) scrollId = id;
     }
 
     let activeId = null;
@@ -117,8 +145,18 @@ export function initSectionAnchors(root = document) {
       activeId = scrollId;
     }
 
-    const nav0 = firstSectionNav(root);
-    const prev = nav0?.querySelector(".isg-btn--active")?.getAttribute("href")?.slice(1);
+    if (anchorNavLockId != null) {
+      if (activeId === anchorNavLockId) {
+        clearAnchorNavigationLock();
+      } else {
+        return;
+      }
+    }
+
+    const prev = root
+      .querySelector("[data-isg-section-nav] a.isg-btn--active")
+      ?.getAttribute("href")
+      ?.slice(1);
     if (prev !== activeId) {
       setActiveSectionLinkAll(root, activeId);
     }
@@ -141,6 +179,7 @@ export function initSectionAnchors(root = document) {
       return;
     }
     e.preventDefault();
+    lockAnchorNavigation(id);
     scrollToSection(id, { behavior: "smooth", updateHash: true });
     setActiveSectionLinkAll(root, id);
     if (a.closest("#isg-nav-drawer")) {

@@ -21,37 +21,37 @@
           <!-- ACF: product_spec_cards (repeater) sub: label, value, meta, icon_svg -->
           <article class="isg-spec-card">
             <div class="isg-spec-card__head">
-              <p class="isg-spec-card__label">Diameter</p>
+              <p class="isg-spec-card__label">Diameter (mm)</p>
               <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                 <circle cx="16" cy="16" r="14" stroke="currentColor" stroke-width="2" />
               </svg>
             </div>
             <div>
-              <p class="isg-spec-card__value">323.9 – 2235 mm</p>
+              <p class="isg-spec-card__value">323.9 – 2235</p>
               <p class="isg-spec-card__meta">18 standard sizes</p>
             </div>
           </article>
           <article class="isg-spec-card">
             <div class="isg-spec-card__head">
-              <p class="isg-spec-card__label">Wall thickness</p>
+              <p class="isg-spec-card__label">Wall thickness (mm)</p>
               <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                 <rect x="4" y="10" width="24" height="12" stroke="currentColor" stroke-width="2" />
               </svg>
             </div>
             <div>
-              <p class="isg-spec-card__value">5.0 – 25.4 mm</p>
+              <p class="isg-spec-card__value">5.0 – 25.4</p>
               <p class="isg-spec-card__meta">Per standard</p>
             </div>
           </article>
           <article class="isg-spec-card">
             <div class="isg-spec-card__head">
-              <p class="isg-spec-card__label">Length</p>
+              <p class="isg-spec-card__label">Length (m)</p>
               <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                 <path d="M6 16h20M18 10l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
               </svg>
             </div>
             <div>
-              <p class="isg-spec-card__value">6 – 18.3 m</p>
+              <p class="isg-spec-card__value">6 – 18.3</p>
               <p class="isg-spec-card__meta">Custom on request</p>
             </div>
           </article>
@@ -128,7 +128,9 @@
         </div>
       </div>
       <div class="isg-product-content__row isg-product-content__row--rule">
-        <div class="isg-rule" role="presentation"></div>
+        <div class="isg-rule" role="presentation">
+          <span class="isg-rule__line" aria-hidden="true"></span>
+        </div>
       </div>
       <div class="isg-product-content__row isg-product-content__row--sizes">
         <div class="isg-product-content__col isg-product-content__col--size-lead">
@@ -136,38 +138,115 @@
         </div>
         <div class="isg-product-content__col isg-product-content__col--size-panel">
           <div class="isg-size-tables">
-            <!-- Одна таблица на пару параметров: на десктопе две колонки в одной таблице, не две отдельные table -->
             <div class="isg-size-tables__pair">
-              <table class="isg-size-table isg-size-table--duo">
-                <thead>
-                  <tr>
-                    <th scope="col" class="isg-size-tables__head">Outside diameter</th>
-                    <th scope="col" class="isg-size-tables__head">Wall thickness</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>323.9 – 2235 mm</td>
-                    <td>5.0 – 25.4 mm</td>
-                  </tr>
-                </tbody>
-              </table>
+              <div class="isg-size-spec" role="group" aria-label="Size range, column 1">
+                <div class="isg-size-spec__head">
+                  <span class="isg-size-spec__colhead isg-size-tables__head">Outside diameter (mm)</span>
+                  <span class="isg-size-spec__colhead isg-size-tables__head">Wall thickness (mm)</span>
+                </div>
+                <div class="isg-size-spec__rule isg-size-spec__rule--head" aria-hidden="true">
+                  <span class="isg-size-spec__seg isg-product-content__line-draw"></span>
+                  <span class="isg-size-spec__seg isg-product-content__line-draw"></span>
+                </div>
+                <ul class="isg-size-spec__list">
+                  <li class="isg-size-spec__item isg-size-spec__item--first">
+                    <div class="isg-size-spec__row">
+                      <span class="isg-size-spec__val">323.9 – 610</span>
+                      <span class="isg-size-spec__val">5.0 – 12.7</span>
+                    </div>
+                  </li>
+                  <li class="isg-size-spec__item">
+                    <span class="isg-size-spec__row-line isg-product-content__line-draw" aria-hidden="true"></span>
+                    <div class="isg-size-spec__row">
+                      <span class="isg-size-spec__val">610 – 914</span>
+                      <span class="isg-size-spec__val">6.3 – 16.0</span>
+                    </div>
+                  </li>
+                  <li class="isg-size-spec__item">
+                    <span class="isg-size-spec__row-line isg-product-content__line-draw" aria-hidden="true"></span>
+                    <div class="isg-size-spec__row">
+                      <span class="isg-size-spec__val">914 – 1219</span>
+                      <span class="isg-size-spec__val">8.0 – 18.0</span>
+                    </div>
+                  </li>
+                  <li class="isg-size-spec__item">
+                    <span class="isg-size-spec__row-line isg-product-content__line-draw" aria-hidden="true"></span>
+                    <div class="isg-size-spec__row">
+                      <span class="isg-size-spec__val">1219 – 1422</span>
+                      <span class="isg-size-spec__val">10.0 – 20.0</span>
+                    </div>
+                  </li>
+                  <li class="isg-size-spec__item">
+                    <span class="isg-size-spec__row-line isg-product-content__line-draw" aria-hidden="true"></span>
+                    <div class="isg-size-spec__row">
+                      <span class="isg-size-spec__val">1422 – 1829</span>
+                      <span class="isg-size-spec__val">12.0 – 22.0</span>
+                    </div>
+                  </li>
+                  <li class="isg-size-spec__item">
+                    <span class="isg-size-spec__row-line isg-product-content__line-draw" aria-hidden="true"></span>
+                    <div class="isg-size-spec__row">
+                      <span class="isg-size-spec__val">1829 – 2235</span>
+                      <span class="isg-size-spec__val">14.0 – 25.4</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
             </div>
             <div class="isg-size-tables__pair">
-              <table class="isg-size-table isg-size-table--duo">
-                <thead>
-                  <tr>
-                    <th scope="col" class="isg-size-tables__head">Pipe length</th>
-                    <th scope="col" class="isg-size-tables__head">Standards</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>6 – 18.3 m</td>
-                    <td>API 5L, EN, ISO</td>
-                  </tr>
-                </tbody>
-              </table>
+              <div class="isg-size-spec" role="group" aria-label="Size range, column 2">
+                <div class="isg-size-spec__head">
+                  <span class="isg-size-spec__colhead isg-size-tables__head">Outside diameter (mm)</span>
+                  <span class="isg-size-spec__colhead isg-size-tables__head">Wall thickness (mm)</span>
+                </div>
+                <div class="isg-size-spec__rule isg-size-spec__rule--head" aria-hidden="true">
+                  <span class="isg-size-spec__seg isg-product-content__line-draw"></span>
+                  <span class="isg-size-spec__seg isg-product-content__line-draw"></span>
+                </div>
+                <ul class="isg-size-spec__list">
+                  <li class="isg-size-spec__item isg-size-spec__item--first">
+                    <div class="isg-size-spec__row">
+                      <span class="isg-size-spec__val">323.9 – 610</span>
+                      <span class="isg-size-spec__val">5.0 – 12.7</span>
+                    </div>
+                  </li>
+                  <li class="isg-size-spec__item">
+                    <span class="isg-size-spec__row-line isg-product-content__line-draw" aria-hidden="true"></span>
+                    <div class="isg-size-spec__row">
+                      <span class="isg-size-spec__val">610 – 914</span>
+                      <span class="isg-size-spec__val">6.3 – 16.0</span>
+                    </div>
+                  </li>
+                  <li class="isg-size-spec__item">
+                    <span class="isg-size-spec__row-line isg-product-content__line-draw" aria-hidden="true"></span>
+                    <div class="isg-size-spec__row">
+                      <span class="isg-size-spec__val">914 – 1219</span>
+                      <span class="isg-size-spec__val">8.0 – 18.0</span>
+                    </div>
+                  </li>
+                  <li class="isg-size-spec__item">
+                    <span class="isg-size-spec__row-line isg-product-content__line-draw" aria-hidden="true"></span>
+                    <div class="isg-size-spec__row">
+                      <span class="isg-size-spec__val">1219 – 1422</span>
+                      <span class="isg-size-spec__val">10.0 – 20.0</span>
+                    </div>
+                  </li>
+                  <li class="isg-size-spec__item">
+                    <span class="isg-size-spec__row-line isg-product-content__line-draw" aria-hidden="true"></span>
+                    <div class="isg-size-spec__row">
+                      <span class="isg-size-spec__val">1422 – 1829</span>
+                      <span class="isg-size-spec__val">12.0 – 22.0</span>
+                    </div>
+                  </li>
+                  <li class="isg-size-spec__item">
+                    <span class="isg-size-spec__row-line isg-product-content__line-draw" aria-hidden="true"></span>
+                    <div class="isg-size-spec__row">
+                      <span class="isg-size-spec__val">1829 – 2235</span>
+                      <span class="isg-size-spec__val">14.0 – 25.4</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>

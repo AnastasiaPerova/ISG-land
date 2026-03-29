@@ -2,6 +2,7 @@
   "name": "isg-theme-static",
   "private": true,
   "scripts": {
+    "build": "npm run build:css",
     "build:css": "sass assets/scss/main.scss assets/css/main.css --no-source-map --style=expanded",
     "watch:css": "sass --watch assets/scss/main.scss assets/css/main.css --no-source-map --style=expanded",
     "dev:serve": "browser-sync start --server . --startPath /preview.html --files assets/css/main.css --files preview.html --files assets/js --files partials --no-notify --port 5173",

@@ -22,7 +22,7 @@ $isg-font-mono: "DM Mono", ui-monospace, monospace;
  @import "typography";
 
 // ——— Отступы Yucca: --gap 1.6rem (desktop) / 1.2rem (≤1099px) ———
-$isg-gap: 1.6rem;
+$isg-gap: 1.4rem;
 $isg-gap-mobile: 1.2rem;
 
 $isg-space-3xs: 0.4rem;
@@ -85,6 +85,9 @@ $isg-btn-relats-duration: 0.6s;
 $isg-nav-pill-gap: 4.8rem;
 $isg-nav-pill-pad: 0.8rem;
 $isg-nav-row-height: 5.4rem;
+/* Высота внешнего блока пилюли в хедере (padding + ряд кнопок) */
+$isg-header-pill-outer-height: ($isg-nav-pill-pad * 2) + $isg-nav-row-height;
+$isg-header-logo-img-max: 8.5rem;
 $isg-nav-section-link-pad-y: 1.4rem;
 $isg-nav-section-link-pad-x: 1.6rem;
 $isg-subtitle-gap: 3.2rem;
@@ -108,4 +111,38 @@ $isg-lang-btn-pad-x: 2rem;
 $isg-color-text: #111111;
 $isg-color-light: #ffffff;
 $isg-color-muted: #6e6e6e;
+/* #1925AA — акцент, hover «Download catalogue» в hero и др. */
 $isg-color-accent: #1925aa;
+/* Подложка блока карточек (digits featured .cards) — полупрозрачная над фото */
+$isg-color-cards-bg: rgba(243, 242, 238, 0.82);
+/* Панели .isg-quality-list-wrap и .isg-about-values — одинаковый внутренний отступ */
+$isg-values-panel-pad: clamp(1.75rem, 3vw, 3.5rem);
+/* Расстояние между .isg-quality-list-item в колонке */
+$isg-quality-list-gap: clamp(1.75rem, 3vw, 2.75rem);
+/* Иконка — надпись: как в макете ~8–12px; меньше $isg-quality-list-gap */
+$isg-quality-list-icon-text-gap: clamp(0.5rem, 1.25vw, 0.75rem);
+
+// Border radius — иерархия (от базы к крупным блокам):
+// 1) $isg-radius-btn / $isg-radius-btn-sm — кнопки и hero watch (≤1099: btn-sm)
+// 2) $isg-radius-hairline … $isg-radius-xs — микро-UI
+// 3) $isg-radius-sm … $isg-radius-md — фокус, превью, иконки списков
+// 4) $isg-radius-swatch — квадрат/точка субтитула
+// 5) $isg-radius-lg … $isg-radius-xl — карточки, инпуты, крупные плитки
+// 6) $isg-radius-2xl … $isg-radius-pill — панели, навигационные капсулы
+// 7) $isg-radius-section-top / $isg-radius-visual — секции и медиа
+$isg-radius-btn: max(9.9pt, min(1.042vw, 19.95px));
+$isg-radius-btn-sm: min(3.846vw, 17.25px);
+$isg-radius-hairline: 1px;
+$isg-radius-xs: 4px;
+$isg-radius-sm: 8px;
+$isg-radius-md: 14px;
+$isg-radius-swatch: 13.3px;
+$isg-radius-lg: 16px;
+$isg-radius-xl: 20px;
+$isg-radius-2xl: 24px;
+$isg-radius-3xl: 28px;
+$isg-radius-pill: 55px;
+$isg-radius-section-top: 64px 64px 0 0;
+$isg-radius-visual: 64px;
+$isg-radius-circle: 50%;
+$isg-radius-none: 0;

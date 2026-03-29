@@ -1,40 +1,58 @@
 <!-- Flexible Content layout: hero -->
-<section
-  id="isg-hero"
-  class="isg-hero"
-  data-isg-block="hero"
-  style="background-image: url('assets/img/img-test-1.jpg');"
-  aria-label="Hero"
->
-  <!-- ACF: hero_background (image URL) -->
+<section id="isg-hero" class="isg-hero" data-isg-block="hero" aria-label="Hero">
+  <!-- ACF: hero_video_mp4 — положите hero-video.mp4 в assets/video/ -->
+  <div class="isg-hero__video" aria-hidden="true">
+    <video
+      class="isg-hero__video-media"
+      autoplay
+      muted
+      loop
+      playsinline
+      poster="assets/img/img-test-1.jpg"
+    >
+      <source src="assets/video/hero-video.mp4" type="video/mp4" />
+    </video>
+  </div>
   <div class="isg-hero__conteiner">
     <div class="isg-hero__content">
       <div class="isg-title-group">
-        <div class="isg-subtitle">
-          <!-- ACF: hero_kicker -->
-          <p class="isg-subtitle__text">Application Areas</p>
-          <span class="isg-subtitle__swatch" aria-hidden="true"></span>
-        </div>
         <!-- ACF: hero_title -->
-        <h1 class="isg-display isg-text-center">
+        <h1 class="isg-display isg-text-center isg-hero__title">
           Large-Diameter <br />
           Spiral-Welded Pipes
         </h1>
         <!-- ACF: hero_subtitle -->
-        <p class="isg-lead isg-text-center">Infrastructure &amp; industrial projects</p>
+        <p class="isg-lead isg-text-center isg-hero__lead">Infrastructure &amp; industrial projects</p>
       </div>
-      <div class="isg-btn-group isg-btn-group--spread">
-        <div class="isg-btn-group">
-          <a class="isg-btn isg-btn--blur" href="#">Download catalogue</a>
-        </div>
-        <div class="isg-btn-group">
-          <span class="isg-btn__media" aria-hidden="true">
-            <svg class="isg-btn__media-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-            </svg>
+      <div class="isg-btn-group isg-btn-group--spread isg-btn-group--hero-actions">
+        <a class="isg-btn isg-btn--blur" href="#">Download catalogue</a>
+        <button
+          type="button"
+          class="isg-hero-watch-btn"
+          data-isg-lightbox="assets/video/hero-video.mp4"
+          data-isg-lightbox-kind="video"
+          aria-label="Watch video"
+        >
+          <span class="isg-hero-watch-btn__thumb" aria-hidden="true">
+            <video
+              class="isg-hero-watch-btn__preview"
+              muted
+              loop
+              playsinline
+              autoplay
+              preload="metadata"
+              poster="assets/img/img-test-1.jpg"
+            >
+              <source src="assets/video/hero-video.mp4" type="video/mp4" />
+            </video>
+            <span class="isg-hero-watch-btn__play">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M9 7.5v9l7.5-4.5L9 7.5z" fill="currentColor" />
+              </svg>
+            </span>
           </span>
-          <a class="isg-btn isg-btn--blur" href="#">Download catalogue</a>
-        </div>
+          <span class="isg-hero-watch-btn__label">Watch video</span>
+        </button>
       </div>
     </div>
   </div>

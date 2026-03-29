@@ -24,6 +24,7 @@ export function initScrollReveal(root = document) {
         trigger: el,
         start: "top 92%",
         toggleActions: "play none none none",
+        invalidateOnRefresh: true,
       },
     });
     tweens.push(tw);
