@@ -7,6 +7,23 @@
 
 import { ensureTinySlider } from "../vendor/tiny-slider-load.js";
 
+/**
+ * Gutter tiny-slider в px из `--isg-gap` (совпадает с `$isg-gap` в _variables.scss).
+ */
+function getIsgGapPx() {
+  const root = document.documentElement;
+  const raw = getComputedStyle(root).getPropertyValue("--isg-gap").trim();
+  if (raw.endsWith("rem")) {
+    const rem = parseFloat(raw);
+    const fs = parseFloat(getComputedStyle(root).fontSize) || 16;
+    return Math.max(0, Math.round(rem * fs));
+  }
+  if (raw.endsWith("px")) {
+    return Math.round(parseFloat(raw));
+  }
+  return 29;
+}
+
 /** @param {import("tiny-slider").TinySliderInfo | undefined} info */
 function syncNavThumb(thumb, info) {
   if (!thumb || !info) return;
@@ -29,7 +46,7 @@ function syncNavThumb(thumb, info) {
   thumb.style.marginLeft = `${progress * travel}%`;
 }
 
-function optionsTeam(track, prev, next) {
+function optionsTeam(track, prev, next, gapPx) {
   return {
     container: track,
     mode: "carousel",
@@ -38,7 +55,7 @@ function optionsTeam(track, prev, next) {
     /* Три карточки целиком в ширине контейнера слайдера (fluid), без fixedWidth */
     items: 3,
     slideBy: 1,
-    gutter: 24,
+    gutter: gapPx,
     speed: 400,
     loop: true,
     mouseDrag: true,
@@ -51,14 +68,14 @@ function optionsTeam(track, prev, next) {
     preventScrollOnTouch: "auto",
     freezable: false,
     responsive: {
-      0: { items: 1, gutter: 16 },
-      560: { items: 2, gutter: 20 },
-      1024: { items: 3, gutter: 24 },
+      0: { items: 1, gutter: gapPx },
+      560: { items: 2, gutter: gapPx },
+      1024: { items: 3, gutter: gapPx },
     },
   };
 }
 
-function optionsGallery(track, prev, next) {
+function optionsGallery(track, prev, next, gapPx) {
   return {
     container: track,
     mode: "carousel",
@@ -68,7 +85,7 @@ function optionsGallery(track, prev, next) {
     slideBy: 1,
     fixedWidth: 560,
     edgePadding: 120,
-    gutter: 24,
+    gutter: gapPx,
     speed: 400,
     loop: true,
     mouseDrag: true,
@@ -81,11 +98,11 @@ function optionsGallery(track, prev, next) {
     preventScrollOnTouch: "auto",
     freezable: false,
     responsive: {
-      0: { fixedWidth: 280, edgePadding: 20, gutter: 12 },
-      480: { fixedWidth: 320, edgePadding: 36, gutter: 14 },
-      768: { fixedWidth: 420, edgePadding: 64, gutter: 18 },
-      1024: { fixedWidth: 480, edgePadding: 96, gutter: 22 },
-      1400: { fixedWidth: 560, edgePadding: 120, gutter: 24 },
+      0: { fixedWidth: 280, edgePadding: 20, gutter: gapPx },
+      480: { fixedWidth: 320, edgePadding: 36, gutter: gapPx },
+      768: { fixedWidth: 420, edgePadding: 64, gutter: gapPx },
+      1024: { fixedWidth: 480, edgePadding: 96, gutter: gapPx },
+      1400: { fixedWidth: 560, edgePadding: 120, gutter: gapPx },
     },
   };
 }
@@ -105,6 +122,8 @@ export async function initSliders(root = document) {
     return () => {};
   }
 
+  const gapPx = getIsgGapPx();
+
   root.querySelectorAll(".isg-slider").forEach((slider) => {
     const track = slider.querySelector(".isg-slider__track");
     const prev = slider.querySelector(".isg-slider__btn--prev");
@@ -116,8 +135,8 @@ export async function initSliders(root = document) {
       slider.getAttribute("data-isg-slider") === "gallery" ||
       slider.classList.contains("isg-slider--mode-gallery");
     const opts = isGallery
-      ? optionsGallery(track, prev, next)
-      : optionsTeam(track, prev, next);
+      ? optionsGallery(track, prev, next, gapPx)
+      : optionsTeam(track, prev, next, gapPx);
 
     /** @type {import("tiny-slider").TinySliderInstance | null} */
     let instance = null;

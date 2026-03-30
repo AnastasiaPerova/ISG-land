@@ -21,8 +21,8 @@ $isg-font-mono: "DM Mono", ui-monospace, monospace;
 
 @import "typography";
 
-// ——— Отступы Yucca: --gap 1.6rem (desktop) / 1.2rem (≤1099px) ———
-$isg-gap: 1.6rem;
+// ——— Отступы Yucca: --gap (desktop) / ≤1099px ———
+$isg-gap: 1.8rem;
 $isg-gap-mobile: 1.55rem;
 
 $isg-space-3xs: 0.4rem;

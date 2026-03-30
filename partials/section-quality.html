@@ -35,48 +35,45 @@
               <p class="isg-subtitle__text">Focus areas</p>
               <span class="isg-subtitle__swatch" aria-hidden="true"></span>
             </div>
-            <div class="isg-quality-list">
-              <!-- ACF: quality_list (repeater) sub: text, image для слайда по индексу -->
-              <button type="button" class="isg-quality-list-item isg-quality-label--plain isg-quality-list-item--active" data-isg-quality-index="0" aria-pressed="true">
-                <span class="isg-quality-list-item__inner">
-                  <span class="isg-quality-list-item__icon" aria-hidden="true">
-                    <img src="assets/img/icons/agriculture.svg" width="48" height="48" alt="" />
-                  </span>
-                  <span class="isg-quality-list-item__text">Dimensional inspection</span>
-                </span>
-              </button>
-              <button type="button" class="isg-quality-list-item isg-quality-label--plain" data-isg-quality-index="1" aria-pressed="false">
-                <span class="isg-quality-list-item__inner">
-                  <span class="isg-quality-list-item__icon" aria-hidden="true">
-                    <img src="assets/img/icons/construction.svg" width="48" height="48" alt="" />
-                  </span>
-                  <span class="isg-quality-list-item__text">Traceability</span>
-                </span>
-              </button>
-              <button type="button" class="isg-quality-list-item isg-quality-label--plain" data-isg-quality-index="2" aria-pressed="false">
-                <span class="isg-quality-list-item__inner">
-                  <span class="isg-quality-list-item__icon" aria-hidden="true">
-                    <img src="assets/img/icons/industry.svg" width="48" height="48" alt="" />
-                  </span>
-                  <span class="isg-quality-list-item__text">Laboratory testing</span>
-                </span>
-              </button>
-              <button type="button" class="isg-quality-list-item isg-quality-label--plain" data-isg-quality-index="3" aria-pressed="false">
-                <span class="isg-quality-list-item__inner">
-                  <span class="isg-quality-list-item__icon" aria-hidden="true">
-                    <img src="assets/img/icons/infrastructure.svg" width="48" height="48" alt="" />
-                  </span>
-                  <span class="isg-quality-list-item__text">Documentation</span>
-                </span>
-              </button>
-              <button type="button" class="isg-quality-list-item isg-quality-label--plain" data-isg-quality-index="4" aria-pressed="false">
-                <span class="isg-quality-list-item__inner">
-                  <span class="isg-quality-list-item__icon" aria-hidden="true">
-                    <img src="assets/img/icons/oil-gas.svg" width="48" height="48" alt="" />
-                  </span>
-                  <span class="isg-quality-list-item__text">Third-party inspection</span>
-                </span>
-              </button>
+            <!-- как .slides .info .center ul на toptier.relats.com (component--other-industries) -->
+            <div class="isg-quality-list-center">
+              <ul class="isg-quality-list" data-isg-quality-list-scroll>
+                <li class="isg-quality-list__li isg-quality-list__item--active">
+                  <button type="button" class="isg-quality-list-item isg-quality-label--plain isg-quality-list-item--text-only isg-quality-list-item--active" data-isg-quality-index="0" aria-pressed="true">
+                    <span class="isg-quality-list-item__inner">
+                      <span class="isg-quality-list-item__text isg-quality-list-item__title">Dimensional inspection</span>
+                    </span>
+                  </button>
+                </li>
+                <li class="isg-quality-list__li">
+                  <button type="button" class="isg-quality-list-item isg-quality-label--plain isg-quality-list-item--text-only" data-isg-quality-index="1" aria-pressed="false">
+                    <span class="isg-quality-list-item__inner">
+                      <span class="isg-quality-list-item__text isg-quality-list-item__title">Traceability</span>
+                    </span>
+                  </button>
+                </li>
+                <li class="isg-quality-list__li">
+                  <button type="button" class="isg-quality-list-item isg-quality-label--plain isg-quality-list-item--text-only" data-isg-quality-index="2" aria-pressed="false">
+                    <span class="isg-quality-list-item__inner">
+                      <span class="isg-quality-list-item__text isg-quality-list-item__title">Laboratory testing</span>
+                    </span>
+                  </button>
+                </li>
+                <li class="isg-quality-list__li">
+                  <button type="button" class="isg-quality-list-item isg-quality-label--plain isg-quality-list-item--text-only" data-isg-quality-index="3" aria-pressed="false">
+                    <span class="isg-quality-list-item__inner">
+                      <span class="isg-quality-list-item__text isg-quality-list-item__title">Documentation</span>
+                    </span>
+                  </button>
+                </li>
+                <li class="isg-quality-list__li">
+                  <button type="button" class="isg-quality-list-item isg-quality-label--plain isg-quality-list-item--text-only" data-isg-quality-index="4" aria-pressed="false">
+                    <span class="isg-quality-list-item__inner">
+                      <span class="isg-quality-list-item__text isg-quality-list-item__title">Third-party inspection</span>
+                    </span>
+                  </button>
+                </li>
+              </ul>
             </div>
           </div>
           <div class="isg-quality-visual">

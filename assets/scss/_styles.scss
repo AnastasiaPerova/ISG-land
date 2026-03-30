@@ -50,7 +50,7 @@ html {
   --isg-font-body: Plus Jakarta Sans, system-ui, sans-serif;
   --isg-font-ui: Plus Jakarta Sans, system-ui, sans-serif;
   --isg-font-mono: DM Mono, ui-monospace, monospace;
-  --isg-gap: 1.4rem;
+  --isg-gap: #{$isg-gap};
   --isg-container-width-yucca: 136rem;
   --isg-header-height: 4rem;
   /* UI kit — типографика (см. _typography.scss); правки в одном месте или здесь в DevTools */
@@ -3456,8 +3456,8 @@ padding: 0.5rem 1.5rem 0.5rem 0.5rem;
   width: 100%;
   max-width: 883px;
   border-radius: $isg-radius-2xl;
-  background: $isg-color-accent;
-  color: #ffffff;
+  background: #e8e6e0;
+  color: #111111;
   padding: $isg-values-panel-pad;
   display: flex;
   flex-direction: column;
@@ -3469,59 +3469,38 @@ padding: 0.5rem 1.5rem 0.5rem 0.5rem;
 }
 
 .isg-quality-list-wrap .isg-quality-list-wrap__label .isg-subtitle__text {
-  color: #e8e6e0;
+  color: #111111;
 }
 
 .isg-quality-list-wrap .isg-subtitle__swatch {
-  background: #e8e6e0;
+  background: $isg-color-accent;
+}
+
+/* Десктоп: в окне видно ~2 пункта; остальное уезжает translateY (quality-scroll.js) */
+@media (min-width: 1100px) {
+  .isg-quality-list-wrap {
+    overflow: hidden;
+  }
+
+  .isg-quality-list-wrap .isg-quality-list {
+    flex: 0 0 auto;
+    justify-content: flex-start;
+    max-height: calc(2 * clamp(3.5rem, 6vw, 5rem) + #{$isg-quality-list-gap});
+    overflow-y: hidden;
+    will-change: transform;
+  }
 }
 
 .isg-quality-list-wrap .isg-quality-list-item__text {
   font-size: var(--isg-type-h4);
   letter-spacing: $isg-letter-h4;
   display: block;
-
-  /* Неактивные строки светлее за счёт прозрачности */
-  opacity: 0.4;
-
-  /* Буквы «заливаются» градиентом сверху вниз (актив — верхняя половина) */
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-  background-image: linear-gradient(180deg, #e8e6e0 50%, #828282 50%);
-  background-size: 100% 200%;
-  background-position: 0 100%;
-  background-clip: text;
-  -webkit-background-clip: text;
-  transition:
-    transform 0.12s cubic-bezier(0.22, 1, 0.36, 1),
-    background-position 0.55s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.2s ease;
+  color: #828282;
+  transition: color 0.25s ease, opacity 0.2s ease;
 }
 
 .isg-quality-list-wrap .isg-quality-list-item--active .isg-quality-list-item__text {
-  opacity: 1;
-  background-position: 0 0;
-  transform: scale(1);
-}
-
-@supports not ((-webkit-background-clip: text) or (background-clip: text)) {
-  .isg-quality-list-wrap .isg-quality-list-item__text {
-    background: none;
-    color: #383838;
-    -webkit-text-fill-color: unset;
-    opacity: 0.5;
-  }
-
-  .isg-quality-list-wrap .isg-quality-list-item--active .isg-quality-list-item__text {
-    color: #e8e6e0;
-    opacity: 1;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .isg-quality-list-wrap .isg-quality-list-item__text {
-    transition-duration: 0.01ms;
-  }
+  color: #111111;
 }
 
 .isg-quality-list-wrap__label.isg-subtitle {
@@ -3572,11 +3551,7 @@ padding: 0.5rem 1.5rem 0.5rem 0.5rem;
   border-radius: $isg-radius-sm;
 }
 
-.isg-quality-list-wrap .isg-quality-list-item:focus-visible {
-  outline-color: #ffffff;
-}
-
-/* Строка пункта: иконка absolute относительно .isg-quality-list-item__inner, не всей панели */
+/* Строка пункта списка в панели quality */
 .isg-quality-list-wrap .isg-quality-list-item {
   width: 100%;
   padding: 0;
@@ -3602,8 +3577,8 @@ padding: 0.5rem 1.5rem 0.5rem 0.5rem;
   text-align: center;
   width: auto;
   min-width: 0;
-  padding-left: calc(52px + #{$isg-quality-list-icon-text-gap});
-  padding-right: calc(52px + #{$isg-quality-list-icon-text-gap});
+  padding-left: clamp(1.25rem, 3.5vw, 2.75rem);
+  padding-right: clamp(1.25rem, 3.5vw, 2.75rem);
   box-sizing: border-box;
 }
 
@@ -3665,65 +3640,6 @@ padding: 0.5rem 1.5rem 0.5rem 0.5rem;
   .isg-quality-list-item--active:hover .isg-quality-list-item__icon {
     background-color: #e4e6f2;
     border-color: rgba(25, 37, 170, 0.18);
-  }
-}
-
-/* Панель списка: иконка слева от текста в слоте — absolute, без сдвига надписи */
-$isg-quality-icon-ease: cubic-bezier(0.22, 1, 0.36, 1);
-
-.isg-quality-list-wrap .isg-quality-list-item__icon {
-  position: absolute;
-  left: 0;
-  top: 50%;
-  display: flex;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  width: 3rem;
-  max-width: 52px;
-  height: 3rem;
-  max-height: 52px;
-  padding: 0;
-  margin: 0;
-  opacity: 0;
-  transform: translateY(-50%) translate3d(-0.75rem, 0, 0);
-  overflow: hidden;
-  pointer-events: none;
-  background-color: transparent;
-  border: 0;
-  transition:
-    opacity 0.12s $isg-quality-icon-ease,
-    transform 0.12s $isg-quality-icon-ease;
-}
-
-.isg-quality-list-wrap .isg-quality-list-item__icon img {
-  filter: brightness(0) invert(1);
-  transition: filter 0.2s ease;
-}
-
-.isg-quality-list-wrap .isg-quality-list-item--active .isg-quality-list-item__icon {
-  opacity: 1;
-  transform: translateY(-50%) translate3d(0, 0, 0);
-  pointer-events: auto;
-  background-color: transparent;
-  border-color: transparent;
-}
-
-.isg-quality-list-wrap .isg-quality-list-item--active .isg-quality-list-item__icon img {
-  filter: brightness(0) invert(1);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .isg-quality-list-wrap .isg-quality-list-item:hover .isg-quality-list-item__icon,
-  .isg-quality-list-wrap .isg-quality-list-item--active:hover .isg-quality-list-item__icon {
-    background-color: transparent;
-    border-color: transparent;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .isg-quality-list-wrap .isg-quality-list-item__icon {
-    transition-duration: 0.01ms;
   }
 }
 
@@ -3805,9 +3721,77 @@ $isg-quality-icon-ease: cubic-bezier(0.22, 1, 0.36, 1);
     padding-bottom: var(--isg-quality-gap-header);
   }
 
-  /* Список «Focus areas» скрыт; горизонтальный слайдер — только фото с подписями */
-  .isg-quality-list-wrap {
+  /* Список скрыт только в About; в Quality — горизонтальная лента в паре со слайдами */
+  .isg-about-content-block .isg-quality-list-wrap {
     display: none;
+  }
+
+  #isg-quality .isg-quality-list-wrap {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: none;
+    margin-inline: calc(-1 * #{$isg-section-pad-x-mobile});
+    padding-inline: $isg-section-pad-x-mobile;
+    padding-block: 0;
+    margin-bottom: clamp(0.75rem, 2.5vw, 1.25rem);
+    box-sizing: border-box;
+  }
+
+  #isg-quality .isg-quality-list-wrap__label.isg-subtitle {
+    padding-inline: $isg-section-pad-x-mobile;
+    margin-bottom: 0.5rem;
+  }
+
+  #isg-quality .isg-quality-list {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    flex: none;
+    gap: clamp(0.75rem, 3vw, 1.125rem);
+    width: 100%;
+    max-width: none;
+    margin-inline: calc(-1 * #{$isg-section-pad-x-mobile});
+    padding-inline: $isg-section-pad-x-mobile;
+    padding-bottom: 6px;
+    box-sizing: border-box;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: $isg-section-pad-x-mobile;
+    scrollbar-width: thin;
+    touch-action: pan-x;
+  }
+
+  #isg-quality .isg-quality-list::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  #isg-quality .isg-quality-list::-webkit-scrollbar-thumb {
+    background: rgba(17, 17, 17, 0.2);
+    border-radius: 4px;
+  }
+
+  #isg-quality .isg-quality-list-item {
+    flex: 0 0 min(88vw, 420px);
+    width: min(88vw, 420px);
+    min-width: min(88vw, 420px);
+    max-width: min(88vw, 420px);
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    box-sizing: border-box;
+  }
+
+  #isg-quality .isg-quality-list-item__inner {
+    padding-left: clamp(1rem, 2.5vw, 1.5rem);
+    padding-right: clamp(1rem, 2.5vw, 1.5rem);
+    min-height: 3.5rem;
+    align-items: center;
+    justify-content: center;
   }
 
   .isg-quality-row {
@@ -3908,6 +3892,15 @@ $isg-quality-icon-ease: cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .isg-quality-visual__slide {
+    scroll-snap-align: none;
+  }
+
+  #isg-quality .isg-quality-list {
+    scroll-behavior: auto;
+    scroll-snap-type: none;
+  }
+
+  #isg-quality .isg-quality-list-item {
     scroll-snap-align: none;
   }
 }

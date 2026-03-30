@@ -6,6 +6,8 @@ import gsap from "gsap";
  * — прогресс 0…1 вдоль трека: при Lenis — lenis.scroll + только lenis «scroll» (без дубля window);
  * — клик по пункту (аналог .bottom .label): lenis.scrollTo(маркер, { offset: -1, … }).
  *
+ * Список слева: как `.slides .info .center ul` на Relats — `yPercent = -(100/n)*t` на `ul`.
+ *
  * About (`data-isg-quality-about` на треке): те же маски для фото + стек `.isg-about-feature-card__content-stack` (yPercent).
  *
  * ScrollTrigger не используем: с Lenis без scrollerProxy scrub/onUpdate часто расходятся с реальным скроллом.
@@ -13,6 +15,36 @@ import gsap from "gsap";
 
 function clamp01(x) {
   return Math.min(1, Math.max(0, x));
+}
+
+/** Центр контейнера → ближайший по центру дочерний элемент (горизонтальная лента). */
+function findBestIndexCentered(container, elements) {
+  if (!container || !elements.length) return 0;
+  const root = container.getBoundingClientRect();
+  const centerX = root.left + root.width / 2;
+  let best = 0;
+  let bestDist = Infinity;
+  elements.forEach((el, i) => {
+    const r = el.getBoundingClientRect();
+    const cx = r.left + r.width / 2;
+    const d = Math.abs(cx - centerX);
+    if (d < bestDist) {
+      bestDist = d;
+      best = i;
+    }
+  });
+  return best;
+}
+
+/** Прокрутить контейнер так, чтобы child оказался по центру по горизонтали. */
+function scrollChildToCenter(container, child, behavior = "auto") {
+  if (!container || !child) return;
+  const cr = container.getBoundingClientRect();
+  const ir = child.getBoundingClientRect();
+  const delta = ir.left + ir.width / 2 - (cr.left + cr.width / 2);
+  const maxScroll = Math.max(0, container.scrollWidth - container.clientWidth);
+  const next = Math.max(0, Math.min(container.scrollLeft + delta, maxScroll));
+  container.scrollTo({ left: next, behavior });
 }
 
 /**
@@ -59,8 +91,9 @@ function getScrollY() {
  */
 function getScrollYForProgress(getLenis) {
   const lenis = typeof getLenis === "function" ? getLenis() : null;
-  if (lenis && typeof lenis.scroll === "number") {
-    return lenis.scroll;
+  if (lenis) {
+    if (typeof lenis.scroll === "number") return lenis.scroll;
+    if (typeof lenis.animatedScroll === "number") return lenis.animatedScroll;
   }
   return getScrollY();
 }
@@ -135,6 +168,26 @@ function initOneQualityScrollTrack(track, options = {}) {
   };
 
   const slidesScrollEl = track.querySelector("[data-isg-quality-mobile-slider]");
+  const listScrollEl = track.querySelector("[data-isg-quality-list-scroll]");
+  const listWrap =
+    track.querySelector(".isg-quality-list-wrap") ||
+    (items[0] ? items[0].closest(".isg-quality-list-wrap") : null);
+  const listCol =
+    listWrap?.querySelector(".isg-quality-list") || track.querySelector(".isg-quality-list");
+
+  /**
+   * Сдвиг ul: как Relats (GSAP `y: -100/n*o + "%"`). Окно — `.isg-quality-list-center`.
+   */
+  const setListColumnScrollFromT = (tFloat) => {
+    if (!listCol || reduced) {
+      if (listCol) gsap.set(listCol, { yPercent: 0, force3D: true });
+      return;
+    }
+
+    const t = Math.min(n - 1, Math.max(0, Number.isFinite(tFloat) ? tFloat : 0));
+    const yPercent = -(100 / n) * t;
+    gsap.set(listCol, { yPercent, force3D: true });
+  };
 
   const layoutTrackHeight = () => {
     if (reduced || !mq.matches) {
@@ -246,8 +299,14 @@ function initOneQualityScrollTrack(track, options = {}) {
     const active = Math.min(n - 1, Math.max(0, Math.round(t)));
     items.forEach((el, i) => {
       const on = i === active;
+      const sibling = !on && (i === active - 1 || i === active + 1);
       el.classList.toggle("isg-quality-list-item--active", on);
       el.setAttribute("aria-pressed", on ? "true" : "false");
+      const li = el.closest(".isg-quality-list__li");
+      if (li) {
+        li.classList.toggle("isg-quality-list__item--active", on);
+        li.classList.toggle("isg-quality-list__item--active-sibling", sibling);
+      }
     });
     slides.forEach((el, i) => {
       el.classList.toggle("isg-quality-visual__slide--active", i === active);
@@ -268,6 +327,7 @@ function initOneQualityScrollTrack(track, options = {}) {
     if (!mq.matches) return;
     setSlidesStackFromT(t);
     setContentStackFromT(t);
+    setListColumnScrollFromT(t);
   };
 
   const syncFromScroll = () => {
@@ -314,22 +374,39 @@ function initOneQualityScrollTrack(track, options = {}) {
     applyFrame(progressForIndex(idx, n));
   };
 
-  const syncActiveFromSlidesScroll = () => {
+  /** Подавить ответную синхронизацию на короткое время после программного scroll (без цикла). */
+  let suppressListScroll = false;
+  let suppressSlidesScroll = false;
+  let suppressListTimer = 0;
+  let suppressSlidesTimer = 0;
+
+  const syncFromSlidesScroll = () => {
     if (!slidesScrollEl || slides.length === 0) return;
-    const root = slidesScrollEl.getBoundingClientRect();
-    const centerX = root.left + root.width / 2;
-    let best = 0;
-    let bestDist = Infinity;
-    slides.forEach((slide, i) => {
-      const r = slide.getBoundingClientRect();
-      const cx = r.left + r.width / 2;
-      const d = Math.abs(cx - centerX);
-      if (d < bestDist) {
-        bestDist = d;
-        best = i;
-      }
-    });
+    const best = findBestIndexCentered(slidesScrollEl, slides);
     setActiveItem(progressForIndex(best, n));
+    if (listScrollEl && items[best]) {
+      suppressListScroll = true;
+      clearTimeout(suppressListTimer);
+      scrollChildToCenter(listScrollEl, items[best], "auto");
+      suppressListTimer = window.setTimeout(() => {
+        suppressListScroll = false;
+      }, 100);
+    }
+  };
+
+  const syncFromListScroll = () => {
+    if (!listScrollEl || items.length === 0) return;
+    const best = findBestIndexCentered(listScrollEl, items);
+    setActiveItem(progressForIndex(best, n));
+    const slide = slides[best];
+    if (slide && slidesScrollEl) {
+      suppressSlidesScroll = true;
+      clearTimeout(suppressSlidesTimer);
+      scrollChildToCenter(slidesScrollEl, slide, "auto");
+      suppressSlidesTimer = window.setTimeout(() => {
+        suppressSlidesScroll = false;
+      }, 100);
+    }
   };
 
   const setupMobileSlidesScroll = () => {
@@ -337,23 +414,48 @@ function initOneQualityScrollTrack(track, options = {}) {
     if (!slidesScrollEl || mq.matches) return;
 
     let ticking = false;
-    const onScroll = () => {
+
+    const onSlidesScroll = () => {
+      if (suppressSlidesScroll) return;
       if (ticking) return;
       ticking = true;
       requestAnimationFrame(() => {
         ticking = false;
-        syncActiveFromSlidesScroll();
+        syncFromSlidesScroll();
       });
     };
 
-    slidesScrollEl.addEventListener("scroll", onScroll, { passive: true });
-    mobileOff.push(() => slidesScrollEl.removeEventListener("scroll", onScroll));
+    slidesScrollEl.addEventListener("scroll", onSlidesScroll, { passive: true });
+    mobileOff.push(() => slidesScrollEl.removeEventListener("scroll", onSlidesScroll));
 
-    const onResize = () => syncActiveFromSlidesScroll();
+    if (listScrollEl) {
+      let listTicking = false;
+      const onListScroll = () => {
+        if (suppressListScroll) return;
+        if (listTicking) return;
+        listTicking = true;
+        requestAnimationFrame(() => {
+          listTicking = false;
+          syncFromListScroll();
+        });
+      };
+
+      listScrollEl.addEventListener("scroll", onListScroll, { passive: true });
+      mobileOff.push(() => listScrollEl.removeEventListener("scroll", onListScroll));
+    }
+
+    const onResize = () => {
+      syncFromSlidesScroll();
+    };
     window.addEventListener("resize", onResize);
     mobileOff.push(() => window.removeEventListener("resize", onResize));
 
-    requestAnimationFrame(() => syncActiveFromSlidesScroll());
+    mobileOff.push(() => {
+      clearTimeout(suppressListTimer);
+      clearTimeout(suppressSlidesTimer);
+    });
+
+    requestAnimationFrame(() => syncFromSlidesScroll());
   };
 
   const build = () => {
@@ -361,8 +463,13 @@ function initOneQualityScrollTrack(track, options = {}) {
     clearMobile();
 
     if (reduced || !mq.matches) {
+      if (listCol) {
+        gsap.set(listCol, { clearProps: "transform" });
+      }
       slides.forEach((el) => {
-        gsap.set(el, { clearProps: "transform,clipPath,opacity,visibility,zIndex" });
+        gsap.set(el, {
+          clearProps: "transform,clipPath,opacity,visibility,zIndex,backgroundPosition",
+        });
       });
       contentStackSlides.forEach((el) => {
         gsap.set(el, { clearProps: "transform,opacity,visibility,zIndex" });
@@ -370,6 +477,14 @@ function initOneQualityScrollTrack(track, options = {}) {
       items.forEach((el, i) => {
         el.classList.toggle("isg-quality-list-item--active", i === 0);
         el.setAttribute("aria-pressed", i === 0 ? "true" : "false");
+        const li = el.closest(".isg-quality-list__li");
+        if (li) {
+          li.classList.toggle("isg-quality-list__item--active", i === 0);
+          li.classList.toggle(
+            "isg-quality-list__item--active-sibling",
+            i === 1 && n > 1,
+          );
+        }
       });
       slides.forEach((el, i) => {
         el.classList.toggle("isg-quality-visual__slide--active", i === 0);
@@ -440,8 +555,14 @@ function initOneQualityScrollTrack(track, options = {}) {
     clearDesktop();
     clearMobile();
     track.style.minHeight = "";
+    if (listCol) {
+      gsap.set(listCol, { clearProps: "transform" });
+    }
     slides.forEach((el) =>
-      gsap.set(el, { clearProps: "transform,clipPath,opacity,visibility,zIndex" }),
+      gsap.set(el, {
+        clearProps:
+          "transform,clipPath,opacity,visibility,zIndex,backgroundPosition",
+      }),
     );
     contentStackSlides.forEach((el) =>
       gsap.set(el, { clearProps: "transform,opacity,visibility,zIndex" }),
