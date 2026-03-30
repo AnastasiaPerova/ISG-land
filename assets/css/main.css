@@ -481,8 +481,8 @@ html {
   --isg-container-width-yucca: 136rem;
   --isg-header-height: 4rem;
   /* UI kit — типографика (см. _typography.scss); правки в одном месте или здесь в DevTools */
-  --isg-type-display: 8.8rem;
-  --isg-type-headline:6.4rem;
+  --isg-type-display: 8rem;
+  --isg-type-headline:6.2rem;
   --isg-type-featured-title: clamp(1.85rem, 3.7vw, 3.2rem);
   --isg-type-lead: 2.2rem;
   --isg-type-stat: 4.4rem;
@@ -1657,8 +1657,9 @@ body.isg-nav-drawer-open {
  * Drawer вне .isg-site-header__chrome, чтобы панель оставалась обычной.
  */
 .isg-site-logo {
+  mix-blend-mode: difference;
   position: fixed;
-  top: calc(env(safe-area-inset-top, 0px) + var(--isg-sticky-header-top, 1.75rem));
+  top: 3rem;
   left: 0;
   z-index: 201;
   box-sizing: border-box;
@@ -1674,6 +1675,7 @@ body.isg-nav-drawer-open {
 }
 
 .isg-site-logo .isg-hero__logo-link {
+  width: 7.5rem;
   pointer-events: auto;
   display: block;
   line-height: 0;
@@ -2334,7 +2336,7 @@ body.isg-nav-drawer-open {
   justify-content: center;
   align-items: stretch;
   gap: 0;
-  padding: clamp(1.25rem, 3vw, 2.5rem) 6.4rem;
+  padding: 8rem 6.4rem 8rem;
   width: 100%;
   max-width: 1792px;
   margin: 0 auto;
@@ -2411,7 +2413,6 @@ body.isg-nav-drawer-open {
   position: relative;
   width: 100%;
   flex-shrink: 0;
-  margin-bottom: clamp(1rem, 3vw, 4rem);
   will-change: transform;
 }
 
@@ -2847,7 +2848,7 @@ body.isg-nav-drawer-open {
   gap: 8rem;
   min-height: 100vh;
   min-height: 100svh;
-  padding: 10.8rem 6.4rem 18.8rem;
+  padding: 8rem 6.4rem 8rem;
   background-color: #777;
   background-size: cover;
   background-position: center;
@@ -3054,17 +3055,16 @@ body.isg-nav-drawer-open {
   background: #e8e6e0;
   border-radius: 48px 48px 0 0;
   padding: 8rem 6.4rem;
-  margin-top: -60px;
+  margin-top: -4rem;
 }
 
 .isg-product-content__inner {
   display: flex;
   flex-direction: column;
   gap: 0;
-  max-width: 1810px;
+  max-width: 100%;
   margin: 0 auto;
   width: 100%;
-  padding-left: 1.2rem;
   box-sizing: border-box;
 }
 
@@ -3298,7 +3298,7 @@ body.isg-nav-drawer-open {
 .isg-size-tables {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(1.6rem, 2vw, 4rem);
+  gap: 2.4rem;
   width: 100%;
   max-width: 100%;
   min-width: 0;
@@ -3571,7 +3571,7 @@ body.isg-nav-drawer-open {
   gap: 8rem;
   min-height: 100vh;
   min-height: 100svh;
-  padding: 10.8rem 6.4rem 18.8rem;
+  padding: 8rem 6.4rem 8rem;
   background-color: #777;
   background-size: cover;
   background-position: center;
@@ -3615,7 +3615,7 @@ body.isg-nav-drawer-open {
   padding-top: var(--isg-quality-content-pad-top);
   padding-inline: 6.4rem;
   padding-bottom: var(--isg-quality-content-pad-bottom);
-  margin-top: -60px;
+  margin-top: -4rem;
   overflow-x: clip;
 }
 
@@ -3689,7 +3689,7 @@ body.isg-nav-drawer-open {
 .isg-quality-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 2.4rem;
+  gap: 1.6rem;
   width: 100%;
   align-items: stretch;
   flex: 1;
@@ -3777,7 +3777,7 @@ body.isg-nav-drawer-open {
 .isg-quality-list-item {
   display: flex;
   align-items: center;
-  gap: 1.4rem;
+  gap: 1.6rem;
   width: 100%;
   margin: 0;
   padding: 0;
@@ -4132,7 +4132,7 @@ body.isg-nav-drawer-open {
   gap: 8rem;
   min-height: 100vh;
   min-height: 100svh;
-  padding: 10.8rem 6.4rem 18.8rem;
+  padding: 8rem 6.4rem 8rem;
   background-color: #777;
   background-size: cover;
   background-position: center;
@@ -4166,12 +4166,13 @@ body.isg-nav-drawer-open {
   position: relative;
   background: #e8e6e0;
   border-radius: 48px 48px 0 0;
-  padding: 10.8rem 6.4rem;
+  padding: 8rem 6.4rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 4rem;
-  margin-top: -60px;
+  margin-top: -4rem;
+  margin-bottom: 4rem;
 }
 
 .isg-about-text-grid__row {
@@ -4179,10 +4180,9 @@ body.isg-nav-drawer-open {
   grid-template-columns: repeat(12, minmax(0, 1fr));
   column-gap: 2.4rem;
   row-gap: 2.4rem;
-  max-width: 1810px;
+  max-width: 100%;
   margin: 0 auto;
   width: 100%;
-  padding-left: 1.2rem;
   box-sizing: border-box;
   align-items: start;
 }
@@ -4202,7 +4202,7 @@ body.isg-nav-drawer-open {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  gap: 32px;
+  gap: 2.4rem;
 }
 
 .isg-about-text-grid__right .isg-h2 {
@@ -4304,7 +4304,7 @@ body.isg-nav-drawer-open {
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: 32px;
+  gap: 2.4rem;
   box-sizing: border-box;
   height: 100%;
   min-height: 100%;
@@ -4371,7 +4371,7 @@ body.isg-nav-drawer-open {
 }
 
 .isg-about-team-block__inner {
-  max-width: 1810px;
+  max-width: 100%;
   margin: 0 auto;
   width: 100%;
   display: flex;
@@ -4495,14 +4495,14 @@ body.isg-nav-drawer-open {
 .isg-about-team-block__certs-list .isg-filled-items {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
+  gap: 0.8rem 1.6rem;
   max-width: none;
   width: 100%;
 }
 
 @media (max-width: 1023px) {
   .isg-about-team-block {
-    padding: 10.8rem clamp(1.85rem, 6.25vw, 2.85rem) 4rem;
+    padding: 8rem clamp(1.85rem, 6.25vw, 2.85rem) 4rem;
   }
   .isg-about-team-block__inner {
     gap: 8rem;
@@ -4808,7 +4808,7 @@ button.isg-slider-item__img,
   position: relative;
   border-radius: 16px;
   width: 100%;
-  max-width: 580px;
+  max-width: 100%;
   justify-content: space-between;
   border: 0;
   font: inherit;
@@ -5026,7 +5026,7 @@ button.isg-slider-item__img,
   gap: 8rem;
   min-height: 100vh;
   min-height: 100svh;
-  padding: 10.8rem 6.4rem 10.8rem;
+  padding: 8rem 6.4rem 8rem;
   background-color: #777;
   background-size: cover;
   background-position: center;
@@ -5096,12 +5096,12 @@ button.isg-slider-item__img,
   position: relative;
   background: #fff;
   border-radius: 48px 48px 0 0;
-  padding: 10.8rem 6.4rem;
+  padding: 8rem 6.4rem;
   display: flex;
   flex-direction: column;
   justify-content: stretch;
   gap: 4rem;
-  margin-top: -60px;
+  margin-top: -4rem;
   box-sizing: border-box;
   min-height: calc(100svh - var(--isg-header-height));
   min-height: calc(100dvh - var(--isg-header-height));
@@ -5191,7 +5191,7 @@ button.isg-slider-item__img,
   min-height: 0;
   border-radius: 18px;
   background: #e8e6e0;
-  padding: clamp(2.4rem, 5vw, 5.2rem) clamp(2rem, 4.2vw, 4.8rem);
+  padding: 4rem;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -5226,7 +5226,7 @@ button.isg-slider-item__img,
 .isg-rfq-inputs {
   display: flex;
   flex-direction: column;
-  gap: clamp(1.75rem, 3vw, 2.75rem);
+  gap: 2.4rem;
   flex: 1;
   min-height: 0;
 }
@@ -5234,7 +5234,7 @@ button.isg-slider-item__img,
 .isg-rfq-inputs-row {
   display: flex;
   flex-wrap: wrap;
-  gap: clamp(1.75rem, 3vw, 2.75rem);
+  gap: 2.4rem;
 }
 
 .isg-rfq-inputs-row--full {
@@ -5614,7 +5614,7 @@ button.isg-slider-item__img,
 .isg-footer {
   background: #111111;
   color: #e8e6e0;
-  padding: 10.8rem 6.4rem 6.4rem;
+  padding: 8rem 6.4rem 6.4rem;
   display: flex;
   flex-direction: column;
   gap: 332px;
@@ -5882,7 +5882,7 @@ button.isg-slider-item__img,
 /* -------------------------------------------------------------------------- */
 @media (max-width: 1099px) {
   .isg-title-group {
-    gap: clamp(2rem, 5.5vw, 2.4rem);
+    gap: 2.4rem;
   }
   .isg-digit-card,
   .isg-filled-item--about,

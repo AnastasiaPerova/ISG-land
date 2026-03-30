@@ -22,7 +22,7 @@ $isg-font-mono: "DM Mono", ui-monospace, monospace;
 @import "typography";
 
 // ——— Отступы Yucca: --gap 1.6rem (desktop) / 1.2rem (≤1099px) ———
-$isg-gap: 1.4rem;
+$isg-gap: 1.6rem;
 $isg-gap-mobile: 1.55rem;
 
 $isg-space-3xs: 0.4rem;
@@ -54,7 +54,7 @@ $isg-container-bs-lg: 960px;
 $isg-container-bs-xl: 1140px;
 $isg-container-bs-xxl: 1320px;
 /* Контентный канал: product __inner, about text-grid / team, quality/about rows */
-$isg-content-inner-max: 1810px;
+$isg-content-inner-max: 100%;
 /* Общий лёгкий сдвиг основного контента вправо (ряды product, about text-grid / team) */
 $isg-content-inner-nudge-x: 1.2rem;
 /* 12 колонок: левая зона подписи 4, правая — контент 8 */
@@ -63,8 +63,8 @@ $isg-content-grid-gap: $isg-space-lg;
 $isg-section-pad-x: 6.4rem;
 /* Мобильные поля контента (реф. relats.com — больше воздуха по бокам) */
 $isg-section-pad-x-mobile: clamp(1.85rem, 6.25vw, 2.85rem);
-$isg-section-pad-y-xl: 10.8rem;
-$isg-section-pad-y-bottom-xl: 18.8rem;
+$isg-section-pad-y-xl: 8rem;
+$isg-section-pad-y-bottom-xl: 4rem;
 $isg-section-inner-gap: 4rem;
 $isg-section-inner-gap-lg: 8rem;
 
