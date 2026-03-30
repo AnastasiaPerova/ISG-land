@@ -23,6 +23,7 @@ import { initTitleAnim } from "./blocks/title-anim.js";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const PARTIALS = [
+  "partials/site-logo.html",
   "partials/site-header.html",
   "partials/hero.html",
   "partials/section-application.html",
