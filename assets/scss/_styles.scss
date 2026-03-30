@@ -52,7 +52,7 @@ html {
   --isg-font-mono: DM Mono, ui-monospace, monospace;
   --isg-gap: 1.4rem;
   --isg-container-width-yucca: 136rem;
-  --isg-header-height: 9.6rem;
+  --isg-header-height: 4rem;
   /* UI kit — типографика (см. _typography.scss); правки в одном месте или здесь в DevTools */
   --isg-type-display: 8.8rem;
   --isg-type-headline:6.4rem;
@@ -1106,7 +1106,7 @@ body.isg-nav-drawer-open {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-
+padding: 0.5rem 1.5rem 0.5rem 0.5rem;
   margin: 0;
   border-radius: $isg-radius-btn;
   cursor: pointer;
@@ -2772,7 +2772,7 @@ body.isg-nav-drawer-open {
   position: relative;
   background: #e8e6e0;
   border-radius: $isg-radius-section-top;
-  padding: 12.8rem $isg-section-pad-x;
+  padding: 8rem $isg-section-pad-x;
   margin-top: -60px;
 }
 

@@ -34,7 +34,7 @@ $isg-space-lg: 2.4rem;
 $isg-space-xl: 4rem;
 $isg-space-2xl: 8rem;
 
-$isg-header-height: 9.6rem;
+$isg-header-height: 4rem;
 $isg-header-height-mobile: 5.6rem;
 
 // Сетка / контейнер (Yucca --container-width: 136rem)
@@ -65,16 +65,16 @@ $isg-section-pad-x: 6.4rem;
 $isg-section-pad-x-mobile: clamp(1.85rem, 6.25vw, 2.85rem);
 $isg-section-pad-y-xl: 10.8rem;
 $isg-section-pad-y-bottom-xl: 18.8rem;
-$isg-section-inner-gap: 9.6rem;
-$isg-section-inner-gap-lg: 12.8rem;
+$isg-section-inner-gap: 4rem;
+$isg-section-inner-gap-lg: 8rem;
 
 // Герой / крупные секции (из типичных padding в теме Yucca: 8rem, 4rem…)
 $isg-hero-pad-y-top: 8rem;
-$isg-hero-pad-y-bottom: 12.8rem;
+$isg-hero-pad-y-bottom: 8rem;
 $isg-hero-pad-y-top-mobile: 4.8rem;
 $isg-hero-pad-y-bottom-mobile: 6.4rem;
-$isg-hero-gap-outer: 12.8rem;
-$isg-hero-gap-inner: 9.6rem;
+$isg-hero-gap-outer: 8rem;
+$isg-hero-gap-inner: 4rem;
 $isg-hero-gap-outer-mobile: 6.4rem;
 $isg-hero-gap-inner-mobile: 6.4rem;
 // Fixed header: отступ от верха вьюпорта (плюс env(safe-area) в CSS)

@@ -94,7 +94,7 @@
 }
 
 .row--gap-lg {
-  row-gap: 9.6rem;
+  row-gap: 4rem;
 }
 
 .row > [class*=col-] {
@@ -479,7 +479,7 @@ html {
   --isg-font-mono: DM Mono, ui-monospace, monospace;
   --isg-gap: 1.4rem;
   --isg-container-width-yucca: 136rem;
-  --isg-header-height: 9.6rem;
+  --isg-header-height: 4rem;
   /* UI kit — типографика (см. _typography.scss); правки в одном месте или здесь в DevTools */
   --isg-type-display: 8.8rem;
   --isg-type-headline:6.4rem;
@@ -1410,8 +1410,8 @@ body.isg-nav-drawer-open {
   min-height: 100svh;
   display: flex;
   flex-direction: column;
-  gap: 12.8rem;
-  padding: 0 6.4rem 12.8rem;
+  gap: 8rem;
+  padding: 0 6.4rem 8rem;
   background-color: #2a2a2a;
   overflow: hidden;
   /* Стабильный слой для filter (intro-exit-blur), меньше артефактов на краях */
@@ -1511,6 +1511,7 @@ body.isg-nav-drawer-open {
   display: inline-flex;
   align-items: center;
   gap: 10px;
+  padding: 0.5rem 1.5rem 0.5rem 0.5rem;
   margin: 0;
   border-radius: max(8pt, min(0.95vw, 17px));
   cursor: pointer;
@@ -1610,7 +1611,7 @@ body.isg-nav-drawer-open {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 9.6rem;
+  gap: 4rem;
   width: 100%;
 }
 
@@ -1970,7 +1971,7 @@ body.isg-nav-drawer-open {
   background-color: rgba(243, 242, 238, 0.82);
   box-shadow: -20px 0 48px rgba(0, 0, 0, 0.1);
   will-change: transform;
-  padding: 12.8rem 6.4rem;
+  padding: 8rem 6.4rem;
 }
 .isg-digits-section.component--featured .scroll .inner .cards .center {
   width: 100%;
@@ -1984,7 +1985,7 @@ body.isg-nav-drawer-open {
 }
 .isg-digits-section.component--featured .scroll .inner .cards .center > .title {
   flex-shrink: 0;
-  margin: 0 0 9.6rem;
+  margin: 0 0 4rem;
   color: #111111;
   max-width: 28ch;
 }
@@ -2410,7 +2411,7 @@ body.isg-nav-drawer-open {
   position: relative;
   width: 100%;
   flex-shrink: 0;
-  margin-bottom: clamp(1rem, 3vw, 9.6rem);
+  margin-bottom: clamp(1rem, 3vw, 4rem);
   will-change: transform;
 }
 
@@ -2843,7 +2844,7 @@ body.isg-nav-drawer-open {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12.8rem;
+  gap: 8rem;
   min-height: 100vh;
   min-height: 100svh;
   padding: 10.8rem 6.4rem 18.8rem;
@@ -2877,7 +2878,7 @@ body.isg-nav-drawer-open {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 9.6rem;
+  gap: 4rem;
   width: 100%;
   flex: 1;
 }
@@ -2886,7 +2887,7 @@ body.isg-nav-drawer-open {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 9.6rem;
+  gap: 4rem;
   width: 100%;
 }
 
@@ -3052,7 +3053,7 @@ body.isg-nav-drawer-open {
   position: relative;
   background: #e8e6e0;
   border-radius: 48px 48px 0 0;
-  padding: 12.8rem 6.4rem;
+  padding: 8rem 6.4rem;
   margin-top: -60px;
 }
 
@@ -3068,7 +3069,7 @@ body.isg-nav-drawer-open {
 }
 
 .isg-product-content .isg-product-content__row--grades {
-  margin-bottom: 12.8rem;
+  margin-bottom: 8rem;
 }
 
 .isg-product-content .isg-h2 {
@@ -3082,7 +3083,7 @@ body.isg-nav-drawer-open {
   column-gap: 2.4rem;
   row-gap: 2.4rem;
   width: 100%;
-  margin-bottom: 9.6rem;
+  margin-bottom: 4rem;
 }
 
 .isg-product-content__title-group > .isg-subtitle,
@@ -3567,7 +3568,7 @@ body.isg-nav-drawer-open {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12.8rem;
+  gap: 8rem;
   min-height: 100vh;
   min-height: 100svh;
   padding: 10.8rem 6.4rem 18.8rem;
@@ -3595,7 +3596,7 @@ body.isg-nav-drawer-open {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 9.6rem;
+  gap: 4rem;
   flex: 1;
   width: 100%;
 }
@@ -3606,8 +3607,8 @@ body.isg-nav-drawer-open {
   /* Внутри липкой сцены: одинаковый зазор сверху/снизу у ряда */
   --isg-quality-gap-header: clamp(1.2rem, 2.2vw, 3rem);
   /* Белый блок: низ = верх (≤1099 задаётся в медиазапросе) */
-  --isg-quality-content-pad-top: 12.8rem;
-  --isg-quality-content-pad-bottom: 12.8rem;
+  --isg-quality-content-pad-top: 8rem;
+  --isg-quality-content-pad-bottom: 8rem;
   position: relative;
   background: #111;
   border-radius: 48px 48px 0 0;
@@ -4005,8 +4006,8 @@ body.isg-nav-drawer-open {
   .isg-quality-content,
   .isg-about-content-block {
     --isg-quality-gap-header: 1.6rem;
-    --isg-quality-content-pad-top: 12.8rem;
-    --isg-quality-content-pad-bottom: 12.8rem;
+    --isg-quality-content-pad-top: 8rem;
+    --isg-quality-content-pad-bottom: 8rem;
     padding-top: var(--isg-quality-content-pad-top);
     padding-inline: clamp(1.85rem, 6.25vw, 2.85rem);
     padding-bottom: var(--isg-quality-content-pad-bottom);
@@ -4128,7 +4129,7 @@ body.isg-nav-drawer-open {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12.8rem;
+  gap: 8rem;
   min-height: 100vh;
   min-height: 100svh;
   padding: 10.8rem 6.4rem 18.8rem;
@@ -4156,7 +4157,7 @@ body.isg-nav-drawer-open {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 9.6rem;
+  gap: 4rem;
   flex: 1;
   width: 100%;
 }
@@ -4169,7 +4170,7 @@ body.isg-nav-drawer-open {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 9.6rem;
+  gap: 4rem;
   margin-top: -60px;
 }
 
@@ -4366,7 +4367,7 @@ body.isg-nav-drawer-open {
 /* About team — макет Pencil PNDFj: padding 128 64 96, gap 96, текст 579px | слайдер вправо, трек↔нав 64px, карточка 430×458 */
 .isg-about-team-block {
   background: #e8e6e0;
-  padding: 12.8rem 6.4rem 12.8rem;
+  padding: 8rem 6.4rem 8rem;
 }
 
 .isg-about-team-block__inner {
@@ -4375,7 +4376,7 @@ body.isg-nav-drawer-open {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 9.6rem;
+  gap: 4rem;
   padding-left: 1.2rem;
   box-sizing: border-box;
 }
@@ -4501,10 +4502,10 @@ body.isg-nav-drawer-open {
 
 @media (max-width: 1023px) {
   .isg-about-team-block {
-    padding: 10.8rem clamp(1.85rem, 6.25vw, 2.85rem) 9.6rem;
+    padding: 10.8rem clamp(1.85rem, 6.25vw, 2.85rem) 4rem;
   }
   .isg-about-team-block__inner {
-    gap: 12.8rem;
+    gap: 8rem;
   }
   .isg-about-team-block__lead,
   .isg-about-team-block__slider-wrap {
@@ -4526,8 +4527,8 @@ body.isg-nav-drawer-open {
   border-radius: 48px 48px 0 0;
   display: flex;
   flex-direction: column;
-  gap: 9.6rem;
-  padding: 12.8rem 0 12.8rem;
+  gap: 4rem;
+  padding: 8rem 0 8rem;
   /* bleed слайдера до краёв вьюпорта — иначе margin calc обрежется */
   overflow-x: visible;
 }
@@ -5022,7 +5023,7 @@ button.isg-slider-item__img,
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  gap: 12.8rem;
+  gap: 8rem;
   min-height: 100vh;
   min-height: 100svh;
   padding: 10.8rem 6.4rem 10.8rem;
@@ -5050,7 +5051,7 @@ button.isg-slider-item__img,
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  gap: 9.6rem;
+  gap: 4rem;
   flex: 1;
   min-height: 0;
   width: 100%;
@@ -5061,7 +5062,7 @@ button.isg-slider-item__img,
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  gap: 9.6rem;
+  gap: 4rem;
   flex: 1;
   min-height: 0;
   width: 100%;
@@ -5071,7 +5072,7 @@ button.isg-slider-item__img,
 .isg-rfq-intro__split {
   display: flex;
   flex-wrap: wrap;
-  gap: 9.6rem;
+  gap: 4rem;
   justify-content: space-between;
   align-items: flex-end;
   width: 100%;
@@ -5099,7 +5100,7 @@ button.isg-slider-item__img,
   display: flex;
   flex-direction: column;
   justify-content: stretch;
-  gap: 9.6rem;
+  gap: 4rem;
   margin-top: -60px;
   box-sizing: border-box;
   min-height: calc(100svh - var(--isg-header-height));
