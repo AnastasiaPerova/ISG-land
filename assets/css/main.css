@@ -472,13 +472,14 @@ html {
   }
 }
 :root {
+  --container-width: 136rem;
+  --container-offset: calc((100vw - var(--container-width)) * .5);
   --isg-sticky-header-offset: 88px;
   --isg-sticky-header-top: 1.75rem;
   --isg-font-body: Plus Jakarta Sans, system-ui, sans-serif;
   --isg-font-ui: Plus Jakarta Sans, system-ui, sans-serif;
   --isg-font-mono: DM Mono, ui-monospace, monospace;
   --isg-gap: 1.8rem;
-  --isg-container-width-yucca: 136rem;
   --isg-header-height: 4rem;
   /* UI kit — типографика (см. _typography.scss); правки в одном месте или здесь в DevTools */
   --isg-type-display: 8rem;
@@ -639,7 +640,7 @@ select {
 .isg-h2 {
   font-size: var(--isg-type-headline);
   font-weight: 400;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.032em;
   line-height: 1.21875;
   margin: 0;
   color: #111111;
@@ -648,7 +649,7 @@ select {
 /* Секции с title-anim: визуальный H3 (чуть меньше базового .isg-h2) */
 .isg-h2.isg-title-anim {
   font-size: var(--isg-type-h3);
-  letter-spacing: -0.019em;
+  letter-spacing: -0.022em;
 }
 
 /* Заголовки: scroll-driven reveal — маска по строкам (title-anim.js) */
@@ -672,7 +673,7 @@ select {
 .isg-lead {
   font-size: var(--isg-type-lead);
   font-weight: 400;
-  letter-spacing: -0.002em;
+  letter-spacing: -0.0032em;
   line-height: 1.3125;
   margin: 0;
   color: #000000;
@@ -723,32 +724,32 @@ select {
 
 .isg-ui-type-headline {
   font-size: var(--isg-type-headline);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.032em;
 }
 
 .isg-ui-type-h2 {
   font-size: var(--isg-type-h2);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.032em;
 }
 
 .isg-ui-type-intro-reveal {
   font-size: var(--isg-type-intro-reveal);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.032em;
 }
 
 .isg-ui-type-h3 {
   font-size: var(--isg-type-h3);
-  letter-spacing: -0.019em;
+  letter-spacing: -0.022em;
 }
 
 .isg-ui-type-h4 {
   font-size: var(--isg-type-h4);
-  letter-spacing: -0.015em;
+  letter-spacing: -0.022em;
 }
 
 .isg-ui-type-lead {
   font-size: var(--isg-type-lead);
-  letter-spacing: -0.002em;
+  letter-spacing: -0.0032em;
 }
 
 .isg-ui-type-title-lg {
@@ -758,7 +759,7 @@ select {
 
 .isg-ui-type-title {
   font-size: var(--isg-type-title);
-  letter-spacing: -0.015em;
+  letter-spacing: -0.022em;
 }
 
 .isg-ui-type-title-sm {
@@ -793,7 +794,7 @@ select {
 .isg-ui-type-stat {
   font-size: var(--isg-type-stat);
   font-weight: 500;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.032em;
   line-height: 1.15;
 }
 
@@ -1982,12 +1983,13 @@ body.isg-nav-drawer-open {
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  justify-content: center;
+  overflow: visible;
   box-sizing: border-box;
 }
 .isg-digits-section.component--featured .scroll .inner .cards .center > .title {
   flex-shrink: 0;
-  margin: 0 0 4rem;
+  margin: 0 0 8rem;
   color: #111111;
   max-width: 28ch;
 }
@@ -1996,20 +1998,19 @@ body.isg-nav-drawer-open {
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: flex-start;
-  align-items: stretch;
+  align-items: flex-start;
   gap: 2.4rem;
   margin: 0;
   padding: 0;
   width: 100%;
   min-width: 0;
   min-height: 0;
-  flex: 1 1 auto;
-  overflow: hidden;
+  flex: 0 1 auto;
+  overflow: visible;
   box-sizing: border-box;
 }
 .isg-digits-section.component--featured .columns--start .columns__item {
-  flex: 1 1 0;
-  min-width: 0;
+  flex: 0 0 max(277.2px, min(21.875vw, 4.3640625in));
   min-height: 0;
   display: flex;
   flex-direction: column;
@@ -2022,13 +2023,12 @@ body.isg-nav-drawer-open {
 .isg-digits-section.component--featured .card.card--featured.isg-digit-card {
   position: relative;
   display: block;
-  flex: 1 1 auto;
+  flex: 0 0 auto;
   width: 100%;
   max-width: none;
-  min-height: 0;
-  max-height: 100%;
-  aspect-ratio: 3/4;
-  border-radius: 16px;
+  height: max(23.87vh, min(30.139vw, 577.22px));
+  max-height: none;
+  border-radius: 1.6rem;
   padding: 0;
   margin: 0;
   overflow: hidden;
@@ -2042,7 +2042,7 @@ body.isg-nav-drawer-open {
 
 /* Классы title--large: размер как у крупного заголовка секции */
 .isg-digit-card {
-  border-radius: 16px;
+  border-radius: 1.6rem;
 }
 
 .isg-digit-card__shade {
@@ -2078,7 +2078,7 @@ body.isg-nav-drawer-open {
   flex-direction: column;
   justify-content: flex-end;
   align-items: flex-start;
-  gap: 1.6rem;
+  gap: 1rem;
   max-width: 100%;
   min-width: 0;
 }
@@ -2086,7 +2086,7 @@ body.isg-nav-drawer-open {
 .isg-digit-card__value {
   font-size: var(--isg-type-stat);
   font-weight: 500;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.032em;
   line-height: 1.15;
   margin: 0;
   color: #ffffff;
@@ -2199,7 +2199,7 @@ body.isg-nav-drawer-open {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    align-items: stretch;
+    align-items: flex-start;
     gap: clamp(0.75rem, 3vw, 1.125rem);
     width: 100%;
     min-width: 0;
@@ -2238,9 +2238,8 @@ body.isg-nav-drawer-open {
   .isg-digits-section.component--featured .card.card--featured.isg-digit-card {
     width: 100%;
     max-width: none;
-    aspect-ratio: 3/4;
-    min-height: 0;
-    border-radius: 20px;
+    height: max(23.87vh, min(30.139vw, 577.22px));
+    border-radius: 1.6rem;
   }
 }
 @media (max-width: 1100px) and (prefers-reduced-motion: reduce) {
@@ -2617,7 +2616,7 @@ body.isg-nav-drawer-open {
 .isg-accordion__title {
   font-size: 2.6rem;
   font-weight: 500;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.022em;
   line-height: 1.3125;
   margin: 0;
   color: #fff;
@@ -2760,7 +2759,7 @@ body.isg-nav-drawer-open {
 /* Побуквенное интро: меньше секционного headline */
 .isg-display.isg-intro-reveal__title {
   font-size: var(--isg-type-display);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.032em;
 }
 
 .isg-intro-reveal__chars {
@@ -2768,6 +2767,7 @@ body.isg-nav-drawer-open {
   width: 100%;
   max-width: min(100%, 36ch);
   margin-left: auto;
+  margin-bottom: 8rem;
   margin-right: auto;
   text-align: center;
   /* transform на этом узле ломает position:absolute у букв — только opacity из JS */
@@ -2878,17 +2878,21 @@ body.isg-nav-drawer-open {
 .isg-product-intro__conteiner {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
   gap: 4rem;
   width: 100%;
+  max-width: min(100%, var(--container-width));
+  margin-inline: auto;
   flex: 1;
+  box-sizing: border-box;
 }
 
 .isg-product-intro__content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4rem;
+  gap: 0;
   width: 100%;
 }
 
@@ -2897,28 +2901,29 @@ body.isg-nav-drawer-open {
   justify-content: center;
   gap: 2.4rem;
   width: 100%;
+  overflow: hidden;
 }
 
 .isg-spec-card {
-  width: 100%;
-  max-width: 429px;
-  min-height: 200px;
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 24rem;
   padding: 2.4rem;
-  border-radius: 13px;
+  border-radius: 1.6rem;
   background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(23px);
-  -webkit-backdrop-filter: blur(23px);
+  backdrop-filter: blur(11px);
+  -webkit-backdrop-filter: blur(11px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 79px;
+  gap: isg-space-xl;
 }
 
 .isg-spec-card__head {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 140px;
+  gap: isg-space-sm;
   width: 100%;
 }
 
@@ -2934,7 +2939,7 @@ body.isg-nav-drawer-open {
 .isg-spec-card__value {
   font-size: var(--isg-type-stat);
   font-weight: 500;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.032em;
   line-height: 1.15;
   margin: 0;
   color: #111111;
@@ -2954,7 +2959,7 @@ body.isg-nav-drawer-open {
 .isg-product-intro .isg-spec-card__value {
   font-size: var(--isg-type-stat);
   line-height: 1.12;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.032em;
   font-weight: 500;
   color: #ffffff;
 }
@@ -3053,8 +3058,8 @@ body.isg-nav-drawer-open {
 .isg-product-content {
   position: relative;
   background: #e8e6e0;
-  border-radius: 48px 48px 0 0;
-  padding: 8rem 6.4rem;
+  border-radius: 3rem 3rem 0 0;
+  padding: 12.8rem 0;
   margin-top: -4rem;
 }
 
@@ -3062,14 +3067,14 @@ body.isg-nav-drawer-open {
   display: flex;
   flex-direction: column;
   gap: 0;
-  max-width: 100%;
+  max-width: 136rem;
   margin: 0 auto;
   width: 100%;
   box-sizing: border-box;
 }
 
 .isg-product-content .isg-product-content__row--grades {
-  margin-bottom: 8rem;
+  margin-bottom: 12.8rem;
 }
 
 .isg-product-content .isg-h2 {
@@ -3083,7 +3088,7 @@ body.isg-nav-drawer-open {
   column-gap: 2.4rem;
   row-gap: 2.4rem;
   width: 100%;
-  margin-bottom: 4rem;
+  margin-bottom: 8rem;
 }
 
 .isg-product-content__title-group > .isg-subtitle,
@@ -3188,7 +3193,7 @@ body.isg-nav-drawer-open {
   max-width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 2.4rem;
+  gap: 1.2rem;
   min-width: 0;
 }
 
@@ -3224,7 +3229,7 @@ body.isg-nav-drawer-open {
   display: flex;
   align-items: center;
   gap: 2.4rem;
-  padding: 16px 24px;
+  padding: 1.5rem 2.1rem;
   border-radius: 13px;
   background: rgba(255, 255, 255, 0.568627451);
   min-width: 0;
@@ -3245,14 +3250,15 @@ body.isg-nav-drawer-open {
 }
 
 .isg-product-content .isg-filled-item {
-  background: rgba(255, 255, 255, 0.568627451);
+  background: #1925aa;
+  color: #e8e6e0;
 }
 
 /* В product-range чипы без hover-состояния */
 .isg-product-content .isg-filled-item:hover,
 .isg-product-content .isg-filled-item:focus-visible {
-  background: rgba(255, 255, 255, 0.568627451);
-  color: inherit;
+  background: #1925aa;
+  color: #e8e6e0;
 }
 
 .isg-product-content .isg-filled-item:hover span,
@@ -3340,7 +3346,7 @@ body.isg-nav-drawer-open {
 }
 
 .isg-size-spec__rule--head {
-  display: flex;
+  display: none;
   width: 100%;
   align-items: stretch;
   gap: 0;
@@ -3611,7 +3617,7 @@ body.isg-nav-drawer-open {
   --isg-quality-content-pad-bottom: 8rem;
   position: relative;
   background: #111;
-  border-radius: 48px 48px 0 0;
+  border-radius: 3rem 3rem 0 0;
   padding-top: var(--isg-quality-content-pad-top);
   padding-inline: 6.4rem;
   padding-bottom: var(--isg-quality-content-pad-bottom);
@@ -3623,6 +3629,108 @@ body.isg-nav-drawer-open {
   --isg-about-gap-header: var(--isg-quality-gap-header);
   --isg-about-content-pad-top: var(--isg-quality-content-pad-top);
   --isg-about-content-pad-bottom: var(--isg-quality-content-pad-bottom);
+  background: #1925aa;
+  border-radius: 0;
+  color: #e8e6e0;
+}
+
+.isg-about-text-grid,
+.isg-about-text-grid h1, .isg-about-text-grid h2, .isg-about-text-grid h3, .isg-about-text-grid h4, .isg-about-text-grid h5, .isg-about-text-grid h6, .isg-about-text-grid p, .isg-about-text-grid span, .isg-about-text-grid a, .isg-about-text-grid li, .isg-about-text-grid label, .isg-about-text-grid small, .isg-about-text-grid strong, .isg-about-text-grid em,
+.isg-about-team-block,
+.isg-about-team-block h1,
+.isg-about-team-block h2,
+.isg-about-team-block h3,
+.isg-about-team-block h4,
+.isg-about-team-block h5,
+.isg-about-team-block h6,
+.isg-about-team-block p,
+.isg-about-team-block span,
+.isg-about-team-block a,
+.isg-about-team-block li,
+.isg-about-team-block label,
+.isg-about-team-block small,
+.isg-about-team-block strong,
+.isg-about-team-block em,
+.isg-about-content-block,
+.isg-about-content-block h1,
+.isg-about-content-block h2,
+.isg-about-content-block h3,
+.isg-about-content-block h4,
+.isg-about-content-block h5,
+.isg-about-content-block h6,
+.isg-about-content-block p,
+.isg-about-content-block span,
+.isg-about-content-block a,
+.isg-about-content-block li,
+.isg-about-content-block label,
+.isg-about-content-block small,
+.isg-about-content-block strong,
+.isg-about-content-block em {
+  color: #e8e6e0;
+}
+.isg-about-text-grid .isg-subtitle__text,
+.isg-about-text-grid .isg-quality-list-wrap,
+.isg-about-text-grid .isg-quality-list-wrap__label .isg-subtitle__text,
+.isg-about-text-grid .isg-quality-list-item__text,
+.isg-about-text-grid .isg-quality-list-item--active .isg-quality-list-item__text,
+.isg-about-text-grid .isg-quality-list-item__icon,
+.isg-about-text-grid .isg-about-feature-card__text,
+.isg-about-text-grid .isg-filled-item__text,
+.isg-about-text-grid .isg-filled-item span,
+.isg-about-team-block .isg-subtitle__text,
+.isg-about-team-block .isg-quality-list-wrap,
+.isg-about-team-block .isg-quality-list-wrap__label .isg-subtitle__text,
+.isg-about-team-block .isg-quality-list-item__text,
+.isg-about-team-block .isg-quality-list-item--active .isg-quality-list-item__text,
+.isg-about-team-block .isg-quality-list-item__icon,
+.isg-about-team-block .isg-about-feature-card__text,
+.isg-about-team-block .isg-filled-item__text,
+.isg-about-team-block .isg-filled-item span,
+.isg-about-content-block .isg-subtitle__text,
+.isg-about-content-block .isg-quality-list-wrap,
+.isg-about-content-block .isg-quality-list-wrap__label .isg-subtitle__text,
+.isg-about-content-block .isg-quality-list-item__text,
+.isg-about-content-block .isg-quality-list-item--active .isg-quality-list-item__text,
+.isg-about-content-block .isg-quality-list-item__icon,
+.isg-about-content-block .isg-about-feature-card__text,
+.isg-about-content-block .isg-filled-item__text,
+.isg-about-content-block .isg-filled-item span {
+  color: #e8e6e0;
+}
+
+/* Сертификаты в About team: бежевый фон + синий текст; hover — чёрный фон + бежевый текст */
+.isg-about-team-block .isg-filled-item--about {
+  background: #e8e6e0;
+  color: #1925aa;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+.isg-about-team-block .isg-filled-item--about .isg-filled-item__text {
+  color: #1925aa;
+  transition: color 0.25s ease;
+}
+
+.isg-about-team-block .isg-filled-item--about .isg-filled-item__go {
+  color: #1925aa;
+  opacity: 0.55;
+  transition: color 0.25s ease, opacity 0.25s ease;
+}
+
+.isg-about-team-block .isg-filled-item--about:hover,
+.isg-about-team-block .isg-filled-item--about:focus-visible {
+  background: #111111;
+  color: #e8e6e0;
+}
+
+.isg-about-team-block .isg-filled-item--about:hover .isg-filled-item__text,
+.isg-about-team-block .isg-filled-item--about:focus-visible .isg-filled-item__text {
+  color: #e8e6e0;
+}
+
+.isg-about-team-block .isg-filled-item--about:hover .isg-filled-item__go,
+.isg-about-team-block .isg-filled-item--about:focus-visible .isg-filled-item__go {
+  color: #e8e6e0;
+  opacity: 1;
 }
 
 .isg-quality-content__track {
@@ -3681,7 +3789,7 @@ body.isg-nav-drawer-open {
 }
 @media (min-width: 1100px) {
   .isg-quality-row {
-    border-radius: 18px;
+    border-radius: 1.6rem;
     box-sizing: border-box;
   }
 }
@@ -3700,7 +3808,7 @@ body.isg-nav-drawer-open {
   flex: 1 1 400px;
   width: 100%;
   max-width: 883px;
-  border-radius: 18px;
+  border-radius: 1.6rem;
   background: #e8e6e0;
   color: #111111;
   padding: clamp(1.75rem, 3vw, 3.5rem);
@@ -3735,7 +3843,7 @@ body.isg-nav-drawer-open {
 }
 .isg-quality-list-wrap .isg-quality-list-item__text {
   font-size: var(--isg-type-h4);
-  letter-spacing: -0.015em;
+  letter-spacing: -0.022em;
   display: block;
   color: #828282;
   transition: color 0.25s ease, opacity 0.2s ease;
@@ -3882,7 +3990,7 @@ body.isg-nav-drawer-open {
   font-size: var(--isg-type-h4);
   font-weight: 500;
   line-height: 1.2;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.022em;
   margin: 0;
   color: #000000;
 }
@@ -3894,7 +4002,7 @@ body.isg-nav-drawer-open {
   align-self: stretch;
   position: relative;
   /* Как у .isg-quality-content (верх секции 64px) */
-  border-radius: 18px;
+  border-radius: 1.6rem;
   overflow: hidden;
   box-sizing: border-box;
 }
@@ -4094,7 +4202,7 @@ body.isg-nav-drawer-open {
     font-size: var(--isg-type-h4);
     font-weight: 500;
     line-height: 1.2;
-    letter-spacing: -0.015em;
+    letter-spacing: -0.022em;
     color: #ffffff;
     margin: 0;
   }
@@ -4160,8 +4268,9 @@ body.isg-nav-drawer-open {
 
 .isg-about-text-grid {
   position: relative;
-  background: #e8e6e0;
-  border-radius: 48px 48px 0 0;
+  background: #1925aa;
+  color: #e8e6e0;
+  border-radius: 3rem 3rem 0 0;
   padding: 8rem 6.4rem;
   display: flex;
   flex-direction: column;
@@ -4176,7 +4285,7 @@ body.isg-nav-drawer-open {
   grid-template-columns: repeat(12, minmax(0, 1fr));
   column-gap: 2.4rem;
   row-gap: 2.4rem;
-  max-width: 100%;
+  max-width: 136rem;
   margin: 0 auto;
   width: 100%;
   box-sizing: border-box;
@@ -4229,7 +4338,7 @@ body.isg-nav-drawer-open {
   min-height: 320px;
   align-self: stretch;
   position: relative;
-  border-radius: 18px;
+  border-radius: 1.6rem;
   overflow: hidden;
   box-sizing: border-box;
   /* Иначе .isg-quality-visual с абсолютными слайдами даёт высоту 0 — фото не видно */
@@ -4288,7 +4397,7 @@ body.isg-nav-drawer-open {
   height: clamp(13.5rem, 32vh, 20rem);
   min-height: clamp(13.5rem, 32vh, 20rem);
   overflow: hidden;
-  border-radius: 18px;
+  border-radius: 1.6rem;
   pointer-events: none;
   box-sizing: border-box;
 }
@@ -4308,7 +4417,7 @@ body.isg-nav-drawer-open {
   pointer-events: none;
   will-change: transform;
   backface-visibility: hidden;
-  border-radius: 18px;
+  border-radius: 1.6rem;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(23px);
   -webkit-backdrop-filter: blur(23px);
@@ -4362,18 +4471,19 @@ body.isg-nav-drawer-open {
 }
 /* About team — макет Pencil PNDFj: padding 128 64 96, gap 96, текст 579px | слайдер вправо, трек↔нав 64px, карточка 430×458 */
 .isg-about-team-block {
-  background: #e8e6e0;
+  background: #1925aa;
+  color: #e8e6e0;
   padding: 8rem 6.4rem 8rem;
 }
 
 .isg-about-team-block__inner {
-  max-width: 100%;
+  max-width: 136rem;
   margin: 0 auto;
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: 4rem;
-  padding-left: 1.2rem;
+  padding: 0;
   box-sizing: border-box;
 }
 
@@ -4450,7 +4560,17 @@ body.isg-nav-drawer-open {
 
 .isg-about-team-block .isg-slider-item__img {
   aspect-ratio: 430/458;
-  border-radius: 18px;
+  border-radius: 1.6rem;
+}
+
+.isg-about-team-block .isg-slider-item__caption {
+  background: #111111;
+}
+
+.isg-about-team-block .isg-slider-item__caption,
+.isg-about-team-block .isg-slider-item__name,
+.isg-about-team-block .isg-slider-item__role {
+  color: #e8e6e0;
 }
 
 /* Галерея: высота от aspect-ratio, без фиксированного vh */
@@ -4520,7 +4640,7 @@ body.isg-nav-drawer-open {
   position: relative;
   background: #111111;
   color: #ffffff;
-  border-radius: 48px 48px 0 0;
+  border-radius: 0;
   display: flex;
   flex-direction: column;
   gap: 4rem;
@@ -4657,7 +4777,7 @@ body.isg-nav-drawer-open {
 .isg-slider-item__img {
   width: 100%;
   aspect-ratio: 4/5;
-  border-radius: 18px;
+  border-radius: 1.6rem;
   background: #ccc;
   background-size: cover;
   background-position: center;
@@ -4892,6 +5012,7 @@ button.isg-slider-item__img,
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
+  border-radius: 1.6rem;
   width: 100%;
   max-width: min(96vw, 1480px);
   max-height: min(90vh, 920px);
@@ -5091,7 +5212,7 @@ button.isg-slider-item__img,
 .isg-rfq-content {
   position: relative;
   background: #fff;
-  border-radius: 48px 48px 0 0;
+  border-radius: 3rem 3rem 0 0;
   padding: 8rem 6.4rem;
   display: flex;
   flex-direction: column;
@@ -5125,7 +5246,7 @@ button.isg-slider-item__img,
 .isg-rfq-aside {
   flex: 1 1 400px;
   max-width: 883px;
-  border-radius: 18px;
+  border-radius: 1.6rem;
   background: #1925aa;
   padding: clamp(1.75rem, 3vw, 3.5rem);
   display: flex;
@@ -5164,7 +5285,7 @@ button.isg-slider-item__img,
   margin: 0;
   font-size: var(--isg-type-h3);
   font-weight: 400;
-  letter-spacing: -0.019em;
+  letter-spacing: -0.022em;
   line-height: 1.2;
   color: #ffffff;
   max-width: 42ch;
@@ -5185,7 +5306,7 @@ button.isg-slider-item__img,
   flex: 1 1 400px;
   min-width: 0;
   min-height: 0;
-  border-radius: 18px;
+  border-radius: 1.6rem;
   background: #e8e6e0;
   padding: 4rem;
   display: flex;
@@ -5703,7 +5824,7 @@ button.isg-slider-item__img,
   font-size: var(--isg-type-title-lg);
   font-weight: 500;
   line-height: 1.3125;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.022em;
   margin: 0;
   color: inherit;
 }
@@ -5880,11 +6001,13 @@ button.isg-slider-item__img,
   .isg-title-group {
     gap: 2.4rem;
   }
-  .isg-digit-card,
-  .isg-filled-item--about,
-  .isg-spec-card {
+  .isg-digit-card {
+    border-radius: 1.6rem;
+  }
+  .isg-filled-item--about {
     border-radius: 20px;
   }
+  .isg-spec-card,
   .isg-slider-item__img,
   .isg-slider-item__caption,
   .isg-app-left,
@@ -5892,7 +6015,9 @@ button.isg-slider-item__img,
   .isg-about-feature-card,
   .isg-about-feature-card__content-stack,
   .isg-about-feature-card__content-slide,
-  .isg-rfq-aside,
+  .isg-rfq-aside {
+    border-radius: 1.6rem;
+  }
   .isg-accordion__media {
     border-radius: 24px;
   }
@@ -5969,3 +6094,5 @@ body.isg-preloader-active {
     transition-duration: 0.01ms;
   }
 }
+
+/*# sourceMappingURL=main.css.map */

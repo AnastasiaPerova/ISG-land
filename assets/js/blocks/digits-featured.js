@@ -12,16 +12,15 @@ function setSlideWidthPx(section, scrollEl) {
   }
 }
 
-/**
- * Фото на всю .scroll; .cards с left:100% и width=W полностью за правым краем до скролла.
- * Сдвиг по X = W — панель наезжает ровно на один вьюпорт (та же величина, что --isg-featured-slide).
- */
-function measureCardsScrollDistance(cardsEl, scrollEl) {
+function measureScrollParams(cardsEl, scrollEl) {
   gsap.set(cardsEl, { x: 0, force3D: true });
+  const cols = cardsEl.querySelector(".columns--start");
+  if (cols) gsap.set(cols, { x: 0, force3D: true });
   void cardsEl.offsetHeight;
 
-  const raw = scrollEl.getBoundingClientRect().width || scrollEl.clientWidth || 0;
-  return Math.max(0, Math.round(raw));
+  const vw = Math.round(scrollEl.getBoundingClientRect().width || scrollEl.clientWidth || 0);
+  const overflow = cols ? Math.max(0, Math.round(cols.scrollWidth - cols.clientWidth)) : 0;
+  return { vw, overflow, total: vw + overflow };
 }
 
 function buildFeaturedTween(section, scrollEl, cardsEl, imageEl, mm, killTween) {
@@ -34,32 +33,37 @@ function buildFeaturedTween(section, scrollEl, cardsEl, imageEl, mm, killTween) 
   }
 
   void cardsEl.offsetHeight;
-  const scrollDist = measureCardsScrollDistance(cardsEl, scrollEl);
+  const { vw, overflow, total } = measureScrollParams(cardsEl, scrollEl);
 
   const syncImageEffect = (self) => {
-    const p = self.progress;
+    const p = overflow > 0 ? Math.min(1, self.progress * total / vw) : self.progress;
     imageEl?.style.setProperty("--isg-digits-img-effect", p.toFixed(5));
   };
 
-  return gsap.fromTo(
-    cardsEl,
-    { x: 0 },
-    {
-      x: -scrollDist,
-      ease: "none",
-      scrollTrigger: {
-        trigger: section,
-        start: "top top",
-        end: `+=${scrollDist}`,
-        pin: scrollEl,
-        scrub: true,
-        invalidateOnRefresh: true,
-        anticipatePin: 1,
-        onUpdate: syncImageEffect,
-        onRefresh: syncImageEffect,
-      },
+  const tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: section,
+      start: "top top",
+      end: `+=${total}`,
+      pin: scrollEl,
+      scrub: true,
+      invalidateOnRefresh: true,
+      anticipatePin: 1,
+      onUpdate: syncImageEffect,
+      onRefresh: syncImageEffect,
     },
-  );
+  });
+
+  tl.fromTo(cardsEl, { x: 0 }, { x: -vw, duration: vw, ease: "none" });
+
+  if (overflow > 0) {
+    const columnsEl = cardsEl.querySelector(".columns--start");
+    if (columnsEl) {
+      tl.fromTo(columnsEl, { x: 0 }, { x: -overflow, duration: overflow, ease: "none" });
+    }
+  }
+
+  return tl;
 }
 
 /**
@@ -83,6 +87,8 @@ export function initDigitsFeatured(root = document) {
       tween?.kill();
       tween = null;
       gsap.set(cardsEl, { clearProps: "transform" });
+      const cols = cardsEl.querySelector(".columns--start");
+      if (cols) gsap.set(cols, { clearProps: "transform" });
       imageEl?.style.removeProperty("--isg-digits-img-effect");
     };
 

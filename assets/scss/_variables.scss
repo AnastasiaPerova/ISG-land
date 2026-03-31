@@ -54,7 +54,7 @@ $isg-container-bs-lg: 960px;
 $isg-container-bs-xl: 1140px;
 $isg-container-bs-xxl: 1320px;
 /* Контентный канал: product __inner, about text-grid / team, quality/about rows */
-$isg-content-inner-max: 100%;
+$isg-content-inner-max: 136rem;
 /* Общий лёгкий сдвиг основного контента вправо (ряды product, about text-grid / team) */
 $isg-content-inner-nudge-x: 1.2rem;
 /* 12 колонок: левая зона подписи 4, правая — контент 8 */
@@ -153,10 +153,12 @@ $isg-radius-md: 11px;
 $isg-radius-swatch: 11px;
 $isg-radius-lg: 13px;
 $isg-radius-xl: 16px;
+$isg-radius-card: 1.6rem;
+$isg-radius-digit-card: $isg-radius-card;
 $isg-radius-2xl: 18px;
 $isg-radius-3xl: 22px;
 $isg-radius-pill: 42px;
-$isg-radius-section-top: 48px 48px 0 0;
+$isg-radius-section-top: 3rem 3rem 0 0;
 $isg-radius-visual: 48px;
 /* Планшеты/телефоны — чуть мягче углы (реф. relats.com) */
 $isg-radius-lg-m: 16px;

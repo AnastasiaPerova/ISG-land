@@ -45,13 +45,15 @@ html {
 }
 
 :root {
+  --container-width: 136rem;
+  --container-offset: calc((100vw - var(--container-width)) * .5);
   --isg-sticky-header-offset: 88px;
   --isg-sticky-header-top: 1.75rem;
   --isg-font-body: Plus Jakarta Sans, system-ui, sans-serif;
   --isg-font-ui: Plus Jakarta Sans, system-ui, sans-serif;
   --isg-font-mono: DM Mono, ui-monospace, monospace;
   --isg-gap: #{$isg-gap};
-  --isg-container-width-yucca: 136rem;
+
   --isg-header-height: 4rem;
   /* UI kit — типографика (см. _typography.scss); правки в одном месте или здесь в DevTools */
   --isg-type-display: 8rem;
@@ -1633,13 +1635,14 @@ padding: 0.5rem 1.5rem 0.5rem 0.5rem;
     flex: 1 1 auto;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    justify-content: center;
+    overflow: visible;
     box-sizing: border-box;
   }
 
   .scroll .inner .cards .center > .title {
     flex-shrink: 0;
-    margin: 0 0 $isg-section-inner-gap;
+    margin: 0 0 8rem;
     color: $isg-color-text;
     max-width: 28ch;
   }
@@ -1649,21 +1652,20 @@ padding: 0.5rem 1.5rem 0.5rem 0.5rem;
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: flex-start;
-    align-items: stretch;
+    align-items: flex-start;
     gap: $isg-space-lg;
     margin: 0;
     padding: 0;
     width: 100%;
     min-width: 0;
     min-height: 0;
-    flex: 1 1 auto;
-    overflow: hidden;
+    flex: 0 1 auto;
+    overflow: visible;
     box-sizing: border-box;
   }
 
   .columns--start .columns__item {
-    flex: 1 1 0;
-    min-width: 0;
+    flex: 0 0 max(277.2px, min(21.875vw, 4.3640625in));
     min-height: 0;
     display: flex;
     flex-direction: column;
@@ -1675,13 +1677,12 @@ padding: 0.5rem 1.5rem 0.5rem 0.5rem;
   .card.card--featured.isg-digit-card {
     position: relative;
     display: block;
-    flex: 1 1 auto;
+    flex: 0 0 auto;
     width: 100%;
     max-width: none;
-    min-height: 0;
-    max-height: 100%;
-    aspect-ratio: 3 / 4;
-    border-radius: $isg-radius-xl;
+    height: max(23.87vh, min(30.139vw, 577.22px));
+    max-height: none;
+    border-radius: $isg-radius-digit-card;
     padding: 0;
     margin: 0;
     overflow: hidden;
@@ -1701,7 +1702,7 @@ padding: 0.5rem 1.5rem 0.5rem 0.5rem;
 }
 
 .isg-digit-card {
-  border-radius: $isg-radius-xl;
+  border-radius: $isg-radius-digit-card;
 }
 
 .isg-digit-card__shade {
@@ -1756,7 +1757,7 @@ padding: 0.5rem 1.5rem 0.5rem 0.5rem;
   flex-direction: column;
   justify-content: flex-end;
   align-items: flex-start;
-  gap: $isg-space-md;
+  gap: $isg-space-xs;
   max-width: 100%;
   min-width: 0;
 }
@@ -1883,7 +1884,7 @@ padding: 0.5rem 1.5rem 0.5rem 0.5rem;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    align-items: stretch;
+    align-items: flex-start;
     gap: clamp(0.75rem, 3vw, 1.125rem);
     width: 100%;
     min-width: 0;
@@ -1926,9 +1927,8 @@ padding: 0.5rem 1.5rem 0.5rem 0.5rem;
   .isg-digits-section.component--featured .card.card--featured.isg-digit-card {
     width: 100%;
     max-width: none;
-    aspect-ratio: 3 / 4;
-    min-height: 0;
-    border-radius: $isg-radius-xl-m;
+    height: max(23.87vh, min(30.139vw, 577.22px));
+    border-radius: $isg-radius-digit-card;
   }
 }
 
@@ -2477,6 +2477,7 @@ padding: 0.5rem 1.5rem 0.5rem 0.5rem;
   width: 100%;
   max-width: min(100%, 36ch);
   margin-left: auto;
+  margin-bottom:8rem;
   margin-right: auto;
   text-align: center;
   /* transform на этом узле ломает position:absolute у букв — только opacity из JS */
@@ -2590,48 +2591,53 @@ padding: 0.5rem 1.5rem 0.5rem 0.5rem;
 .isg-product-intro__conteiner {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
   gap: $isg-section-inner-gap;
   width: 100%;
+  max-width: min(100%, var(--container-width));
+  margin-inline: auto;
   flex: 1;
+  box-sizing: border-box;
 }
 
 .isg-product-intro__content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: $isg-section-inner-gap;
+  gap: 0;
   width: 100%;
 }
 
 .isg-spec-cards {
   display: flex;
-
   justify-content: center;
   gap: $isg-space-lg;
   width: 100%;
+  overflow: hidden;
 }
 
 .isg-spec-card {
-  width: 100%;
-  max-width: 429px;
-  min-height: 200px;
+  flex: 1 1 0;
+  min-width: 0;
+
+  min-height: 24rem;
   padding: $isg-space-lg;
-  border-radius: $isg-radius-lg;
+  border-radius: $isg-radius-card;
   background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(23px);
-  -webkit-backdrop-filter: blur(23px);
+  backdrop-filter: blur(11px);
+  -webkit-backdrop-filter: blur(11px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 79px;
+  gap: isg-space-xl;
 }
 
 .isg-spec-card__head {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 140px;
+  gap: isg-space-sm;
   width: 100%;
 }
 
@@ -2776,7 +2782,7 @@ padding: 0.5rem 1.5rem 0.5rem 0.5rem;
   position: relative;
   background: #e8e6e0;
   border-radius: $isg-radius-section-top;
-  padding: 8rem $isg-section-pad-x;
+  padding: 12.8rem 0;
   margin-top: -4rem;
 }
 
@@ -2787,12 +2793,11 @@ padding: 0.5rem 1.5rem 0.5rem 0.5rem;
   max-width: $isg-content-inner-max;
   margin: 0 auto;
   width: 100%;
-
   box-sizing: border-box;
 }
 
 .isg-product-content .isg-product-content__row--grades {
-  margin-bottom: $isg-section-inner-gap-lg;
+  margin-bottom: 12.8rem;
 }
 
 .isg-product-content .isg-h2 {
@@ -2808,7 +2813,7 @@ padding: 0.5rem 1.5rem 0.5rem 0.5rem;
   column-gap: $isg-content-grid-gap;
   row-gap: $isg-space-lg;
   width: 100%;
-  margin-bottom: $isg-section-inner-gap;
+  margin-bottom: 8rem;
 }
 
 .isg-product-content__title-group > .isg-subtitle,
@@ -2913,7 +2918,7 @@ padding: 0.5rem 1.5rem 0.5rem 0.5rem;
   max-width: 100%;
   display: flex;
   flex-direction: column;
-  gap: $isg-space-lg;
+  gap: $isg-space-sm;
   min-width: 0;
 }
 
@@ -2949,7 +2954,7 @@ padding: 0.5rem 1.5rem 0.5rem 0.5rem;
   display: flex;
   align-items: center;
   gap: $isg-space-lg;
-  padding: 16px 24px;
+  padding: 1.5rem 2.1rem;
   border-radius: $isg-radius-lg;
   background: rgba(255, 255, 255, 0.568627451);
   min-width: 0;
@@ -2970,14 +2975,15 @@ padding: 0.5rem 1.5rem 0.5rem 0.5rem;
 }
 
 .isg-product-content .isg-filled-item {
-  background: rgba(255, 255, 255, 0.568627451);
+  background: #1925aa;
+  color: #e8e6e0;
 }
 
 /* В product-range чипы без hover-состояния */
 .isg-product-content .isg-filled-item:hover,
 .isg-product-content .isg-filled-item:focus-visible {
-  background: rgba(255, 255, 255, 0.568627451);
-  color: inherit;
+  background: #1925aa;
+  color: #e8e6e0;
 }
 
 .isg-product-content .isg-filled-item:hover span,
@@ -3066,7 +3072,7 @@ padding: 0.5rem 1.5rem 0.5rem 0.5rem;
 }
 
 .isg-size-spec__rule--head {
-  display: flex;
+  display: none;
   width: 100%;
   align-items: stretch;
   gap: 0;
@@ -3363,6 +3369,64 @@ padding: 0.5rem 1.5rem 0.5rem 0.5rem;
   --isg-about-gap-header: var(--isg-quality-gap-header);
   --isg-about-content-pad-top: var(--isg-quality-content-pad-top);
   --isg-about-content-pad-bottom: var(--isg-quality-content-pad-bottom);
+  background: #1925aa;
+  border-radius: 0;
+  color: #e8e6e0;
+}
+
+.isg-about-text-grid,
+.isg-about-team-block,
+.isg-about-content-block {
+  &,
+  h1, h2, h3, h4, h5, h6, p, span, a, li, label, small, strong, em {
+    color: #e8e6e0;
+  }
+  .isg-subtitle__text,
+  .isg-quality-list-wrap,
+  .isg-quality-list-wrap__label .isg-subtitle__text,
+  .isg-quality-list-item__text,
+  .isg-quality-list-item--active .isg-quality-list-item__text,
+  .isg-quality-list-item__icon,
+  .isg-about-feature-card__text,
+  .isg-filled-item__text,
+  .isg-filled-item span {
+    color: #e8e6e0;
+  }
+}
+
+/* Сертификаты в About team: бежевый фон + синий текст; hover — чёрный фон + бежевый текст */
+.isg-about-team-block .isg-filled-item--about {
+  background: #e8e6e0;
+  color: #1925aa;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+.isg-about-team-block .isg-filled-item--about .isg-filled-item__text {
+  color: #1925aa;
+  transition: color 0.25s ease;
+}
+
+.isg-about-team-block .isg-filled-item--about .isg-filled-item__go {
+  color: #1925aa;
+  opacity: 0.55;
+  transition: color 0.25s ease, opacity 0.25s ease;
+}
+
+.isg-about-team-block .isg-filled-item--about:hover,
+.isg-about-team-block .isg-filled-item--about:focus-visible {
+  background: #111111;
+  color: #e8e6e0;
+}
+
+.isg-about-team-block .isg-filled-item--about:hover .isg-filled-item__text,
+.isg-about-team-block .isg-filled-item--about:focus-visible .isg-filled-item__text {
+  color: #e8e6e0;
+}
+
+.isg-about-team-block .isg-filled-item--about:hover .isg-filled-item__go,
+.isg-about-team-block .isg-filled-item--about:focus-visible .isg-filled-item__go {
+  color: #e8e6e0;
+  opacity: 1;
 }
 
 .isg-quality-content__track {
@@ -3435,7 +3499,7 @@ padding: 0.5rem 1.5rem 0.5rem 0.5rem;
 
 @media (min-width: 1100px) {
   .isg-quality-row {
-    border-radius: $isg-radius-2xl;
+    border-radius: $isg-radius-card;
     box-sizing: border-box;
   }
 }
@@ -3455,7 +3519,7 @@ padding: 0.5rem 1.5rem 0.5rem 0.5rem;
   flex: 1 1 400px;
   width: 100%;
   max-width: 883px;
-  border-radius: $isg-radius-2xl;
+  border-radius: $isg-radius-card;
   background: #e8e6e0;
   color: #111111;
   padding: $isg-values-panel-pad;
@@ -3659,7 +3723,7 @@ padding: 0.5rem 1.5rem 0.5rem 0.5rem;
   align-self: stretch;
   position: relative;
   /* Как у .isg-quality-content (верх секции 64px) */
-  border-radius: $isg-radius-2xl;
+  border-radius: $isg-radius-card;
   overflow: hidden;
   box-sizing: border-box;
 }
@@ -3955,7 +4019,8 @@ padding: 0.5rem 1.5rem 0.5rem 0.5rem;
 
 .isg-about-text-grid {
   position: relative;
-  background: #e8e6e0;
+  background: #1925aa;
+  color: #e8e6e0;
   border-radius: $isg-radius-section-top;
   padding: $isg-section-pad-y-xl $isg-section-pad-x;
   display: flex;
@@ -4027,7 +4092,7 @@ padding: 0.5rem 1.5rem 0.5rem 0.5rem;
   min-height: 320px;
   align-self: stretch;
   position: relative;
-  border-radius: $isg-radius-2xl;
+  border-radius: $isg-radius-card;
   overflow: hidden;
   box-sizing: border-box;
   /* Иначе .isg-quality-visual с абсолютными слайдами даёт высоту 0 — фото не видно */
@@ -4090,7 +4155,7 @@ padding: 0.5rem 1.5rem 0.5rem 0.5rem;
   height: clamp(13.5rem, 32vh, 20rem);
   min-height: clamp(13.5rem, 32vh, 20rem);
   overflow: hidden;
-  border-radius: $isg-radius-2xl;
+  border-radius: $isg-radius-card;
   pointer-events: none;
   box-sizing: border-box;
 }
@@ -4110,7 +4175,7 @@ padding: 0.5rem 1.5rem 0.5rem 0.5rem;
   pointer-events: none;
   will-change: transform;
   backface-visibility: hidden;
-  border-radius: $isg-radius-2xl;
+  border-radius: $isg-radius-card;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(23px);
   -webkit-backdrop-filter: blur(23px);
@@ -4166,7 +4231,8 @@ padding: 0.5rem 1.5rem 0.5rem 0.5rem;
 
 /* About team — макет Pencil PNDFj: padding 128 64 96, gap 96, текст 579px | слайдер вправо, трек↔нав 64px, карточка 430×458 */
 .isg-about-team-block {
-  background: #e8e6e0;
+  background: #1925aa;
+  color: #e8e6e0;
   padding: $isg-section-inner-gap-lg $isg-section-pad-x $isg-section-inner-gap-lg;
 }
 
@@ -4177,7 +4243,7 @@ padding: 0.5rem 1.5rem 0.5rem 0.5rem;
   display: flex;
   flex-direction: column;
   gap: $isg-section-inner-gap;
-  padding-left: $isg-content-inner-nudge-x;
+  padding: 0;
   box-sizing: border-box;
 }
 
@@ -4254,7 +4320,17 @@ padding: 0.5rem 1.5rem 0.5rem 0.5rem;
 
 .isg-about-team-block .isg-slider-item__img {
   aspect-ratio: 430 / 458;
-  border-radius: $isg-radius-2xl;
+  border-radius: $isg-radius-card;
+}
+
+.isg-about-team-block .isg-slider-item__caption {
+  background: #111111;
+}
+
+.isg-about-team-block .isg-slider-item__caption,
+.isg-about-team-block .isg-slider-item__name,
+.isg-about-team-block .isg-slider-item__role {
+  color: #e8e6e0;
 }
 
 /* Галерея: высота от aspect-ratio, без фиксированного vh */
@@ -4329,7 +4405,7 @@ padding: 0.5rem 1.5rem 0.5rem 0.5rem;
   position: relative;
   background: #111111;
   color: #ffffff;
-  border-radius: $isg-radius-section-top;
+  border-radius: 0;
   display: flex;
   flex-direction: column;
   gap: $isg-section-inner-gap;
@@ -4468,7 +4544,7 @@ padding: 0.5rem 1.5rem 0.5rem 0.5rem;
 .isg-slider-item__img {
   width: 100%;
   aspect-ratio: 4/5;
-  border-radius: $isg-radius-2xl;
+  border-radius: $isg-radius-card;
   background: #ccc;
   background-size: cover;
   background-position: center;
@@ -4705,6 +4781,7 @@ button.isg-slider-item__img,
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
+  border-radius: $isg-radius-card;
   width: 100%;
   max-width: min(96vw, 1480px);
   max-height: min(90vh, 920px);
@@ -4941,7 +5018,7 @@ button.isg-slider-item__img,
 .isg-rfq-aside {
   flex: 1 1 400px;
   max-width: 883px;
-  border-radius: $isg-radius-2xl;
+  border-radius: $isg-radius-card;
   background: $isg-color-accent;
   padding: $isg-values-panel-pad;
   display: flex;
@@ -5001,7 +5078,7 @@ button.isg-slider-item__img,
   flex: 1 1 400px;
   min-width: 0;
   min-height: 0;
-  border-radius: $isg-radius-2xl;
+  border-radius: $isg-radius-card;
   background: #e8e6e0;
   padding: 4rem;
   display: flex;
@@ -5730,12 +5807,13 @@ button.isg-slider-item__img,
     gap: $isg-title-group-gap;
   }
 
-  .isg-digit-card,
-  .isg-filled-item--about,
-  .isg-spec-card {
+  .isg-digit-card {
+    border-radius: $isg-radius-digit-card;
+  }
+  .isg-filled-item--about {
     border-radius: $isg-radius-xl-m;
   }
-
+  .isg-spec-card,
   .isg-slider-item__img,
   .isg-slider-item__caption,
   .isg-app-left,
@@ -5743,7 +5821,9 @@ button.isg-slider-item__img,
   .isg-about-feature-card,
   .isg-about-feature-card__content-stack,
   .isg-about-feature-card__content-slide,
-  .isg-rfq-aside,
+  .isg-rfq-aside {
+    border-radius: $isg-radius-card;
+  }
   .isg-accordion__media {
     border-radius: $isg-radius-2xl-m;
   }
