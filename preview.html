@@ -45,5 +45,23 @@
     </div>
     <main id="isg-main"></main>
     <script type="module" src="assets/js/main.js"></script>
+    <script>
+    // DEBUG: check sticky ancestors for About
+    setTimeout(function(){
+      var s = document.querySelector('#isg-about .isg-quality-content__sticky');
+      if(!s){console.warn('DIAG: sticky element NOT FOUND'); return;}
+      var computed = getComputedStyle(s);
+      console.warn('DIAG: sticky position=' + computed.position + ' top=' + computed.top);
+      var el = s.parentElement;
+      while(el){
+        var cs = getComputedStyle(el);
+        var tag = el.tagName + (el.id?'#'+el.id:'') + '.' + (el.className||'').toString().split(' ')[0];
+        console.warn('DIAG: ' + tag + ' overflow=' + cs.overflow + ' overflowX=' + cs.overflowX + ' overflowY=' + cs.overflowY);
+        el = el.parentElement;
+      }
+      var track = s.parentElement;
+      console.warn('DIAG: track minHeight=' + (track?track.style.minHeight:'?') + ' offsetHeight=' + (track?track.offsetHeight:'?'));
+    }, 3000);
+    </script>
   </body>
 </html>

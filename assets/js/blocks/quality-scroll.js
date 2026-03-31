@@ -9,6 +9,8 @@ import gsap from "gsap";
  * Список слева: как `.slides .info .center ul` на Relats — `yPercent = -(100/n)*t` на `ul`.
  *
  * About (`data-isg-quality-about` на треке): те же маски для фото + стек `.isg-about-feature-card__content-stack` (yPercent).
+ * Lipkая сцена — CSS `position:sticky` (не fixed): работает корректно с Lenis и не ломается
+ * от transform на родителе (#isg-about получает transform от GSAP intro-анимации).
  *
  * ScrollTrigger не используем: с Lenis без scrollerProxy scrub/onUpdate часто расходятся с реальным скроллом.
  */
@@ -129,6 +131,12 @@ function initOneQualityScrollTrack(track, options = {}) {
 
   const aboutTrack = track.hasAttribute("data-isg-quality-about");
   let contentStackSlides = [];
+  const contentStackEl = aboutTrack
+    ? track.querySelector(".isg-about-feature-card__content-stack")
+    : null;
+  const contentInnerEl = aboutTrack
+    ? track.querySelector(".isg-about-feature-card__content-inner")
+    : null;
   if (aboutTrack) {
     contentStackSlides = Array.from(
       track.querySelectorAll(
@@ -239,60 +247,54 @@ function initOneQualityScrollTrack(track, options = {}) {
       const raw = i === 0 ? 0 : clamp01(i - t);
       const eased = reduced ? raw : smootherstep(raw);
       const reveal = i === 0 ? 0 : 100 * eased;
-      const below = reveal >= 99.98;
-      /** Маска снизу + скругление (round), плавность через smootherstep на raw */
+      const hidden = reveal >= 99.98;
+      /**
+       * Как Relats .images .image: маска сверху → фото открывается снизу вверх.
+       * inset(top right bottom left round radius)
+       * top = reveal% → при reveal=100% фото полностью скрыто сверху; при 0% — полностью видно.
+       */
       const clipPath =
         i === 0
           ? "none"
-          : `inset(0 0 ${reveal}% 0 round ${ISG_QUALITY_SLIDE_CLIP_RADIUS}px)`;
+          : `inset(${reveal}% 0 0 0 round ${ISG_QUALITY_SLIDE_CLIP_RADIUS}px)`;
       gsap.set(el, {
         yPercent: 0,
         clipPath,
         zIndex: i + 1,
-        opacity: below ? 0 : 1,
-        visibility: below ? "hidden" : "visible",
+        opacity: hidden ? 0 : 1,
+        visibility: hidden ? "hidden" : "visible",
         force3D: true,
       });
     });
   };
 
-  /** Стеклянная панель About: yPercent, как в прежнем about-scroll */
-  /** Стеклянная панель About: смена сверху вниз (yPercent −100→0), ушедший слайд вниз (100). */
+  /**
+   * Как Relats `.boxes .inner`: один контейнер двигается yPercent = -(100/n)*t.
+   * Все `.box` (content-slide) в нормальном потоке внутри `.inner`;
+   * `.boxes` (content-stack) = overflow:hidden + фикс. высота одного box.
+   */
   const setContentStackFromT = (t) => {
-    if (!contentStackSlides.length) return;
-    contentStackSlides.forEach((el, i) => {
-      if (i === 0) {
-        gsap.set(el, {
-          yPercent: 0,
-          zIndex: i + 1,
-          opacity: 1,
-          visibility: "visible",
-          force3D: true,
-        });
-        return;
-      }
-      if (t > i) {
-        gsap.set(el, {
-          yPercent: 100,
-          zIndex: i + 1,
-          opacity: 0,
-          visibility: "hidden",
-          force3D: true,
-        });
-        return;
-      }
-      const raw = clamp01(i - t);
-      const eased = reduced ? raw : smootherstep(raw);
-      const yPercent = -100 * eased;
-      const farAbove = yPercent <= -99.98;
-      gsap.set(el, {
-        yPercent,
-        zIndex: i + 1,
-        opacity: farAbove ? 0 : 1,
-        visibility: farAbove ? "hidden" : "visible",
-        force3D: true,
-      });
-    });
+    if (!contentInnerEl || !contentStackSlides.length) return;
+    if (reduced) {
+      gsap.set(contentInnerEl, { yPercent: 0, force3D: true });
+      return;
+    }
+    const clamped = Math.min(n - 1, Math.max(0, Number.isFinite(t) ? t : 0));
+    const yPercent = -(100 / n) * clamped;
+    gsap.set(contentInnerEl, { yPercent, force3D: true });
+  };
+
+  /** Как Relats: задать высоту `.boxes` = высота одного `.box` */
+  const layoutBoxesHeight = () => {
+    if (!contentStackEl || !contentStackSlides.length) return;
+    if (!mq.matches) {
+      contentStackEl.style.removeProperty("height");
+      return;
+    }
+    const firstSlide = contentStackSlides[0];
+    if (firstSlide) {
+      contentStackEl.style.height = `${firstSlide.offsetHeight}px`;
+    }
   };
 
   const setActiveItemFromT = (t) => {
@@ -368,7 +370,9 @@ function initOneQualityScrollTrack(track, options = {}) {
       const rect = marker.getBoundingClientRect();
       const y = Math.max(0, rect.top + sy - getHeaderScrollOffset());
       window.scrollTo({ top: y, behavior: reduced ? "auto" : "smooth" });
-      requestAnimationFrame(() => applyFrame(trackProgress01()));
+      requestAnimationFrame(() => {
+        applyFrame(trackProgress01());
+      });
       return;
     }
     applyFrame(progressForIndex(idx, n));
@@ -466,13 +470,16 @@ function initOneQualityScrollTrack(track, options = {}) {
       if (listCol) {
         gsap.set(listCol, { clearProps: "transform" });
       }
+      if (contentInnerEl) {
+        gsap.set(contentInnerEl, { clearProps: "transform" });
+      }
+      if (contentStackEl) {
+        contentStackEl.style.removeProperty("height");
+      }
       slides.forEach((el) => {
         gsap.set(el, {
           clearProps: "transform,clipPath,opacity,visibility,zIndex,backgroundPosition",
         });
-      });
-      contentStackSlides.forEach((el) => {
-        gsap.set(el, { clearProps: "transform,opacity,visibility,zIndex" });
       });
       items.forEach((el, i) => {
         el.classList.toggle("isg-quality-list-item--active", i === 0);
@@ -500,6 +507,7 @@ function initOneQualityScrollTrack(track, options = {}) {
 
     layoutTrackHeight();
     layoutMarkers();
+    layoutBoxesHeight();
     applyFrame(trackProgress01());
 
     const lenis = getLenis();
@@ -516,6 +524,7 @@ function initOneQualityScrollTrack(track, options = {}) {
     const onResize = () => {
       layoutTrackHeight();
       layoutMarkers();
+      layoutBoxesHeight();
       syncFromScroll();
     };
     window.addEventListener("resize", onResize);
@@ -558,20 +567,24 @@ function initOneQualityScrollTrack(track, options = {}) {
     if (listCol) {
       gsap.set(listCol, { clearProps: "transform" });
     }
+    if (contentInnerEl) {
+      gsap.set(contentInnerEl, { clearProps: "transform" });
+    }
+    if (contentStackEl) {
+      contentStackEl.style.removeProperty("height");
+    }
     slides.forEach((el) =>
       gsap.set(el, {
         clearProps:
           "transform,clipPath,opacity,visibility,zIndex,backgroundPosition",
       }),
     );
-    contentStackSlides.forEach((el) =>
-      gsap.set(el, { clearProps: "transform,opacity,visibility,zIndex" }),
-    );
   });
 
   requestAnimationFrame(() => {
     layoutTrackHeight();
     layoutMarkers();
+    layoutBoxesHeight();
     syncFromScroll();
   });
 

@@ -1,7 +1,6 @@
 <!-- Flexible Content layout: about_us (nested: intro+text, values, team+certs, gallery) -->
-<div id="isg-about" class="isg-about-intro-block" data-isg-block="about">
-  <!-- Block 1: intro + text grid; пин только на section.intro (intro-section-scroll) -->
-  <div class="isg-intro-pin isg-intro-pin--about">
+<!-- Block 1: intro; пин только на section.intro (intro-section-scroll) -->
+<div class="isg-intro-pin isg-intro-pin--about">
   <section class="isg-about-intro" style="background-image: url('assets/img/about-us-intro.jpg');" data-isg-intro-scroll>
     <!-- ACF: about_intro_background -->
     <div class="isg-about-intro__conteiner">
@@ -18,6 +17,11 @@
       </div>
     </div>
   </section>
+  </div>
+
+<div id="isg-about" class="isg-about-intro-block" data-isg-block="about">
+  <div class="isg-about-main">
+  <!-- Block 1b: text grid -->
   <div class="isg-about-text-grid">
     <div class="isg-about-text-grid__row">
       <div class="isg-about-text-grid__left">
@@ -43,9 +47,8 @@
       </div>
     </div>
   </div>
-  </div>
 
-  <!-- Block 2: та же логика scroll + clip-path, что Quality; стеклянная панель — isg-about-feature-card__content-stack -->
+  <!-- Block 2: scroll-driven липкая сцена (CSS sticky) — аналог Relats other-industries -->
   <div class="isg-about-content-block">
     <div
       class="isg-quality-content__track"
@@ -57,6 +60,7 @@
         <span class="isg-quality-marker" data-isg-quality-marker="0"></span>
         <span class="isg-quality-marker" data-isg-quality-marker="1"></span>
         <span class="isg-quality-marker" data-isg-quality-marker="2"></span>
+        <span class="isg-quality-marker" data-isg-quality-marker="3"></span>
       </div>
       <div class="isg-quality-content__sticky">
         <div class="isg-quality-row">
@@ -86,6 +90,13 @@
                   <button type="button" class="isg-quality-list-item isg-quality-label--plain isg-quality-list-item--text-only" data-isg-quality-index="2" aria-pressed="false">
                     <span class="isg-quality-list-item__inner">
                       <span class="isg-quality-list-item__text isg-quality-list-item__title">Modern manufacturing</span>
+                    </span>
+                  </button>
+                </li>
+                <li class="isg-quality-list__li">
+                  <button type="button" class="isg-quality-list-item isg-quality-label--plain isg-quality-list-item--text-only" data-isg-quality-index="3" aria-pressed="false">
+                    <span class="isg-quality-list-item__inner">
+                      <span class="isg-quality-list-item__text isg-quality-list-item__title">Sustainable growth</span>
                     </span>
                   </button>
                 </li>
@@ -128,36 +139,57 @@
                     <h3 class="isg-quality-visual__caption-title">Modern manufacturing</h3>
                   </div>
                 </div>
+                <div
+                  class="isg-quality-visual__slide"
+                  data-isg-quality-slide="3"
+                  style="background-image: url('assets/img/isg-quality-content-4.jpg');"
+                  role="img"
+                  aria-label="Sustainable growth"
+                >
+                  <div class="isg-quality-visual__caption">
+                    <h3 class="isg-quality-visual__caption-title">Sustainable growth</h3>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="isg-about-feature-card__inner">
               <div class="isg-about-feature-card__content-stack">
-                <div
-                  class="isg-about-feature-card__content-slide isg-about-feature-card__content-slide--active"
-                  data-isg-about-content-slide="0"
-                >
-                  <span class="isg-about-feature-card__icon" aria-hidden="true">
-                    <img src="assets/img/icons/agriculture.svg" width="40" height="40" alt="" />
-                  </span>
-                  <p class="isg-body isg-about-feature-card__text">
-                    Digital coordination ties planning, production, and quality data into one clear workflow—so teams respond faster and every stage stays traceable.
-                  </p>
-                </div>
-                <div class="isg-about-feature-card__content-slide" data-isg-about-content-slide="1">
-                  <span class="isg-about-feature-card__icon" aria-hidden="true">
-                    <img src="assets/img/icons/construction.svg" width="40" height="40" alt="" />
-                  </span>
-                  <p class="isg-body isg-about-feature-card__text">
-                    Practical efficiency means lean routines on the shop floor: less waste, predictable throughput, and consistent output without compromising safety or compliance.
-                  </p>
-                </div>
-                <div class="isg-about-feature-card__content-slide" data-isg-about-content-slide="2">
-                  <span class="isg-about-feature-card__icon" aria-hidden="true">
-                    <img src="assets/img/icons/industry.svg" width="40" height="40" alt="" />
-                  </span>
-                  <p class="isg-body isg-about-feature-card__text">
-                    Modern manufacturing combines advanced equipment with disciplined processes—delivering large-diameter pipe that meets strict specs and partner expectations.
-                  </p>
+                <div class="isg-about-feature-card__content-inner">
+                  <div
+                    class="isg-about-feature-card__content-slide isg-about-feature-card__content-slide--active"
+                    data-isg-about-content-slide="0"
+                  >
+                    <span class="isg-about-feature-card__icon" aria-hidden="true">
+                      <img src="assets/img/icons/agriculture.svg" width="40" height="40" alt="" />
+                    </span>
+                    <p class="isg-body isg-about-feature-card__text">
+                      Digital coordination ties planning, production, and quality data into one clear workflow—so teams respond faster and every stage stays traceable.
+                    </p>
+                  </div>
+                  <div class="isg-about-feature-card__content-slide" data-isg-about-content-slide="1">
+                    <span class="isg-about-feature-card__icon" aria-hidden="true">
+                      <img src="assets/img/icons/construction.svg" width="40" height="40" alt="" />
+                    </span>
+                    <p class="isg-body isg-about-feature-card__text">
+                      Practical efficiency means lean routines on the shop floor: less waste, predictable throughput, and consistent output without compromising safety or compliance.
+                    </p>
+                  </div>
+                  <div class="isg-about-feature-card__content-slide" data-isg-about-content-slide="2">
+                    <span class="isg-about-feature-card__icon" aria-hidden="true">
+                      <img src="assets/img/icons/industry.svg" width="40" height="40" alt="" />
+                    </span>
+                    <p class="isg-body isg-about-feature-card__text">
+                      Modern manufacturing combines advanced equipment with disciplined processes—delivering large-diameter pipe that meets strict specs and partner expectations.
+                    </p>
+                  </div>
+                  <div class="isg-about-feature-card__content-slide" data-isg-about-content-slide="3">
+                    <span class="isg-about-feature-card__icon" aria-hidden="true">
+                      <img src="assets/img/icons/agriculture.svg" width="40" height="40" alt="" />
+                    </span>
+                    <p class="isg-body isg-about-feature-card__text">
+                      Sustainable growth drives long-term value through responsible sourcing, energy-efficient production, and partnerships built on transparency and mutual benefit.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -276,6 +308,7 @@
         </div>
       </div>
     </div>
+  </div>
   </div>
 
   <!-- Block 4: gallery — заголовок в .container; трек на 100vw, края как tiny-slider fixedWidth + edgePadding / Responsive -->

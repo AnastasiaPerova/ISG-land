@@ -14,6 +14,7 @@
 /* Иконка — надпись: как в макете ~8–12px; меньше $isg-quality-list-gap */
 /* Планшеты/телефоны — чуть мягче углы (реф. relats.com) */
 @import "../css/vendor/tiny-slider.css";
+@import "../css/vendor/tiny-slider.css";
 .container-fluid {
   width: 100%;
   max-width: 100%;
@@ -429,6 +430,435 @@
   padding-right: calc(1.6rem * 0.5);
 }
 
+/** Потолок кегля display в fullscreen-интро (product / quality / about / rfq) */
+/* Контентный канал: product __inner, about text-grid / team, quality/about rows */
+/* Общий лёгкий сдвиг основного контента вправо (ряды product, about text-grid / team) */
+/* 12 колонок: левая зона подписи 4, правая — контент 8 */
+/* Мобильные поля контента (реф. relats.com — больше воздуха по бокам) */
+/* Высота внешнего блока пилюли в хедере (padding + ряд кнопок) */
+/* #1925AA — акцент, hover «Download catalogue» в hero и др. */
+/* Подложка блока карточек (digits featured .cards) — полупрозрачная над фото */
+/* Панели .isg-quality-list-wrap и .isg-about-values — одинаковый внутренний отступ */
+/* Панели .isg-quality-list-wrap / .isg-about-values; чёрный ряд-обёртка на десктопе (min-width: 1100px) */
+/* Расстояние между .isg-quality-list-item в колонке (плотнее) */
+/* About values: прежний шаг между пунктами */
+/* Иконка — надпись: как в макете ~8–12px; меньше $isg-quality-list-gap */
+/* Планшеты/телефоны — чуть мягче углы (реф. relats.com) */
+.container-fluid {
+  width: 100%;
+  max-width: 100%;
+}
+
+.container {
+  width: 100%;
+  max-width: 1920px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 0.8rem;
+  padding-right: 0.8rem;
+}
+
+@media (max-width: 767px) {
+  .container {
+    padding-left: clamp(1.85rem, 6.25vw, 2.85rem);
+    padding-right: clamp(1.85rem, 6.25vw, 2.85rem);
+  }
+}
+.container--bs {
+  max-width: 100%;
+}
+
+@media (min-width: 576px) {
+  .container--bs {
+    max-width: 540px;
+  }
+}
+@media (min-width: 768px) {
+  .container--bs {
+    max-width: 720px;
+  }
+}
+@media (min-width: 992px) {
+  .container--bs {
+    max-width: 960px;
+  }
+}
+@media (min-width: 1200px) {
+  .container--bs {
+    max-width: 1140px;
+  }
+}
+@media (min-width: 1400px) {
+  .container--bs {
+    max-width: 1320px;
+  }
+}
+@media (min-width: 768px) {
+  .container,
+  .container--bs {
+    padding-left: 6.4rem;
+    padding-right: 6.4rem;
+  }
+}
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: -0.8rem;
+  margin-right: -0.8rem;
+}
+
+.row--nowrap {
+  flex-wrap: nowrap;
+}
+
+.row--align-center {
+  align-items: center;
+}
+
+.row--justify-between {
+  justify-content: space-between;
+}
+
+.row--justify-end {
+  justify-content: flex-end;
+}
+
+.row--gap-lg {
+  row-gap: 4rem;
+}
+
+.row > [class*=col-] {
+  box-sizing: border-box;
+  max-width: 100%;
+  padding-left: 0.8rem;
+  padding-right: 0.8rem;
+}
+
+.col-1 {
+  flex: 0 0 8.3333333333%;
+  max-width: 8.3333333333%;
+}
+
+.col-2 {
+  flex: 0 0 16.6666666667%;
+  max-width: 16.6666666667%;
+}
+
+.col-3 {
+  flex: 0 0 25%;
+  max-width: 25%;
+}
+
+.col-4 {
+  flex: 0 0 33.3333333333%;
+  max-width: 33.3333333333%;
+}
+
+.col-5 {
+  flex: 0 0 41.6666666667%;
+  max-width: 41.6666666667%;
+}
+
+.col-6 {
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+
+.col-7 {
+  flex: 0 0 58.3333333333%;
+  max-width: 58.3333333333%;
+}
+
+.col-8 {
+  flex: 0 0 66.6666666667%;
+  max-width: 66.6666666667%;
+}
+
+.col-9 {
+  flex: 0 0 75%;
+  max-width: 75%;
+}
+
+.col-10 {
+  flex: 0 0 83.3333333333%;
+  max-width: 83.3333333333%;
+}
+
+.col-11 {
+  flex: 0 0 91.6666666667%;
+  max-width: 91.6666666667%;
+}
+
+.col-12 {
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+
+@media (min-width: 576px) {
+  .col-sm-1 {
+    flex: 0 0 8.3333333333%;
+    max-width: 8.3333333333%;
+  }
+  .col-sm-2 {
+    flex: 0 0 16.6666666667%;
+    max-width: 16.6666666667%;
+  }
+  .col-sm-3 {
+    flex: 0 0 25%;
+    max-width: 25%;
+  }
+  .col-sm-4 {
+    flex: 0 0 33.3333333333%;
+    max-width: 33.3333333333%;
+  }
+  .col-sm-5 {
+    flex: 0 0 41.6666666667%;
+    max-width: 41.6666666667%;
+  }
+  .col-sm-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+  .col-sm-7 {
+    flex: 0 0 58.3333333333%;
+    max-width: 58.3333333333%;
+  }
+  .col-sm-8 {
+    flex: 0 0 66.6666666667%;
+    max-width: 66.6666666667%;
+  }
+  .col-sm-9 {
+    flex: 0 0 75%;
+    max-width: 75%;
+  }
+  .col-sm-10 {
+    flex: 0 0 83.3333333333%;
+    max-width: 83.3333333333%;
+  }
+  .col-sm-11 {
+    flex: 0 0 91.6666666667%;
+    max-width: 91.6666666667%;
+  }
+  .col-sm-12 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+@media (min-width: 768px) {
+  .col-md-1 {
+    flex: 0 0 8.3333333333%;
+    max-width: 8.3333333333%;
+  }
+  .col-md-2 {
+    flex: 0 0 16.6666666667%;
+    max-width: 16.6666666667%;
+  }
+  .col-md-3 {
+    flex: 0 0 25%;
+    max-width: 25%;
+  }
+  .col-md-4 {
+    flex: 0 0 33.3333333333%;
+    max-width: 33.3333333333%;
+  }
+  .col-md-5 {
+    flex: 0 0 41.6666666667%;
+    max-width: 41.6666666667%;
+  }
+  .col-md-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+  .col-md-7 {
+    flex: 0 0 58.3333333333%;
+    max-width: 58.3333333333%;
+  }
+  .col-md-8 {
+    flex: 0 0 66.6666666667%;
+    max-width: 66.6666666667%;
+  }
+  .col-md-9 {
+    flex: 0 0 75%;
+    max-width: 75%;
+  }
+  .col-md-10 {
+    flex: 0 0 83.3333333333%;
+    max-width: 83.3333333333%;
+  }
+  .col-md-11 {
+    flex: 0 0 91.6666666667%;
+    max-width: 91.6666666667%;
+  }
+  .col-md-12 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+@media (min-width: 992px) {
+  .col-lg-1 {
+    flex: 0 0 8.3333333333%;
+    max-width: 8.3333333333%;
+  }
+  .col-lg-2 {
+    flex: 0 0 16.6666666667%;
+    max-width: 16.6666666667%;
+  }
+  .col-lg-3 {
+    flex: 0 0 25%;
+    max-width: 25%;
+  }
+  .col-lg-4 {
+    flex: 0 0 33.3333333333%;
+    max-width: 33.3333333333%;
+  }
+  .col-lg-5 {
+    flex: 0 0 41.6666666667%;
+    max-width: 41.6666666667%;
+  }
+  .col-lg-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+  .col-lg-7 {
+    flex: 0 0 58.3333333333%;
+    max-width: 58.3333333333%;
+  }
+  .col-lg-8 {
+    flex: 0 0 66.6666666667%;
+    max-width: 66.6666666667%;
+  }
+  .col-lg-9 {
+    flex: 0 0 75%;
+    max-width: 75%;
+  }
+  .col-lg-10 {
+    flex: 0 0 83.3333333333%;
+    max-width: 83.3333333333%;
+  }
+  .col-lg-11 {
+    flex: 0 0 91.6666666667%;
+    max-width: 91.6666666667%;
+  }
+  .col-lg-12 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+@media (min-width: 1200px) {
+  .col-xl-1 {
+    flex: 0 0 8.3333333333%;
+    max-width: 8.3333333333%;
+  }
+  .col-xl-2 {
+    flex: 0 0 16.6666666667%;
+    max-width: 16.6666666667%;
+  }
+  .col-xl-3 {
+    flex: 0 0 25%;
+    max-width: 25%;
+  }
+  .col-xl-4 {
+    flex: 0 0 33.3333333333%;
+    max-width: 33.3333333333%;
+  }
+  .col-xl-5 {
+    flex: 0 0 41.6666666667%;
+    max-width: 41.6666666667%;
+  }
+  .col-xl-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+  .col-xl-7 {
+    flex: 0 0 58.3333333333%;
+    max-width: 58.3333333333%;
+  }
+  .col-xl-8 {
+    flex: 0 0 66.6666666667%;
+    max-width: 66.6666666667%;
+  }
+  .col-xl-9 {
+    flex: 0 0 75%;
+    max-width: 75%;
+  }
+  .col-xl-10 {
+    flex: 0 0 83.3333333333%;
+    max-width: 83.3333333333%;
+  }
+  .col-xl-11 {
+    flex: 0 0 91.6666666667%;
+    max-width: 91.6666666667%;
+  }
+  .col-xl-12 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+@media (min-width: 1400px) {
+  .col-xxl-1 {
+    flex: 0 0 8.3333333333%;
+    max-width: 8.3333333333%;
+  }
+  .col-xxl-2 {
+    flex: 0 0 16.6666666667%;
+    max-width: 16.6666666667%;
+  }
+  .col-xxl-3 {
+    flex: 0 0 25%;
+    max-width: 25%;
+  }
+  .col-xxl-4 {
+    flex: 0 0 33.3333333333%;
+    max-width: 33.3333333333%;
+  }
+  .col-xxl-5 {
+    flex: 0 0 41.6666666667%;
+    max-width: 41.6666666667%;
+  }
+  .col-xxl-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+  .col-xxl-7 {
+    flex: 0 0 58.3333333333%;
+    max-width: 58.3333333333%;
+  }
+  .col-xxl-8 {
+    flex: 0 0 66.6666666667%;
+    max-width: 66.6666666667%;
+  }
+  .col-xxl-9 {
+    flex: 0 0 75%;
+    max-width: 75%;
+  }
+  .col-xxl-10 {
+    flex: 0 0 83.3333333333%;
+    max-width: 83.3333333333%;
+  }
+  .col-xxl-11 {
+    flex: 0 0 91.6666666667%;
+    max-width: 91.6666666667%;
+  }
+  .col-xxl-12 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+.col {
+  flex: 1 1 0;
+  min-width: 0;
+  padding-left: 0.8rem;
+  padding-right: 0.8rem;
+}
+
+.col-auto {
+  flex: 0 0 auto;
+  width: auto;
+  max-width: 100%;
+  padding-left: 0.8rem;
+  padding-right: 0.8rem;
+}
+
 *,
 *::before,
 *::after {
@@ -659,12 +1089,14 @@ select {
   box-sizing: border-box;
   text-wrap: wrap;
 }
+
 .isg-title-anim .isg-title-anim__line-mask {
   display: block;
   overflow: hidden;
   padding-bottom: 0.06em;
   margin-bottom: -0.06em;
 }
+
 .isg-title-anim .isg-title-anim__line-inner {
   display: block;
   will-change: transform, opacity, filter;
@@ -1177,11 +1609,13 @@ select {
   scrollbar-width: none;
   max-width: 100%;
 }
+
 .isg-nav-pill__row--sections::-webkit-scrollbar {
   display: none;
   width: 0;
   height: 0;
 }
+
 .isg-nav-pill__row--sections .isg-btn {
   flex: 0 0 auto;
   min-width: 0;
@@ -1894,6 +2328,7 @@ body.isg-nav-drawer-open {
    * так нет полосы прокрутки из‑за scrollbar + vw.
    */
 }
+
 .isg-digits-section.component--featured .scroll {
   display: block;
   height: auto;
@@ -1902,6 +2337,7 @@ body.isg-nav-drawer-open {
   overflow-x: clip;
   position: relative;
 }
+
 .isg-digits-section.component--featured .scroll .inner {
   position: relative;
   width: 100%;
@@ -1910,6 +2346,7 @@ body.isg-nav-drawer-open {
   min-height: 31.25rem;
   isolation: isolate;
 }
+
 .isg-digits-section.component--featured .scroll .inner > .image {
   position: absolute;
   inset: 0;
@@ -1922,12 +2359,14 @@ body.isg-nav-drawer-open {
   z-index: 0;
   --isg-digits-img-effect: 0;
 }
+
 .isg-digits-section.component--featured .scroll .inner > .image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
 }
+
 .isg-digits-section.component--featured .isg-digits-featured__image-media {
   position: absolute;
   inset: 0;
@@ -1939,6 +2378,7 @@ body.isg-nav-drawer-open {
   filter: blur(calc(var(--isg-digits-img-effect, 0) * 16px));
   will-change: filter, transform;
 }
+
 @media (prefers-reduced-motion: reduce) {
   .isg-digits-section.component--featured .isg-digits-featured__image-media {
     filter: none;
@@ -1954,6 +2394,7 @@ body.isg-nav-drawer-open {
   pointer-events: none;
   background: rgba(0, 0, 0, calc(0.2 + var(--isg-digits-img-effect, 0) * 0.52));
 }
+
 .isg-digits-section.component--featured .scroll .inner .cards {
   position: absolute;
   top: 0;
@@ -1976,6 +2417,7 @@ body.isg-nav-drawer-open {
   will-change: transform;
   padding: 8rem 6.4rem;
 }
+
 .isg-digits-section.component--featured .scroll .inner .cards .center {
   width: 100%;
   max-width: 100%;
@@ -1987,12 +2429,14 @@ body.isg-nav-drawer-open {
   overflow: visible;
   box-sizing: border-box;
 }
+
 .isg-digits-section.component--featured .scroll .inner .cards .center > .title {
   flex-shrink: 0;
   margin: 0 0 8rem;
   color: #111111;
   max-width: 28ch;
 }
+
 .isg-digits-section.component--featured .columns--start {
   display: flex;
   flex-direction: row;
@@ -2009,6 +2453,7 @@ body.isg-nav-drawer-open {
   overflow: visible;
   box-sizing: border-box;
 }
+
 .isg-digits-section.component--featured .columns--start .columns__item {
   flex: 0 0 max(277.2px, min(21.875vw, 4.3640625in));
   min-height: 0;
@@ -2017,9 +2462,11 @@ body.isg-nav-drawer-open {
   padding: 0;
   margin: 0;
 }
+
 .isg-digits-section.component--featured {
   /* Карточки: фон на всю площадь, блок value + label снизу слева */
 }
+
 .isg-digits-section.component--featured .card.card--featured.isg-digit-card {
   position: relative;
   display: block;
@@ -2740,6 +3187,7 @@ body.isg-nav-drawer-open {
 .isg-product-content,
 .isg-quality-content,
 .isg-about-content-block,
+.isg-about-intro-block,
 .isg-about-text-grid,
 .isg-about-gallery-block,
 .isg-rfq-content {
@@ -2848,7 +3296,7 @@ body.isg-nav-drawer-open {
   gap: 8rem;
   min-height: 100vh;
   min-height: 100svh;
-  padding: 8rem 6.4rem 8rem;
+  padding: 8rem 0 8rem;
   background-color: #777;
   background-size: cover;
   background-position: center;
@@ -2880,7 +3328,6 @@ body.isg-nav-drawer-open {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 4rem;
   width: 100%;
   max-width: min(100%, var(--container-width));
   margin-inline: auto;
@@ -2910,7 +3357,7 @@ body.isg-nav-drawer-open {
   min-height: 24rem;
   padding: 2.4rem;
   border-radius: 1.6rem;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(11px);
   -webkit-backdrop-filter: blur(11px);
   display: flex;
@@ -3058,17 +3505,18 @@ body.isg-nav-drawer-open {
 .isg-product-content {
   position: relative;
   background: #e8e6e0;
-  border-radius: 3rem 3rem 0 0;
   padding: 12.8rem 0;
   margin-top: -4rem;
 }
 
-.isg-product-content__inner {
+.isg-product-content__inner,
+.isg-about-main {
   display: flex;
   flex-direction: column;
   gap: 0;
   max-width: 136rem;
-  margin: 0 auto;
+  margin-left: auto;
+  margin-right: auto;
   width: 100%;
   box-sizing: border-box;
 }
@@ -3607,17 +4055,13 @@ body.isg-nav-drawer-open {
   width: 100%;
 }
 
-/* Quality + About: scroll-driven блок (макет quality: список | gap | медиа; те же токены и липкая сцена) */
-.isg-quality-content,
-.isg-about-content-block {
-  /* Внутри липкой сцены: одинаковый зазор сверху/снизу у ряда */
+/* Quality: scroll-driven блок (список | медиа; липкая сцена) */
+.isg-quality-content {
   --isg-quality-gap-header: clamp(1.2rem, 2.2vw, 3rem);
-  /* Белый блок: низ = верх (≤1099 задаётся в медиазапросе) */
   --isg-quality-content-pad-top: 8rem;
   --isg-quality-content-pad-bottom: 8rem;
   position: relative;
   background: #111;
-  border-radius: 3rem 3rem 0 0;
   padding-top: var(--isg-quality-content-pad-top);
   padding-inline: 6.4rem;
   padding-bottom: var(--isg-quality-content-pad-bottom);
@@ -3625,13 +4069,19 @@ body.isg-nav-drawer-open {
   overflow-x: clip;
 }
 
+/* About: overflow:visible обязателен — position:sticky ломается при overflow:clip/hidden на предке */
 .isg-about-content-block {
+  --isg-quality-gap-header: clamp(1.2rem, 2.2vw, 3rem);
   --isg-about-gap-header: var(--isg-quality-gap-header);
-  --isg-about-content-pad-top: var(--isg-quality-content-pad-top);
-  --isg-about-content-pad-bottom: var(--isg-quality-content-pad-bottom);
-  background: #1925aa;
+  --isg-quality-content-pad-top: 0px;
+  --isg-quality-content-pad-bottom: 0px;
+  position: relative;
+  background: transparent;
   border-radius: 0;
   color: #e8e6e0;
+  padding: 0;
+  margin-top: 0;
+  overflow: visible;
 }
 
 .isg-about-text-grid,
@@ -3668,6 +4118,7 @@ body.isg-nav-drawer-open {
 .isg-about-content-block em {
   color: #e8e6e0;
 }
+
 .isg-about-text-grid .isg-subtitle__text,
 .isg-about-text-grid .isg-quality-list-wrap,
 .isg-about-text-grid .isg-quality-list-wrap__label .isg-subtitle__text,
@@ -3858,6 +4309,36 @@ body.isg-nav-drawer-open {
   width: 100%;
 }
 
+/* Как Relats .center: окно списка по центру вертикали; label остаётся вверху */
+.isg-quality-list-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 0;
+}
+
+@media (min-width: 1100px) {
+  /* Как Relats .info: overflow:hidden обрезает всё за пределами панели */
+  .isg-about-content-block .isg-quality-list-wrap {
+    overflow: hidden;
+    position: relative;
+  }
+  /* Как Relats .center: position:absolute по центру .info */
+  .isg-about-content-block .isg-quality-list-center {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    padding-inline: clamp(1.75rem, 3vw, 3.5rem);
+  }
+  .isg-about-content-block .isg-quality-list {
+    max-height: none;
+    overflow-y: visible;
+    flex: 0 0 auto;
+    justify-content: flex-start;
+  }
+}
 .isg-quality-list {
   display: flex;
   flex-direction: column;
@@ -4038,9 +4519,8 @@ body.isg-nav-drawer-open {
 }
 
 @media (max-width: 1099px) {
-  /* Горизонтальная лента «две коробки» (как .boxes на toptier.relats.com); About — те же отступы оболочки */
-  .isg-quality-content,
-  .isg-about-content-block {
+  /* Горизонтальная лента «две коробки» (как .boxes на toptier.relats.com) */
+  .isg-quality-content {
     --isg-quality-gap-header: 1.6rem;
     --isg-quality-content-pad-top: 8rem;
     --isg-quality-content-pad-bottom: 8rem;
@@ -4048,6 +4528,9 @@ body.isg-nav-drawer-open {
     padding-inline: clamp(1.85rem, 6.25vw, 2.85rem);
     padding-bottom: var(--isg-quality-content-pad-bottom);
     overflow-x: visible;
+  }
+  .isg-about-content-block {
+    --isg-quality-gap-header: 1.6rem;
   }
   .isg-quality-content__track {
     min-height: 0;
@@ -4223,9 +4706,19 @@ body.isg-nav-drawer-open {
     scroll-snap-align: none;
   }
 }
+/* Как .isg-product-content: скругление верха + перекрытие предыдущей секции на всей обёртке */
 .isg-about-intro-block {
-  width: 100%;
-  background: #e8e6e0;
+  position: relative;
+  background: #1925aa;
+  border-radius: 3rem 3rem 0 0;
+  padding: 12.8rem 0;
+  margin-top: -4rem;
+  /* overflow НЕ hidden — иначе position:sticky внутри не работает */
+}
+
+.isg-about-main {
+  position: relative;
+  /* overflow:hidden убран — он ломал position:sticky для .isg-quality-content__sticky */
 }
 
 .isg-about-intro {
@@ -4268,16 +4761,15 @@ body.isg-nav-drawer-open {
 
 .isg-about-text-grid {
   position: relative;
-  background: #1925aa;
+  background: transparent;
   color: #e8e6e0;
-  border-radius: 3rem 3rem 0 0;
-  padding: 8rem 6.4rem;
+  border-radius: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 4rem;
-  margin-top: -4rem;
-  margin-bottom: 4rem;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .isg-about-text-grid__row {
@@ -4323,8 +4815,8 @@ body.isg-nav-drawer-open {
 
 @media (max-width: 1023px) {
   .isg-about-text-grid {
-    padding-left: clamp(1.85rem, 6.25vw, 2.85rem);
-    padding-right: clamp(1.85rem, 6.25vw, 2.85rem);
+    padding-left: 0;
+    padding-right: 0;
   }
   .isg-about-text-grid__left,
   .isg-about-text-grid__right {
@@ -4367,9 +4859,11 @@ body.isg-nav-drawer-open {
   pointer-events: none;
   color: #ffffff;
 }
+
 .isg-about-feature-card__inner .isg-about-feature-card__text {
   color: #ffffff;
 }
+
 .isg-about-feature-card__inner .isg-about-feature-card__icon {
   background: transparent;
   border: none;
@@ -4380,13 +4874,14 @@ body.isg-nav-drawer-open {
   max-height: none;
   padding: 0;
 }
+
 .isg-about-feature-card__inner .isg-about-feature-card__icon img {
   width: 40px;
   height: 40px;
   filter: brightness(0) invert(1);
 }
 
-/* Область слайдов: позиция в карточке + высота под GSAP yPercent */
+/* Как Relats .boxes: overflow:hidden, фикс. высота (задаётся JS); виден один .box за раз */
 .isg-about-feature-card__content-stack {
   position: absolute;
   right: 3.2rem;
@@ -4394,29 +4889,33 @@ body.isg-nav-drawer-open {
   z-index: 10;
   width: calc(100% - 6.4rem);
   max-width: 396px;
-  height: clamp(13.5rem, 32vh, 20rem);
-  min-height: clamp(13.5rem, 32vh, 20rem);
   overflow: hidden;
   border-radius: 1.6rem;
   pointer-events: none;
   box-sizing: border-box;
 }
 
+/* Как Relats .inner: столбец всех box'ов; двигается yPercent = -(100/n)*t */
+.isg-about-feature-card__content-inner {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* Как Relats .box: обычный flow, не absolute */
 .isg-about-feature-card__content-slide {
-  position: absolute;
-  inset: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
   gap: 2.4rem;
   box-sizing: border-box;
-  height: 100%;
-  min-height: 100%;
+  width: 100%;
+  flex: 0 0 auto;
   padding: 2.4rem;
   pointer-events: none;
-  will-change: transform;
-  backface-visibility: hidden;
   border-radius: 1.6rem;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(23px);
@@ -4471,9 +4970,8 @@ body.isg-nav-drawer-open {
 }
 /* About team — макет Pencil PNDFj: padding 128 64 96, gap 96, текст 579px | слайдер вправо, трек↔нав 64px, карточка 430×458 */
 .isg-about-team-block {
-  background: #1925aa;
+  background: transparent;
   color: #e8e6e0;
-  padding: 8rem 6.4rem 8rem;
 }
 
 .isg-about-team-block__inner {
