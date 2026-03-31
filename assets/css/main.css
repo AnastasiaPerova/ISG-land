@@ -4323,7 +4323,7 @@ body.isg-nav-drawer-open {
     overflow: hidden;
     position: relative;
   }
-  /* Как Relats .center: position:absolute по центру .info */
+  /* Как Relats .center: position:absolute по центру .info; overflow:hidden обрезает список */
   .isg-about-content-block .isg-quality-list-center {
     position: absolute;
     left: 0;
@@ -4331,6 +4331,7 @@ body.isg-nav-drawer-open {
     top: 50%;
     transform: translateY(-50%);
     padding-inline: clamp(1.75rem, 3vw, 3.5rem);
+    overflow: hidden;
   }
   .isg-about-content-block .isg-quality-list {
     max-height: none;

@@ -182,6 +182,26 @@ function initOneQualityScrollTrack(track, options = {}) {
     (items[0] ? items[0].closest(".isg-quality-list-wrap") : null);
   const listCol =
     listWrap?.querySelector(".isg-quality-list") || track.querySelector(".isg-quality-list");
+  const listCenter =
+    listWrap?.querySelector(".isg-quality-list-center") || track.querySelector(".isg-quality-list-center");
+
+  /**
+   * Как Relats .center padding-top: высота одного li, чтобы активный пункт
+   * оказывался по центру окна при yPercent = -(100/n)*t.
+   */
+  const layoutListCenter = () => {
+    if (!listCenter || !aboutTrack || !mq.matches) {
+      if (listCenter) listCenter.style.removeProperty("padding-top");
+      return;
+    }
+    const firstLi = listCol?.querySelector(".isg-quality-list__li");
+    if (firstLi) {
+      const liH = firstLi.offsetHeight;
+      const centerH = listCenter.offsetHeight;
+      const pad = Math.max(0, (centerH - liH) / 2);
+      listCenter.style.paddingTop = `${pad}px`;
+    }
+  };
 
   /**
    * Сдвиг ul: как Relats (GSAP `y: -100/n*o + "%"`). Окно — `.isg-quality-list-center`.
@@ -476,6 +496,9 @@ function initOneQualityScrollTrack(track, options = {}) {
       if (contentStackEl) {
         contentStackEl.style.removeProperty("height");
       }
+      if (listCenter) {
+        listCenter.style.removeProperty("padding-top");
+      }
       slides.forEach((el) => {
         gsap.set(el, {
           clearProps: "transform,clipPath,opacity,visibility,zIndex,backgroundPosition",
@@ -508,6 +531,7 @@ function initOneQualityScrollTrack(track, options = {}) {
     layoutTrackHeight();
     layoutMarkers();
     layoutBoxesHeight();
+    layoutListCenter();
     applyFrame(trackProgress01());
 
     const lenis = getLenis();
@@ -525,6 +549,7 @@ function initOneQualityScrollTrack(track, options = {}) {
       layoutTrackHeight();
       layoutMarkers();
       layoutBoxesHeight();
+      layoutListCenter();
       syncFromScroll();
     };
     window.addEventListener("resize", onResize);
@@ -573,6 +598,9 @@ function initOneQualityScrollTrack(track, options = {}) {
     if (contentStackEl) {
       contentStackEl.style.removeProperty("height");
     }
+    if (listCenter) {
+      listCenter.style.removeProperty("padding-top");
+    }
     slides.forEach((el) =>
       gsap.set(el, {
         clearProps:
@@ -585,6 +613,7 @@ function initOneQualityScrollTrack(track, options = {}) {
     layoutTrackHeight();
     layoutMarkers();
     layoutBoxesHeight();
+    layoutListCenter();
     syncFromScroll();
   });
 
