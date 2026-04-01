@@ -1,8 +1,36 @@
 <!-- Site header (общий с hero; в #isg-main после partials/site-logo.html) -->
 <header class="isg-site-header isg-hero__header" data-isg-sticky-header>
   <div class="isg-site-header__chrome">
+    <div class="isg-site-header__cluster isg-header-desktop-only">
+      <div class="isg-hero__lang">
+        <div class="isg-nav-pill isg-lang-pill">
+          <div class="isg-nav-pill__inner">
+            <div
+              class="isg-nav-pill__row isg-nav-pill__row--slider isg-lang-pill__row isg-nav-pill__row--slider--init"
+              data-isg-nav-slider
+              data-isg-lang-nav
+            >
+              <span class="isg-nav-pill__slider" aria-hidden="true"></span>
+              <a class="isg-btn isg-btn--ghost-dark isg-btn--active" href="#" data-isg-lang="en" aria-current="true">EN</a>
+              <a class="isg-btn isg-btn--ghost-dark" href="#" data-isg-lang="pl">PL</a>
+              <a class="isg-btn isg-btn--ghost-dark" href="#" data-isg-lang="de">DE</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="isg-hero__nav-wrap isg-header-desktop-only">
       <nav class="isg-nav-pill" aria-label="Primary" data-isg-section-nav>
+        <a class="isg-hero__logo isg-nav-pill__brand" href="#isg-hero" aria-label="ISG - Home">
+          <img
+            class="isg-hero__logo-img"
+            src="assets/img/logo_footer.svg"
+            alt=""
+            width="170"
+            height="62"
+            decoding="async"
+          />
+        </a>
         <div class="isg-nav-pill__inner">
           <div
             class="isg-nav-pill__row isg-nav-pill__row--slider isg-nav-pill__row--sections isg-nav-pill__row--slider--init"
@@ -28,24 +56,6 @@
     >
       <span class="isg-burger__bars" aria-hidden="true"></span>
     </button>
-    <div class="isg-site-header__cluster isg-header-desktop-only">
-      <div class="isg-hero__lang">
-        <div class="isg-nav-pill isg-lang-pill">
-          <div class="isg-nav-pill__inner">
-            <div
-              class="isg-nav-pill__row isg-nav-pill__row--slider isg-lang-pill__row isg-nav-pill__row--slider--init"
-              data-isg-nav-slider
-              data-isg-lang-nav
-            >
-              <span class="isg-nav-pill__slider" aria-hidden="true"></span>
-              <a class="isg-btn isg-btn--ghost-dark isg-btn--active" href="#" data-isg-lang="en" aria-current="true">EN</a>
-              <a class="isg-btn isg-btn--ghost-dark" href="#" data-isg-lang="pl">PL</a>
-              <a class="isg-btn isg-btn--ghost-dark" href="#" data-isg-lang="de">DE</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
   <div id="isg-nav-drawer" class="isg-nav-drawer" aria-hidden="true">
     <button type="button" class="isg-nav-drawer__backdrop" data-isg-drawer-close tabindex="-1" aria-label="Close menu"></button>
