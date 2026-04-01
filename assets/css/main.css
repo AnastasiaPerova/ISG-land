@@ -1315,12 +1315,12 @@ html {
   --container-width: 136rem;
   --container-offset: calc((100vw - var(--container-width)) * .5);
   --isg-sticky-header-offset: 88px;
-  --isg-sticky-header-top: 1.75rem;
+  --isg-sticky-header-top: 4.6rem;
   --isg-font-body: Plus Jakarta Sans, system-ui, sans-serif;
   --isg-font-ui: Plus Jakarta Sans, system-ui, sans-serif;
   --isg-font-mono: DM Mono, ui-monospace, monospace;
   --isg-gap: 1.8rem;
-  --isg-header-height: 4rem;
+  --isg-header-height: 8rem;
   /* UI kit — типографика (см. _typography.scss); правки в одном месте или здесь в DevTools */
   --isg-type-display: 8.4rem;
   --isg-type-headline:6.2rem;
@@ -1886,8 +1886,8 @@ select {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 4.8rem;
-  padding: 0.8rem;
+  gap: 6.4rem;
+  padding: 0;
   border-radius: 18px;
   background: rgba(28, 28, 28, 0.06);
   backdrop-filter: blur(23px);
@@ -2592,8 +2592,7 @@ body.isg-nav-drawer-open {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  padding: 5px 0;
+  padding: 1rem 2.4rem;
   width: auto;
   max-width: 14rem;
   min-width: 0;
