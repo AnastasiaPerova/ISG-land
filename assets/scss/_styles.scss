@@ -3613,15 +3613,14 @@ body.isg-nav-drawer-open {
 /* Quality: scroll-driven блок (список | медиа; липкая сцена) */
 .isg-quality-content {
   --isg-quality-gap-header: clamp(1.2rem, 2.2vw, 3rem);
-  --isg-quality-content-pad-top: 8rem;
-  --isg-quality-content-pad-bottom: 8rem;
+  --isg-quality-content-pad-top: 0px;
+  --isg-quality-content-pad-bottom: 0px;
   position: relative;
-  background: #111;
-  padding-top: var(--isg-quality-content-pad-top);
-  padding-inline: 6.4rem;
-  padding-bottom: var(--isg-quality-content-pad-bottom);
-  margin-top: -4rem;
-  overflow-x: clip;
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+  margin-top: 0;
+  overflow: visible;
 }
 
 /* About: overflow:visible обязателен — position:sticky ломается при overflow:clip/hidden на предке */
@@ -3769,15 +3768,16 @@ body.isg-nav-drawer-open {
 /* На всю высоту вьюпорта — оболочка; контент по высоте области с учётом паддингов */
 .isg-quality-content__sticky {
   position: sticky;
-  /* Не уезжать под fixed-хедер (та же величина, что scroll-margin у секций и offset якорей) */
   top: var(--isg-sticky-header-offset, 88px);
   z-index: 2;
+  padding-bottom: 2rem;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  justify-content: flex-start;
+  justify-content: center;
   width: 100%;
+
 }
 
 @media (min-width: 1100px) {
@@ -3805,7 +3805,7 @@ body.isg-nav-drawer-open {
   gap: 1.8rem;
   width: 100%;
   align-items: stretch;
-  flex: 1;
+height: 76vh;
   min-height: 0;
 }
 
@@ -3872,26 +3872,36 @@ body.isg-nav-drawer-open {
 }
 
 @media (min-width: 1100px) {
-  /* Как Relats .info: overflow:hidden обрезает всё за пределами панели */
-  .isg-about-content-block .isg-quality-list-wrap {
+  [data-isg-quality-about] .isg-quality-list-wrap {
     overflow: hidden;
     position: relative;
   }
-  /* Как Relats .center: position:absolute по центру .info; overflow:hidden обрезает список */
-  .isg-about-content-block .isg-quality-list-center {
+  [data-isg-quality-about] .isg-quality-list-center {
     position: absolute;
     left: 0;
     right: 0;
     top: 50%;
     transform: translateY(-50%);
+    height: max(99pt, min(10.417vw, 199.5px));
+    padding-top: 16rem;
     padding-inline: clamp(1.75rem, 3vw, 3.5rem);
-    overflow: hidden;
+    overflow: visible;
   }
-  .isg-about-content-block .isg-quality-list {
+  [data-isg-quality-about] .isg-quality-list {
     max-height: none;
     overflow-y: visible;
     flex: 0 0 auto;
     justify-content: flex-start;
+  }
+  [data-isg-quality-about] .isg-quality-list__li {
+    opacity: 0.001;
+    transition: opacity 0.35s ease;
+  }
+  [data-isg-quality-about] .isg-quality-list__li.isg-quality-list__item--active {
+    opacity: 1;
+  }
+  [data-isg-quality-about] .isg-quality-list__li.isg-quality-list__item--active-sibling {
+    opacity: 0.4;
   }
 }
 
@@ -3967,7 +3977,7 @@ body.isg-nav-drawer-open {
 }
 
 /* About: пункты без иконки — симметричные поля (класс --text-only на кнопке) */
-.isg-about-content-block .isg-quality-list-item--text-only .isg-quality-list-item__inner {
+[data-isg-quality-about] .isg-quality-list-item--text-only .isg-quality-list-item__inner {
   padding-left: clamp(1.25rem, 3.5vw, 2.75rem);
   padding-right: clamp(1.25rem, 3.5vw, 2.75rem);
 }
@@ -4406,6 +4416,26 @@ body.isg-nav-drawer-open {
   width: 100%;
   flex: 1 1 auto;
   min-height: 0;
+}
+
+/* Как Relats .image--cover: контейнер с clip-path, внутри <img> с translate3d */
+.isg-quality-visual__slide-img {
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+@media (min-width: 1100px) {
+  [data-isg-quality-about] .isg-quality-visual__slide-img {
+    top: -15%;
+    bottom: auto;
+    height: 130%;
+    will-change: transform;
+  }
 }
 
 /* Обёртка стеклянной панели — поверх фото, не участвует в расчёте высоты */

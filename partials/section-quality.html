@@ -18,8 +18,7 @@
   </section>
   <div class="isg-quality-content">
     <!-- Длина скролла = фазы смены слайдов (как scroll-driven slides на Relats) -->
-    <div class="isg-quality-content__track" data-isg-quality-scroll aria-label="Quality control focus areas">
-      <!-- Якоря для scrollTo (как .markers .item у Relats toptier) -->
+    <div class="isg-quality-content__track" data-isg-quality-scroll data-isg-quality-about aria-label="Quality control focus areas">
       <div class="isg-quality-markers" aria-hidden="true">
         <span class="isg-quality-marker" data-isg-quality-marker="0"></span>
         <span class="isg-quality-marker" data-isg-quality-marker="1"></span>
@@ -30,12 +29,10 @@
       <div class="isg-quality-content__sticky">
         <div class="isg-quality-row">
           <div class="isg-quality-list-wrap">
-            <!-- ACF: quality_list_label -->
             <div class="isg-subtitle isg-quality-list-wrap__label">
               <p class="isg-subtitle__text">Focus areas</p>
               <span class="isg-subtitle__swatch" aria-hidden="true"></span>
             </div>
-            <!-- как .slides .info .center ul на toptier.relats.com (component--other-industries) -->
             <div class="isg-quality-list-center">
               <ul class="isg-quality-list" data-isg-quality-list-scroll>
                 <li class="isg-quality-list__li isg-quality-list__item--active">
@@ -76,62 +73,109 @@
               </ul>
             </div>
           </div>
-          <div class="isg-quality-visual">
-            <div class="isg-quality-visual__slides" data-isg-quality-mobile-slider data-lenis-prevent>
-              <!-- ACF: quality_slide_1 … quality_slide_5 -->
-              <div
-                class="isg-quality-visual__slide isg-quality-content--1 isg-quality-visual__slide--active"
-                data-isg-quality-slide="0"
-                style="background-image: url('assets/img/isg-quality-content-1.jpg');"
-                role="img"
-                aria-label="Dimensional inspection"
-              >
-                <div class="isg-quality-visual__caption">
-                  <h3 class="isg-quality-visual__caption-title">Dimensional inspection</h3>
+          <div class="isg-about-feature-card">
+            <div class="isg-quality-visual">
+              <div class="isg-quality-visual__slides" data-isg-quality-mobile-slider data-lenis-prevent>
+                <div
+                  class="isg-quality-visual__slide isg-quality-visual__slide--active"
+                  data-isg-quality-slide="0"
+                  role="img"
+                  aria-label="Dimensional inspection"
+                >
+                  <img class="isg-quality-visual__slide-img" src="assets/img/isg-quality-content-1.jpg" alt="" />
+                  <div class="isg-quality-visual__caption">
+                    <h3 class="isg-quality-visual__caption-title">Dimensional inspection</h3>
+                  </div>
+                </div>
+                <div
+                  class="isg-quality-visual__slide"
+                  data-isg-quality-slide="1"
+                  role="img"
+                  aria-label="Traceability"
+                >
+                  <img class="isg-quality-visual__slide-img" src="assets/img/isg-quality-content-2.jpg" alt="" />
+                  <div class="isg-quality-visual__caption">
+                    <h3 class="isg-quality-visual__caption-title">Traceability</h3>
+                  </div>
+                </div>
+                <div
+                  class="isg-quality-visual__slide"
+                  data-isg-quality-slide="2"
+                  role="img"
+                  aria-label="Laboratory testing"
+                >
+                  <img class="isg-quality-visual__slide-img" src="assets/img/isg-quality-content-3.jpg" alt="" />
+                  <div class="isg-quality-visual__caption">
+                    <h3 class="isg-quality-visual__caption-title">Laboratory testing</h3>
+                  </div>
+                </div>
+                <div
+                  class="isg-quality-visual__slide"
+                  data-isg-quality-slide="3"
+                  role="img"
+                  aria-label="Documentation"
+                >
+                  <img class="isg-quality-visual__slide-img" src="assets/img/isg-quality-content-4.jpg" alt="" />
+                  <div class="isg-quality-visual__caption">
+                    <h3 class="isg-quality-visual__caption-title">Documentation</h3>
+                  </div>
+                </div>
+                <div
+                  class="isg-quality-visual__slide"
+                  data-isg-quality-slide="4"
+                  role="img"
+                  aria-label="Third-party inspection"
+                >
+                  <img class="isg-quality-visual__slide-img" src="assets/img/isg-quality-content-5.jpg" alt="" />
+                  <div class="isg-quality-visual__caption">
+                    <h3 class="isg-quality-visual__caption-title">Third-party inspection</h3>
+                  </div>
                 </div>
               </div>
-              <div
-                class="isg-quality-visual__slide isg-quality-content--2"
-                data-isg-quality-slide="1"
-                style="background-image: url('assets/img/isg-quality-content-2.jpg');"
-                role="img"
-                aria-label="Traceability"
-              >
-                <div class="isg-quality-visual__caption">
-                  <h3 class="isg-quality-visual__caption-title">Traceability</h3>
-                </div>
-              </div>
-              <div
-                class="isg-quality-visual__slide isg-quality-content--3"
-                data-isg-quality-slide="2"
-                style="background-image: url('assets/img/isg-quality-content-3.jpg');"
-                role="img"
-                aria-label="Laboratory testing"
-              >
-                <div class="isg-quality-visual__caption">
-                  <h3 class="isg-quality-visual__caption-title">Laboratory testing</h3>
-                </div>
-              </div>
-              <div
-                class="isg-quality-visual__slide isg-quality-content--4"
-                data-isg-quality-slide="3"
-                style="background-image: url('assets/img/isg-quality-content-4.jpg');"
-                role="img"
-                aria-label="Documentation"
-              >
-                <div class="isg-quality-visual__caption">
-                  <h3 class="isg-quality-visual__caption-title">Documentation</h3>
-                </div>
-              </div>
-              <div
-                class="isg-quality-visual__slide isg-quality-content--5"
-                data-isg-quality-slide="4"
-                style="background-image: url('assets/img/isg-quality-content-5.jpg');"
-                role="img"
-                aria-label="Third-party inspection"
-              >
-                <div class="isg-quality-visual__caption">
-                  <h3 class="isg-quality-visual__caption-title">Third-party inspection</h3>
+            </div>
+            <div class="isg-about-feature-card__inner">
+              <div class="isg-about-feature-card__content-stack">
+                <div class="isg-about-feature-card__content-inner">
+                  <div class="isg-about-feature-card__content-slide isg-about-feature-card__content-slide--active" data-isg-about-content-slide="0">
+                    <span class="isg-about-feature-card__icon" aria-hidden="true">
+                      <img src="assets/img/icons/infrastructure.svg" width="40" height="40" alt="" />
+                    </span>
+                    <p class="isg-body isg-about-feature-card__text">
+                      Every pipe undergoes precise dimensional checks — diameter, wall thickness, length, and ovality — ensuring full compliance with project specifications.
+                    </p>
+                  </div>
+                  <div class="isg-about-feature-card__content-slide" data-isg-about-content-slide="1">
+                    <span class="isg-about-feature-card__icon" aria-hidden="true">
+                      <img src="assets/img/icons/industry.svg" width="40" height="40" alt="" />
+                    </span>
+                    <p class="isg-body isg-about-feature-card__text">
+                      Each pipe is assigned a unique identification code, linking it to raw material certificates, production data, and test results throughout its lifecycle.
+                    </p>
+                  </div>
+                  <div class="isg-about-feature-card__content-slide" data-isg-about-content-slide="2">
+                    <span class="isg-about-feature-card__icon" aria-hidden="true">
+                      <img src="assets/img/icons/construction.svg" width="40" height="40" alt="" />
+                    </span>
+                    <p class="isg-body isg-about-feature-card__text">
+                      In-house laboratory performs mechanical, chemical, and metallographic testing to verify material properties meet the required standards.
+                    </p>
+                  </div>
+                  <div class="isg-about-feature-card__content-slide" data-isg-about-content-slide="3">
+                    <span class="isg-about-feature-card__icon" aria-hidden="true">
+                      <img src="assets/img/icons/oil-gas.svg" width="40" height="40" alt="" />
+                    </span>
+                    <p class="isg-body isg-about-feature-card__text">
+                      Comprehensive quality documentation — mill certificates, inspection reports, and compliance records — accompanies every delivery.
+                    </p>
+                  </div>
+                  <div class="isg-about-feature-card__content-slide" data-isg-about-content-slide="4">
+                    <span class="isg-about-feature-card__icon" aria-hidden="true">
+                      <img src="assets/img/icons/agriculture.svg" width="40" height="40" alt="" />
+                    </span>
+                    <p class="isg-body isg-about-feature-card__text">
+                      Independent inspectors verify production quality on-site, providing additional assurance for critical infrastructure projects.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>

@@ -148,6 +148,10 @@ function initOneQualityScrollTrack(track, options = {}) {
     }
   }
 
+  const slideImgs = aboutTrack
+    ? slides.map((el) => el.querySelector(".isg-quality-visual__slide-img"))
+    : [];
+
   /** @type {(() => void)[]} */
   const disposers = [];
   /** @type {(() => void)[]} */
@@ -185,23 +189,7 @@ function initOneQualityScrollTrack(track, options = {}) {
   const listCenter =
     listWrap?.querySelector(".isg-quality-list-center") || track.querySelector(".isg-quality-list-center");
 
-  /**
-   * Как Relats .center padding-top: высота одного li, чтобы активный пункт
-   * оказывался по центру окна при yPercent = -(100/n)*t.
-   */
-  const layoutListCenter = () => {
-    if (!listCenter || !aboutTrack || !mq.matches) {
-      if (listCenter) listCenter.style.removeProperty("padding-top");
-      return;
-    }
-    const firstLi = listCol?.querySelector(".isg-quality-list__li");
-    if (firstLi) {
-      const liH = firstLi.offsetHeight;
-      const centerH = listCenter.offsetHeight;
-      const pad = Math.max(0, (centerH - liH) / 2);
-      listCenter.style.paddingTop = `${pad}px`;
-    }
-  };
+  const layoutListCenter = () => {};
 
   /**
    * Сдвиг ul: как Relats (GSAP `y: -100/n*o + "%"`). Окно — `.isg-quality-list-center`.
@@ -263,20 +251,19 @@ function initOneQualityScrollTrack(track, options = {}) {
   };
 
   const setSlidesStackFromT = (t) => {
+    const tFloat = Math.min(n - 1, Math.max(0, Number.isFinite(t) ? t : 0));
+
     slides.forEach((el, i) => {
-      const raw = i === 0 ? 0 : clamp01(i - t);
+      const raw = i === 0 ? 0 : clamp01(i - tFloat);
       const eased = reduced ? raw : smootherstep(raw);
       const reveal = i === 0 ? 0 : 100 * eased;
+      const revealNorm = reveal / 100;
       const hidden = reveal >= 99.98;
-      /**
-       * Как Relats .images .image: маска сверху → фото открывается снизу вверх.
-       * inset(top right bottom left round radius)
-       * top = reveal% → при reveal=100% фото полностью скрыто сверху; при 0% — полностью видно.
-       */
       const clipPath =
         i === 0
           ? "none"
           : `inset(${reveal}% 0 0 0 round ${ISG_QUALITY_SLIDE_CLIP_RADIUS}px)`;
+
       gsap.set(el, {
         yPercent: 0,
         clipPath,
@@ -285,6 +272,18 @@ function initOneQualityScrollTrack(track, options = {}) {
         visibility: hidden ? "hidden" : "visible",
         force3D: true,
       });
+
+      const img = slideImgs[i];
+      if (img && !reduced) {
+        let imgYPct;
+        if (i === 0) {
+          const u = clamp01(tFloat / Math.max(1, n - 1));
+          imgYPct = -4 + smootherstep(u) * 8;
+        } else {
+          imgYPct = revealNorm * 10;
+        }
+        gsap.set(img, { yPercent: imgYPct, force3D: true });
+      }
     });
   };
 
@@ -487,6 +486,7 @@ function initOneQualityScrollTrack(track, options = {}) {
     clearMobile();
 
     if (reduced || !mq.matches) {
+      if (slidesScrollEl) slidesScrollEl.setAttribute("data-lenis-prevent", "");
       if (listCol) {
         gsap.set(listCol, { clearProps: "transform" });
       }
@@ -496,13 +496,13 @@ function initOneQualityScrollTrack(track, options = {}) {
       if (contentStackEl) {
         contentStackEl.style.removeProperty("height");
       }
-      if (listCenter) {
-        listCenter.style.removeProperty("padding-top");
-      }
       slides.forEach((el) => {
         gsap.set(el, {
-          clearProps: "transform,clipPath,opacity,visibility,zIndex,backgroundPosition",
+          clearProps: "transform,clipPath,opacity,visibility,zIndex",
         });
+      });
+      slideImgs.forEach((img) => {
+        if (img) gsap.set(img, { clearProps: "transform" });
       });
       items.forEach((el, i) => {
         el.classList.toggle("isg-quality-list-item--active", i === 0);
@@ -527,6 +527,8 @@ function initOneQualityScrollTrack(track, options = {}) {
       }
       return;
     }
+
+    if (slidesScrollEl) slidesScrollEl.removeAttribute("data-lenis-prevent");
 
     layoutTrackHeight();
     layoutMarkers();
@@ -598,15 +600,14 @@ function initOneQualityScrollTrack(track, options = {}) {
     if (contentStackEl) {
       contentStackEl.style.removeProperty("height");
     }
-    if (listCenter) {
-      listCenter.style.removeProperty("padding-top");
-    }
     slides.forEach((el) =>
       gsap.set(el, {
-        clearProps:
-          "transform,clipPath,opacity,visibility,zIndex,backgroundPosition",
+        clearProps: "transform,clipPath,opacity,visibility,zIndex",
       }),
     );
+    slideImgs.forEach((img) => {
+      if (img) gsap.set(img, { clearProps: "transform" });
+    });
   });
 
   requestAnimationFrame(() => {
