@@ -3294,13 +3294,14 @@ body.isg-nav-drawer-open {
   align-items: center;
   justify-content: center;
   gap: 8rem;
-  min-height: 100vh;
-  min-height: 100svh;
+  height: 100vh;
+  height: 100svh;
   padding: 8rem 0 8rem;
   background-color: #777;
   background-size: cover;
   background-position: center;
   position: relative;
+  overflow: hidden;
 }
 
 .isg-product-intro::after {
@@ -4015,6 +4016,7 @@ body.isg-nav-drawer-open {
 }
 .isg-quality-section {
   width: 100%;
+  background: rgb(29 29 29);
 }
 
 .isg-quality-intro {
@@ -4023,13 +4025,14 @@ body.isg-nav-drawer-open {
   align-items: center;
   justify-content: center;
   gap: 8rem;
-  min-height: 100vh;
-  min-height: 100svh;
+  height: 100vh;
+  height: 100svh;
   padding: 8rem 6.4rem 8rem;
   background-color: #777;
   background-size: cover;
   background-position: center;
   position: relative;
+  overflow: hidden;
 }
 
 .isg-quality-intro::after {
@@ -4061,7 +4064,7 @@ body.isg-nav-drawer-open {
   --isg-quality-content-pad-top: 0px;
   --isg-quality-content-pad-bottom: 0px;
   position: relative;
-  background: transparent;
+  background: rgb(29 29 29);
   border-radius: 0;
   max-width: 136rem;
   margin-left: auto;
@@ -4083,8 +4086,8 @@ body.isg-nav-drawer-open {
   background: transparent;
   border-radius: 0;
   color: #e8e6e0;
-  padding: 0;
-  margin-top: clamp(4rem, 8vw, 8rem);
+
+padding-top: clamp(4rem, 8vw, 8rem);
   overflow: visible;
 }
 
@@ -4311,6 +4314,39 @@ body.isg-nav-drawer-open {
 .isg-quality-list-wrap__label.isg-subtitle {
   align-self: flex-start;
   width: 100%;
+}
+
+.isg-quality-list-wrap__skip {
+  margin-top: auto;
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.4rem;
+  padding: 0.45rem 0.95rem;
+  border: 1px solid rgba(17, 17, 17, 0.28);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.56);
+  color: #111111;
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .isg-quality-list-wrap__skip:hover {
+    background: rgba(255, 255, 255, 0.82);
+    border-color: rgba(17, 17, 17, 0.44);
+    transform: translateY(-1px);
+  }
+}
+
+.isg-quality-list-wrap__skip:focus-visible {
+  outline: 2px solid rgba(17, 17, 17, 0.7);
+  outline-offset: 2px;
 }
 
 /* Как Relats .center: окно списка по центру вертикали; label остаётся вверху */
@@ -4712,7 +4748,7 @@ body.isg-nav-drawer-open {
   position: relative;
   background: #1925aa;
   border-radius: 3rem 3rem 0 0;
-  padding: 12.8rem 0;
+  padding: 12.8rem 0 0;
   margin-top: -4rem;
   /* overflow НЕ hidden — иначе position:sticky внутри не работает */
 }
@@ -4728,13 +4764,14 @@ body.isg-nav-drawer-open {
   align-items: center;
   justify-content: center;
   gap: 8rem;
-  min-height: 100vh;
-  min-height: 100svh;
+  height: 100vh;
+  height: 100svh;
   padding: 8rem 6.4rem 8rem;
   background-color: #777;
   background-size: cover;
   background-position: center;
   position: relative;
+  overflow: hidden;
 }
 
 .isg-about-intro::after {
@@ -4801,7 +4838,7 @@ body.isg-nav-drawer-open {
   flex-direction: column;
   justify-content: flex-end;
   gap: 2.4rem;
-  margin-bottom: 9.4rem
+
 }
 
 .isg-about-text-grid__right .isg-h2 {
@@ -4933,11 +4970,11 @@ body.isg-nav-drawer-open {
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: 2.4rem;
+  gap: 1.6rem;
   box-sizing: border-box;
   width: 100%;
   flex: 0 0 auto;
-  padding: 2.4rem;
+  padding: 1.6rem;
   pointer-events: none;
   -webkit-backdrop-filter: blur(23px);
 }
@@ -5247,6 +5284,11 @@ body.isg-nav-drawer-open {
   width: 100%;
 }
 
+.isg-slider .isg-slider__btn,
+.isg-slider .isg-slider-nav {
+  display: none;
+}
+
 .isg-slider__track {
   display: flex;
   gap: 2.4rem;
@@ -5254,6 +5296,109 @@ body.isg-nav-drawer-open {
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  cursor: grab;
+}
+
+.isg-slider__track:active {
+  cursor: grabbing;
+}
+
+.isg-slider .tns-outer,
+.isg-slider .tns-ovh {
+  cursor: grab;
+}
+
+.isg-slider .tns-outer:active,
+.isg-slider .tns-ovh:active {
+  cursor: grabbing;
+}
+
+.isg-slider-bar {
+  display: flex;
+  align-items: center;
+  gap: 2.4rem;
+  width: 100%;
+  padding-top: 2.4rem;
+  box-sizing: border-box;
+}
+
+.isg-slider-bar__line {
+  flex: 1 1 0;
+  height: 2px;
+  background: rgba(136, 136, 136, 0.25);
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.isg-slider-bar__progress {
+  height: 100%;
+  background: currentColor;
+  border-radius: 1px;
+  width: 0;
+  transition: width 0.35s ease;
+}
+
+.isg-slider-bar__controls {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.isg-slider-bar__counter {
+  font-size: 1.3rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  min-width: 3.6rem;
+  text-align: center;
+  user-select: none;
+}
+
+.isg-slider-bar__arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(136, 136, 136, 0.35);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .isg-slider-bar__arrow:hover {
+    background: rgba(136, 136, 136, 0.12);
+    border-color: rgba(136, 136, 136, 0.55);
+  }
+}
+
+.isg-slider-bar__arrow:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.isg-about-gallery-block .isg-slider-bar {
+  padding-left: max(6rem, env(safe-area-inset-left));
+  padding-right: max(6rem, env(safe-area-inset-right));
+}
+
+.isg-about-gallery-block .isg-slider-bar__line {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.isg-about-gallery-block .isg-slider-bar__arrow {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .isg-about-gallery-block .isg-slider-bar__arrow:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.5);
+  }
 }
 
 /* tiny-slider переопределяет трек (carousel + transform) */
@@ -5660,13 +5805,14 @@ button.isg-slider-item__img,
   align-items: center;
   justify-content: flex-start;
   gap: 8rem;
-  min-height: 100vh;
-  min-height: 100svh;
+  height: 100vh;
+  height: 100svh;
   padding: 8rem 6.4rem 8rem;
   background-color: #777;
   background-size: cover;
   background-position: center;
   position: relative;
+  overflow: hidden;
   color: #ffffff;
 }
 

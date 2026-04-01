@@ -9,6 +9,7 @@ import { initLangNav } from "./blocks/lang-nav.js";
 import { initDigitsFeatured } from "./blocks/digits-featured.js";
 import { initApplicationScroll } from "./blocks/application-scroll.js";
 import { initQualityScroll } from "./blocks/quality-scroll.js";
+import { initQualitySkip } from "./blocks/quality-skip.js";
 import { initIntroSectionScroll } from "./blocks/intro-section-scroll.js";
 import { initIntroBgEntranceScale } from "./blocks/intro-bg-entrance-scale.js";
 import { initIntroExitBlur } from "./blocks/intro-exit-blur.js";
@@ -68,6 +69,7 @@ export async function initIsgPage(root = document.body) {
   disposers.push(initSectionAnchors(root));
   disposers.push(initFooterReveal(root));
   disposers.push(initQualityScroll(root, { getLenis }));
+  disposers.push(initQualitySkip(root, { getLenis }));
   disposers.push(initIntroSectionScroll(root));
   disposers.push(initIntroBgEntranceScale(root));
   disposers.push(initIntroExitBlur(root));

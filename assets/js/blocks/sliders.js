@@ -1,14 +1,11 @@
 /**
- * Слайдеры .isg-slider на tiny-slider (`tns` из assets/js/vendor/tiny-slider.min.js).
- * Загрузка через ensureTinySlider() — не обязательно вручную ставить <script> перед main.js.
- * — team: Center (демо ganlanyuan.github.io/tiny-slider/demo/)
- * — gallery: full-viewport + fixedWidth + edgePadding (края обрезаны, как демо fixedWidth-edgePadding / Responsive на ganlanyuan.github.io/tiny-slider/demo/)
+ * Sliders .isg-slider on tiny-slider (`tns` from assets/js/vendor/tiny-slider.min.js).
  */
 
 import { ensureTinySlider } from "../vendor/tiny-slider-load.js";
 
 /**
- * Gutter tiny-slider в px из `--isg-gap` (совпадает с `$isg-gap` в _variables.scss).
+ * tiny-slider gutter in px from `--isg-gap`.
  */
 function getIsgGapPx() {
   const root = document.documentElement;
@@ -25,46 +22,61 @@ function getIsgGapPx() {
 }
 
 /** @param {import("tiny-slider").TinySliderInfo | undefined} info */
+function getSliderUiState(info) {
+  if (!info) {
+    return { current: 1, total: 1 };
+  }
+
+  const total =
+    typeof info.pages === "number" && info.pages > 0
+      ? info.pages
+      : Math.max(1, info.slideCount || 1);
+
+  const current =
+    typeof info.navCurrentIndex === "number"
+      ? info.navCurrentIndex + 1
+      : typeof info.displayIndex === "number"
+        ? Math.max(1, Math.min(total, info.displayIndex))
+        : Math.max(1, Math.min(total, (info.index ?? 0) + 1));
+
+  return { current, total };
+}
+
+/** @param {import("tiny-slider").TinySliderInfo | undefined} info */
 function syncNavThumb(thumb, info) {
   if (!thumb || !info) return;
-  const n = info.slideCount || 1;
-  if (n <= 1) {
+  const { current, total } = getSliderUiState(info);
+  if (total <= 1) {
     thumb.style.width = "100%";
     thumb.style.marginLeft = "0";
     return;
   }
-  // В loop у `index` есть смещение клонов; для UI нужен displayIndex (1…slideCount из getInfo).
-  const display =
-    typeof info.displayIndex === "number"
-      ? info.displayIndex
-      : ((info.index ?? 0) % n) + 1;
-  const idx0 = Math.max(0, Math.min(n - 1, display - 1));
+
+  const idx0 = Math.max(0, Math.min(total - 1, current - 1));
   const thumbW = 30;
   const travel = 100 - thumbW;
-  const progress = idx0 / (n - 1);
+  const progress = idx0 / (total - 1);
   thumb.style.width = `${thumbW}%`;
   thumb.style.marginLeft = `${progress * travel}%`;
 }
 
 function optionsTeam(track, prev, next, gapPx) {
-  return {
+  const opts = {
     container: track,
     mode: "carousel",
     axis: "horizontal",
     center: false,
-    /* Три карточки целиком в ширине контейнера слайдера (fluid), без fixedWidth */
     items: 3,
     slideBy: 1,
     gutter: gapPx,
     speed: 400,
-    loop: true,
+    loop: false,
+    rewind: true,
     mouseDrag: true,
     swipeAngle: 15,
-    controls: true,
+    controls: !!(prev && next),
     nav: false,
     autoplay: false,
-    prevButton: prev,
-    nextButton: next,
     preventScrollOnTouch: "auto",
     freezable: false,
     responsive: {
@@ -73,10 +85,15 @@ function optionsTeam(track, prev, next, gapPx) {
       1024: { items: 3, gutter: gapPx },
     },
   };
+  if (prev && next) {
+    opts.prevButton = prev;
+    opts.nextButton = next;
+  }
+  return opts;
 }
 
 function optionsGallery(track, prev, next, gapPx) {
-  return {
+  const opts = {
     container: track,
     mode: "carousel",
     axis: "horizontal",
@@ -87,14 +104,13 @@ function optionsGallery(track, prev, next, gapPx) {
     edgePadding: 120,
     gutter: gapPx,
     speed: 400,
-    loop: true,
+    loop: false,
+    rewind: true,
     mouseDrag: true,
     swipeAngle: 15,
-    controls: true,
+    controls: !!(prev && next),
     nav: false,
     autoplay: false,
-    prevButton: prev,
-    nextButton: next,
     preventScrollOnTouch: "auto",
     freezable: false,
     responsive: {
@@ -105,6 +121,11 @@ function optionsGallery(track, prev, next, gapPx) {
       1400: { fixedWidth: 560, edgePadding: 120, gutter: gapPx },
     },
   };
+  if (prev && next) {
+    opts.prevButton = prev;
+    opts.nextButton = next;
+  }
+  return opts;
 }
 
 /**
@@ -129,7 +150,7 @@ export async function initSliders(root = document) {
     const prev = slider.querySelector(".isg-slider__btn--prev");
     const next = slider.querySelector(".isg-slider__btn--next");
     const thumb = slider.querySelector(".isg-slider-nav__thumb");
-    if (!track || !prev || !next) return;
+    if (!track) return;
 
     const isGallery =
       slider.getAttribute("data-isg-slider") === "gallery" ||
@@ -149,22 +170,63 @@ export async function initSliders(root = document) {
     }
 
     if (!instance?.events) {
-      console.error("[ISG] tiny-slider: нет instance.events");
+      console.error("[ISG] tiny-slider: no instance.events");
       return;
     }
 
-    const onIndex = (info) => {
-      syncNavThumb(thumb, info ?? instance?.getInfo());
-    };
+    const slideCount = instance.getInfo()?.slideCount ?? 0;
+    const hasNav = slideCount > 3;
 
-    instance.events.on("indexChanged", onIndex);
-    instance.events.on("transitionEnd", onIndex);
-    onIndex(instance.getInfo());
+    let bar = null;
+    let syncBar = null;
+
+    if (hasNav) {
+      bar = document.createElement("div");
+      bar.className = "isg-slider-bar";
+      bar.innerHTML = [
+        '<div class="isg-slider-bar__line"><div class="isg-slider-bar__progress"></div></div>',
+        '<div class="isg-slider-bar__controls">',
+        '<button type="button" class="isg-slider-bar__arrow isg-slider-bar__arrow--prev" aria-label="Previous slide">',
+        '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+        "</button>",
+        '<span class="isg-slider-bar__counter"></span>',
+        '<button type="button" class="isg-slider-bar__arrow isg-slider-bar__arrow--next" aria-label="Next slide">',
+        '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+        "</button>",
+        "</div>",
+      ].join("");
+
+      const barProgress = bar.querySelector(".isg-slider-bar__progress");
+      const barCounter = bar.querySelector(".isg-slider-bar__counter");
+      const barPrev = bar.querySelector(".isg-slider-bar__arrow--prev");
+      const barNext = bar.querySelector(".isg-slider-bar__arrow--next");
+
+      slider.appendChild(bar);
+
+      barPrev.addEventListener("click", () => instance?.goTo("prev"));
+      barNext.addEventListener("click", () => instance?.goTo("next"));
+
+      syncBar = (info) => {
+        const data = info ?? instance?.getInfo();
+        if (!data) return;
+        syncNavThumb(thumb, data);
+
+        const { current, total } = getSliderUiState(data);
+        barCounter.textContent = `${current}\u2009/\u2009${total}`;
+        const pct = total <= 1 ? 100 : (current / total) * 100;
+        barProgress.style.width = `${pct}%`;
+      };
+
+      instance.events.on("indexChanged", syncBar);
+      instance.events.on("transitionEnd", syncBar);
+      syncBar(instance.getInfo());
+    }
 
     disposers.push(() => {
+      if (bar) bar.remove();
       try {
-        instance?.events?.off?.("indexChanged", onIndex);
-        instance?.events?.off?.("transitionEnd", onIndex);
+        instance?.events?.off?.("indexChanged", syncBar);
+        instance?.events?.off?.("transitionEnd", syncBar);
       } catch (_) {
         /* noop */
       }
