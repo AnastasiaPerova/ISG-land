@@ -5793,6 +5793,10 @@ body.isg-nav-drawer-open {
   --isg-cursor-scale: 1;
 }
 
+.isg-slider__drag-cursor--click-to-see {
+  background: #1925aa;
+}
+
 .isg-slider-bar {
   display: flex;
   align-items: center;

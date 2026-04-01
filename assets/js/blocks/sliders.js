@@ -15,8 +15,11 @@ function setupSliderDragCursor() {
 
   /** @type {Set<Element>} */
   const inside = new Set();
-  /** @type {Map<Element, string>} */
+  /** @type {Map<Element, { defaultLabel: string; isLightbox: boolean; sliderKey: Element | null }>} */
   const labels = new Map();
+  /** @type {WeakMap<Element, { draggedOnce: boolean }>} */
+  const sliderStates = new WeakMap();
+  const DRAG_SWITCH_PX = 10;
 
   let raf = 0;
   let targetX = 0;
@@ -52,12 +55,20 @@ function setupSliderDragCursor() {
 
   const syncDom = () => {
     const on = inside.size > 0;
+    let isClickToSee = false;
     if (on) {
       const active = Array.from(inside).at(-1);
-      const label = labels.get(active) || "Drag";
+      const meta = labels.get(active);
+      let label = meta?.defaultLabel || "Drag";
+      if (meta?.isLightbox) {
+        const state = meta.sliderKey ? sliderStates.get(meta.sliderKey) : null;
+        label = state?.draggedOnce ? "click\nto see" : "Drag";
+      }
       el.textContent = label;
+      isClickToSee = label === "click\nto see";
     }
     el.classList.toggle("isg-slider__drag-cursor--visible", on);
+    el.classList.toggle("isg-slider__drag-cursor--click-to-see", on && isClickToSee);
     document.body.classList.toggle("isg-drag-cursor-active", on);
   };
 
@@ -87,13 +98,61 @@ function setupSliderDragCursor() {
     bind(slider) {
       const hasLightbox = !!slider.querySelector("[data-isg-lightbox]");
       const label = hasLightbox ? "click\nto see" : "Drag";
+      if (hasLightbox && !sliderStates.has(slider)) {
+        sliderStates.set(slider, { draggedOnce: false });
+      }
+      const resetSliderState = () => {
+        if (!hasLightbox) return;
+        const state = sliderStates.get(slider);
+        if (!state) return;
+        if (!state.draggedOnce) return;
+        state.draggedOnce = false;
+        sliderStates.set(slider, state);
+      };
       const targets = Array.from(slider.querySelectorAll(".isg-slider-item__img"));
       if (!targets.length) {
         return () => {};
       }
 
       const handlers = targets.map((target) => {
-        labels.set(target, label);
+        labels.set(target, { defaultLabel: label, isLightbox: hasLightbox, sliderKey: slider });
+        let downX = 0;
+        let downY = 0;
+        let down = false;
+        let pid = -1;
+
+        const onDown = (e) => {
+          if (!hasLightbox) return;
+          if (e.pointerType === "mouse" && e.button !== 0) return;
+          down = true;
+          pid = e.pointerId;
+          downX = e.clientX;
+          downY = e.clientY;
+        };
+
+        const onUp = (e) => {
+          if (!hasLightbox) return;
+          if (!down || e.pointerId !== pid) return;
+          const moved = Math.hypot(e.clientX - downX, e.clientY - downY);
+          const state = sliderStates.get(slider);
+          if (state && moved > DRAG_SWITCH_PX) {
+            state.draggedOnce = true;
+            sliderStates.set(slider, state);
+            if (inside.has(target)) syncDom();
+          }
+          down = false;
+          pid = -1;
+        };
+
+        const onCancel = () => {
+          down = false;
+          pid = -1;
+        };
+        const onClick = () => {
+          // Lightbox is opened from this click; reset state for next visit.
+          resetSliderState();
+        };
+
         const onEnter = () => {
           inside.add(target);
           syncDom();
@@ -102,13 +161,29 @@ function setupSliderDragCursor() {
           inside.delete(target);
           syncDom();
         };
+        target.addEventListener("pointerdown", onDown);
+        document.addEventListener("pointerup", onUp);
+        document.addEventListener("pointercancel", onCancel);
+        target.addEventListener("click", onClick);
         target.addEventListener("pointerenter", onEnter);
         target.addEventListener("pointerleave", onLeave);
-        return { target, onEnter, onLeave };
+        return { target, onDown, onUp, onCancel, onClick, onEnter, onLeave };
       });
 
+      const onSliderLeave = () => {
+        resetSliderState();
+        handlers.forEach(({ target }) => inside.delete(target));
+        syncDom();
+      };
+      slider.addEventListener("pointerleave", onSliderLeave);
+
       return () => {
-        handlers.forEach(({ target, onEnter, onLeave }) => {
+        slider.removeEventListener("pointerleave", onSliderLeave);
+        handlers.forEach(({ target, onDown, onUp, onCancel, onClick, onEnter, onLeave }) => {
+          target.removeEventListener("pointerdown", onDown);
+          document.removeEventListener("pointerup", onUp);
+          document.removeEventListener("pointercancel", onCancel);
+          target.removeEventListener("click", onClick);
           target.removeEventListener("pointerenter", onEnter);
           target.removeEventListener("pointerleave", onLeave);
           inside.delete(target);

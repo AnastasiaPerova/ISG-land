@@ -5370,6 +5370,10 @@ padding-top: clamp(4rem, 8vw, 8rem);
   --isg-cursor-scale: 1;
 }
 
+.isg-slider__drag-cursor--click-to-see {
+  background: #1925aa;
+}
+
 .isg-slider-bar {
   display: flex;
   align-items: center;
