@@ -13,9 +13,6 @@
 /* About values: прежний шаг между пунктами */
 /* Иконка — надпись: как в макете ~8–12px; меньше $isg-quality-list-gap */
 /* Планшеты/телефоны — чуть мягче углы (реф. relats.com) */
-@import "../css/vendor/tiny-slider.css";
-@import "../css/vendor/tiny-slider.css";
-@import "../css/vendor/tiny-slider.css";
 .container-fluid {
   width: 100%;
   max-width: 100%;
@@ -5534,7 +5531,7 @@ body.isg-nav-drawer-open {
 
 /* team: items:3 — карточка на всю ширину ячейки tns, без min(430px) из общего правила */
 .isg-about-team-block__slider .isg-slider__item,
-.isg-about-team-block__slider .tns-item .isg-slider__item {
+.isg-about-team-block__slider .swiper-slide .isg-slider__item {
   width: 100%;
   max-width: none;
 }
@@ -5556,7 +5553,7 @@ body.isg-nav-drawer-open {
 
 /* Галерея: высота от aspect-ratio, без фиксированного vh */
 .isg-slider--gallery .isg-slider__item,
-.isg-slider--gallery .tns-item .isg-slider__item {
+.isg-slider--gallery .swiper-slide .isg-slider__item {
   width: 100%;
   max-width: none;
 }
@@ -5655,7 +5652,7 @@ body.isg-nav-drawer-open {
   margin-right: calc(50% - 50vw);
 }
 
-.isg-about-gallery-block__slider-bleed .tns-outer,
+.isg-about-gallery-block__slider-bleed .swiper,
 .isg-about-gallery-block__slider-bleed .isg-slider {
   width: 100%;
 }
@@ -5709,6 +5706,10 @@ body.isg-nav-drawer-open {
   width: 100%;
 }
 
+.isg-slider.swiper {
+  overflow: hidden;
+}
+
 .isg-slider .isg-slider__btn,
 .isg-slider .isg-slider-nav {
   display: none;
@@ -5724,18 +5725,72 @@ body.isg-nav-drawer-open {
   cursor: grab;
 }
 
+.isg-slider__track.swiper-wrapper {
+  display: flex;
+  transition-property: transform;
+  will-change: transform;
+}
+
 .isg-slider__track:active {
   cursor: grabbing;
 }
 
-.isg-slider .tns-outer,
-.isg-slider .tns-ovh {
+.isg-slider.swiper,
+.isg-slider .swiper-wrapper {
   cursor: grab;
 }
 
-.isg-slider .tns-outer:active,
-.isg-slider .tns-ovh:active {
+.isg-slider.swiper:active,
+.isg-slider .swiper-wrapper:active {
   cursor: grabbing;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  body.isg-drag-cursor-active .isg-slider,
+  body.isg-drag-cursor-active .isg-slider .isg-slider__track,
+  body.isg-drag-cursor-active .isg-slider .swiper-wrapper {
+    cursor: none;
+  }
+}
+.isg-slider__drag-cursor {
+  --isg-cursor-x: 0px;
+  --isg-cursor-y: 0px;
+  --isg-cursor-scale: 0.9;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 9999;
+  width: 86px;
+  height: 86px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  white-space: pre-line;
+  text-align: center;
+  line-height: 1.15;
+  border: none;
+  background: rgba(255, 255, 255, 0.15);
+  -webkit-backdrop-filter: blur(23px);
+  backdrop-filter: blur(23px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.22s ease;
+  transform: translate3d(var(--isg-cursor-x), var(--isg-cursor-y), 0) scale(var(--isg-cursor-scale));
+  will-change: transform, opacity;
+}
+
+.isg-slider__drag-cursor--visible {
+  opacity: 1;
+  visibility: visible;
+  --isg-cursor-scale: 1;
 }
 
 .isg-slider-bar {
@@ -5824,10 +5879,10 @@ body.isg-nav-drawer-open {
     border-color: rgba(255, 255, 255, 0.5);
   }
 }
-/* tiny-slider переопределяет трек (carousel + transform) */
-.isg-slider__track.tns-slider {
-  display: block;
-  overflow: hidden;
+/* Swiper wrapper overrides fallback track */
+.isg-slider__track.swiper-wrapper {
+  display: flex;
+  overflow: visible;
   scroll-snap-type: none;
   gap: 0;
 }
@@ -5836,17 +5891,17 @@ body.isg-nav-drawer-open {
   display: none;
 }
 
-.isg-slider .tns-item {
+.isg-slider .swiper-slide {
   box-sizing: border-box;
 }
 
-/* Ширину задаёт tiny-slider (fixedWidth); карточка растягивается на ячейку */
-.isg-slider .tns-item .isg-slider__item {
+/* Slide width is managed by Swiper; card fills slide cell */
+.isg-slider .swiper-slide .isg-slider__item {
   width: 100%;
   max-width: none;
 }
 
-.isg-slider .tns-item .isg-slider__item--wide {
+.isg-slider .swiper-slide .isg-slider__item--wide {
   width: 100%;
   max-width: none;
 }
@@ -5857,10 +5912,39 @@ body.isg-nav-drawer-open {
   width: min(430px, 85vw);
 }
 
+.isg-slider__item.swiper-slide {
+  height: auto;
+  flex-shrink: 0;
+}
+
 .isg-slider__item--wide {
   width: min(885px, 90vw);
 }
 
+.isg-slider--gallery .isg-slider__item.swiper-slide {
+  width: 280px;
+}
+
+@media (min-width: 480px) {
+  .isg-slider--gallery .isg-slider__item.swiper-slide {
+    width: 320px;
+  }
+}
+@media (min-width: 768px) {
+  .isg-slider--gallery .isg-slider__item.swiper-slide {
+    width: 420px;
+  }
+}
+@media (min-width: 1024px) {
+  .isg-slider--gallery .isg-slider__item.swiper-slide {
+    width: 480px;
+  }
+}
+@media (min-width: 1400px) {
+  .isg-slider--gallery .isg-slider__item.swiper-slide {
+    width: 560px;
+  }
+}
 .isg-slider-item__img {
   width: 100%;
   aspect-ratio: 4/5;

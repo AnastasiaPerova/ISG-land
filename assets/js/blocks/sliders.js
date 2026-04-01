@@ -1,12 +1,131 @@
-/**
- * Sliders .isg-slider on tiny-slider (`tns` from assets/js/vendor/tiny-slider.min.js).
- */
+import Swiper from "swiper";
+import { Navigation } from "swiper/modules";
 
-import { ensureTinySlider } from "../vendor/tiny-slider-load.js";
+function setupSliderDragCursor() {
+  const finePointer = matchMedia("(hover: hover) and (pointer: fine)");
+  if (!finePointer.matches) {
+    return { bind: () => () => {}, destroy: () => {} };
+  }
 
-/**
- * tiny-slider gutter in px from `--isg-gap`.
- */
+  const el = document.createElement("div");
+  el.className = "isg-slider__drag-cursor";
+  el.setAttribute("aria-hidden", "true");
+  el.textContent = "Drag";
+  document.body.appendChild(el);
+
+  /** @type {Set<Element>} */
+  const inside = new Set();
+  /** @type {Map<Element, string>} */
+  const labels = new Map();
+
+  let raf = 0;
+  let targetX = 0;
+  let targetY = 0;
+  let currentX = 0;
+  let currentY = 0;
+  let hasPos = false;
+  const SMOOTHING = 0.18;
+  const STOP_EPS = 0.15;
+
+  const applyPos = () => {
+    const half = 36;
+    if (!hasPos) {
+      currentX = targetX;
+      currentY = targetY;
+      hasPos = true;
+    } else {
+      currentX += (targetX - currentX) * SMOOTHING;
+      currentY += (targetY - currentY) * SMOOTHING;
+    }
+
+    el.style.setProperty("--isg-cursor-x", `${currentX - half}px`);
+    el.style.setProperty("--isg-cursor-y", `${currentY - half}px`);
+
+    const dx = Math.abs(targetX - currentX);
+    const dy = Math.abs(targetY - currentY);
+    if (dx > STOP_EPS || dy > STOP_EPS) {
+      raf = requestAnimationFrame(applyPos);
+      return;
+    }
+    raf = 0;
+  };
+
+  const syncDom = () => {
+    const on = inside.size > 0;
+    if (on) {
+      const active = Array.from(inside).at(-1);
+      const label = labels.get(active) || "Drag";
+      el.textContent = label;
+    }
+    el.classList.toggle("isg-slider__drag-cursor--visible", on);
+    document.body.classList.toggle("isg-drag-cursor-active", on);
+  };
+
+  const isPointInsideTarget = (target, px, py) => {
+    const r = target.getBoundingClientRect();
+    return px >= r.left && px <= r.right && py >= r.top && py <= r.bottom;
+  };
+
+  const onMove = (e) => {
+    targetX = e.clientX;
+    targetY = e.clientY;
+    if (inside.size > 0) {
+      const inAnyTarget = Array.from(labels.keys()).some((target) =>
+        isPointInsideTarget(target, targetX, targetY),
+      );
+      if (!inAnyTarget) {
+        inside.clear();
+        syncDom();
+      }
+    }
+    if (!raf) raf = requestAnimationFrame(applyPos);
+  };
+
+  window.addEventListener("pointermove", onMove, { passive: true });
+
+  return {
+    bind(slider) {
+      const hasLightbox = !!slider.querySelector("[data-isg-lightbox]");
+      const label = hasLightbox ? "click\nto see" : "Drag";
+      const targets = Array.from(slider.querySelectorAll(".isg-slider-item__img"));
+      if (!targets.length) {
+        return () => {};
+      }
+
+      const handlers = targets.map((target) => {
+        labels.set(target, label);
+        const onEnter = () => {
+          inside.add(target);
+          syncDom();
+        };
+        const onLeave = () => {
+          inside.delete(target);
+          syncDom();
+        };
+        target.addEventListener("pointerenter", onEnter);
+        target.addEventListener("pointerleave", onLeave);
+        return { target, onEnter, onLeave };
+      });
+
+      return () => {
+        handlers.forEach(({ target, onEnter, onLeave }) => {
+          target.removeEventListener("pointerenter", onEnter);
+          target.removeEventListener("pointerleave", onLeave);
+          inside.delete(target);
+          labels.delete(target);
+        });
+        syncDom();
+      };
+    },
+    destroy() {
+      window.removeEventListener("pointermove", onMove);
+      if (raf) cancelAnimationFrame(raf);
+      document.body.classList.remove("isg-drag-cursor-active");
+      el.remove();
+    },
+  };
+}
+
 function getIsgGapPx() {
   const root = document.documentElement;
   const raw = getComputedStyle(root).getPropertyValue("--isg-gap").trim();
@@ -21,31 +140,16 @@ function getIsgGapPx() {
   return 29;
 }
 
-/** @param {import("tiny-slider").TinySliderInfo | undefined} info */
-function getSliderUiState(info) {
-  if (!info) {
-    return { current: 1, total: 1 };
-  }
-
-  const total =
-    typeof info.pages === "number" && info.pages > 0
-      ? info.pages
-      : Math.max(1, info.slideCount || 1);
-
-  const current =
-    typeof info.navCurrentIndex === "number"
-      ? info.navCurrentIndex + 1
-      : typeof info.displayIndex === "number"
-        ? Math.max(1, Math.min(total, info.displayIndex))
-        : Math.max(1, Math.min(total, (info.index ?? 0) + 1));
-
+function getSliderUiState(swiper) {
+  if (!swiper) return { current: 1, total: 1 };
+  const total = Math.max(1, swiper.snapGrid?.length || swiper.slides?.length || 1);
+  const current = Math.max(1, Math.min(total, (swiper.snapIndex ?? 0) + 1));
   return { current, total };
 }
 
-/** @param {import("tiny-slider").TinySliderInfo | undefined} info */
-function syncNavThumb(thumb, info) {
-  if (!thumb || !info) return;
-  const { current, total } = getSliderUiState(info);
+function syncNavThumb(thumb, state) {
+  if (!thumb || !state) return;
+  const { current, total } = state;
   if (total <= 1) {
     thumb.style.width = "100%";
     thumb.style.marginLeft = "0";
@@ -60,72 +164,60 @@ function syncNavThumb(thumb, info) {
   thumb.style.marginLeft = `${progress * travel}%`;
 }
 
-function optionsTeam(track, prev, next, gapPx) {
-  const opts = {
-    container: track,
-    mode: "carousel",
-    axis: "horizontal",
-    center: false,
-    items: 3,
-    slideBy: 1,
-    gutter: gapPx,
+function teamOptions(gapPx, prev, next) {
+  return {
+    modules: [Navigation],
     speed: 400,
     loop: false,
     rewind: true,
-    mouseDrag: true,
-    swipeAngle: 15,
-    controls: !!(prev && next),
-    nav: false,
-    autoplay: false,
-    preventScrollOnTouch: "auto",
-    freezable: false,
-    responsive: {
-      0: { items: 1, gutter: gapPx },
-      560: { items: 2, gutter: gapPx },
-      1024: { items: 3, gutter: gapPx },
+    grabCursor: true,
+    watchOverflow: true,
+    slidesPerView: 1,
+    spaceBetween: gapPx,
+    navigation:
+      prev && next
+        ? {
+            prevEl: prev,
+            nextEl: next,
+          }
+        : undefined,
+    breakpoints: {
+      560: { slidesPerView: 2, spaceBetween: gapPx },
+      1024: { slidesPerView: 3, spaceBetween: gapPx },
     },
   };
-  if (prev && next) {
-    opts.prevButton = prev;
-    opts.nextButton = next;
-  }
-  return opts;
 }
 
-function optionsGallery(track, prev, next, gapPx) {
-  const opts = {
-    container: track,
-    mode: "carousel",
-    axis: "horizontal",
-    center: false,
-    items: 1,
-    slideBy: 1,
-    fixedWidth: 560,
-    edgePadding: 120,
-    gutter: gapPx,
+function galleryOptions(gapPx, prev, next) {
+  return {
+    modules: [Navigation],
     speed: 400,
     loop: false,
     rewind: true,
-    mouseDrag: true,
-    swipeAngle: 15,
-    controls: !!(prev && next),
-    nav: false,
-    autoplay: false,
-    preventScrollOnTouch: "auto",
-    freezable: false,
-    responsive: {
-      0: { fixedWidth: 280, edgePadding: 20, gutter: gapPx },
-      480: { fixedWidth: 320, edgePadding: 36, gutter: gapPx },
-      768: { fixedWidth: 420, edgePadding: 64, gutter: gapPx },
-      1024: { fixedWidth: 480, edgePadding: 96, gutter: gapPx },
-      1400: { fixedWidth: 560, edgePadding: 120, gutter: gapPx },
+    grabCursor: true,
+    watchOverflow: true,
+    centeredSlides: false,
+    slidesPerView: 1.18,
+    // Gallery slides are interactive buttons (lightbox trigger),
+    // so allow drag from these elements too.
+    focusableElements: "input, select, option, textarea, label",
+    spaceBetween: gapPx,
+    slidesOffsetBefore: 20,
+    slidesOffsetAfter: 20,
+    navigation:
+      prev && next
+        ? {
+            prevEl: prev,
+            nextEl: next,
+          }
+        : undefined,
+    breakpoints: {
+      480: { slidesPerView: 1.35, slidesOffsetBefore: 36, slidesOffsetAfter: 36, spaceBetween: gapPx },
+      768: { slidesPerView: 2.12, slidesOffsetBefore: 64, slidesOffsetAfter: 64, spaceBetween: gapPx },
+      1024: { slidesPerView: 2.14, slidesOffsetBefore: 96, slidesOffsetAfter: 96, spaceBetween: gapPx },
+      1400: { slidesPerView: 2.18, slidesOffsetBefore: 120, slidesOffsetAfter: 120, spaceBetween: gapPx },
     },
   };
-  if (prev && next) {
-    opts.prevButton = prev;
-    opts.nextButton = next;
-  }
-  return opts;
 }
 
 /**
@@ -134,108 +226,112 @@ function optionsGallery(track, prev, next, gapPx) {
 export async function initSliders(root = document) {
   /** @type {(() => void)[]} */
   const disposers = [];
-
-  let tns;
-  try {
-    tns = await ensureTinySlider();
-  } catch (err) {
-    console.error("[ISG] tiny-slider:", err instanceof Error ? err.message : err);
-    return () => {};
-  }
-
   const gapPx = getIsgGapPx();
+  const dragCursorApi = setupSliderDragCursor();
 
   root.querySelectorAll(".isg-slider").forEach((slider) => {
     const track = slider.querySelector(".isg-slider__track");
+    const slides = Array.from(slider.querySelectorAll(".isg-slider__item"));
     const prev = slider.querySelector(".isg-slider__btn--prev");
     const next = slider.querySelector(".isg-slider__btn--next");
     const thumb = slider.querySelector(".isg-slider-nav__thumb");
-    if (!track) return;
+    if (!track || slides.length === 0) return;
+
+    slider.classList.add("swiper");
+    track.classList.add("swiper-wrapper");
+    slides.forEach((slide) => slide.classList.add("swiper-slide"));
 
     const isGallery =
       slider.getAttribute("data-isg-slider") === "gallery" ||
       slider.classList.contains("isg-slider--mode-gallery");
-    const opts = isGallery
-      ? optionsGallery(track, prev, next, gapPx)
-      : optionsTeam(track, prev, next, gapPx);
 
-    /** @type {import("tiny-slider").TinySliderInstance | null} */
-    let instance = null;
-
+    let swiper = null;
     try {
-      instance = tns(opts);
+      swiper = new Swiper(
+        slider,
+        isGallery ? galleryOptions(gapPx, prev, next) : teamOptions(gapPx, prev, next),
+      );
     } catch (err) {
-      console.error("[ISG] tiny-slider init:", err);
+      console.error("[ISG] swiper init:", err);
       return;
     }
-
-    if (!instance?.events) {
-      console.error("[ISG] tiny-slider: no instance.events");
-      return;
-    }
-
-    const slideCount = instance.getInfo()?.slideCount ?? 0;
-    const hasNav = slideCount > 3;
 
     let bar = null;
-    let syncBar = null;
+    let barPrev = null;
+    let barNext = null;
 
-    if (hasNav) {
-      bar = document.createElement("div");
-      bar.className = "isg-slider-bar";
-      bar.innerHTML = [
-        '<div class="isg-slider-bar__line"><div class="isg-slider-bar__progress"></div></div>',
-        '<div class="isg-slider-bar__controls">',
-        '<button type="button" class="isg-slider-bar__arrow isg-slider-bar__arrow--prev" aria-label="Previous slide">',
-        '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
-        "</button>",
-        '<span class="isg-slider-bar__counter"></span>',
-        '<button type="button" class="isg-slider-bar__arrow isg-slider-bar__arrow--next" aria-label="Next slide">',
-        '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
-        "</button>",
-        "</div>",
-      ].join("");
+    const syncBar = () => {
+      const state = getSliderUiState(swiper);
+      const hasNav = state.total > 3;
+
+      if (!hasNav) {
+        if (bar) {
+          bar.remove();
+          bar = null;
+          barPrev = null;
+          barNext = null;
+        }
+        syncNavThumb(thumb, state);
+        return;
+      }
+
+      if (!bar) {
+        bar = document.createElement("div");
+        bar.className = "isg-slider-bar";
+        bar.innerHTML = [
+          '<div class="isg-slider-bar__line"><div class="isg-slider-bar__progress"></div></div>',
+          '<div class="isg-slider-bar__controls">',
+          '<button type="button" class="isg-slider-bar__arrow isg-slider-bar__arrow--prev" aria-label="Previous slide">',
+          '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+          "</button>",
+          '<span class="isg-slider-bar__counter"></span>',
+          '<button type="button" class="isg-slider-bar__arrow isg-slider-bar__arrow--next" aria-label="Next slide">',
+          '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+          "</button>",
+          "</div>",
+        ].join("");
+        slider.appendChild(bar);
+        barPrev = bar.querySelector(".isg-slider-bar__arrow--prev");
+        barNext = bar.querySelector(".isg-slider-bar__arrow--next");
+        barPrev?.addEventListener("click", () => swiper?.slidePrev());
+        barNext?.addEventListener("click", () => swiper?.slideNext());
+      }
 
       const barProgress = bar.querySelector(".isg-slider-bar__progress");
       const barCounter = bar.querySelector(".isg-slider-bar__counter");
-      const barPrev = bar.querySelector(".isg-slider-bar__arrow--prev");
-      const barNext = bar.querySelector(".isg-slider-bar__arrow--next");
+      if (!barProgress || !barCounter) return;
 
-      slider.appendChild(bar);
+      syncNavThumb(thumb, state);
+      barCounter.textContent = `${state.current}\u2009/\u2009${state.total}`;
+      const pct = state.total <= 1 ? 100 : (state.current / state.total) * 100;
+      barProgress.style.width = `${pct}%`;
+    };
 
-      barPrev.addEventListener("click", () => instance?.goTo("prev"));
-      barNext.addEventListener("click", () => instance?.goTo("next"));
+    swiper.on("slideChange", syncBar);
+    swiper.on("transitionEnd", syncBar);
+    swiper.on("resize", syncBar);
+    swiper.on("breakpoint", syncBar);
+    syncBar();
 
-      syncBar = (info) => {
-        const data = info ?? instance?.getInfo();
-        if (!data) return;
-        syncNavThumb(thumb, data);
-
-        const { current, total } = getSliderUiState(data);
-        barCounter.textContent = `${current}\u2009/\u2009${total}`;
-        const pct = total <= 1 ? 100 : (current / total) * 100;
-        barProgress.style.width = `${pct}%`;
-      };
-
-      instance.events.on("indexChanged", syncBar);
-      instance.events.on("transitionEnd", syncBar);
-      syncBar(instance.getInfo());
-    }
+    const unbindDragCursor = dragCursorApi.bind(slider);
 
     disposers.push(() => {
+      unbindDragCursor();
+      try {
+        swiper?.off("slideChange", syncBar);
+        swiper?.off("transitionEnd", syncBar);
+        swiper?.off("resize", syncBar);
+        swiper?.off("breakpoint", syncBar);
+      } catch (_) {
+        /* noop */
+      }
       if (bar) bar.remove();
       try {
-        instance?.events?.off?.("indexChanged", syncBar);
-        instance?.events?.off?.("transitionEnd", syncBar);
+        swiper?.destroy(true, true);
       } catch (_) {
         /* noop */
       }
-      try {
-        instance?.destroy?.();
-      } catch (_) {
-        /* noop */
-      }
-      instance = null;
+      swiper = null;
     });
   });
 
@@ -247,5 +343,6 @@ export async function initSliders(root = document) {
         /* noop */
       }
     }
+    dragCursorApi.destroy();
   };
 }

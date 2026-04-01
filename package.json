@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "gsap": "^3.12.5",
-    "tiny-slider": "^2.9.4"
+    "swiper": "^11.2.10"
   },
   "devDependencies": {
     "browser-sync": "^3.0.3",

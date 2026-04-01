@@ -434,6 +434,13 @@ export function openLightbox(anchor) {
 
 const DRAG_PX = 14;
 
+/** @param {Element} node */
+function getSliderSwiper(node) {
+  const slider = node.closest(".isg-slider.swiper");
+  if (!slider) return null;
+  return slider.swiper || null;
+}
+
 /**
  * @param {ParentNode} [root]
  */
@@ -454,6 +461,11 @@ export function initLightbox(root = document.body) {
   /** @param {PointerEvent} e */
   const onPtrUp = (e) => {
     if (!ptr || e.pointerId !== ptr.pid) return;
+    const swiper = getSliderSwiper(ptr.t);
+    if (swiper && swiper.allowClick === false) {
+      ptr = null;
+      return;
+    }
     const moved = Math.hypot(e.clientX - ptr.x, e.clientY - ptr.y);
     if (moved <= DRAG_PX) {
       const src = ptr.t.getAttribute("data-isg-lightbox");
