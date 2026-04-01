@@ -1,10 +1,7 @@
 <!-- Flexible Content layout: rfq -->
 <div id="isg-rfq" class="isg-rfq-section" data-isg-block="rfq">
-  <section
-    class="isg-rfq-intro"
-    style="background-image: url('assets/img/engenereeng-intro.jpg');"
-    data-isg-intro-scroll
-  >
+  <section class="isg-rfq-intro" style="background-image: url('assets/img/engenereeng-intro.jpg');"
+    data-isg-intro-scroll>
     <!-- ACF: rfq_intro_background -->
     <div class="isg-rfq-intro__conteiner">
       <div class="isg-rfq-intro__content isg-text-light">
@@ -20,7 +17,9 @@
         <div class="isg-rfq-intro__split">
           <!-- ACF: rfq_intro_body -->
           <p class="isg-rfq-intro__lead">
-            Production parameters can be adapted to technical specifications, including diameter, wall thickness, steel grade, pipe length, applicable standards and documentation. Custom orders are manufactured in accordance with customer specifications.
+            Production parameters can be adapted to technical specifications, including diameter, wall thickness, steel
+            grade, pipe length, applicable standards and documentation. Custom orders are manufactured in accordance
+            with customer specifications.
           </p>
           <div class="isg-btn-group isg-btn-group--spread">
             <div class="isg-btn-group">
@@ -38,119 +37,123 @@
           <div class="isg-rfq-aside__inner">
             <!-- ACF: rfq_aside_label — как .isg-quality-list-wrap__label -->
             <div class="isg-subtitle isg-rfq-aside__label">
-              <p class="isg-subtitle__text">PRODUCT RANGE</p>
+              <p class="isg-subtitle__text">RFQ</p>
               <span class="isg-subtitle__swatch" aria-hidden="true"></span>
             </div>
             <!-- ACF: rfq_aside_heading -->
-            <h3 class="isg-rfq-aside__heading">
-              Please send your project specifications for review
-            </h3>
-            <!-- ACF: rfq_aside_footer -->
-            <h4 class="isg-rfq-aside__footer">
-              Our team will assess the requirements and prepare a quotation based on the provided information.
-            </h4>
+            <h2 class="isg-h2 isg-rfq-aside__heading">
+              Please send your project specifications for review. Our team will assess the requirements and prepare a
+              quotation based on the provided information.
+            </h2>
+
           </div>
         </aside>
         <div class="isg-rfq-form-wrap">
-        <form class="isg-rfq-form" data-isg-rfq-form>
-          <div class="isg-rfq-inputs">
-            <div class="isg-rfq-inputs-row">
-              <!-- ACF: rfq_field_company -->
-              <label class="isg-field isg-field--float">
-                <input class="isg-field__control" type="text" name="company" autocomplete="organization" placeholder=" " />
-                <span class="isg-field__label"><span class="isg-field__label-text">company name</span></span>
+          <form class="isg-rfq-form" data-isg-rfq-form>
+            <div class="isg-rfq-inputs">
+              <div class="isg-rfq-inputs-row">
+                <!-- ACF: rfq_field_company -->
+                <label class="isg-field isg-field--float">
+                  <input class="isg-field__control" type="text" name="company" autocomplete="organization"
+                    placeholder=" " />
+                  <span class="isg-field__label"><span class="isg-field__label-text">company name</span></span>
+                </label>
+              </div>
+              <div class="isg-rfq-inputs-row">
+                <label class="isg-field isg-field--float">
+                  <input class="isg-field__control" type="email" name="email" autocomplete="email" required
+                    placeholder=" " />
+                  <span class="isg-field__label"><span class="isg-field__label-text">email address</span><abbr
+                      class="isg-field__req" title="required">*</abbr></span>
+                </label>
+                <label class="isg-field isg-field--float">
+                  <input class="isg-field__control" type="tel" name="phone" autocomplete="tel" required
+                    placeholder=" " />
+                  <span class="isg-field__label"><span class="isg-field__label-text">phone number</span><abbr
+                      class="isg-field__req" title="required">*</abbr></span>
+                </label>
+              </div>
+              <div class="isg-rfq-inputs-row">
+                <!-- ACF: pipe diameter / wall thickness — options из repeater или select -->
+                <label class="isg-field isg-field--float isg-field--select">
+                  <select class="isg-field__control" name="diameter" required>
+                    <option value="" disabled selected hidden> </option>
+                    <option value="406">406 mm</option>
+                    <option value="508">508 mm</option>
+                    <option value="610">610 mm</option>
+                    <option value="762">762 mm</option>
+                    <option value="914">914 mm</option>
+                    <option value="1067">1067 mm</option>
+                    <option value="1219">1219 mm</option>
+                    <option value="custom">Custom (specify in message)</option>
+                  </select>
+                  <span class="isg-field__label"><span class="isg-field__label-text">pipe diameter</span></span>
+                </label>
+                <label class="isg-field isg-field--float isg-field--select">
+                  <select class="isg-field__control" name="wall_thickness" required>
+                    <option value="" disabled selected hidden> </option>
+                    <option value="6">6 mm</option>
+                    <option value="8">8 mm</option>
+                    <option value="10">10 mm</option>
+                    <option value="12">12 mm</option>
+                    <option value="14">14 mm</option>
+                    <option value="16">16 mm</option>
+                    <option value="custom">Custom</option>
+                  </select>
+                  <span class="isg-field__label"><span class="isg-field__label-text">wall thickness</span></span>
+                </label>
+              </div>
+              <div class="isg-rfq-inputs-row">
+                <label class="isg-field isg-field--float isg-field--select">
+                  <select class="isg-field__control" name="steel_grade" required>
+                    <option value="" disabled selected hidden> </option>
+                    <option value="s235">S235 / S235JR</option>
+                    <option value="s275">S275 / S275J0</option>
+                    <option value="s355">S355 / S355J2</option>
+                    <option value="api5l-b">API 5L Grade B</option>
+                    <option value="api5l-x52">API 5L X52</option>
+                    <option value="api5l-x65">API 5L X65</option>
+                    <option value="en10219">EN 10219 S355J2H</option>
+                    <option value="custom">Other / specify</option>
+                  </select>
+                  <span class="isg-field__label"><span class="isg-field__label-text">steel grade</span></span>
+                </label>
+              </div>
+              <div class="isg-rfq-inputs-row">
+                <label class="isg-field isg-field--float">
+                  <input class="isg-field__control" type="text" name="project_type" placeholder=" " />
+                  <span class="isg-field__label"><span class="isg-field__label-text">project type</span></span>
+                </label>
+                <label class="isg-field isg-field--float">
+                  <input class="isg-field__control" type="text" name="delivery" placeholder=" " />
+                  <span class="isg-field__label"><span class="isg-field__label-text">delivery location</span></span>
+                </label>
+                <label class="isg-field isg-field--float">
+                  <input class="isg-field__control" type="text" name="quantity" placeholder=" " />
+                  <span class="isg-field__label"><span class="isg-field__label-text">quantity</span></span>
+                </label>
+              </div>
+              <div class="isg-rfq-inputs-row isg-rfq-inputs-row--full">
+                <!-- ACF: rfq_field_message -->
+                <label class="isg-field isg-field--float isg-field--textarea">
+                  <textarea class="isg-field__control" name="message" rows="2" placeholder=" "></textarea>
+                  <span class="isg-field__label"><span class="isg-field__label-text">message</span></span>
+                </label>
+              </div>
+            </div>
+            <div class="isg-checkbox-row">
+              <input class="isg-checkbox" type="checkbox" name="terms" id="rfq-terms" value="1" required />
+              <label class="isg-checkbox-label" for="rfq-terms">
+                I have read and accept the
+                <!-- ACF: rfq_terms_url -->
+                <a class="isg-checkbox-label__link" href="#" target="_blank" rel="noopener noreferrer">Terms &amp;
+                  Conditions</a>.
               </label>
             </div>
-            <div class="isg-rfq-inputs-row">
-              <label class="isg-field isg-field--float">
-                <input class="isg-field__control" type="email" name="email" autocomplete="email" required placeholder=" " />
-                <span class="isg-field__label"><span class="isg-field__label-text">email address</span><abbr class="isg-field__req" title="required">*</abbr></span>
-              </label>
-              <label class="isg-field isg-field--float">
-                <input class="isg-field__control" type="tel" name="phone" autocomplete="tel" required placeholder=" " />
-                <span class="isg-field__label"><span class="isg-field__label-text">phone number</span><abbr class="isg-field__req" title="required">*</abbr></span>
-              </label>
+            <div class="isg-btn-group">
+              <button class="isg-btn" type="submit">Submit form</button>
             </div>
-            <div class="isg-rfq-inputs-row">
-              <label class="isg-field isg-field--float">
-                <input class="isg-field__control" type="text" name="project_type" placeholder=" " />
-                <span class="isg-field__label"><span class="isg-field__label-text">project type</span></span>
-              </label>
-              <label class="isg-field isg-field--float">
-                <input class="isg-field__control" type="text" name="delivery" placeholder=" " />
-                <span class="isg-field__label"><span class="isg-field__label-text">delivery location</span></span>
-              </label>
-            </div>
-            <div class="isg-rfq-inputs-row">
-              <!-- ACF: pipe diameter / wall thickness — options из repeater или select -->
-              <label class="isg-field isg-field--float isg-field--select">
-                <select class="isg-field__control" name="diameter" required>
-                  <option value="" disabled selected hidden> </option>
-                  <option value="406">406 mm</option>
-                  <option value="508">508 mm</option>
-                  <option value="610">610 mm</option>
-                  <option value="762">762 mm</option>
-                  <option value="914">914 mm</option>
-                  <option value="1067">1067 mm</option>
-                  <option value="1219">1219 mm</option>
-                  <option value="custom">Custom (specify in message)</option>
-                </select>
-                <span class="isg-field__label"><span class="isg-field__label-text">pipe diameter</span></span>
-              </label>
-              <label class="isg-field isg-field--float isg-field--select">
-                <select class="isg-field__control" name="wall_thickness" required>
-                  <option value="" disabled selected hidden> </option>
-                  <option value="6">6 mm</option>
-                  <option value="8">8 mm</option>
-                  <option value="10">10 mm</option>
-                  <option value="12">12 mm</option>
-                  <option value="14">14 mm</option>
-                  <option value="16">16 mm</option>
-                  <option value="custom">Custom</option>
-                </select>
-                <span class="isg-field__label"><span class="isg-field__label-text">wall thickness</span></span>
-              </label>
-            </div>
-            <div class="isg-rfq-inputs-row">
-              <label class="isg-field isg-field--float isg-field--select">
-                <select class="isg-field__control" name="steel_grade" required>
-                  <option value="" disabled selected hidden> </option>
-                  <option value="s235">S235 / S235JR</option>
-                  <option value="s275">S275 / S275J0</option>
-                  <option value="s355">S355 / S355J2</option>
-                  <option value="api5l-b">API 5L Grade B</option>
-                  <option value="api5l-x52">API 5L X52</option>
-                  <option value="api5l-x65">API 5L X65</option>
-                  <option value="en10219">EN 10219 S355J2H</option>
-                  <option value="custom">Other / specify</option>
-                </select>
-                <span class="isg-field__label"><span class="isg-field__label-text">steel grade</span></span>
-              </label>
-              <label class="isg-field isg-field--float">
-                <input class="isg-field__control" type="text" name="quantity" placeholder=" " />
-                <span class="isg-field__label"><span class="isg-field__label-text">quantity</span></span>
-              </label>
-            </div>
-            <div class="isg-rfq-inputs-row isg-rfq-inputs-row--full">
-              <!-- ACF: rfq_field_message -->
-              <label class="isg-field isg-field--float isg-field--textarea">
-                <textarea class="isg-field__control" name="message" rows="2" placeholder=" "></textarea>
-                <span class="isg-field__label"><span class="isg-field__label-text">message</span></span>
-              </label>
-            </div>
-          </div>
-          <div class="isg-checkbox-row">
-            <input class="isg-checkbox" type="checkbox" name="terms" id="rfq-terms" value="1" required />
-            <label class="isg-checkbox-label" for="rfq-terms">
-              I have read and accept the
-              <!-- ACF: rfq_terms_url -->
-              <a class="isg-checkbox-label__link" href="#" target="_blank" rel="noopener noreferrer">Terms &amp; Conditions</a>.
-            </label>
-          </div>
-          <div class="isg-btn-group">
-            <button class="isg-btn" type="submit">Submit form</button>
-          </div>
-        </form>
+          </form>
         </div>
       </div>
     </div>

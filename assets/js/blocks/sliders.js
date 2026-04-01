@@ -277,7 +277,7 @@ function galleryOptions(gapPx, prev, next) {
     // so allow drag from these elements too.
     focusableElements: "input, select, option, textarea, label",
     spaceBetween: gapPx,
-    slidesOffsetBefore: 20,
+    slidesOffsetBefore: 16,
     slidesOffsetAfter: 20,
     navigation:
       prev && next
@@ -287,10 +287,10 @@ function galleryOptions(gapPx, prev, next) {
           }
         : undefined,
     breakpoints: {
-      480: { slidesPerView: 1.35, slidesOffsetBefore: 36, slidesOffsetAfter: 36, spaceBetween: gapPx },
-      768: { slidesPerView: 2.12, slidesOffsetBefore: 64, slidesOffsetAfter: 64, spaceBetween: gapPx },
-      1024: { slidesPerView: 2.14, slidesOffsetBefore: 96, slidesOffsetAfter: 96, spaceBetween: gapPx },
-      1400: { slidesPerView: 2.18, slidesOffsetBefore: 120, slidesOffsetAfter: 120, spaceBetween: gapPx },
+      480: { slidesPerView: 1.35, slidesOffsetBefore: 24, slidesOffsetAfter: 36, spaceBetween: gapPx },
+      768: { slidesPerView: 2.12, slidesOffsetBefore: 16, slidesOffsetAfter: 64, spaceBetween: gapPx },
+      1024: { slidesPerView: 2.14, slidesOffsetBefore: 16, slidesOffsetAfter: 96, spaceBetween: gapPx },
+      1400: { slidesPerView: 2.18, slidesOffsetBefore: 30, slidesOffsetAfter: 120, spaceBetween: gapPx },
     },
   };
 }

@@ -8,6 +8,7 @@ const HEADING_SELECTORS = [
   ".isg-about-text-grid h2.isg-h2",
   ".isg-about-team-block h2.isg-h2",
   ".isg-about-gallery-block h2.isg-h2",
+  ".isg-rfq-aside h2.isg-h2",
 ];
 
 const M = "isg-title-anim__measure";

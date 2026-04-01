@@ -20,7 +20,7 @@
 
 .container {
   width: 100%;
-  max-width: 1920px;
+  max-width: 136rem;
   margin-left: auto;
   margin-right: auto;
   padding-left: calc(1.6rem * 0.5);
@@ -38,27 +38,27 @@
 }
 @media (min-width: 576px) {
   .container--bs {
-    max-width: 540px;
+    max-width: min(540px, 136rem);
   }
 }
 @media (min-width: 768px) {
   .container--bs {
-    max-width: 720px;
+    max-width: min(720px, 136rem);
   }
 }
 @media (min-width: 992px) {
   .container--bs {
-    max-width: 960px;
+    max-width: min(960px, 136rem);
   }
 }
 @media (min-width: 1200px) {
   .container--bs {
-    max-width: 1140px;
+    max-width: min(1140px, 136rem);
   }
 }
 @media (min-width: 1400px) {
   .container--bs {
-    max-width: 1320px;
+    max-width: min(1320px, 136rem);
   }
 }
 
@@ -449,7 +449,6 @@
 
 .container {
   width: 100%;
-  max-width: 1920px;
   margin-left: auto;
   margin-right: auto;
   padding-left: 0.8rem;
@@ -489,13 +488,6 @@
 @media (min-width: 1400px) {
   .container--bs {
     max-width: 1320px;
-  }
-}
-@media (min-width: 768px) {
-  .container,
-  .container--bs {
-    padding-left: 6.4rem;
-    padding-right: 6.4rem;
   }
 }
 .row {
@@ -878,11 +870,9 @@
 
 .container {
   width: 100%;
-  max-width: 1920px;
+  max-width: 136rem;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 0.8rem;
-  padding-right: 0.8rem;
 }
 
 @media (max-width: 767px) {
@@ -918,13 +908,6 @@
 @media (min-width: 1400px) {
   .container--bs {
     max-width: 1320px;
-  }
-}
-@media (min-width: 768px) {
-  .container,
-  .container--bs {
-    padding-left: 6.4rem;
-    padding-right: 6.4rem;
   }
 }
 .row {
@@ -1339,7 +1322,7 @@ html {
   --isg-gap: 1.8rem;
   --isg-header-height: 4rem;
   /* UI kit — типографика (см. _typography.scss); правки в одном месте или здесь в DevTools */
-  --isg-type-display: 8rem;
+  --isg-type-display: 8.4rem;
   --isg-type-headline:6.2rem;
   --isg-type-featured-title: clamp(1.85rem, 3.7vw, 3.2rem);
   --isg-type-lead: 2.2rem;
@@ -1512,7 +1495,7 @@ select {
 /* Заголовки: scroll-driven reveal — маска по строкам (title-anim.js) */
 .isg-title-anim {
   width: 100%;
-  max-width: min(100%, 130rem);
+  max-width: min(100%, 120rem);
   box-sizing: border-box;
   text-wrap: wrap;
 }
@@ -2839,10 +2822,10 @@ body.isg-nav-drawer-open {
   justify-content: flex-start;
   overflow: hidden;
   box-sizing: border-box;
-  background-color: rgba(243, 242, 238, 0.82);
-  box-shadow: -20px 0 48px rgba(0, 0, 0, 0.1);
+  background-color: rgba(29, 29, 29, 0.82);
+  backdrop-filter: blur(23px);
   will-change: transform;
-  padding: 8rem 6.4rem;
+  padding: 12.8rem 6.4rem;
 }
 
 .isg-digits-section.component--featured .scroll .inner .cards .center {
@@ -2859,8 +2842,8 @@ body.isg-nav-drawer-open {
 
 .isg-digits-section.component--featured .scroll .inner .cards .center > .title {
   flex-shrink: 0;
-  margin: 0 0 8rem;
-  color: #111111;
+  margin: 0 0 6.4rem;
+  color: #E8E6E0;
   max-width: 28ch;
 }
 
@@ -2900,7 +2883,7 @@ body.isg-nav-drawer-open {
   flex: 0 0 auto;
   width: 100%;
   max-width: none;
-  height: max(23.87vh, min(30.139vw, 577.22px));
+  height: max(23.87vh, min(30.139vw, 412px));
   max-height: none;
   border-radius: 1.6rem;
   padding: 0;
@@ -4586,6 +4569,7 @@ body.isg-nav-drawer-open {
 .isg-about-team-block .isg-filled-item--about {
   background: #e8e6e0;
   color: #1925aa;
+  font-weight: 500;
   transition: background 0.25s ease, color 0.25s ease;
 }
 
@@ -5367,8 +5351,7 @@ body.isg-nav-drawer-open {
   right: 3.2rem;
   bottom: 3.2rem;
   z-index: 10;
-  width: calc(100% - 6.4rem);
-  max-width: 396px;
+  width: 30rem;
   overflow: hidden;
   border-radius: 1.6rem;
   background: rgba(255, 255, 255, 0.1);
@@ -5396,7 +5379,7 @@ body.isg-nav-drawer-open {
   box-sizing: border-box;
   width: 100%;
   flex: 0 0 auto;
-  padding: 1.6rem;
+  padding: 2.4rem;
   pointer-events: none;
   -webkit-backdrop-filter: blur(23px);
 }
@@ -5460,7 +5443,6 @@ body.isg-nav-drawer-open {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 4rem;
   padding: 0;
   box-sizing: border-box;
 }
@@ -5494,11 +5476,12 @@ body.isg-nav-drawer-open {
   max-width: none;
   width: 100%;
   min-width: 0;
+  margin-bottom: 8rem;
 }
 
 .isg-about-team-block__title-col .isg-h2 {
   width: 100%;
-  max-width: min(100%, 130rem);
+  max-width: min(100%, 120rem);
   min-width: 0;
 }
 
@@ -5509,6 +5492,7 @@ body.isg-nav-drawer-open {
   row-gap: 2.4rem;
   align-items: start;
   width: 100%;
+  margin-bottom: 12.8rem;
 }
 
 .isg-about-team-block__lead {
@@ -5573,6 +5557,7 @@ body.isg-nav-drawer-open {
   row-gap: 2.4rem;
   align-items: start;
   width: 100%;
+  margin-bottom: 12.8rem;
 }
 
 .isg-about-team-block__certs-lead {
@@ -5616,13 +5601,13 @@ body.isg-nav-drawer-open {
 }
 .isg-about-gallery-block {
   position: relative;
-  background: #111111;
+  background: rgb(29, 29, 29);
   color: #ffffff;
   border-radius: 0;
   display: flex;
   flex-direction: column;
-  gap: 4rem;
-  padding: 8rem 0 8rem;
+  gap: 8rem;
+  padding: 12.8rem 0 12.8rem;
   /* bleed слайдера до краёв вьюпорта — иначе margin calc обрежется */
   overflow-x: visible;
 }
@@ -5632,7 +5617,7 @@ body.isg-nav-drawer-open {
 }
 
 .isg-about-gallery-block .isg-subtitle__swatch {
-  background: rgba(255, 255, 255, 0.45);
+  background: rgb(29, 29, 29);
 }
 
 .isg-about-gallery-block .isg-h2 {
@@ -6318,7 +6303,7 @@ button.isg-slider-item__img,
   gap: 8rem;
   height: 100vh;
   height: 100svh;
-  padding: 8rem 6.4rem 8rem;
+  padding: 12.8rem 6.4rem 12.8rem;
   background-color: #777;
   background-size: cover;
   background-position: center;
@@ -6387,13 +6372,12 @@ button.isg-slider-item__img,
 
 .isg-rfq-content {
   position: relative;
-  background: #fff;
+  background: #1925aa;
   border-radius: 3rem 3rem 0 0;
-  padding: 8rem 6.4rem;
+  padding: 12.8rem 0;
   display: flex;
   flex-direction: column;
   justify-content: stretch;
-  gap: 4rem;
   margin-top: -4rem;
   box-sizing: border-box;
   min-height: calc(100svh - var(--isg-header-height));
@@ -6401,36 +6385,35 @@ button.isg-slider-item__img,
 }
 
 .isg-rfq-content__inner {
-  flex: 1;
+  margin: 0 auto;
   display: flex;
+  justify-content: center;
   flex-direction: column;
   min-height: 0;
   width: 100%;
+  max-width: 136rem;
 }
 
 .isg-rfq-row {
   display: flex;
+  flex-direction: column;
   flex-wrap: wrap;
   gap: 2.4rem;
   width: 100%;
   align-items: stretch;
-  flex: 1;
-  min-height: 0;
 }
 
 /* Как .isg-quality-list-wrap: паддинги, скругление, лейбл .isg-subtitle */
 .isg-rfq-aside {
-  flex: 1 1 400px;
-  max-width: 883px;
-  border-radius: 1.6rem;
-  background: #1925aa;
-  padding: clamp(1.75rem, 3vw, 3.5rem);
-  display: flex;
-  flex-direction: column;
-  align-self: stretch;
-  min-height: 0;
   box-sizing: border-box;
   color: rgba(255, 255, 255, 0.92);
+}
+
+.isg-quality-wrapper {
+  background: rgb(29, 29, 29);
+  border-radius: 3rem 3rem 0 0;
+  padding: 8rem 0;
+  margin-top: -4rem;
 }
 
 .isg-rfq-aside .isg-rfq-aside__label .isg-subtitle__text {
@@ -6447,24 +6430,18 @@ button.isg-slider-item__img,
 }
 
 .isg-rfq-aside__inner {
-  flex: 1 1 auto;
-  width: 100%;
-  min-height: 0;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
   gap: 4rem;
+  margin-bottom: 8rem;
 }
 
 .isg-rfq-aside__heading {
   margin: 0;
-  font-size: var(--isg-type-h3);
-  font-weight: 400;
-  letter-spacing: -0.022em;
-  line-height: 1.2;
   color: #ffffff;
-  max-width: 42ch;
+  max-width: min(100%, 120rem);
 }
 
 .isg-rfq-aside__footer {
@@ -6479,8 +6456,7 @@ button.isg-slider-item__img,
 }
 
 .isg-rfq-form-wrap {
-  flex: 1 1 400px;
-  min-width: 0;
+  max-width: 100%;
   min-height: 0;
   border-radius: 1.6rem;
   background: #e8e6e0;
@@ -6517,27 +6493,25 @@ button.isg-slider-item__img,
 }
 
 .isg-rfq-inputs {
-  display: flex;
-  flex-direction: column;
-  gap: 2.4rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2.4rem 5rem;
   flex: 1;
   min-height: 0;
 }
 
 .isg-rfq-inputs-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2.4rem;
+  display: contents;
 }
 
 .isg-rfq-inputs-row--full {
-  flex: 1 1 100%;
-  width: 100%;
+  display: contents;
 }
 
 .isg-rfq-form .isg-field--textarea {
   flex: 1 1 100%;
   min-width: 0;
+  grid-column: 1/-1;
 }
 
 .isg-rfq-form .isg-field--textarea .isg-field__control {
@@ -6556,15 +6530,22 @@ button.isg-slider-item__img,
 }
 
 @media (max-width: 1099px) {
+  .isg-rfq-inputs {
+    grid-template-columns: 1fr;
+  }
   .isg-rfq-inputs-row {
-    flex-direction: column;
-    flex-wrap: nowrap;
-    align-items: stretch;
+    display: block;
   }
   .isg-rfq-form .isg-field {
     flex: 1 1 100%;
     width: 100%;
     max-width: 100%;
+  }
+  .isg-rfq-inputs-row > .isg-field + .isg-field {
+    margin-top: 2.4rem;
+  }
+  .isg-rfq-inputs-row--full {
+    display: block;
   }
 }
 .isg-rfq-form .isg-field--float {
