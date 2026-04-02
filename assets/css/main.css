@@ -4983,30 +4983,69 @@ button.isg-slider-item__img,
 .isg-rfq-content {
   background: #1925aa;
   box-sizing: border-box;
+  position: relative;
+}
+
+.isg-rfq-content__inner {
+  position: relative;
+  width: 100%;
+  padding-top: 4.8rem;
 }
 
 .isg-rfq-row {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1.8rem;
   width: 100%;
   align-items: stretch;
 }
 
-/* Как .isg-quality-list-wrap: паддинги, скругление, лейбл .isg-subtitle */
-.isg-rfq-aside {
-  box-sizing: border-box;
-  color: rgba(255, 255, 255, 0.92);
+.isg-rfq-content__inner::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  border-top: 1px dashed rgba(96, 170, 255, 0.45);
+  pointer-events: none;
 }
 
-.isg-quality-wrapper {
-  background: rgb(25, 37, 170);
+.isg-rfq-aside__inner {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.isg-rfq-aside .isg-section-head {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 4.8rem;
+}
+
+.isg-rfq-aside .isg-subtitle__text {
+  color: #111111;
+}
+
+.isg-rfq-aside .isg-subtitle__swatch {
+  background: #1925aa;
+}
+
+/* Как .isg-quality-list-wrap: паддинги, скругление, лейбл .isg-subtitle */
+.isg-rfq-aside {
+  border-radius: 1.6rem;
+  background: #e8e6e0;
+  padding: 4.6rem;
+  box-sizing: border-box;
+  color: #111111;
 }
 
 .isg-rfq-aside .isg-section-head__title {
   margin: 0;
-  color: #ffffff;
-  max-width: min(100%, 120rem);
+  color: #111111;
+  max-width: 19ch;
 }
 
 .isg-rfq-form-wrap {
@@ -5022,44 +5061,47 @@ button.isg-slider-item__img,
 }
 
 .isg-rfq-form-wrap .isg-btn {
-  background: #1925aa;
-  border-color: #1925aa;
-  color: #ffffff;
+  background: #cecbc7;
+  border-color: #cecbc7;
+  color: #6e6e6e;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .isg-rfq-form-wrap .isg-btn:hover {
-    background: #ffffff;
-    border-color: #ffffff;
-    color: #1d1d1d;
+    background: #bdbab6;
+    border-color: #bdbab6;
+    color: #4a4a4a;
   }
 }
 .isg-rfq-form-wrap .isg-btn:focus-visible {
-  outline-color: #1925aa;
+  outline-color: #6e6e6e;
 }
 
 .isg-rfq-form {
   display: flex;
   flex-direction: column;
-  gap: 48px;
+  gap: 3.2rem;
   flex: 1;
   min-height: 0;
 }
 
 .isg-rfq-inputs {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 2.4rem 5rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2.6rem 4.6rem;
   flex: 1;
   min-height: 0;
 }
 
 .isg-rfq-inputs-row {
-  display: contents;
+  grid-column: 1/-1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2.6rem 4.6rem;
 }
 
 .isg-rfq-inputs-row--full {
-  display: contents;
+  grid-template-columns: 1fr;
 }
 
 .isg-rfq-form .isg-field--textarea {
@@ -5084,22 +5126,30 @@ button.isg-slider-item__img,
 }
 
 @media (max-width: 1099px) {
+  .isg-rfq-row {
+    grid-template-columns: 1fr;
+  }
+  .isg-rfq-aside {
+    padding: clamp(2.2rem, 6vw, 3.2rem);
+  }
+  .isg-rfq-form-wrap {
+    padding: clamp(2.2rem, 6vw, 3.2rem);
+  }
   .isg-rfq-inputs {
     grid-template-columns: 1fr;
   }
   .isg-rfq-inputs-row {
-    display: block;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.4rem;
   }
   .isg-rfq-form .isg-field {
     flex: 1 1 100%;
     width: 100%;
     max-width: 100%;
   }
-  .isg-rfq-inputs-row > .isg-field + .isg-field {
-    margin-top: 2.4rem;
-  }
   .isg-rfq-inputs-row--full {
-    display: block;
+    grid-template-columns: 1fr;
   }
 }
 .isg-rfq-form .isg-field--float {

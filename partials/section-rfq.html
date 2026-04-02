@@ -30,20 +30,19 @@
       </div>
     </div>
   </section>
+
   <div id="isg-rfq-content" class="isg-rfq-content isg-section-surface">
-   
-      <div class="container">
-        
-   
-            <div class="isg-section-head isg-section-head--color-white isg-title-group isg-title-group--align-start">
-              <!-- ACF: rfq_aside_label — как .isg-quality-list-wrap__label -->
+    <div class="container isg-rfq-content__inner">
+      <div class="isg-rfq-row">
+        <aside class="isg-rfq-aside">
+          <div class="isg-rfq-aside__inner">
+            <div class="isg-section-head isg-title-group isg-title-group--align-start">
               <div class="isg-section-head__subtitle isg-subtitle">
                 <p class="isg-subtitle__text">RFQ</p>
                 <span class="isg-subtitle__swatch" aria-hidden="true"></span>
               </div>
               <div class="isg-section-head__title-row">
                 <div class="isg-section-head__title-col">
-                  <!-- ACF: rfq_aside_heading -->
                   <h2 class="isg-section-head__title isg-h2">
                     Please send your project specifications for review. Our team will assess the requirements and prepare a
                     quotation based on the provided information
@@ -51,36 +50,40 @@
                 </div>
               </div>
             </div>
+          </div>
+        </aside>
 
-     
-        
         <div class="isg-rfq-form-wrap">
           <form class="isg-rfq-form" data-isg-rfq-form>
             <div class="isg-rfq-inputs">
-              <div class="isg-rfq-inputs-row">
+              <div class="isg-rfq-inputs-row isg-rfq-inputs-row--full">
                 <!-- ACF: rfq_field_company -->
                 <label class="isg-field isg-field--float">
-                  <input class="isg-field__control" type="text" name="company" autocomplete="organization"
-                    placeholder=" " />
+                  <input class="isg-field__control" type="text" name="company" autocomplete="organization" placeholder=" " />
                   <span class="isg-field__label"><span class="isg-field__label-text">company name</span></span>
                 </label>
               </div>
+
               <div class="isg-rfq-inputs-row">
                 <label class="isg-field isg-field--float">
-                  <input class="isg-field__control" type="email" name="email" autocomplete="email" required
-                    placeholder=" " />
-                  <span class="isg-field__label"><span class="isg-field__label-text">email address</span><abbr
-                      class="isg-field__req" title="required">*</abbr></span>
+                  <input class="isg-field__control" type="email" name="email" autocomplete="email" required placeholder=" " />
+                  <span class="isg-field__label"><span class="isg-field__label-text">email address</span><abbr class="isg-field__req" title="required">*</abbr></span>
                 </label>
                 <label class="isg-field isg-field--float">
-                  <input class="isg-field__control" type="tel" name="phone" autocomplete="tel" required
-                    placeholder=" " />
-                  <span class="isg-field__label"><span class="isg-field__label-text">phone number</span><abbr
-                      class="isg-field__req" title="required">*</abbr></span>
+                  <input class="isg-field__control" type="tel" name="phone" autocomplete="tel" required placeholder=" " />
+                  <span class="isg-field__label"><span class="isg-field__label-text">phone number</span><abbr class="isg-field__req" title="required">*</abbr></span>
                 </label>
               </div>
+
+              <div class="isg-rfq-inputs-row isg-rfq-inputs-row--full">
+                <label class="isg-field isg-field--float">
+                  <input class="isg-field__control" type="text" name="project_type" placeholder=" " />
+                  <span class="isg-field__label"><span class="isg-field__label-text">project type</span></span>
+                </label>
+              </div>
+
               <div class="isg-rfq-inputs-row">
-                <!-- ACF: pipe diameter / wall thickness — options из repeater или select -->
+                <!-- ACF: pipe diameter / wall thickness -->
                 <label class="isg-field isg-field--float isg-field--select">
                   <select class="isg-field__control" name="diameter" required>
                     <option value="" disabled selected hidden> </option>
@@ -109,6 +112,7 @@
                   <span class="isg-field__label"><span class="isg-field__label-text">wall thickness</span></span>
                 </label>
               </div>
+
               <div class="isg-rfq-inputs-row">
                 <label class="isg-field isg-field--float isg-field--select">
                   <select class="isg-field__control" name="steel_grade" required>
@@ -124,46 +128,41 @@
                   </select>
                   <span class="isg-field__label"><span class="isg-field__label-text">steel grade</span></span>
                 </label>
-              </div>
-              <div class="isg-rfq-inputs-row">
-                <label class="isg-field isg-field--float">
-                  <input class="isg-field__control" type="text" name="project_type" placeholder=" " />
-                  <span class="isg-field__label"><span class="isg-field__label-text">project type</span></span>
-                </label>
-                <label class="isg-field isg-field--float">
-                  <input class="isg-field__control" type="text" name="delivery" placeholder=" " />
-                  <span class="isg-field__label"><span class="isg-field__label-text">delivery location</span></span>
-                </label>
                 <label class="isg-field isg-field--float">
                   <input class="isg-field__control" type="text" name="quantity" placeholder=" " />
                   <span class="isg-field__label"><span class="isg-field__label-text">quantity</span></span>
                 </label>
               </div>
+
               <div class="isg-rfq-inputs-row isg-rfq-inputs-row--full">
-                <!-- ACF: rfq_field_message -->
+                <label class="isg-field isg-field--float">
+                  <input class="isg-field__control" type="text" name="delivery" placeholder=" " />
+                  <span class="isg-field__label"><span class="isg-field__label-text">delivery location</span></span>
+                </label>
+              </div>
+
+              <div class="isg-rfq-inputs-row isg-rfq-inputs-row--full">
                 <label class="isg-field isg-field--float isg-field--textarea">
                   <textarea class="isg-field__control" name="message" rows="2" placeholder=" "></textarea>
                   <span class="isg-field__label"><span class="isg-field__label-text">message</span></span>
                 </label>
               </div>
             </div>
+
             <div class="isg-checkbox-row">
               <input class="isg-checkbox" type="checkbox" name="terms" id="rfq-terms" value="1" required />
               <label class="isg-checkbox-label" for="rfq-terms">
                 I have read and accept the
-                <!-- ACF: rfq_terms_url -->
-                <a class="isg-checkbox-label__link" href="#" target="_blank" rel="noopener noreferrer">Terms &amp;
-                  Conditions</a>.
+                <a class="isg-checkbox-label__link" href="#" target="_blank" rel="noopener noreferrer">Terms &amp; Conditions</a>.
               </label>
             </div>
+
             <div class="isg-btn-group">
               <button class="isg-btn" type="submit">Submit form</button>
             </div>
           </form>
         </div>
       </div>
-   
+    </div>
   </div>
 </div>
-
-
