@@ -1,13 +1,13 @@
 <!-- Flexible Content layout: product_range (intro + white content block) -->
 <div id="isg-product" class="isg-product-section" data-isg-block="product-range">
   <section
-    class="isg-product-intro"
+    class="isg-intro-section isg-intro-section--align-center isg-product-intro"
     style="background-image: url('assets/img/product-range-intro.jpg');"
     data-isg-intro-scroll
   >
     <!-- ACF: product_intro_background -->
-    <div class="isg-product-intro__conteiner">
-      <div class="isg-product-intro__content">
+    <div class="isg-intro-section__container isg-product-intro__conteiner container">
+      <div class="isg-intro-section__content isg-product-intro__content">
         <div class="isg-title-group">
           <div class="isg-subtitle">
             <!-- ACF: product_intro_kicker -->
@@ -71,31 +71,31 @@
       </div>
     </div>
   </section>
-  <div class="isg-product-content">
-    <div class="isg-product-content__inner">
+  <div class="isg-product-content isg-section-surface">
+    <div class="container isg-product-content__inner">
       <!-- ACF: product_content_anchor_id (optional) -->
-      <div class="isg-product-content__title-group isg-title-group isg-title-group--align-start">
-        <div class="isg-subtitle">
+      <div class="isg-section-head isg-section-head--color-ivory isg-title-group isg-title-group--align-start">
+        <div class="isg-section-head__subtitle isg-subtitle">
           <!-- ACF: product_content_kicker -->
           <p class="isg-subtitle__text">our position</p>
           <span class="isg-subtitle__swatch" aria-hidden="true"></span>
         </div>
-        <div class="isg-product-content__row isg-product-content__row--title">
-          <div class="isg-product-content__col isg-product-content__col--wide">
+        <div class="isg-section-head__title-row">
+          <div class="isg-section-head__title-col">
             <!-- ACF: product_content_heading -->
-            <h2 class="isg-h2">
+            <h2 class="isg-section-head__title isg-h2">
               We use high-quality steel grades in accordance with international standards and project requirements
             </h2>
           </div>
         </div>
       </div>
-      <div class="isg-product-content__row isg-product-content__row--grades">
-        <div class="isg-product-content__col isg-product-content__col--grades-intro">
+      <div class="isg-product-content__row isg-grid-row isg-product-content__row--grades">
+        <div class="isg-product-content__col isg-grid-col isg-grid-col--left isg-product-content__col--grades-intro">
           <!-- ACF: product_grades_intro -->
           <p class="isg-body">Typical steel grades include:</p>
         </div>
         <div class="isg-product-content__grades-stacks">
-          <div class="isg-product-content__col isg-product-content__col--grades-stack">
+          <div class="isg-product-content__col isg-grid-col isg-product-content__col--grades-stack">
             <div class="isg-subtitle">
               <p class="isg-mono-label">Structural:</p>
             </div>
@@ -107,7 +107,7 @@
               <div class="isg-filled-item"><span>S460JOH</span></div>
             </div>
           </div>
-          <div class="isg-product-content__col isg-product-content__col--grades-stack">
+          <div class="isg-product-content__col isg-grid-col isg-product-content__col--grades-stack">
             <div class="isg-subtitle">
               <p class="isg-mono-label">Pressure:</p>
             </div>
@@ -117,7 +117,7 @@
               <div class="isg-filled-item"><span>L360</span></div>
             </div>
           </div>
-          <div class="isg-product-content__col isg-product-content__col--grades-stack isg-product-content__col--grades-stack--wide">
+          <div class="isg-product-content__col isg-grid-col isg-product-content__col--grades-stack isg-product-content__col--grades-stack--wide">
             <div class="isg-subtitle">
               <p class="isg-mono-label">Pipeline:</p>
             </div>
@@ -129,16 +129,16 @@
           </div>
         </div>
       </div>
-      <div class="isg-product-content__row isg-product-content__row--rule">
+      <div class="isg-product-content__row isg-grid-row isg-product-content__row--rule">
         <div class="isg-rule" role="presentation">
           <span class="isg-rule__line" aria-hidden="true"></span>
         </div>
       </div>
-      <div class="isg-product-content__row isg-product-content__row--sizes">
-        <div class="isg-product-content__col isg-product-content__col--size-lead">
+      <div class="isg-product-content__row isg-grid-row isg-product-content__row--sizes">
+        <div class="isg-product-content__col isg-grid-col isg-grid-col--left isg-product-content__col--size-lead">
           <p class="isg-body">We produce spiral-welded steel pipes in the following size range:</p>
         </div>
-        <div class="isg-product-content__col isg-product-content__col--size-panel">
+        <div class="isg-product-content__col isg-grid-col isg-grid-col--right isg-product-content__col--size-panel">
           <div class="isg-size-tables">
             <div class="isg-size-tables__pair">
               <div class="isg-size-spec" role="group" aria-label="Size range, column 1">

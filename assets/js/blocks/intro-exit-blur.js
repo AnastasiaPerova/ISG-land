@@ -4,12 +4,10 @@ function clamp01(t) {
   return Math.max(0, Math.min(1, t));
 }
 
-const INTRO_BLUR_SELECTOR =
-  ".isg-product-intro, .isg-quality-intro, .isg-about-intro, .isg-rfq-intro, .isg-hero";
+const INTRO_BLUR_SELECTOR = ".isg-intro-section, .isg-hero";
 
 /** Уже существующие обёртки контента в разметке (без новых контейнеров) */
-const INTRO_INNER_SELECTOR =
-  ".isg-product-intro__conteiner, .isg-quality-intro__conteiner, .isg-about-intro__conteiner, .isg-rfq-intro__conteiner, .isg-hero__conteiner";
+const INTRO_INNER_SELECTOR = ".isg-intro-section__container, .isg-hero__conteiner";
 
 /** Размытие с этой доли «проскролла» блока (35% высоты блока ушло вверх) */
 const BLUR_SCROLL_START = 0.35;

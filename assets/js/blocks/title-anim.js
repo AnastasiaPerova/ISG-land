@@ -4,11 +4,8 @@ import gsap from "gsap";
  * Intro с побуквенной заливкой (intro-section-scroll) — не трогать .isg-about-intro h2.isg-display.
  */
 const HEADING_SELECTORS = [
-  ".isg-product-content h2.isg-h2",
+  ".isg-section-head__title.isg-h2",
   ".isg-about-text-grid h2.isg-h2",
-  ".isg-about-team-block h2.isg-h2",
-  ".isg-about-gallery-block h2.isg-h2",
-  ".isg-rfq-aside h2.isg-h2",
 ];
 
 const M = "isg-title-anim__measure";

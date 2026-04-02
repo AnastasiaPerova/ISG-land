@@ -1,10 +1,10 @@
 <!-- Flexible Content layout: rfq -->
 <div id="isg-rfq" class="isg-rfq-section" data-isg-block="rfq">
-  <section class="isg-rfq-intro" style="background-image: url('assets/img/engenereeng-intro.jpg');"
+  <section class="isg-intro-section isg-intro-section--align-start isg-rfq-intro isg-section-surface" style="background-image: url('assets/img/engenereeng-intro.jpg');"
     data-isg-intro-scroll>
     <!-- ACF: rfq_intro_background -->
-    <div class="isg-rfq-intro__conteiner">
-      <div class="isg-rfq-intro__content isg-text-light">
+    <div class="isg-intro-section__container isg-rfq-intro__conteiner container">
+      <div class="isg-intro-section__content isg-rfq-intro__content isg-text-light">
         <div class="isg-title-group">
           <div class="isg-subtitle">
             <!-- ACF: rfq_intro_kicker -->
@@ -30,24 +30,30 @@
       </div>
     </div>
   </section>
-  <div id="isg-rfq-content" class="isg-rfq-content">
-    <div class="isg-rfq-content__inner">
-      <div class="isg-rfq-row">
-        <aside class="isg-rfq-aside">
-          <div class="isg-rfq-aside__inner">
-            <!-- ACF: rfq_aside_label — как .isg-quality-list-wrap__label -->
-            <div class="isg-subtitle isg-rfq-aside__label">
-              <p class="isg-subtitle__text">RFQ</p>
-              <span class="isg-subtitle__swatch" aria-hidden="true"></span>
+  <div id="isg-rfq-content" class="isg-rfq-content isg-section-surface">
+   
+      <div class="container">
+        
+   
+            <div class="isg-section-head isg-section-head--color-white isg-title-group isg-title-group--align-start">
+              <!-- ACF: rfq_aside_label — как .isg-quality-list-wrap__label -->
+              <div class="isg-section-head__subtitle isg-subtitle">
+                <p class="isg-subtitle__text">RFQ</p>
+                <span class="isg-subtitle__swatch" aria-hidden="true"></span>
+              </div>
+              <div class="isg-section-head__title-row">
+                <div class="isg-section-head__title-col">
+                  <!-- ACF: rfq_aside_heading -->
+                  <h2 class="isg-section-head__title isg-h2">
+                    Please send your project specifications for review. Our team will assess the requirements and prepare a
+                    quotation based on the provided information
+                  </h2>
+                </div>
+              </div>
             </div>
-            <!-- ACF: rfq_aside_heading -->
-            <h2 class="isg-h2 isg-rfq-aside__heading">
-              Please send your project specifications for review. Our team will assess the requirements and prepare a
-              quotation based on the provided information.
-            </h2>
 
-          </div>
-        </aside>
+     
+        
         <div class="isg-rfq-form-wrap">
           <form class="isg-rfq-form" data-isg-rfq-form>
             <div class="isg-rfq-inputs">
@@ -156,6 +162,8 @@
           </form>
         </div>
       </div>
-    </div>
+   
   </div>
 </div>
+
+
