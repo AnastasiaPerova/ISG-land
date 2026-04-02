@@ -873,10 +873,7 @@ html {
   }
 }
 @media (max-width: 1099px) {
-  html {
-    /* Чистый vw давал root <11px на ширинах ~500–800px; нижняя граница как на yucca.co.za */
-    font-size: clamp(13px, 1.38vw, 16px);
-  }
+
 }
 @media (max-width: 499px) {
   html {
