@@ -21,6 +21,7 @@ import { initSectionAnchors } from "./blocks/section-anchors.js";
 import { initFooterReveal } from "./blocks/footer-reveal.js";
 import { initLightbox } from "./blocks/lightbox.js";
 import { initTitleAnim } from "./blocks/title-anim.js";
+import { initFilledItemsAnim } from "./blocks/filled-items-anim.js";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const PARTIALS = [
@@ -78,6 +79,7 @@ export async function initIsgPage(root = document.body) {
   disposers.push(initSpecCardsReveal(root));
   disposers.push(initLightbox(root));
   disposers.push(initTitleAnim(root));
+  disposers.push(initFilledItemsAnim(root));
   ScrollTrigger.refresh();
   requestAnimationFrame(() => {
     ScrollTrigger.refresh();

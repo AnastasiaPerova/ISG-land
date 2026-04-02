@@ -1,5 +1,6 @@
+import gsap from "gsap";
 import Swiper from "swiper";
-import { Navigation } from "swiper/modules";
+import { Autoplay, FreeMode, Navigation } from "swiper/modules";
 
 function setupSliderDragCursor() {
   const finePointer = matchMedia("(hover: hover) and (pointer: fine)");
@@ -265,12 +266,19 @@ function teamOptions(gapPx, prev, next) {
 
 function galleryOptions(gapPx, prev, next) {
   return {
-    modules: [Navigation],
-    speed: 400,
-    loop: false,
-    rewind: true,
+    modules: [Navigation, Autoplay, FreeMode],
+    speed: 5200,
+    loop: true,
+    rewind: false,
     grabCursor: true,
+    allowTouchMove: true,
     watchOverflow: true,
+    freeMode: {
+      enabled: true,
+      momentum: false,
+      minimumVelocity: 0.02,
+      sticky: false,
+    },
     centeredSlides: false,
     slidesPerView: 1.18,
     // Gallery slides are interactive buttons (lightbox trigger),
@@ -286,12 +294,201 @@ function galleryOptions(gapPx, prev, next) {
             nextEl: next,
           }
         : undefined,
+    autoplay: {
+      delay: 0,
+      disableOnInteraction: false,
+      pauseOnMouseEnter: true,
+      waitForTransition: true,
+    },
     breakpoints: {
       480: { slidesPerView: 1.35, slidesOffsetBefore: 24, slidesOffsetAfter: 36, spaceBetween: gapPx },
       768: { slidesPerView: 2.12, slidesOffsetBefore: 16, slidesOffsetAfter: 64, spaceBetween: gapPx },
       1024: { slidesPerView: 2.14, slidesOffsetBefore: 16, slidesOffsetAfter: 96, spaceBetween: gapPx },
       1400: { slidesPerView: 2.18, slidesOffsetBefore: 30, slidesOffsetAfter: 120, spaceBetween: gapPx },
     },
+  };
+}
+
+function bindSliderReveal(slider, swiper, onReady = () => {}) {
+  const items = Array.from(slider.querySelectorAll(".isg-slider__item.swiper-slide")).filter(
+    (el) => !el.classList.contains("swiper-slide-duplicate"),
+  );
+  if (!items.length) {
+    onReady();
+    return () => {};
+  }
+
+  let hasPlayed = false;
+  let rafId = 0;
+
+  gsap.set(slider, { opacity: 0 });
+  gsap.set(items, {
+    opacity: 0,
+    y: 72,
+    rotateY: 18,
+    rotateZ: -1.4,
+    scale: 0.92,
+    transformOrigin: "50% 100%",
+    filter: "blur(10px)",
+  });
+
+  const play = () => {
+    if (hasPlayed) return;
+    hasPlayed = true;
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        onReady();
+      },
+    });
+
+    tl.to(slider, {
+      opacity: 1,
+      duration: 0.2,
+      ease: "power1.out",
+    }).to(
+      items,
+      {
+        opacity: 1,
+        y: 0,
+        rotateY: 0,
+        rotateZ: 0,
+        scale: 1,
+        filter: "blur(0px)",
+        duration: 1.15,
+        stagger: {
+          each: 0.08,
+          from: "start",
+        },
+        ease: "power4.out",
+      },
+      0,
+    );
+  };
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        observer.disconnect();
+        rafId = requestAnimationFrame(play);
+      });
+    },
+    { threshold: 0.15 },
+  );
+
+  observer.observe(slider);
+  swiper?.autoplay?.stop?.();
+
+  return () => {
+    observer.disconnect();
+    if (rafId) cancelAnimationFrame(rafId);
+    gsap.killTweensOf(slider);
+    gsap.killTweensOf(items);
+    gsap.set(slider, { clearProps: "opacity" });
+    gsap.set(items, { clearProps: "opacity,transform,filter,transformOrigin" });
+  };
+}
+
+function bindTeamReveal(slider, onReady = () => {}) {
+  const cards = Array.from(slider.querySelectorAll(".isg-slider__item.swiper-slide"));
+  if (!cards.length) {
+    onReady();
+    return () => {};
+  }
+
+  const images = cards
+    .map((card) => card.querySelector(".isg-slider-item__img"))
+    .filter((el) => el instanceof HTMLElement);
+  const captions = cards
+    .map((card) => card.querySelector(".isg-slider-item__caption"))
+    .filter((el) => el instanceof HTMLElement);
+
+  let hasPlayed = false;
+  let rafId = 0;
+  const sectionRoot = slider.closest("[data-isg-block]") || slider.closest("section") || slider.parentElement;
+  const sectionHeading = sectionRoot?.querySelector(".isg-section-head__title.isg-h2");
+  const headingAnimDelay = sectionHeading?.classList.contains("isg-title-anim") ? 1.25 : 0.45;
+
+  gsap.set(cards, {
+    opacity: 0,
+    y: 88,
+    scale: 0.94,
+    rotateX: 8,
+    transformOrigin: "50% 100%",
+    filter: "blur(8px)",
+  });
+  gsap.set(images, {
+    clipPath: "inset(18% 0% 82% 0% round 20px)",
+    y: 34,
+    scale: 1.04,
+  });
+  gsap.set(captions, { opacity: 0, y: 22 });
+
+  const play = () => {
+    if (hasPlayed) return;
+    hasPlayed = true;
+    const tl = gsap.timeline({
+      delay: headingAnimDelay,
+      onComplete: () => onReady(),
+    });
+
+    tl.to(cards, {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      rotateX: 0,
+      filter: "blur(0px)",
+      duration: 1.35,
+      stagger: 0.17,
+      ease: "expo.out",
+    })
+      .to(
+        images,
+        {
+          clipPath: "inset(0% 0% 0% 0% round 20px)",
+          y: 0,
+          scale: 1,
+          duration: 1.05,
+          stagger: 0.17,
+          ease: "expo.out",
+        },
+        0.18,
+      )
+      .to(
+        captions,
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.78,
+          stagger: 0.14,
+          ease: "power3.out",
+        },
+        0.62,
+      );
+  };
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        observer.disconnect();
+        rafId = requestAnimationFrame(play);
+      });
+    },
+    { threshold: 0.15 },
+  );
+  observer.observe(slider);
+
+  return () => {
+    observer.disconnect();
+    if (rafId) cancelAnimationFrame(rafId);
+    gsap.killTweensOf(cards);
+    gsap.killTweensOf(images);
+    gsap.killTweensOf(captions);
+    gsap.set(cards, { clearProps: "opacity,transform,filter,transformOrigin" });
+    gsap.set(images, { clearProps: "clipPath,transform" });
+    gsap.set(captions, { clearProps: "opacity,transform" });
   };
 }
 
@@ -316,9 +513,9 @@ export async function initSliders(root = document) {
     track.classList.add("swiper-wrapper");
     slides.forEach((slide) => slide.classList.add("swiper-slide"));
 
-    const isGallery =
-      slider.getAttribute("data-isg-slider") === "gallery" ||
-      slider.classList.contains("isg-slider--mode-gallery");
+    const sliderMode = slider.getAttribute("data-isg-slider") || "";
+    const isGallery = sliderMode === "gallery" || slider.classList.contains("isg-slider--mode-gallery");
+    const isTeam = sliderMode === "team";
 
     let swiper = null;
     try {
@@ -386,12 +583,24 @@ export async function initSliders(root = document) {
     swiper.on("transitionEnd", syncBar);
     swiper.on("resize", syncBar);
     swiper.on("breakpoint", syncBar);
+    if (isGallery) {
+      swiper.on("touchStart", () => swiper?.autoplay?.stop?.());
+      swiper.on("touchEnd", () => swiper?.autoplay?.start?.());
+    }
     syncBar();
 
     const unbindDragCursor = dragCursorApi.bind(slider);
+    const unbindSliderReveal = isGallery
+      ? bindSliderReveal(slider, swiper, () => {
+          swiper?.autoplay?.start?.();
+        })
+      : isTeam
+        ? bindTeamReveal(slider)
+        : () => {};
 
     disposers.push(() => {
       unbindDragCursor();
+      unbindSliderReveal();
       try {
         swiper?.off("slideChange", syncBar);
         swiper?.off("transitionEnd", syncBar);

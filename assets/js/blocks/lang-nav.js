@@ -1,3 +1,5 @@
+import gsap from "gsap";
+
 /**
  * Dropdown language switcher (desktop + drawer) with synced selected value.
  */
@@ -7,8 +9,38 @@ export function initLangNav(root = document) {
     return () => {};
   }
   const canHover = window.matchMedia("(hover: hover) and (pointer: fine)");
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   let closeTimer = null;
   const CLOSE_DELAY_MS = 260;
+  const animations = new WeakMap();
+
+  const clearAnimation = (nav) => {
+    const tl = animations.get(nav);
+    if (tl) {
+      tl.kill();
+      animations.delete(nav);
+    }
+  };
+
+  const getParts = (nav) => {
+    const toggle = nav.querySelector("[data-isg-lang-toggle]");
+    const menu = nav.querySelector("[data-isg-lang-menu]");
+    if (!(toggle instanceof HTMLElement) || !(menu instanceof HTMLElement)) return null;
+    const options = Array.from(menu.querySelectorAll("[data-isg-lang]")).filter((el) => el instanceof HTMLElement);
+    return { toggle, menu, options };
+  };
+
+  const getVisibleOptions = (parts) =>
+    parts.options.filter((el) => window.getComputedStyle(el).display !== "none");
+
+  const resetAnimatedStyles = (parts) => {
+    gsap.set(parts.menu, { clearProps: "opacity,transform,transformOrigin,overflow,pointerEvents" });
+    gsap.set(parts.options, { clearProps: "opacity,transform" });
+    gsap.set(parts.toggle, { clearProps: "backgroundColor" });
+    gsap.set(parts.menu.parentElement, {
+      clearProps: "--isg-lang-shell-scale,--isg-lang-shell-opacity,--isg-lang-shell-h",
+    });
+  };
 
   const getInitialCode = () => {
     const selected =
@@ -18,33 +50,164 @@ export function initLangNav(root = document) {
     return selected?.getAttribute("data-isg-lang") || "en";
   };
 
-  const closeAll = () => {
+  const closeNav = (nav, { immediate = false } = {}) => {
+    const parts = getParts(nav);
+    if (!parts) return;
+    const { toggle, menu } = parts;
+    const options = getVisibleOptions(parts);
+    const shellHeight = `${toggle.offsetHeight + menu.offsetHeight - 14}px`;
+    clearAnimation(nav);
+    toggle.setAttribute("aria-expanded", "false");
+
+    if (immediate || reduceMotion) {
+      menu.hidden = true;
+      nav.classList.remove("isg-lang-dropdown--open");
+      resetAnimatedStyles(parts);
+      return;
+    }
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        menu.hidden = true;
+        nav.classList.remove("isg-lang-dropdown--open");
+        resetAnimatedStyles(parts);
+        animations.delete(nav);
+      },
+    });
+
+    tl.to(
+      options,
+      {
+        opacity: 0,
+        y: -6,
+        stagger: { each: 0.03, from: "end" },
+        duration: 0.12,
+        ease: "power1.in",
+      },
+      0,
+    )
+      .to(
+        nav,
+        {
+          "--isg-lang-shell-scale": 0.82,
+          "--isg-lang-shell-opacity": 1,
+          "--isg-lang-shell-h": shellHeight,
+          duration: 0.16,
+          ease: "power1.inOut",
+        },
+        0,
+      )
+      .to(
+        menu,
+        {
+          opacity: 0,
+          y: -10,
+          scaleY: 0.28,
+          transformOrigin: "top center",
+          duration: 0.2,
+          ease: "power2.in",
+        },
+        0,
+      )
+      .to(
+        nav,
+        {
+          "--isg-lang-shell-scale": 0,
+          "--isg-lang-shell-opacity": 0,
+          duration: 0.22,
+          ease: "power2.in",
+        },
+        0.04,
+      );
+
+    animations.set(nav, tl);
+  };
+
+  const closeAll = ({ except = null, immediate = false } = {}) => {
     if (closeTimer) {
       clearTimeout(closeTimer);
       closeTimer = null;
     }
     navs.forEach((nav) => {
-      const toggle = nav.querySelector("[data-isg-lang-toggle]");
-      const menu = nav.querySelector("[data-isg-lang-menu]");
-      if (!toggle || !menu) return;
-      toggle.setAttribute("aria-expanded", "false");
-      menu.hidden = true;
-      nav.classList.remove("isg-lang-dropdown--open");
+      if (except && nav === except) return;
+      closeNav(nav, { immediate });
     });
   };
 
-  const openNav = (nav) => {
+  const openNav = (nav, { immediate = false } = {}) => {
     if (closeTimer) {
       clearTimeout(closeTimer);
       closeTimer = null;
     }
-    const toggle = nav.querySelector("[data-isg-lang-toggle]");
-    const menu = nav.querySelector("[data-isg-lang-menu]");
-    if (!toggle || !menu) return;
-    closeAll();
+    const parts = getParts(nav);
+    if (!parts) return;
+    const { toggle, menu } = parts;
+    closeAll({ except: nav, immediate: true });
+    clearAnimation(nav);
     toggle.setAttribute("aria-expanded", "true");
     menu.hidden = false;
     nav.classList.add("isg-lang-dropdown--open");
+
+    if (immediate || reduceMotion) {
+      resetAnimatedStyles(parts);
+      return;
+    }
+
+    const options = getVisibleOptions(parts);
+    const shellHeight = `${toggle.offsetHeight + menu.offsetHeight - 14}px`;
+
+    gsap.set(menu, {
+      opacity: 0,
+      y: -10,
+      scaleY: 0.28,
+      transformOrigin: "top center",
+      overflow: "hidden",
+      pointerEvents: "none",
+    });
+    gsap.set(options, { opacity: 0, y: -8 });
+    gsap.set(nav, {
+      "--isg-lang-shell-scale": 0,
+      "--isg-lang-shell-opacity": 0,
+      "--isg-lang-shell-h": shellHeight,
+    });
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        gsap.set(menu, { clearProps: "overflow,pointerEvents" });
+        animations.delete(nav);
+      },
+    });
+
+    tl.to(nav, {
+      "--isg-lang-shell-opacity": 1,
+      "--isg-lang-shell-scale": 1,
+      duration: 0.16,
+      ease: "power2.out",
+    })
+      .to(
+        menu,
+        {
+          opacity: 1,
+          y: 0,
+          scaleY: 1,
+          duration: 0.28,
+          ease: "power2.out",
+        },
+        ">-0.02",
+      )
+      .to(
+        options,
+        {
+          opacity: 1,
+          y: 0,
+          stagger: 0.05,
+          duration: 0.2,
+          ease: "power2.out",
+        },
+        "<0.04",
+      );
+
+    animations.set(nav, tl);
   };
 
   const setLang = (code) => {
@@ -62,7 +225,7 @@ export function initLangNav(root = document) {
   };
 
   setLang(getInitialCode());
-  closeAll();
+  closeAll({ immediate: true });
 
   const onClick = (e) => {
     const toggle = e.target.closest("[data-isg-lang-toggle]");
@@ -72,9 +235,10 @@ export function initLangNav(root = document) {
       const menu = nav.querySelector("[data-isg-lang-menu]");
       if (!menu) return;
       const nextOpen = toggle.getAttribute("aria-expanded") !== "true";
-      closeAll();
       if (nextOpen) {
         openNav(nav);
+      } else {
+        closeNav(nav);
       }
       return;
     }
@@ -87,7 +251,7 @@ export function initLangNav(root = document) {
       if (!code) return;
       e.preventDefault();
       setLang(code);
-      closeAll();
+      closeNav(nav);
       return;
     }
 
@@ -137,6 +301,7 @@ export function initLangNav(root = document) {
       clearTimeout(closeTimer);
       closeTimer = null;
     }
+    navs.forEach(clearAnimation);
     root.removeEventListener("click", onClick);
     document.removeEventListener("keydown", onKeyDown);
     navs.forEach((nav) => {

@@ -6,12 +6,14 @@ gsap.registerPlugin(ScrollTrigger);
 const INNER_SELECTOR = ".isg-product-content__inner";
 const LINES_CLASS = "isg-product-content__inner--lines-draw";
 const LINE_DRAW_SELECTOR = ".isg-product-content__line-draw";
+const SIZE_ROW_LINE_SELECTOR = ".isg-size-spec__row-line";
 
 const EASE_LINE = "power2.out";
 const DUR_H = 0.88;
 const DUR_SEG = 0.72;
 const STAGGER_SEG = 0.1;
 const TL_DELAY = 0.06;
+const CLIP_SUPPORTED = typeof CSS !== "undefined" && CSS.supports?.("clip-path", "inset(0 100% 0 0)");
 
 /** Когда верх триггера доходит до этой линии вьюпорта — запускаем рисование (не раньше). */
 const ST_START = "top 78%";
@@ -40,18 +42,20 @@ function isPastScrollTriggerStart(triggerEl) {
 /**
  * Узкий элемент у линий: не весь inner (иначе срабатывает на заголовке секции).
  */
-function getLineDrawTrigger(inner, ruleLines, lineDrawEls) {
+function getLineDrawTrigger(inner, ruleLines, lineDrawEls, sizeRowLines) {
   return (
     inner.querySelector(".isg-product-content__row--rule") ||
     inner.querySelector(".isg-product-content__row--sizes") ||
     inner.querySelector(LINE_DRAW_SELECTOR) ||
+    sizeRowLines[0] ||
     ruleLines[0] ||
     null
   );
 }
 
 /**
- * Горизонтальные линии: разделитель + сегменты под шапкой + линии над строками списка (scaleX, origin left).
+ * Горизонтальные линии: разделитель + сегменты под шапкой + линии над строками списка.
+ * Рисуем как "въезд из-под маски": clipPath + x-сдвиг.
  * Чёрную полосу анимируем на `.isg-rule__line` — у родителя фон прозрачный при --lines-draw.
  */
 export function initProductContentLineDraw(root = document) {
@@ -76,38 +80,48 @@ export function initProductContentLineDraw(root = document) {
     const ruleBar =
       inner.querySelector(".isg-product-content__row--rule .isg-rule") || inner.querySelector(".isg-rule");
     const lineDrawEls = inner.querySelectorAll(LINE_DRAW_SELECTOR);
+    const sizeRowLines = inner.querySelectorAll(SIZE_ROW_LINE_SELECTOR);
 
-    if (!mainRuleLine && !ruleBar && !lineDrawEls.length) {
+    const segmentTargets = Array.from(
+      new Set([...Array.from(lineDrawEls), ...Array.from(sizeRowLines)]),
+    );
+
+    if (!mainRuleLine && !ruleBar && !segmentTargets.length) {
       return;
     }
 
     if (reduced) {
       if (mainRuleLine) {
-        gsap.set(mainRuleLine, { scaleX: 1, transformOrigin: "left center", force3D: true });
+        gsap.set(mainRuleLine, { clipPath: "inset(0 0% 0 0)", x: 0, scaleX: 1, force3D: true });
       } else if (ruleBar) {
-        gsap.set(ruleBar, { scaleX: 1, transformOrigin: "left center", force3D: true });
+        gsap.set(ruleBar, { clipPath: "inset(0 0% 0 0)", x: 0, scaleX: 1, force3D: true });
       }
-      gsap.set(ruleLines, { scaleX: 1, transformOrigin: "left center", force3D: true });
-      lineDrawEls.forEach((node) => {
-        gsap.set(node, { scaleX: 1, transformOrigin: "left center", force3D: true });
+      gsap.set(ruleLines, { clipPath: "inset(0 0% 0 0)", x: 0, scaleX: 1, force3D: true });
+      segmentTargets.forEach((node) => {
+        gsap.set(node, { clipPath: "inset(0 0% 0 0)", x: 0, scaleX: 1, force3D: true });
       });
       return;
     }
 
     const lineTarget = mainRuleLine || ruleBar;
     if (lineTarget) {
-      gsap.set(lineTarget, { scaleX: 0, transformOrigin: "left center", force3D: true });
+      gsap.set(
+        lineTarget,
+        CLIP_SUPPORTED
+          ? { clipPath: "inset(0 100% 0 0)", x: -24, force3D: true }
+          : { scaleX: 0, x: -24, transformOrigin: "left center", force3D: true },
+      );
     }
-    lineDrawEls.forEach((node) => {
-      gsap.set(node, { scaleX: 0, transformOrigin: "left center", force3D: true });
+    segmentTargets.forEach((node) => {
+      gsap.set(
+        node,
+        CLIP_SUPPORTED
+          ? { clipPath: "inset(0 100% 0 0)", x: -20, force3D: true }
+          : { scaleX: 0, x: -20, transformOrigin: "left center", force3D: true },
+      );
     });
 
     let played = false;
-
-    const triggerEl = getLineDrawTrigger(inner, ruleLines, lineDrawEls);
-    if (!triggerEl) {
-      return;
-    }
 
     function runReveal() {
       if (played) {
@@ -120,29 +134,57 @@ export function initProductContentLineDraw(root = document) {
       const hasMainRule = Boolean(lineTarget);
 
       if (lineTarget) {
-        tl.to(lineTarget, {
-          scaleX: 1,
-          duration: DUR_H,
-          ease: EASE_LINE,
-          force3D: true,
-        });
+        tl.to(
+          lineTarget,
+          CLIP_SUPPORTED
+            ? {
+                clipPath: "inset(0 0% 0 0)",
+                x: 0,
+                duration: DUR_H,
+                ease: EASE_LINE,
+                force3D: true,
+              }
+            : {
+                scaleX: 1,
+                x: 0,
+                duration: DUR_H,
+                ease: EASE_LINE,
+                force3D: true,
+              },
+        );
       }
 
-      if (lineDrawEls.length) {
+      if (segmentTargets.length) {
         tl.to(
-          lineDrawEls,
-          {
-            scaleX: 1,
-            duration: DUR_SEG,
-            stagger: STAGGER_SEG,
-            ease: EASE_LINE,
-            force3D: true,
-          },
+          segmentTargets,
+          CLIP_SUPPORTED
+            ? {
+                clipPath: "inset(0 0% 0 0)",
+                x: 0,
+                duration: DUR_SEG,
+                stagger: STAGGER_SEG,
+                ease: EASE_LINE,
+                force3D: true,
+              }
+            : {
+                scaleX: 1,
+                x: 0,
+                duration: DUR_SEG,
+                stagger: STAGGER_SEG,
+                ease: EASE_LINE,
+                force3D: true,
+              },
           hasMainRule ? "-=0.5" : 0
         );
       }
 
       timelines.push(tl);
+    }
+
+    const triggerEl = getLineDrawTrigger(inner, ruleLines, lineDrawEls, sizeRowLines);
+    if (!triggerEl) {
+      doubleRaf(runReveal);
+      return;
     }
 
     const st = ScrollTrigger.create({
@@ -175,8 +217,10 @@ export function initProductContentLineDraw(root = document) {
     timelines.length = 0;
     inners.forEach((el) => {
       el.classList.remove(LINES_CLASS);
-      el.querySelectorAll(".isg-rule, .isg-rule__line, .isg-product-content__line-draw").forEach((node) => {
-        gsap.set(node, { clearProps: "transform" });
+      el
+        .querySelectorAll(".isg-rule, .isg-rule__line, .isg-product-content__line-draw, .isg-size-spec__row-line")
+        .forEach((node) => {
+          gsap.set(node, { clearProps: "transform,clipPath,x,scaleX" });
       });
     });
   };
