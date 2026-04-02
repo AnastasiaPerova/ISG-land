@@ -7,6 +7,8 @@ export function initLangNav(root = document) {
     return () => {};
   }
   const canHover = window.matchMedia("(hover: hover) and (pointer: fine)");
+  let closeTimer = null;
+  const CLOSE_DELAY_MS = 260;
 
   const getInitialCode = () => {
     const selected =
@@ -17,6 +19,10 @@ export function initLangNav(root = document) {
   };
 
   const closeAll = () => {
+    if (closeTimer) {
+      clearTimeout(closeTimer);
+      closeTimer = null;
+    }
     navs.forEach((nav) => {
       const toggle = nav.querySelector("[data-isg-lang-toggle]");
       const menu = nav.querySelector("[data-isg-lang-menu]");
@@ -28,6 +34,10 @@ export function initLangNav(root = document) {
   };
 
   const openNav = (nav) => {
+    if (closeTimer) {
+      clearTimeout(closeTimer);
+      closeTimer = null;
+    }
     const toggle = nav.querySelector("[data-isg-lang-toggle]");
     const menu = nav.querySelector("[data-isg-lang-menu]");
     if (!toggle || !menu) return;
@@ -101,9 +111,20 @@ export function initLangNav(root = document) {
     openNav(nav);
   };
 
-  const onMouseLeave = () => {
+  const onMouseLeave = (e) => {
     if (!canHover.matches) return;
-    closeAll();
+    const nav = e.currentTarget;
+    const next = e.relatedTarget;
+    if (next instanceof Node && nav instanceof Node && nav.contains(next)) {
+      return;
+    }
+    if (closeTimer) {
+      clearTimeout(closeTimer);
+    }
+    closeTimer = setTimeout(() => {
+      closeAll();
+      closeTimer = null;
+    }, CLOSE_DELAY_MS);
   };
 
   navs.forEach((nav) => {
@@ -112,6 +133,10 @@ export function initLangNav(root = document) {
   });
 
   return () => {
+    if (closeTimer) {
+      clearTimeout(closeTimer);
+      closeTimer = null;
+    }
     root.removeEventListener("click", onClick);
     document.removeEventListener("keydown", onKeyDown);
     navs.forEach((nav) => {

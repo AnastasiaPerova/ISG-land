@@ -851,6 +851,7 @@ select {
   position: relative;
   width: 100%;
   min-width: 9.2rem;
+  z-index: 40;
 }
 
 .isg-lang-dropdown__toggle {
@@ -889,10 +890,11 @@ select {
 
 .isg-lang-dropdown__menu {
   position: absolute;
-  top: calc(100% + 0.6rem);
+  top: 100%;
   right: 0;
   left: 0;
-  z-index: 24;
+  z-index: 60;
+  pointer-events: auto;
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
@@ -1342,9 +1344,7 @@ body.isg-nav-drawer-open {
   max-width: 100%;
   box-sizing: border-box;
   --isg-header-pad-inline: 6.4rem;
-  /* Навигация с overflow-x: auto не должна раздувать вьюпорт */
-  overflow-x: clip;
-  overflow-y: visible;
+  overflow: visible;
   background: transparent;
   border: 0;
   box-shadow: none;
@@ -1477,7 +1477,7 @@ body.isg-nav-drawer-open {
   flex: 1;
   min-width: 0;
   max-width: 100%;
-  overflow-x: clip;
+  overflow: visible;
 }
 
 .isg-hero__nav-wrap .isg-nav-pill {
@@ -2596,9 +2596,8 @@ body.isg-nav-drawer-open {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 100vh;
-  min-height: 100svh;
-  min-height: 100dvh;
+  height: calc(100vh + 8rem);
+  height: calc(100svh + 8rem);
   padding: 12rem 0 16rem;
   background-size: cover;
   background-position: center;

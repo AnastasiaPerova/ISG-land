@@ -2594,8 +2594,8 @@ width: max(277.2px, min(21.875vw, 4.3640625in));
   flex-direction: column;
   align-items: center;
 
-  height: 100vh;
-  height: 100svh;
+  height: calc(100vh + 8rem);
+  height: calc(100svh + 8rem);
   padding: 12rem 0 calc(12rem + 4rem);
 
   background-size: cover;
@@ -3299,8 +3299,6 @@ width: max(277.2px, min(21.875vw, 4.3640625in));
 }
 .isg-quality-section {
   width: 100%;
-
-
 }
 
 .isg-quality-intro {
