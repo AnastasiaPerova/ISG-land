@@ -27,18 +27,21 @@
           </div>
         </div>
         <div class="isg-hero__lang">
-          <div class="isg-nav-pill isg-lang-pill">
-            <div class="isg-nav-pill__inner">
-              <div
-                class="isg-nav-pill__row isg-nav-pill__row--slider isg-lang-pill__row isg-nav-pill__row--slider--init"
-                data-isg-nav-slider
-                data-isg-lang-nav
-              >
-                <span class="isg-nav-pill__slider" aria-hidden="true"></span>
-                <a class="isg-btn isg-btn--ghost-dark isg-btn--active" href="#" data-isg-lang="en" aria-current="true">EN</a>
-                <a class="isg-btn isg-btn--ghost-dark" href="#" data-isg-lang="pl">PL</a>
-                <a class="isg-btn isg-btn--ghost-dark" href="#" data-isg-lang="de">DE</a>
-              </div>
+          <div class="isg-lang-dropdown" data-isg-lang-nav>
+            <button
+              type="button"
+              class="isg-lang-dropdown__toggle isg-btn isg-btn--ghost-dark"
+              data-isg-lang-toggle
+              aria-haspopup="listbox"
+              aria-expanded="false"
+            >
+              <span class="isg-lang-dropdown__current" data-isg-lang-current>EN</span>
+              <span class="isg-lang-dropdown__chevron" aria-hidden="true"></span>
+            </button>
+            <div class="isg-lang-dropdown__menu" data-isg-lang-menu role="listbox" hidden>
+              <button type="button" class="isg-lang-dropdown__option isg-btn isg-btn--ghost-dark isg-btn--active" data-isg-lang="en" role="option" aria-selected="true">EN</button>
+              <button type="button" class="isg-lang-dropdown__option isg-btn isg-btn--ghost-dark" data-isg-lang="pl" role="option" aria-selected="false">PL</button>
+              <button type="button" class="isg-lang-dropdown__option isg-btn isg-btn--ghost-dark" data-isg-lang="de" role="option" aria-selected="false">DE</button>
             </div>
           </div>
         </div>
@@ -65,17 +68,24 @@
         <a class="isg-btn isg-btn--ghost-dark" href="#isg-about">About</a>
         <a class="isg-btn isg-btn--ghost-dark" href="#isg-rfq-content">Contact</a>
       </nav>
-      <div class="isg-nav-drawer__lang" data-isg-lang-nav>
+      <div class="isg-nav-drawer__lang">
         <span class="isg-nav-drawer__lang-label">Language</span>
-        <div
-          class="isg-nav-drawer__lang-row isg-nav-pill__row isg-nav-pill__row--slider isg-nav-pill__row--slider--init"
-          data-isg-nav-slider
-          data-isg-lang-nav
-        >
-          <span class="isg-nav-pill__slider" aria-hidden="true"></span>
-          <a class="isg-btn isg-btn--ghost-dark isg-btn--active" href="#" data-isg-lang="en" aria-current="true">EN</a>
-          <a class="isg-btn isg-btn--ghost-dark" href="#" data-isg-lang="pl">PL</a>
-          <a class="isg-btn isg-btn--ghost-dark" href="#" data-isg-lang="de">DE</a>
+        <div class="isg-lang-dropdown isg-lang-dropdown--drawer" data-isg-lang-nav>
+          <button
+            type="button"
+            class="isg-lang-dropdown__toggle isg-btn isg-btn--ghost-dark"
+            data-isg-lang-toggle
+            aria-haspopup="listbox"
+            aria-expanded="false"
+          >
+            <span class="isg-lang-dropdown__current" data-isg-lang-current>EN</span>
+            <span class="isg-lang-dropdown__chevron" aria-hidden="true"></span>
+          </button>
+          <div class="isg-lang-dropdown__menu" data-isg-lang-menu role="listbox" hidden>
+            <button type="button" class="isg-lang-dropdown__option isg-btn isg-btn--ghost-dark isg-btn--active" data-isg-lang="en" role="option" aria-selected="true">EN</button>
+            <button type="button" class="isg-lang-dropdown__option isg-btn isg-btn--ghost-dark" data-isg-lang="pl" role="option" aria-selected="false">PL</button>
+            <button type="button" class="isg-lang-dropdown__option isg-btn isg-btn--ghost-dark" data-isg-lang="de" role="option" aria-selected="false">DE</button>
+          </div>
         </div>
       </div>
     </div>
