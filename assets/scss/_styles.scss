@@ -3229,6 +3229,13 @@ body.isg-nav-drawer-open {
   max-width: min(100%, 30ch);
 }
 
+@media (max-width: 1099px) {
+  .isg-product-content .isg-product-content__col .isg-body,
+  .isg-about-team-block__lead .isg-body {
+    max-width: none;
+  }
+}
+
 .isg-product-content .isg-product-content__col .isg-h2:not(.isg-title-anim),
 .isg-about-gallery-block .isg-product-content__col .isg-h2:not(.isg-title-anim) {
   max-width: min(100%, 30ch);
@@ -3358,6 +3365,14 @@ body.isg-nav-drawer-open {
   margin-top: 1.6rem;
 }
 
+.isg-product-content__row--sizes-mobile {
+  display: none;
+}
+
+.isg-product-content__col--size-rule-mobile {
+  display: none;
+}
+
 .isg-product-content__row--sizes .isg-product-content__col--size-panel {
   grid-column: 5/13;
   min-width: 0;
@@ -3413,7 +3428,7 @@ body.isg-nav-drawer-open {
   text-align: left;
   overflow-wrap: break-word;
   hyphens: auto;
-  font-size: clamp(0.65rem, 0.42rem + 0.65vw, 1.5rem);
+
 }
 
 .isg-size-spec__rule--head {
@@ -3591,6 +3606,34 @@ body.isg-nav-drawer-open {
   }
 }
 @media (max-width: 900px) {
+  .isg-product-content__row--rule {
+    display: none;
+  }
+  .isg-product-content__row--sizes-desktop {
+    display: none;
+  }
+  .isg-product-content__row--sizes-mobile {
+    display: grid;
+  }
+  .isg-product-content__row--sizes-mobile .isg-size-tables {
+    grid-template-columns: 1fr;
+  }
+  .isg-product-content__row--sizes-mobile .isg-size-tables__pair:nth-child(2) {
+    display: none;
+  }
+  .isg-product-content__row--sizes-mobile .isg-product-content__col--size-panel {
+    border-top: 1px solid #000000;
+    padding-top: 1.6rem;
+  }
+  .isg-product-content__inner--lines-draw .isg-rule,
+  .isg-product-content__inner--lines-draw .isg-rule__line,
+  .isg-product-content__inner--lines-draw .isg-product-content__line-draw {
+    transform: none !important;
+    clip-path: none !important;
+  }
+  .isg-size-spec__head {
+    padding: 0 0 2.1rem;
+  }
   .isg-product-content__row--grades .isg-product-content__col--grades-intro,
   .isg-product-content__row--grades .isg-product-content__grades-stacks {
     grid-column: 1/-1;
@@ -3625,12 +3668,12 @@ body.isg-nav-drawer-open {
   .isg-size-table--quad thead tr:first-child th,
   .isg-size-table--quad tbody td {
     padding-left: 0;
-    padding-right: 8px;
+    padding-right: 1.2rem;
   }
   .isg-product-content .isg-size-spec__head,
-  .isg-product-content .isg-size-spec__row {
+  .isg-product-content .isg-size-spec__row{
     padding-left: 0;
-    padding-right: 8px;
+    padding-right: 1.2rem;
   }
   .isg-product-content .isg-size-spec__val:last-child {
     padding-right: 0;
@@ -4227,7 +4270,7 @@ body.isg-nav-drawer-open {
     box-sizing: border-box;
     overflow: hidden;
     scrollbar-width: thin;
-    border-radius: 24px;
+
     touch-action: pan-y;
   }
   .isg-quality-visual__slides::-webkit-scrollbar {
@@ -4314,6 +4357,7 @@ body.isg-nav-drawer-open {
   .isg-quality-row .isg-quality-visual__slide .isg-about-feature-card__content-stack--mobile.isg-about-feature-card__content-stack--active {
     opacity: 1;
     visibility: visible;
+
   }
   .isg-quality-row .isg-about-feature-card__content-slide {
     display: none;
@@ -4461,7 +4505,7 @@ body.isg-nav-drawer-open {
   filter: brightness(0) invert(1);
 }
 
-/* Как Relats .boxes: overflow:hidden, фикс. высота (задаётся JS); виден один .box за раз */
+
 .isg-about-feature-card__content-stack {
   position: absolute;
   right: 3.2rem;
@@ -4470,6 +4514,7 @@ body.isg-nav-drawer-open {
 
 width: 30rem;
   overflow: hidden;
+
   border-radius: 1.6rem;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(23px);
@@ -4498,7 +4543,7 @@ width: 30rem;
   flex: 0 0 auto;
   padding: 2.4rem;
   pointer-events: none;
-  -webkit-backdrop-filter: blur(23px);
+
 }
 
 .isg-about-feature-card__content-slide--active {
@@ -4582,6 +4627,26 @@ width: 30rem;
 .isg-about-team-block__slider-wrap {
   display: flex;
   justify-content: flex-end;
+}
+
+@media (max-width: 1099px) {
+  .isg-about-team-block__slider-wrap {
+    width: 100%;
+    margin-right: 0;
+    overflow: visible;
+  }
+}
+
+@media (max-width: 1099px) {
+  .isg-about-team-block__inner.container {
+    padding-right: 0;
+  }
+  .isg-about-team-block .isg-section-head,
+  .isg-about-team-block__lead,
+  .isg-about-team-block__certs {
+    padding-right: 3.2rem;
+    box-sizing: border-box;
+  }
 }
 
 .isg-about-team-block__slider.isg-slider {

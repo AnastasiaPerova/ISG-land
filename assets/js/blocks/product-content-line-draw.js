@@ -63,6 +63,18 @@ export function initProductContentLineDraw(root = document) {
   if (!inners.length) {
     return () => {};
   }
+  const isMobile = window.matchMedia("(max-width: 900px)").matches;
+  if (isMobile) {
+    inners.forEach((inner) => {
+      inner.classList.remove(LINES_CLASS);
+      inner
+        .querySelectorAll(".isg-rule, .isg-rule__line, .isg-product-content__line-draw, .isg-size-spec__row-line")
+        .forEach((node) => {
+          gsap.set(node, { clearProps: "transform,clipPath,x,scaleX" });
+        });
+    });
+    return () => {};
+  }
 
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const triggers = [];
