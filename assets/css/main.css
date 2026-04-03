@@ -9,6 +9,13 @@
   flex-direction: column;
 }
 
+@media (max-width: 1099px) {
+  .container {
+    max-width: 100%;
+    padding-left: 3.2rem;
+    padding-right: 3.2rem;
+  }
+}
 *,
 *::before,
 *::after {
@@ -33,6 +40,16 @@ html {
 @media (max-width: 1439px) {
   html {
     font-size: 0.641025641vw;
+  }
+}
+@media (max-width: 1099px) {
+  html {
+    font-size: 1.3513513514vw;
+  }
+}
+@media (max-width: 499px) {
+  html {
+    font-size: 1.9vw;
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -80,6 +97,13 @@ html {
   :root {
     --isg-gap: 1.55rem;
     --isg-header-height: 5.6rem;
+    --isg-type-display: 6.1rem;
+    --isg-type-h3: 4.2rem;
+    --isg-type-h4: 3.1rem;
+    --isg-type-body-lg: 2rem;
+    --isg-type-body: 1.74rem;
+    --isg-type-body-sm: 1.5rem;
+    --isg-type-caption: 1.3rem;
   }
 }
 body {
@@ -589,6 +613,8 @@ select {
   row-gap: 2.4rem;
   align-items: start;
   width: 100%;
+  max-width: none;
+  justify-self: stretch;
   margin: 0;
 }
 
@@ -603,7 +629,6 @@ select {
   width: 100%;
   min-width: 0;
   margin: 0;
-  max-width: min(100%, 120rem);
 }
 
 .isg-section-head--color-ivory .isg-subtitle__swatch {
@@ -2169,6 +2194,7 @@ body.isg-nav-drawer-open {
   }
   .isg-digits-section.component--featured .scroll .inner .cards {
     position: relative;
+    padding: 6rem 0;
     left: auto;
     right: auto;
     top: auto;
@@ -2189,49 +2215,50 @@ body.isg-nav-drawer-open {
     /* Иначе обрезается горизонтальная лента с отриц. margin — карточки не «уезжают» за край */
     overflow-x: visible;
     overflow-y: visible;
+    touch-action: pan-x;
     /* На мобильной — сплошная подложка (без полупрозрачности как на десктопе поверх фото) */
     background-color: #f3f2ee;
   }
   .isg-digits-section.component--featured .scroll .inner .cards .center {
     width: 100%;
     max-width: none;
-    padding: 0;
-    padding-right: clamp(1.85rem, 6.25vw, 2.85rem);
     box-sizing: border-box;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-    overflow-x: visible;
-    overflow-y: visible;
+    padding-inline: 0;
   }
   .isg-digits-section.component--featured .scroll .inner .cards .center > .title {
-    padding-inline: 0;
+    width: 100%;
+    max-width: none;
+    box-sizing: border-box;
+    padding-inline: clamp(1.85rem, 6.25vw, 2.85rem);
   }
   /*
    * Карточки как на relats.com (моб.): горизонтальный скролл, «peek» справа до края экрана.
    * Слева — выравнивание с текстом; справа — без поля (только safe-area), карточки визуально уходят за край.
    */
   .isg-digits-section.component--featured .columns--start {
-    --isg-mobile-bleed: clamp(1.85rem, 6.25vw, 2.85rem);
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
     align-items: flex-start;
+    justify-content: flex-start;
     gap: clamp(0.75rem, 3vw, 1.125rem);
-    width: calc(100% + var(--isg-mobile-bleed) * 2);
+    width: 100%;
     min-width: 0;
+    max-width: none;
     margin: 0;
     position: relative;
-    left: calc(-1 * var(--isg-mobile-bleed));
+    width: calc(100% + clamp(1.85rem, 6.25vw, 2.85rem));
+    left: calc(-1 * clamp(1.85rem, 6.25vw, 2.85rem));
     padding: 0;
-    padding-left: var(--isg-mobile-bleed);
-    padding-right: calc(var(--isg-mobile-bleed) + env(safe-area-inset-right, 0px));
+    padding-left: clamp(1.85rem, 6.25vw, 2.85rem);
+    padding-right: env(safe-area-inset-right, 0px);
     padding-bottom: 6px;
     box-sizing: border-box;
     overflow-x: auto;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-x: contain;
+    touch-action: pan-x;
     scroll-snap-type: x mandatory;
     scroll-padding-left: clamp(1.85rem, 6.25vw, 2.85rem);
     scroll-padding-right: env(safe-area-inset-right, 0px);
@@ -2245,17 +2272,17 @@ body.isg-nav-drawer-open {
     border-radius: 4px;
   }
   .isg-digits-section.component--featured .columns--start .columns__item {
-    flex: 0 0 min(35vw, 180px);
-    width: min(82vw, 180px);
-    min-width: min(35vw, 180px);
-    max-width: min(35vw, 180px);
+    flex: 0 0 min(82vw, 360px);
+    width: min(82vw, 360px);
+    min-width: min(82vw, 360px);
+    max-width: min(82vw, 360px);
     scroll-snap-align: start;
     scroll-snap-stop: always;
   }
   .isg-digits-section.component--featured .card.card--featured.isg-digit-card {
     width: 100%;
     max-width: none;
-    height: max(23.87vh, min(30.139vw, 577.22px));
+    height: max(23.87pc, min(30.139vw, 577.22px));
     border-radius: 1.6rem;
   }
 }
@@ -2782,6 +2809,21 @@ body.isg-nav-drawer-open {
   padding-bottom: var(--isg-section-surface-pad-bottom);
 }
 
+@media (max-width: 1099px) {
+  .isg-quality-wrapper.isg-section-surface {
+    --isg-section-surface-pad-top: 6rem;
+    --isg-section-surface-pad-bottom: calc(6rem + 3.2rem);
+    padding-top: var(--isg-section-surface-pad-top) !important;
+    padding-bottom: var(--isg-section-surface-pad-bottom) !important;
+  }
+  .isg-section-surface {
+    --isg-section-surface-pad-top: 6rem;
+    --isg-section-surface-pad-bottom: calc(6rem + 3.2rem);
+    border-top-left-radius: 1.6rem;
+    border-top-right-radius: 1.6rem;
+    margin-top: -1.6rem;
+  }
+}
 .isg-quality-wrapper.isg-section-surface {
   padding-top: calc(12.8rem - 12vh);
   padding-bottom: calc(26.8rem - 12vh);
@@ -2796,15 +2838,6 @@ body.isg-nav-drawer-open {
   margin-top: -4rem;
 }
 
-@media (max-width: 1099px) {
-  /* На мобильной убираем межсекционный нахлест, который визуально "наезжает" на sticky-блоки */
-  .isg-section-surface {
-    margin-top: 0;
-  }
-  .isg-intro-section {
-    margin-top: 0;
-  }
-}
 /* Обёртка about: intro + text-grid */
 .isg-intro-pin {
   width: 100%;
@@ -2912,6 +2945,13 @@ body.isg-nav-drawer-open {
   overflow: hidden;
 }
 
+@media (max-width: 1099px) {
+  .isg-intro-section {
+    height: auto;
+    min-height: 0;
+    max-height: none;
+  }
+}
 .isg-intro-section--align-center {
   justify-content: center;
 }
@@ -3063,10 +3103,8 @@ body.isg-nav-drawer-open {
     overflow-x: visible;
     min-width: 0;
   }
-  /* Справа без поля секции — лента до края экрана; отступ только у заголовка (как .cards + .center у digits) */
   .isg-product-intro {
-    padding-left: clamp(1.85rem, 6.25vw, 2.85rem);
-    padding-right: env(safe-area-inset-right, 0px);
+    padding: 6rem 0;
   }
   .isg-product-intro__content {
     align-items: stretch;
@@ -3078,57 +3116,26 @@ body.isg-nav-drawer-open {
     padding-right: clamp(1.85rem, 6.25vw, 2.85rem);
   }
   .isg-spec-cards {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr));
     align-items: stretch;
-    justify-content: flex-start;
+    justify-content: stretch;
     gap: clamp(0.75rem, 3vw, 1.125rem);
     width: 100%;
     min-width: 0;
     margin: 0;
-    position: relative;
-    width: calc(100% + clamp(1.85rem, 6.25vw, 2.85rem));
-    left: calc(-1 * clamp(1.85rem, 6.25vw, 2.85rem));
     padding: 0;
-    padding-left: clamp(1.85rem, 6.25vw, 2.85rem);
-    padding-right: env(safe-area-inset-right, 0px);
-    padding-bottom: 6px;
     box-sizing: border-box;
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior-x: contain;
-    scroll-snap-type: x mandatory;
-    scroll-padding-left: clamp(1.85rem, 6.25vw, 2.85rem);
-    scroll-padding-right: env(safe-area-inset-right, 0px);
-    scrollbar-width: thin;
-  }
-  .isg-spec-cards::-webkit-scrollbar {
-    height: 4px;
-  }
-  .isg-spec-cards::-webkit-scrollbar-thumb {
-    background: rgba(17, 17, 17, 0.2);
-    border-radius: 4px;
+    overflow: visible;
   }
   .isg-product-intro .isg-spec-card {
-    flex: 0 0 min(82vw, 360px);
-    width: min(82vw, 360px);
-    min-width: min(82vw, 360px);
-    max-width: min(82vw, 360px);
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
+    flex: initial;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
   }
   .isg-product-intro .isg-spec-card__head {
     gap: clamp(0.75rem, 3vw, 2rem);
-  }
-}
-@media (max-width: 1100px) and (prefers-reduced-motion: reduce) {
-  .isg-spec-cards {
-    scroll-snap-type: none;
-  }
-  .isg-product-intro .isg-spec-card {
-    scroll-snap-align: none;
   }
 }
 .isg-product-content {
@@ -3181,6 +3188,12 @@ body.isg-nav-drawer-open {
   width: 100%;
 }
 
+@media (max-width: 1099px) {
+  .isg-product-content .isg-section-head__title-col,
+  .isg-about-gallery-block .isg-section-head__title-col {
+    grid-column: 1/12;
+  }
+}
 /* Уже мера строки для текста в колонках (таблицы и сетка чипов без изменений) */
 .isg-product-content .isg-product-content__col .isg-body,
 .isg-about-team-block__lead .isg-body {
@@ -4103,13 +4116,14 @@ body.isg-nav-drawer-open {
 
 @media (max-width: 1099px) {
   /* Горизонтальная лента «две коробки» (как .boxes на toptier.relats.com) */
-  .isg-quality-content {
+  .isg-quality-content, .isg-about-content-block {
     --isg-quality-gap-header: 1.6rem;
-    --isg-quality-content-pad-top: 8rem;
-    --isg-quality-content-pad-bottom: 8rem;
-    padding-top: var(--isg-quality-content-pad-top);
-    padding-inline: clamp(1.85rem, 6.25vw, 2.85rem);
-    padding-bottom: var(--isg-quality-content-pad-bottom);
+    --isg-quality-content-pad-top: 0px;
+    --isg-quality-content-pad-bottom: 0px;
+    height: auto;
+    min-height: 0;
+    padding: 0;
+    padding-left: 3.2rem;
     overflow-x: visible;
   }
   .isg-about-content-block {
@@ -4117,85 +4131,31 @@ body.isg-nav-drawer-open {
   }
   .isg-quality-content__track {
     min-height: 0;
+    height: auto;
   }
   .isg-quality-content__sticky {
     position: relative;
     top: auto;
+    display: block;
+    height: auto;
     min-height: 0;
-    padding-top: var(--isg-quality-gap-header);
-    padding-bottom: var(--isg-quality-gap-header);
+    max-height: none;
+    padding-top: 0;
+    padding-bottom: 0;
   }
-  /* Список скрыт только в About; в Quality — горизонтальная лента в паре со слайдами */
-  .isg-about-content-block .isg-quality-list-wrap {
+  .isg-quality-content__sticky > .container {
+    max-width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .isg-quality-row .isg-quality-list-wrap {
     display: none;
-  }
-  #isg-quality .isg-quality-list-wrap {
-    --isg-mobile-bleed: clamp(1.85rem, 6.25vw, 2.85rem);
-    display: flex;
-    flex-direction: column;
-    width: calc(100% + var(--isg-mobile-bleed) * 2);
-    max-width: none;
-    margin-inline: 0;
-    position: relative;
-    left: calc(-1 * var(--isg-mobile-bleed));
-    padding-inline: var(--isg-mobile-bleed);
-    padding-block: 0;
-    margin-bottom: clamp(0.75rem, 2.5vw, 1.25rem);
-    box-sizing: border-box;
-  }
-  #isg-quality .isg-quality-list-wrap__label.isg-subtitle {
-    padding-inline: clamp(1.85rem, 6.25vw, 2.85rem);
-    margin-bottom: 0.5rem;
-  }
-  #isg-quality .isg-quality-list {
-    --isg-mobile-bleed: clamp(1.85rem, 6.25vw, 2.85rem);
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    align-items: stretch;
-    flex: none;
-    gap: clamp(0.75rem, 3vw, 1.125rem);
-    width: calc(100% + var(--isg-mobile-bleed) * 2);
-    max-width: none;
-    margin-inline: 0;
-    position: relative;
-    left: calc(-1 * var(--isg-mobile-bleed));
-    padding-inline: var(--isg-mobile-bleed);
-    padding-bottom: 6px;
-    box-sizing: border-box;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior-x: contain;
-    scroll-snap-type: x mandatory;
-    scroll-padding-inline: clamp(1.85rem, 6.25vw, 2.85rem);
-    scrollbar-width: thin;
-    touch-action: pan-x;
-  }
-  #isg-quality .isg-quality-list::-webkit-scrollbar {
-    height: 4px;
-  }
-  #isg-quality .isg-quality-list::-webkit-scrollbar-thumb {
-    background: rgba(17, 17, 17, 0.2);
-    border-radius: 4px;
-  }
-  #isg-quality .isg-quality-list-item {
-    flex: 0 0 min(88vw, 420px);
-    width: min(88vw, 420px);
-    min-width: min(88vw, 420px);
-    max-width: min(88vw, 420px);
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
-    box-sizing: border-box;
-  }
-  #isg-quality .isg-quality-list-item {
-    padding-left: clamp(1rem, 2.5vw, 1.5rem);
-    padding-right: clamp(1rem, 2.5vw, 1.5rem);
-    min-height: 3.5rem;
   }
   .isg-quality-row {
     display: block;
+    height: auto;
+    min-height: 0;
+    max-height: none;
     margin-inline: 0;
     padding-inline: 0;
     overflow: visible;
@@ -4206,6 +4166,16 @@ body.isg-nav-drawer-open {
     max-width: none;
     min-height: 0;
     aspect-ratio: auto;
+  }
+  .isg-quality-row .isg-about-feature-card {
+    width: 100%;
+    max-width: none;
+    min-height: 0;
+    aspect-ratio: auto;
+    position: relative;
+    border-radius: 24px;
+    overflow: hidden;
+    background: #1f1f1f;
   }
   .isg-quality-visual__slides {
     --isg-mobile-bleed: clamp(1.85rem, 6.25vw, 2.85rem);
@@ -4249,7 +4219,7 @@ body.isg-nav-drawer-open {
     min-width: min(88vw, 420px);
     max-width: min(88vw, 420px);
     min-height: 0;
-    aspect-ratio: 16/10;
+    aspect-ratio: 4/5;
     scroll-snap-align: start;
     scroll-snap-stop: always;
     border-radius: 24px;
@@ -4260,39 +4230,67 @@ body.isg-nav-drawer-open {
   }
   .isg-quality-visual__caption {
     display: flex;
-    align-items: flex-end;
+    align-items: flex-start;
     justify-content: flex-start;
     position: absolute;
     inset: 0;
-    padding: 1rem 1.25rem;
-    background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.55) 100%);
+    padding: 1.5rem 1.5rem 5rem;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.42) 0%, rgba(0, 0, 0, 0) 34%);
     pointer-events: none;
     z-index: 2;
     box-sizing: border-box;
   }
   .isg-quality-visual__caption-title {
     font-size: var(--isg-type-h4);
-    font-weight: 500;
-    line-height: 1.2;
-    letter-spacing: -0.022em;
     color: #ffffff;
     margin: 0;
   }
-}
-@media (max-width: 1099px) and (prefers-reduced-motion: reduce) {
-  .isg-quality-visual__slides {
-    scroll-behavior: auto;
-    scroll-snap-type: none;
+  .isg-quality-row .isg-about-feature-card__inner {
+    display: block;
+    position: absolute;
+    inset: auto 0 0 0;
+    z-index: 3;
+    pointer-events: none;
   }
-  .isg-quality-visual__slide {
-    scroll-snap-align: none;
+  .isg-quality-row .isg-about-feature-card__content-stack {
+    position: absolute;
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+    width: auto;
+    max-width: none;
+    border-radius: 1.5rem;
+    background: rgba(255, 255, 255, 0.16);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
   }
-  #isg-quality .isg-quality-list {
-    scroll-behavior: auto;
-    scroll-snap-type: none;
+  .isg-quality-row .isg-about-feature-card__content-inner {
+    display: block;
+    width: 100%;
+    transform: none !important;
+    will-change: auto;
   }
-  #isg-quality .isg-quality-list-item {
-    scroll-snap-align: none;
+  .isg-quality-row .isg-about-feature-card__content-slide {
+    display: none;
+    gap: 1rem;
+    padding: 1.25rem;
+    min-height: 0;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .isg-quality-row .isg-about-feature-card__content-slide--active {
+    display: flex;
+  }
+  .isg-quality-row .isg-about-feature-card__inner .isg-about-feature-card__icon img {
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+  .isg-quality-row .isg-about-feature-card__text,
+  .isg-quality-row .isg-about-feature-card__inner .isg-about-feature-card__text {
+    color: #ffffff;
+  }
+  .isg-quality-markers {
+    display: none;
   }
 }
 .isg-about-intro-block, .isg-quality-wrapper {
@@ -4558,26 +4556,6 @@ body.isg-nav-drawer-open {
   width: 100%;
 }
 
-@media (max-width: 1023px) {
-  .isg-about-team-block {
-    padding: 8rem clamp(1.85rem, 6.25vw, 2.85rem) 4rem;
-  }
-  .isg-about-team-block__inner {
-    gap: 8rem;
-  }
-  .isg-about-team-block__lead,
-  .isg-about-team-block__slider-wrap {
-    grid-column: 1/-1;
-  }
-  .isg-about-team-block__slider-wrap {
-    justify-content: flex-start;
-    width: 100%;
-  }
-  .isg-about-team-block__certs-lead,
-  .isg-about-team-block__certs-list {
-    grid-column: 1/-1;
-  }
-}
 .isg-about-gallery-block {
   background: rgb(29, 29, 29);
   color: #ffffff;
@@ -6063,37 +6041,6 @@ button.isg-slider-item__img,
 /* -------------------------------------------------------------------------- */
 /* Мобильная плотность: yucca.co.za — читаемый кегль; relats.com — поля и скругления */
 /* -------------------------------------------------------------------------- */
-@media (max-width: 1099px) {
-  .isg-title-group {
-    gap: 2.4rem;
-  }
-  .isg-digit-card {
-    border-radius: 1.6rem;
-  }
-  .isg-filled-item--about {
-    border-radius: 20px;
-  }
-  .isg-spec-card,
-  .isg-slider-item__img,
-  .isg-slider-item__caption,
-  .isg-app-left,
-  .isg-quality-list-wrap,
-  .isg-about-feature-card,
-  .isg-about-feature-card__content-stack,
-  .isg-about-feature-card__content-slide,
-  .isg-rfq-aside {
-    border-radius: 1.6rem;
-  }
-  .isg-accordion__media {
-    border-radius: 24px;
-  }
-  .isg-product-content,
-  .isg-about-text-grid,
-  .isg-about-gallery-block,
-  .isg-rfq-content {
-    border-radius: 36px 36px 0 0;
-  }
-}
 /* -------------------------------------------------------------------------- */
 /* Прелоадер: пока подгружаются partials, скрипты и изображения */
 /* -------------------------------------------------------------------------- */
@@ -6119,26 +6066,59 @@ body.isg-preloader-active {
 }
 
 .isg-preloader__inner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.25rem;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 0 max(1.25rem, env(safe-area-inset-right)) max(1.25rem, env(safe-area-inset-bottom)) max(1.25rem, env(safe-area-inset-left));
 }
 
-.isg-preloader__mark {
-  width: 48px;
-  height: 48px;
-  border: 3px solid rgba(25, 37, 170, 0.18);
-  border-top-color: #1925aa;
-  border-radius: 50%;
-  animation: isg-preloader-spin 0.85s linear infinite;
+.isg-preloader__value {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  position: absolute;
+  right: max(1.25rem, env(safe-area-inset-right));
+  bottom: calc(max(1.25rem, env(safe-area-inset-bottom)) + 0.55rem);
+  font-size: 20vw;
+  font-weight: 600;
+  line-height: 0.78;
+  letter-spacing: 0.5px;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
 }
 
-@keyframes isg-preloader-spin {
-  to {
-    transform: rotate(360deg);
-  }
+.isg-preloader__label {
+  position: absolute;
+  left: max(1.25rem, env(safe-area-inset-left));
+  bottom: calc(max(1.25rem, env(safe-area-inset-bottom)) + 1.1rem);
+  max-width: min(24rem, 55vw);
+  font-size: 0.72rem;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(28, 28, 28, 0.58);
+  text-align: left;
 }
+
+.isg-preloader__bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 5px;
+  background: rgba(25, 37, 170, 0.12);
+}
+
+.isg-preloader__bar-fill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #1925aa;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.22s ease;
+}
+
 .isg-preloader__sr {
   position: absolute;
   width: 1px;
@@ -6151,15 +6131,6 @@ body.isg-preloader-active {
   border: 0;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .isg-preloader__mark {
-    animation: none;
-    border-top-color: rgba(25, 37, 170, 0.45);
-  }
-  .isg-preloader {
-    transition-duration: 0.01ms;
-  }
-}
 
 
 /*# sourceMappingURL=main.css.map */

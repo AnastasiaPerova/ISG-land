@@ -22,6 +22,7 @@ import { initFooterReveal } from "./blocks/footer-reveal.js";
 import { initLightbox } from "./blocks/lightbox.js";
 import { initTitleAnim } from "./blocks/title-anim.js";
 import { initFilledItemsAnim } from "./blocks/filled-items-anim.js";
+import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const PARTIALS = [
@@ -37,6 +38,87 @@ const PARTIALS = [
 ];
 
 let disposers = [];
+const PRELOADER_STEPS = {
+  partials: { from: 0, to: 45, label: "Loading sections" },
+  init: { from: 45, to: 70, label: "Initializing interface" },
+  fonts: { from: 70, to: 80, label: "Loading typography" },
+  images: { from: 80, to: 96, label: "Loading images" },
+  finalize: { from: 96, to: 100, label: "Finalizing page" },
+};
+
+function createPreloaderController() {
+  const root = document.getElementById("isg-preloader");
+  if (!root) {
+    return {
+      playExit: () => Promise.resolve(),
+      setProgress: () => {},
+      setStepProgress: () => {},
+      complete: () => {},
+    };
+  }
+
+  const valueEl = root.querySelector("[data-isg-preloader-value]");
+  const labelEl = root.querySelector("[data-isg-preloader-label]");
+  const barEl = root.querySelector("[data-isg-preloader-bar]");
+  const progressEl = root.querySelector(".isg-preloader__bar");
+  const srEl = root.querySelector(".isg-preloader__sr");
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let current = 0;
+
+  gsap.set(root, { opacity: 1, clearProps: "visibility" });
+  if (barEl) gsap.set(barEl, { scaleX: 0, transformOrigin: "left center" });
+  gsap.set(valueEl, { clearProps: "all", autoAlpha: 1 });
+  gsap.set(labelEl, { clearProps: "all", autoAlpha: 1 });
+  gsap.set(progressEl, { clearProps: "all", autoAlpha: 1 });
+
+  const animateBar = (value) => {
+    if (!barEl) return;
+    if (reduced) {
+      gsap.set(barEl, { scaleX: value / 100 });
+      return;
+    }
+    gsap.to(barEl, {
+      scaleX: value / 100,
+      duration: 0.48,
+      ease: "power3.out",
+      overwrite: true,
+    });
+  };
+
+  const render = (value, label) => {
+    current = Math.max(current, Math.max(0, Math.min(100, Math.round(value))));
+    if (valueEl) valueEl.textContent = `${current}%`;
+    if (labelEl && label) labelEl.textContent = label;
+    animateBar(current);
+    if (progressEl) progressEl.setAttribute("aria-valuenow", String(current));
+    if (srEl) srEl.textContent = label ? `${label}: ${current}%` : `Loading ${current}%`;
+  };
+
+  render(0, "Preparing assets");
+
+  return {
+    playExit() {
+      if (reduced) return Promise.resolve();
+      return new Promise((resolve) => {
+        gsap.timeline({ defaults: { ease: "power2.inOut" }, onComplete: resolve })
+          .to(labelEl, { autoAlpha: 0, xPercent: -10, duration: 0.26 }, 0)
+          .to(valueEl, { autoAlpha: 0, yPercent: 10, duration: 0.32 }, 0.04)
+          .to(progressEl, { autoAlpha: 0, duration: 0.24 }, 0.08)
+          .to(root, { opacity: 0, duration: 0.28 }, 0.12);
+      });
+    },
+    setProgress(value, label) {
+      render(value, label);
+    },
+    setStepProgress(step, ratio = 1, label = step.label) {
+      const clamped = Math.max(0, Math.min(1, ratio));
+      render(step.from + (step.to - step.from) * clamped, label);
+    },
+    complete(label = "Ready") {
+      render(100, label);
+    },
+  };
+}
 
 function nextFrame() {
   return new Promise((resolve) => {
@@ -103,12 +185,17 @@ export function destroyIsgPage() {
   disposeInternals();
 }
 
-async function fetchPartialsInto(target) {
+async function fetchPartialsInto(target, onProgress = () => {}) {
+  const total = PARTIALS.length || 1;
+  let done = 0;
+  onProgress(0);
   for (const path of PARTIALS) {
     const res = await fetch(path);
     if (!res.ok) throw new Error(`Failed to load ${path}: ${res.status}`);
     const html = await res.text();
     target.insertAdjacentHTML("beforeend", html);
+    done += 1;
+    onProgress(done / total);
   }
 }
 
@@ -117,38 +204,63 @@ async function fetchPartialsInto(target) {
  * @param {ParentNode} root
  * @param {number} [perImageCapMs]
  */
-function waitForImages(root, perImageCapMs = 12000) {
-  const images = root.querySelectorAll("img");
-  if (!images.length) return Promise.resolve();
+function waitForImages(root, perImageCapMs = 12000, onProgress = () => {}) {
+  const images = [...root.querySelectorAll("img")];
+  if (!images.length) {
+    onProgress(1);
+    return Promise.resolve();
+  }
+
+  let done = 0;
+  const total = images.length;
+  const notify = () => onProgress(done / total);
+  const markDone = () => {
+    done += 1;
+    notify();
+  };
+
+  notify();
   return Promise.all(
-    [...images].map((img) =>
-      Promise.race([
-        img.complete
-          ? Promise.resolve()
-          : new Promise((resolve) => {
-              img.addEventListener("load", resolve, { once: true });
-              img.addEventListener("error", resolve, { once: true });
-            }),
-        new Promise((resolve) => setTimeout(resolve, perImageCapMs)),
-      ]),
-    ),
+    images.map((img) => {
+      if (img.complete) {
+        markDone();
+        return Promise.resolve();
+      }
+      return new Promise((resolve) => {
+        let settled = false;
+        const finish = () => {
+          if (settled) return;
+          settled = true;
+          clearTimeout(timeoutId);
+          markDone();
+          resolve();
+        };
+        const timeoutId = setTimeout(finish, perImageCapMs);
+        img.addEventListener("load", finish, { once: true });
+        img.addEventListener("error", finish, { once: true });
+      });
+    }),
   );
 }
 
-async function waitForFonts() {
+async function waitForFonts(onProgress = () => {}) {
+  onProgress(0);
   try {
     if (document.fonts?.ready) await document.fonts.ready;
   } catch (_) {
     /* noop */
   }
+  onProgress(1);
 }
 
-async function hidePreloader() {
+async function hidePreloader(preloader = null, { complete = true } = {}) {
   const el = document.getElementById("isg-preloader");
   if (!el) {
     document.body.classList.remove("isg-preloader-active");
     return;
   }
+  if (complete) preloader?.complete("Ready");
+  await preloader?.playExit?.();
   el.setAttribute("aria-busy", "false");
   el.classList.add("isg-preloader--done");
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -160,26 +272,32 @@ async function hidePreloader() {
 document.addEventListener("DOMContentLoaded", async () => {
   const main = document.getElementById("isg-main");
   if (!main) return;
+  const preloader = createPreloaderController();
 
   try {
-    await fetchPartialsInto(main);
+    await fetchPartialsInto(main, (ratio) => preloader.setStepProgress(PRELOADER_STEPS.partials, ratio));
   } catch (e) {
     console.error(e);
     main.innerHTML =
       "<p style=\"padding:2rem;font-family:sans-serif\">Запустите локальный сервер из папки темы (<code>npx serve .</code>), чтобы partials подгружались через fetch.</p>";
-    await hidePreloader();
+    preloader.setProgress(100, "Failed to load page");
+    await hidePreloader(preloader, { complete: false });
     return;
   }
 
   try {
+    preloader.setStepProgress(PRELOADER_STEPS.init, 0);
     await initIsgPage(main);
-    await waitForFonts();
-    await waitForImages(main);
+    preloader.setStepProgress(PRELOADER_STEPS.init, 1);
+    await waitForFonts((ratio) => preloader.setStepProgress(PRELOADER_STEPS.fonts, ratio));
+    await waitForImages(main, 12000, (ratio) => preloader.setStepProgress(PRELOADER_STEPS.images, ratio));
+    preloader.setStepProgress(PRELOADER_STEPS.finalize, 0.35);
     await stabilizeScrollLayout(3);
+    preloader.setStepProgress(PRELOADER_STEPS.finalize, 1);
   } catch (e) {
     console.error(e);
   } finally {
-    await hidePreloader();
+    await hidePreloader(preloader);
     await stabilizeScrollLayout(3);
   }
 });

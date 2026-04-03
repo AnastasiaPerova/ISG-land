@@ -32,6 +32,99 @@ function prefersReducedMotion() {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
+/** @param {Element | null | undefined} node */
+function getSliderSwiper(node) {
+  if (!(node instanceof Element)) return null;
+  const slider = node.closest(".isg-slider.swiper");
+  if (!slider) return null;
+  return slider.swiper || null;
+}
+
+/** @param {any} swiper */
+function resetSwiperInteraction(swiper) {
+  if (!swiper || swiper.destroyed) return;
+  swiper.allowClick = true;
+  const touch = swiper.touchEventsData;
+  if (touch && typeof touch === "object") {
+    touch.isTouched = false;
+    touch.isMoved = false;
+    touch.startMoving = false;
+    touch.allowTouchCallbacks = true;
+  }
+  try {
+    swiper.update();
+  } catch (_) {
+    /* noop */
+  }
+}
+
+/**
+ * @param {HTMLElement} overlay
+ * @param {{ restoreFocus?: boolean, resumeAutoplay?: boolean }} [opts]
+ */
+function resetOverlayState(overlay, opts = {}) {
+  const { restoreFocus = false, resumeAutoplay = false } = opts;
+  const img = overlay.querySelector(".isg-lightbox__img");
+  const vid = overlay.querySelector(".isg-lightbox__video");
+  const btnPrev = overlay.querySelector(".isg-lightbox__nav--prev");
+  const btnNext = overlay.querySelector(".isg-lightbox__nav--next");
+  const counter = overlay.querySelector(".isg-lightbox__counter");
+  const originAnchor = overlay._isgOriginAnchor || null;
+  const originSwiper = overlay._isgOriginSwiper || null;
+
+  overlay._isgOpenToken = (overlay._isgOpenToken || 0) + 1;
+  killLbTweens(overlay);
+  overlay.classList.add("isg-lightbox--inactive");
+  overlay.setAttribute("hidden", "");
+  overlay.setAttribute("aria-hidden", "true");
+
+  if (img) {
+    img.removeAttribute("src");
+    img.alt = "";
+    img.hidden = false;
+  }
+  if (vid) {
+    try {
+      vid.pause();
+    } catch (_) {
+      /* noop */
+    }
+    vid.removeAttribute("src");
+    try {
+      vid.load();
+    } catch (_) {
+      /* noop */
+    }
+    vid.hidden = true;
+  }
+
+  overlay._isgAlbum = null;
+  overlay._isgIndex = 0;
+  overlay._isgOriginAnchor = null;
+  overlay._isgOriginSwiper = null;
+
+  if (btnPrev) btnPrev.hidden = true;
+  if (btnNext) btnNext.hidden = true;
+  if (counter) {
+    counter.hidden = true;
+    counter.textContent = "";
+  }
+
+  document.body.style.overflow = "";
+  const hk = overlay._isgLightboxOnKey;
+  if (hk) document.removeEventListener("keydown", hk);
+
+  resetSwiperInteraction(originSwiper);
+  if (resumeAutoplay) originSwiper?.autoplay?.start?.();
+  if (restoreFocus && originAnchor instanceof HTMLElement && originAnchor.isConnected) {
+    try {
+      originAnchor.focus({ preventScroll: true });
+    } catch (_) {
+      /* noop */
+    }
+  }
+}
+
 /** @param {HTMLElement} overlay */
 function killLbTweens(overlay) {
   const nodes = overlay.querySelectorAll(
@@ -187,6 +280,7 @@ function collectAlbum(anchor) {
 
   const out = [];
   for (const el of nodes) {
+    if (el.closest(".swiper-slide-duplicate")) continue;
     const raw = el.getAttribute("data-isg-lightbox");
     if (!raw || !isAllowedLightboxSrc(raw)) continue;
     const src = normalizeSrcAttr(raw);
@@ -202,9 +296,7 @@ function collectAlbum(anchor) {
 }
 
 function patchOverlayAttrs(el) {
-  el.classList.add("isg-lightbox--inactive");
-  el.removeAttribute("hidden");
-  el.setAttribute("aria-hidden", "true");
+  resetOverlayState(el);
   /* fixed у предка с transform (GSAP на .panel) ломает позицию — кнопка должна быть снаружи панели */
   const closeInPanel = el.querySelector(".isg-lightbox__panel .isg-lightbox__close");
   if (closeInPanel) {
@@ -226,6 +318,7 @@ function ensureOverlay() {
   el.setAttribute("role", "dialog");
   el.setAttribute("aria-modal", "true");
   el.setAttribute("aria-label", "Gallery");
+  el.setAttribute("hidden", "");
   el.setAttribute("aria-hidden", "true");
   el.innerHTML = `
     <button type="button" class="isg-lightbox__backdrop" aria-label="Close"></button>
@@ -320,38 +413,7 @@ function bindOverlayOnce(overlay) {
   overlay._isgShowAt = showAt;
 
   const finalizeClose = () => {
-    killLbTweens(overlay);
-    overlay.classList.add("isg-lightbox--inactive");
-    overlay.setAttribute("aria-hidden", "true");
-    if (img) {
-      img.removeAttribute("src");
-      img.alt = "";
-      img.hidden = false;
-    }
-    if (vid) {
-      try {
-        vid.pause();
-      } catch (_) {
-        /* noop */
-      }
-      vid.removeAttribute("src");
-      try {
-        vid.load();
-      } catch (_) {
-        /* noop */
-      }
-      vid.hidden = true;
-    }
-    overlay._isgAlbum = null;
-    overlay._isgIndex = 0;
-    if (btnPrev) btnPrev.hidden = true;
-    if (btnNext) btnNext.hidden = true;
-    if (counter) {
-      counter.hidden = true;
-      counter.textContent = "";
-    }
-    document.body.style.overflow = "";
-    document.removeEventListener("keydown", onKey);
+    resetOverlayState(overlay, { restoreFocus: true, resumeAutoplay: true });
   };
   overlay._isgFinalizeClose = finalizeClose;
 
@@ -410,10 +472,14 @@ export function openLightbox(anchor) {
 
   killLbTweens(overlay);
   if (!overlay.classList.contains("isg-lightbox--inactive")) {
-    overlay._isgFinalizeClose?.();
+    resetOverlayState(overlay);
   }
 
   overlay._isgAlbum = album;
+  overlay._isgOriginAnchor = anchor;
+  overlay._isgOriginSwiper = getSliderSwiper(anchor);
+  overlay._isgOpenToken = (overlay._isgOpenToken || 0) + 1;
+  const openToken = overlay._isgOpenToken;
 
   const hk = overlay._isgLightboxOnKey;
   if (hk) document.removeEventListener("keydown", hk);
@@ -422,30 +488,29 @@ export function openLightbox(anchor) {
 
   const tl = createOpenTimeline(overlay);
 
+  overlay.removeAttribute("hidden");
   overlay.classList.remove("isg-lightbox--inactive");
   overlay.setAttribute("aria-hidden", "false");
   document.body.style.overflow = "hidden";
+  overlay._isgOriginSwiper?.autoplay?.stop?.();
   if (hk) document.addEventListener("keydown", hk);
 
   waitActiveMedia(overlay).then(() => {
-    requestAnimationFrame(() => tl.play());
+    if (overlay._isgOpenToken !== openToken || overlay.classList.contains("isg-lightbox--inactive")) return;
+    requestAnimationFrame(() => {
+      if (overlay._isgOpenToken !== openToken || overlay.classList.contains("isg-lightbox--inactive")) return;
+      tl.play();
+    });
   });
 }
 
 const DRAG_PX = 14;
 
-/** @param {Element} node */
-function getSliderSwiper(node) {
-  const slider = node.closest(".isg-slider.swiper");
-  if (!slider) return null;
-  return slider.swiper || null;
-}
-
 /**
  * @param {ParentNode} [root]
  */
 export function initLightbox(root = document.body) {
-  ensureOverlay();
+  const overlay = ensureOverlay();
 
   /** @type {{ t: Element; x: number; y: number; pid: number } | null} */
   let ptr = null;
@@ -494,6 +559,11 @@ export function initLightbox(root = document.body) {
   document.addEventListener("pointercancel", onPtrCancel);
   root.addEventListener("click", onClick);
   return () => {
+    if (!overlay.classList.contains("isg-lightbox--inactive")) {
+      overlay._isgFinalizeClose?.();
+    } else {
+      resetOverlayState(overlay);
+    }
     root.removeEventListener("pointerdown", onPtrDown);
     document.removeEventListener("pointerup", onPtrUp);
     document.removeEventListener("pointercancel", onPtrCancel);

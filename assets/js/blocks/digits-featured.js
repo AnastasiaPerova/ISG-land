@@ -102,6 +102,7 @@ export function initDigitsFeatured(root = document) {
     const cardsEl = section.querySelector("[data-isg-featured-cards]");
     const imageEl = section.querySelector(".isg-digits-featured__image");
     if (!scrollEl || !inner || !cardsEl) return;
+    const colsEl = cardsEl.querySelector(".columns--start");
 
     const mm = window.matchMedia(`(min-width: ${FEATURED_MIN_WIDTH}px)`);
     let tween = null;
@@ -127,6 +128,17 @@ export function initDigitsFeatured(root = document) {
       tween = buildFeaturedTween(section, scrollEl, cardsEl, imageEl, mm, killTween);
     };
 
+    const syncMobileSwipeAttrs = () => {
+      if (!colsEl) return;
+      if (mm.matches) {
+        cardsEl.removeAttribute("data-lenis-prevent");
+        colsEl.removeAttribute("data-lenis-prevent");
+        return;
+      }
+      cardsEl.setAttribute("data-lenis-prevent", "");
+      colsEl.setAttribute("data-lenis-prevent", "");
+    };
+
     let refreshRaf = 0;
     const scheduleFeaturedRefresh = () => {
       if (refreshRaf) cancelAnimationFrame(refreshRaf);
@@ -142,6 +154,7 @@ export function initDigitsFeatured(root = document) {
       rebuildRaf = requestAnimationFrame(() => {
         rebuildRaf = 0;
         setSlideWidthPx(section, scrollEl);
+        syncMobileSwipeAttrs();
         rebuild();
         ScrollTrigger.refresh();
       });
@@ -155,10 +168,13 @@ export function initDigitsFeatured(root = document) {
     ro.observe(cardsEl);
 
     setSlideWidthPx(section, scrollEl);
+    syncMobileSwipeAttrs();
     const kickoff = () => {
+      syncMobileSwipeAttrs();
       rebuild();
       requestAnimationFrame(() => {
         setSlideWidthPx(section, scrollEl);
+        syncMobileSwipeAttrs();
         scheduleFeaturedRefresh();
         rebuild();
       });
@@ -182,6 +198,7 @@ export function initDigitsFeatured(root = document) {
 
     const onChange = () => {
       setSlideWidthPx(section, scrollEl);
+      syncMobileSwipeAttrs();
       scheduleRebuild();
     };
 
@@ -195,6 +212,8 @@ export function initDigitsFeatured(root = document) {
       window.removeEventListener("resize", onChange);
       ro.disconnect();
       section.style.removeProperty("--isg-featured-slide");
+      cardsEl.removeAttribute("data-lenis-prevent");
+      colsEl?.removeAttribute("data-lenis-prevent");
       killTween();
     });
   });

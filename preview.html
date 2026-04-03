@@ -39,7 +39,18 @@
       aria-label="Loading page"
     >
       <div class="isg-preloader__inner">
-        <span class="isg-preloader__mark" aria-hidden="true"></span>
+        <span class="isg-preloader__value" data-isg-preloader-value>0%</span>
+        <span class="isg-preloader__label" data-isg-preloader-label>Preparing assets</span>
+        <div
+          class="isg-preloader__bar"
+          role="progressbar"
+          aria-label="Page loading progress"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-valuenow="0"
+        >
+          <span class="isg-preloader__bar-fill" data-isg-preloader-bar></span>
+        </div>
         <span class="isg-preloader__sr">Loading…</span>
       </div>
     </div>
