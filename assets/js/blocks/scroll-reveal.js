@@ -27,6 +27,8 @@ export function initScrollReveal(root = document) {
   root.querySelectorAll("[data-isg-block]").forEach((el) => {
     if (el.classList.contains("isg-digits-section")) return;
     if (el.hasAttribute("data-isg-app-scroll")) return;
+    if (el.classList.contains("isg-about-intro-block")) return;
+    if (el.classList.contains("isg-about-gallery-block")) return;
     /* Секции с intro pin + буквенной заливкой — иначе родитель остаётся opacity:0 и «ломает» скролл */
     if (el.querySelector("[data-isg-intro-scroll]")) return;
 
@@ -34,6 +36,7 @@ export function initScrollReveal(root = document) {
   });
 
   root.querySelectorAll(".isg-quality-wrapper").forEach((el) => {
+    if (el.classList.contains("isg-section-surface")) return;
     reveal(el);
   });
 
