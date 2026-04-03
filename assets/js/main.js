@@ -38,6 +38,22 @@ const PARTIALS = [
 
 let disposers = [];
 
+function nextFrame() {
+  return new Promise((resolve) => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(resolve);
+    });
+  });
+}
+
+async function stabilizeScrollLayout(passes = 2) {
+  for (let i = 0; i < passes; i += 1) {
+    getLenis()?.resize();
+    ScrollTrigger.refresh();
+    await nextFrame();
+  }
+}
+
 function disposeInternals() {
   while (disposers.length) {
     const off = disposers.pop();
@@ -80,10 +96,7 @@ export async function initIsgPage(root = document.body) {
   disposers.push(initLightbox(root));
   disposers.push(initTitleAnim(root));
   disposers.push(initFilledItemsAnim(root));
-  ScrollTrigger.refresh();
-  requestAnimationFrame(() => {
-    ScrollTrigger.refresh();
-  });
+  await stabilizeScrollLayout(2);
 }
 
 export function destroyIsgPage() {
@@ -162,11 +175,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     await initIsgPage(main);
     await waitForFonts();
     await waitForImages(main);
-    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    await stabilizeScrollLayout(3);
   } catch (e) {
     console.error(e);
   } finally {
     await hidePreloader();
+    await stabilizeScrollLayout(3);
   }
 });
 

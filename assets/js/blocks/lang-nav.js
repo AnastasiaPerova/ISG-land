@@ -30,8 +30,22 @@ export function initLangNav(root = document) {
     return { toggle, menu, options };
   };
 
+  const isNavOpen = (nav, parts = getParts(nav)) => {
+    if (!parts) return false;
+    return nav.classList.contains("isg-lang-dropdown--open") || parts.toggle.getAttribute("aria-expanded") === "true" || !parts.menu.hidden;
+  };
+
   const getVisibleOptions = (parts) =>
     parts.options.filter((el) => window.getComputedStyle(el).display !== "none");
+
+  const getShellHeight = (nav, parts) => {
+    const navRect = nav.getBoundingClientRect();
+    const toggleRect = parts.toggle.getBoundingClientRect();
+    const menuVisible = !parts.menu.hidden;
+    const menuRect = menuVisible ? parts.menu.getBoundingClientRect() : null;
+    const contentBottom = menuRect ? menuRect.bottom - navRect.top : toggleRect.height;
+    return `${Math.max(toggleRect.height, contentBottom)}px`;
+  };
 
   const resetAnimatedStyles = (parts) => {
     gsap.set(parts.menu, { clearProps: "opacity,transform,transformOrigin,overflow,pointerEvents" });
@@ -54,8 +68,16 @@ export function initLangNav(root = document) {
     const parts = getParts(nav);
     if (!parts) return;
     const { toggle, menu } = parts;
+    const isOpen = isNavOpen(nav, parts);
+    if (!isOpen) {
+      toggle.setAttribute("aria-expanded", "false");
+      menu.hidden = true;
+      nav.classList.remove("isg-lang-dropdown--open");
+      resetAnimatedStyles(parts);
+      return;
+    }
     const options = getVisibleOptions(parts);
-    const shellHeight = `${toggle.offsetHeight + menu.offsetHeight - 14}px`;
+    const shellHeight = getShellHeight(nav, parts);
     clearAnimation(nav);
     toggle.setAttribute("aria-expanded", "false");
 
@@ -154,7 +176,7 @@ export function initLangNav(root = document) {
     }
 
     const options = getVisibleOptions(parts);
-    const shellHeight = `${toggle.offsetHeight + menu.offsetHeight - 14}px`;
+    const shellHeight = getShellHeight(nav, parts);
 
     gsap.set(menu, {
       opacity: 0,
@@ -228,10 +250,18 @@ export function initLangNav(root = document) {
   closeAll({ immediate: true });
 
   const onClick = (e) => {
+    if (!(e.target instanceof Element)) return;
+    const nav = e.target.closest("[data-isg-lang-nav]");
+    if (!nav) {
+      if (navs.some((node) => isNavOpen(node))) {
+        closeAll();
+      }
+      return;
+    }
+    if (!root.contains(nav)) return;
+
     const toggle = e.target.closest("[data-isg-lang-toggle]");
-    if (toggle) {
-      const nav = toggle.closest("[data-isg-lang-nav]");
-      if (!nav || !root.contains(nav)) return;
+    if (toggle && nav.contains(toggle)) {
       const menu = nav.querySelector("[data-isg-lang-menu]");
       if (!menu) return;
       const nextOpen = toggle.getAttribute("aria-expanded") !== "true";
@@ -243,20 +273,15 @@ export function initLangNav(root = document) {
       return;
     }
 
-    const option = e.target.closest("[data-isg-lang]");
+    const option = e.target.closest("[data-isg-lang-menu] [data-isg-lang]");
     if (option) {
-      const nav = option.closest("[data-isg-lang-nav]");
-      if (!nav || !root.contains(nav)) return;
+      if (!nav.contains(option)) return;
       const code = option.getAttribute("data-isg-lang");
       if (!code) return;
       e.preventDefault();
       setLang(code);
       closeNav(nav);
       return;
-    }
-
-    if (!e.target.closest("[data-isg-lang-nav]")) {
-      closeAll();
     }
   };
 

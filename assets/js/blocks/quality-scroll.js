@@ -180,7 +180,9 @@ function initOneQualityScrollTrack(track, options = {}) {
   };
 
   const slidesScrollEl = track.querySelector("[data-isg-quality-mobile-slider]");
-  const listScrollEl = track.querySelector("[data-isg-quality-list-scroll]");
+  const listScrollEl =
+    track.querySelector("[data-isg-quality-list-scroll]") ||
+    track.querySelector(".isg-quality-list");
   const listWrap =
     track.querySelector(".isg-quality-list-wrap") ||
     (items[0] ? items[0].closest(".isg-quality-list-wrap") : null);
@@ -189,7 +191,28 @@ function initOneQualityScrollTrack(track, options = {}) {
   const listCenter =
     listWrap?.querySelector(".isg-quality-list-center") || track.querySelector(".isg-quality-list-center");
 
-  const layoutListCenter = () => {};
+  const layoutListCenter = () => {
+    if (!listCenter || !listWrap || aboutTrack || !mq.matches) {
+      listCenter?.style.removeProperty("min-height");
+      return;
+    }
+    const labelEl = listWrap.querySelector(".isg-quality-list-wrap__label");
+    const skipEl = listWrap.querySelector(".isg-quality-list-wrap__skip");
+    const styles = window.getComputedStyle(listWrap);
+    const padTop = parseFloat(styles.paddingTop) || 0;
+    const padBottom = parseFloat(styles.paddingBottom) || 0;
+    const available =
+      listWrap.clientHeight -
+      padTop -
+      padBottom -
+      (labelEl?.offsetHeight || 0) -
+      (skipEl?.offsetHeight || 0);
+    if (available > 0) {
+      listCenter.style.minHeight = `${Math.max(0, Math.round(available))}px`;
+    } else {
+      listCenter.style.removeProperty("min-height");
+    }
+  };
 
   /**
    * Сдвиг ul: как Relats (GSAP `y: -100/n*o + "%"`). Окно — `.isg-quality-list-center`.
@@ -571,6 +594,15 @@ function initOneQualityScrollTrack(track, options = {}) {
 
   build();
 
+  let layoutRaf = 0;
+  const requestLayoutSync = () => {
+    if (layoutRaf) return;
+    layoutRaf = requestAnimationFrame(() => {
+      layoutRaf = 0;
+      build();
+    });
+  };
+
   const onItemClick = (e) => {
     const raw = e.currentTarget.getAttribute("data-isg-quality-index");
     const idx = raw == null ? NaN : Number.parseInt(raw, 10);
@@ -583,14 +615,24 @@ function initOneQualityScrollTrack(track, options = {}) {
   });
 
   if (!reduced) {
-    mq.addEventListener("change", build);
-    disposers.push(() => mq.removeEventListener("change", build));
+    mq.addEventListener("change", requestLayoutSync);
+    disposers.push(() => mq.removeEventListener("change", requestLayoutSync));
+  }
+
+  const onLoad = () => requestLayoutSync();
+  window.addEventListener("load", onLoad);
+  disposers.push(() => window.removeEventListener("load", onLoad));
+
+  if (document.fonts?.ready) {
+    document.fonts.ready.then(requestLayoutSync).catch(() => {});
   }
 
   disposers.push(() => {
+    if (layoutRaf) cancelAnimationFrame(layoutRaf);
     clearDesktop();
     clearMobile();
     track.style.minHeight = "";
+    listCenter?.style.removeProperty("min-height");
     if (listCol) {
       gsap.set(listCol, { clearProps: "transform" });
     }

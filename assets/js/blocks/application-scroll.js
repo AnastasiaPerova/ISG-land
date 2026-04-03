@@ -68,6 +68,8 @@ export function initApplicationScroll(root = document) {
     let pendingVideoTime = null;
     let accordionManual = false;
     let manualAccordionIdx = -1;
+    let st = null;
+    let currentMode = "";
 
     const flushVideoSeek = () => {
       videoSeekRaf = 0;
@@ -178,13 +180,10 @@ export function initApplicationScroll(root = document) {
       if (postEl) postEl.style.height = `${scrubPx}px`;
       section.style.minHeight = "";
     };
-    applyTrackHeights();
-
-    const onResize = () => {
-      applyTrackHeights();
-      ScrollTrigger.refresh();
+    const clearTrackHeights = () => {
+      if (postEl) postEl.style.height = "";
+      section.style.minHeight = "";
     };
-    window.addEventListener("resize", onResize);
 
     const scrubEndPx = () => Math.round(window.innerHeight * APP_SCROLL_SCRUB_VH);
 
@@ -214,109 +213,172 @@ export function initApplicationScroll(root = document) {
       setAccordionIndex(-1);
     };
 
-    applyInitialFrame();
-
-    const scrollTriggerEl = scene;
-    const scrollStart = "top top";
-
-    const st = ScrollTrigger.create({
-      trigger: scrollTriggerEl,
-      start: scrollStart,
-      end: () => "+=" + scrubEndPx(),
-      scrub: 0.55,
-      invalidateOnRefresh: true,
-      onLeaveBack: () => {
-        applyInitialFrame();
-        pendingVideoTime = null;
-      },
-      onUpdate: (self) => {
-        const p = clamp01(self.progress);
-        const desktop = mqDesktop.matches;
-
-        if (p < P_TABS_START) {
-          accordionManual = false;
-          manualAccordionIdx = -1;
+    const setStaticFrame = () => {
+      accordionManual = false;
+      manualAccordionIdx = -1;
+      pendingVideoTime = null;
+      clearTrackHeights();
+      if (st) {
+        st.kill();
+        st = null;
+      }
+      stageIntro?.style.setProperty("display", "block");
+      if (head) gsap.set(head, { opacity: 0, visibility: "hidden", y: 0 });
+      if (stageIntro) gsap.set(stageIntro, { opacity: 1, visibility: "visible", y: 0 });
+      setTitleCharProgress(1);
+      setBodyLayer(1, 0);
+      if (appRight) gsap.set(appRight, { opacity: 1, y: 0 });
+      setAccordionIndex(items.length ? 0 : -1);
+      try {
+        if (video.duration && Number.isFinite(video.duration)) {
+          video.currentTime = 0;
         }
+      } catch (_) {}
+    };
 
-        if (p <= 0.002) {
-          try {
-            const d = video.duration;
-            if (d && Number.isFinite(d)) {
-              video.currentTime = 0;
-            }
-          } catch (_) {}
-        } else if (p <= P_TITLE_FADE_IN_END) {
-          syncVideoToPhaseProgress(clamp01(p / P_TITLE_FADE_IN_END));
-        } else {
-          freezeVideoLastFrame();
-        }
+    const buildDesktopScene = () => {
+      stageIntro?.style.removeProperty("display");
+      applyTrackHeights();
+      applyInitialFrame();
 
-        const fill01 = p < P_TITLE_FADE_IN_END ? clamp01(p / P_TITLE_FADE_IN_END) : 1;
-        setTitleCharProgress(fill01);
+      const scrollTriggerEl = scene;
+      const scrollStart = "top top";
 
-        const titleGroupOpacity =
-          p < P_TITLE_FADE_OUT_START
-            ? 1
-            : p >= P_TITLE_FADE_OUT_END
-              ? 0
-              : 1 -
-                clamp01((p - P_TITLE_FADE_OUT_START) / (P_TITLE_FADE_OUT_END - P_TITLE_FADE_OUT_START));
+      st = ScrollTrigger.create({
+        trigger: scrollTriggerEl,
+        start: scrollStart,
+        end: () => "+=" + scrubEndPx(),
+        scrub: 0.55,
+        invalidateOnRefresh: true,
+        onLeaveBack: () => {
+          applyInitialFrame();
+          pendingVideoTime = null;
+        },
+        onUpdate: (self) => {
+          const p = clamp01(self.progress);
 
-        const tVis = titleGroupOpacity > 0.008 ? "visible" : "hidden";
-        if (desktop) {
+          if (p < P_TABS_START) {
+            accordionManual = false;
+            manualAccordionIdx = -1;
+          }
+
+          if (p <= 0.002) {
+            try {
+              const d = video.duration;
+              if (d && Number.isFinite(d)) {
+                video.currentTime = 0;
+              }
+            } catch (_) {}
+          } else if (p <= P_TITLE_FADE_IN_END) {
+            syncVideoToPhaseProgress(clamp01(p / P_TITLE_FADE_IN_END));
+          } else {
+            freezeVideoLastFrame();
+          }
+
+          const fill01 = p < P_TITLE_FADE_IN_END ? clamp01(p / P_TITLE_FADE_IN_END) : 1;
+          setTitleCharProgress(fill01);
+
+          const titleGroupOpacity =
+            p < P_TITLE_FADE_OUT_START
+              ? 1
+              : p >= P_TITLE_FADE_OUT_END
+                ? 0
+                : 1 -
+                  clamp01((p - P_TITLE_FADE_OUT_START) / (P_TITLE_FADE_OUT_END - P_TITLE_FADE_OUT_START));
+
+          const tVis = titleGroupOpacity > 0.008 ? "visible" : "hidden";
           if (head) gsap.set(head, { opacity: titleGroupOpacity, visibility: tVis, y: 0 });
           if (stageIntro) gsap.set(stageIntro, { opacity: 0, visibility: "hidden", y: 0 });
-        } else {
-          if (stageIntro) gsap.set(stageIntro, { opacity: titleGroupOpacity, visibility: tVis, y: 0 });
-          if (head) gsap.set(head, { opacity: 0, visibility: "hidden", y: 0 });
-        }
 
-        const bodyIn =
-          p < P_BODY_IN_START ? 0 : clamp01((p - P_BODY_IN_START) / (P_BODY_IN_END - P_BODY_IN_START));
-        const bodyOp = bodyIn;
-        const bodyY = 28 * (1 - bodyIn);
-        setBodyLayer(bodyOp, bodyY);
+          const bodyIn =
+            p < P_BODY_IN_START ? 0 : clamp01((p - P_BODY_IN_START) / (P_BODY_IN_END - P_BODY_IN_START));
+          const bodyOp = bodyIn;
+          const bodyY = 28 * (1 - bodyIn);
+          setBodyLayer(bodyOp, bodyY);
 
-        const n = items.length;
-        let idx = -1;
-        if (accordionManual) {
-          idx = manualAccordionIdx;
-        } else if (n > 0 && bodyOp > 0.35 && p >= P_TABS_START) {
-          const tabP = clamp01((p - P_TABS_START) / (P_TABS_END - P_TABS_START));
-          if (tabP <= 0) idx = -1;
-          else if (tabP >= 1) idx = n - 1;
-          else {
-            idx = Math.min(Math.floor(tabP * n), n - 1);
+          const n = items.length;
+          let idx = -1;
+          if (accordionManual) {
+            idx = manualAccordionIdx;
+          } else if (n > 0 && bodyOp > 0.35 && p >= P_TABS_START) {
+            const tabP = clamp01((p - P_TABS_START) / (P_TABS_END - P_TABS_START));
+            if (tabP <= 0) idx = -1;
+            else if (tabP >= 1) idx = n - 1;
+            else {
+              idx = Math.min(Math.floor(tabP * n), n - 1);
+            }
           }
-        }
-        setAccordionIndex(idx);
+          setAccordionIndex(idx);
 
-        const ctaT = p <= P_CTA_START ? 0 : clamp01((p - P_CTA_START) / (P_CTA_END - P_CTA_START));
-        if (appRight) {
-          gsap.set(appRight, { opacity: ctaT, y: 18 * (1 - ctaT) });
+          const ctaT = p <= P_CTA_START ? 0 : clamp01((p - P_CTA_START) / (P_CTA_END - P_CTA_START));
+          if (appRight) {
+            gsap.set(appRight, { opacity: ctaT, y: 18 * (1 - ctaT) });
+          }
+        },
+      });
+    };
+
+    const rebuild = () => {
+      const nextMode = reduced ? "reduced" : mqDesktop.matches ? "desktop" : "mobile";
+      if (nextMode === currentMode && (nextMode !== "desktop" || st)) {
+        if (nextMode === "desktop") {
+          applyTrackHeights();
         }
-      },
-    });
+        ScrollTrigger.refresh();
+        return;
+      }
+
+      currentMode = nextMode;
+
+      if (nextMode === "desktop") {
+        buildDesktopScene();
+      } else {
+        setStaticFrame();
+      }
+    };
+
+    rebuild();
+
+    const onResize = () => {
+      rebuild();
+    };
+    window.addEventListener("resize", onResize);
+
+    const onDesktopChange = () => {
+      rebuild();
+    };
+    mqDesktop.addEventListener("change", onDesktopChange);
 
     requestAnimationFrame(() => ScrollTrigger.refresh());
 
     disposers.push(() => {
       if (videoSeekRaf) cancelAnimationFrame(videoSeekRaf);
       window.removeEventListener("resize", onResize);
+      mqDesktop.removeEventListener("change", onDesktopChange);
       titleH2s.forEach((h2) => {
         restoreHeading(h2);
       });
-      section.style.minHeight = "";
-      if (postEl) postEl.style.height = "";
+      clearTrackHeights();
+      stageIntro?.style.removeProperty("display");
       if (head) gsap.set(head, { clearProps: "opacity,visibility,transform" });
       if (stageIntro) gsap.set(stageIntro, { clearProps: "opacity,visibility,transform" });
       gsap.set(stageBody, { clearProps: "opacity,visibility,transform,pointerEvents" });
       if (appRight) gsap.set(appRight, { clearProps: "opacity,transform" });
-      st.kill();
+      st?.kill();
+      st = null;
     });
 
     const onMeta = () => {
       pendingVideoTime = null;
+      if (currentMode !== "desktop" || !st) {
+        try {
+          if (video.duration && Number.isFinite(video.duration)) {
+            video.currentTime = 0;
+          }
+        } catch (_) {}
+        return;
+      }
+
       const prog = clamp01(st.progress);
       if (prog <= 0.001) {
         try {
