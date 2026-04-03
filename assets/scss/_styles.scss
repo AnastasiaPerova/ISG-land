@@ -3606,6 +3606,9 @@ body.isg-nav-drawer-open {
   }
 }
 @media (max-width: 900px) {
+  .isg-size-spec__head .isg-size-spec__colhead.isg-size-tables__head:last-child {
+    padding-right: 2rem;
+  }
   .isg-product-content__row--rule {
     display: none;
   }
@@ -3614,6 +3617,7 @@ body.isg-nav-drawer-open {
   }
   .isg-product-content__row--sizes-mobile {
     display: grid;
+    gap: 1.6rem;
   }
   .isg-product-content__row--sizes-mobile .isg-size-tables {
     grid-template-columns: 1fr;
