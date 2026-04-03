@@ -16,11 +16,8 @@ function setupSliderDragCursor() {
 
   /** @type {Set<Element>} */
   const inside = new Set();
-  /** @type {Map<Element, { defaultLabel: string; isLightbox: boolean; sliderKey: Element | null }>} */
+  /** @type {Map<Element, { defaultLabel: string }>} */
   const labels = new Map();
-  /** @type {WeakMap<Element, { draggedOnce: boolean }>} */
-  const sliderStates = new WeakMap();
-  const DRAG_SWITCH_PX = 10;
 
   let raf = 0;
   let targetX = 0;
@@ -56,20 +53,13 @@ function setupSliderDragCursor() {
 
   const syncDom = () => {
     const on = inside.size > 0;
-    let isClickToSee = false;
     if (on) {
       const active = Array.from(inside).at(-1);
       const meta = labels.get(active);
-      let label = meta?.defaultLabel || "Drag";
-      if (meta?.isLightbox) {
-        const state = meta.sliderKey ? sliderStates.get(meta.sliderKey) : null;
-        label = state?.draggedOnce ? "click\nto see" : "Drag";
-      }
-      el.textContent = label;
-      isClickToSee = label === "click\nto see";
+      el.textContent = meta?.defaultLabel || "Drag";
     }
     el.classList.toggle("isg-slider__drag-cursor--visible", on);
-    el.classList.toggle("isg-slider__drag-cursor--click-to-see", on && isClickToSee);
+    el.classList.remove("isg-slider__drag-cursor--click-to-see");
     document.body.classList.toggle("isg-drag-cursor-active", on);
   };
 
@@ -97,62 +87,14 @@ function setupSliderDragCursor() {
 
   return {
     bind(slider) {
-      const hasLightbox = !!slider.querySelector("[data-isg-lightbox]");
-      const label = hasLightbox ? "click\nto see" : "Drag";
-      if (hasLightbox && !sliderStates.has(slider)) {
-        sliderStates.set(slider, { draggedOnce: false });
-      }
-      const resetSliderState = () => {
-        if (!hasLightbox) return;
-        const state = sliderStates.get(slider);
-        if (!state) return;
-        if (!state.draggedOnce) return;
-        state.draggedOnce = false;
-        sliderStates.set(slider, state);
-      };
+      const label = "Drag";
       const targets = Array.from(slider.querySelectorAll(".isg-slider-item__img"));
       if (!targets.length) {
         return () => {};
       }
 
       const handlers = targets.map((target) => {
-        labels.set(target, { defaultLabel: label, isLightbox: hasLightbox, sliderKey: slider });
-        let downX = 0;
-        let downY = 0;
-        let down = false;
-        let pid = -1;
-
-        const onDown = (e) => {
-          if (!hasLightbox) return;
-          if (e.pointerType === "mouse" && e.button !== 0) return;
-          down = true;
-          pid = e.pointerId;
-          downX = e.clientX;
-          downY = e.clientY;
-        };
-
-        const onUp = (e) => {
-          if (!hasLightbox) return;
-          if (!down || e.pointerId !== pid) return;
-          const moved = Math.hypot(e.clientX - downX, e.clientY - downY);
-          const state = sliderStates.get(slider);
-          if (state && moved > DRAG_SWITCH_PX) {
-            state.draggedOnce = true;
-            sliderStates.set(slider, state);
-            if (inside.has(target)) syncDom();
-          }
-          down = false;
-          pid = -1;
-        };
-
-        const onCancel = () => {
-          down = false;
-          pid = -1;
-        };
-        const onClick = () => {
-          // Lightbox is opened from this click; reset state for next visit.
-          resetSliderState();
-        };
+        labels.set(target, { defaultLabel: label });
 
         const onEnter = () => {
           inside.add(target);
@@ -162,17 +104,12 @@ function setupSliderDragCursor() {
           inside.delete(target);
           syncDom();
         };
-        target.addEventListener("pointerdown", onDown);
-        document.addEventListener("pointerup", onUp);
-        document.addEventListener("pointercancel", onCancel);
-        target.addEventListener("click", onClick);
         target.addEventListener("pointerenter", onEnter);
         target.addEventListener("pointerleave", onLeave);
-        return { target, onDown, onUp, onCancel, onClick, onEnter, onLeave };
+        return { target, onEnter, onLeave };
       });
 
       const onSliderLeave = () => {
-        resetSliderState();
         handlers.forEach(({ target }) => inside.delete(target));
         syncDom();
       };
@@ -180,11 +117,7 @@ function setupSliderDragCursor() {
 
       return () => {
         slider.removeEventListener("pointerleave", onSliderLeave);
-        handlers.forEach(({ target, onDown, onUp, onCancel, onClick, onEnter, onLeave }) => {
-          target.removeEventListener("pointerdown", onDown);
-          document.removeEventListener("pointerup", onUp);
-          document.removeEventListener("pointercancel", onCancel);
-          target.removeEventListener("click", onClick);
+        handlers.forEach(({ target, onEnter, onLeave }) => {
           target.removeEventListener("pointerenter", onEnter);
           target.removeEventListener("pointerleave", onLeave);
           inside.delete(target);
@@ -242,12 +175,20 @@ function syncNavThumb(thumb, state) {
 
 function teamOptions(gapPx, prev, next) {
   return {
-    modules: [Navigation],
-    speed: 400,
-    loop: false,
-    rewind: true,
+    modules: [Navigation, Autoplay, FreeMode],
+    speed: 5200,
+    loop: true,
+    rewind: false,
     grabCursor: true,
+    allowTouchMove: true,
     watchOverflow: true,
+    freeMode: {
+      enabled: true,
+      momentum: false,
+      minimumVelocity: 0.02,
+      sticky: false,
+    },
+    centeredSlides: false,
     slidesPerView: 1,
     spaceBetween: gapPx,
     navigation:
@@ -257,6 +198,12 @@ function teamOptions(gapPx, prev, next) {
             nextEl: next,
           }
         : undefined,
+    autoplay: {
+      delay: 0,
+      disableOnInteraction: false,
+      pauseOnMouseEnter: true,
+      waitForTransition: true,
+    },
     breakpoints: {
       560: { slidesPerView: 2, spaceBetween: gapPx },
       1024: { slidesPerView: 3, spaceBetween: gapPx },
@@ -583,7 +530,7 @@ export async function initSliders(root = document) {
     swiper.on("transitionEnd", syncBar);
     swiper.on("resize", syncBar);
     swiper.on("breakpoint", syncBar);
-    if (isGallery) {
+    if (isGallery || isTeam) {
       swiper.on("touchStart", () => swiper?.autoplay?.stop?.());
       swiper.on("touchEnd", () => swiper?.autoplay?.start?.());
     }
@@ -595,7 +542,9 @@ export async function initSliders(root = document) {
           swiper?.autoplay?.start?.();
         })
       : isTeam
-        ? bindTeamReveal(slider)
+        ? bindTeamReveal(slider, () => {
+            swiper?.autoplay?.start?.();
+          })
         : () => {};
 
     disposers.push(() => {
