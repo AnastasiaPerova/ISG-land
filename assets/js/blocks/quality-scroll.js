@@ -132,15 +132,20 @@ function initOneQualityScrollTrack(track, options = {}) {
   const aboutTrack = track.hasAttribute("data-isg-quality-about");
   let contentStackSlides = [];
   const contentStackEl = aboutTrack
-    ? track.querySelector(".isg-about-feature-card__content-stack")
+    ? track.querySelector(
+        ".isg-about-feature-card__inner .isg-about-feature-card__content-stack",
+      )
     : null;
   const contentInnerEl = aboutTrack
-    ? track.querySelector(".isg-about-feature-card__content-inner")
+    ? track.querySelector(
+        ".isg-about-feature-card__inner .isg-about-feature-card__content-inner",
+      )
     : null;
+  let mobileContentStacks = [];
   if (aboutTrack) {
     contentStackSlides = Array.from(
       track.querySelectorAll(
-        ".isg-about-feature-card__content-stack [data-isg-about-content-slide]",
+        ".isg-about-feature-card__inner .isg-about-feature-card__content-stack [data-isg-about-content-slide]",
       ),
     );
     if (contentStackSlides.length !== n) {
@@ -212,6 +217,33 @@ function initOneQualityScrollTrack(track, options = {}) {
     } else {
       listCenter.style.removeProperty("min-height");
     }
+  };
+
+  const ensureMobileContentStacks = () => {
+    if (!aboutTrack || !contentStackSlides.length) {
+      mobileContentStacks = [];
+      return;
+    }
+
+    mobileContentStacks = slides.map((slide, i) => {
+      let stack = slide.querySelector(".isg-about-feature-card__content-stack--mobile");
+      if (!stack) {
+        stack = document.createElement("div");
+        stack.className =
+          "isg-about-feature-card__content-stack isg-about-feature-card__content-stack--mobile";
+        slide.appendChild(stack);
+      }
+
+      const clone = contentStackSlides[i]?.cloneNode(true);
+      if (clone) {
+        clone.classList.add("isg-about-feature-card__content-slide--active");
+        stack.replaceChildren(clone);
+      } else {
+        stack.replaceChildren();
+      }
+
+      return stack;
+    });
   };
 
   /**
@@ -358,6 +390,10 @@ function initOneQualityScrollTrack(track, options = {}) {
     contentStackSlides.forEach((el, i) => {
       el.classList.toggle("isg-about-feature-card__content-slide--active", i === active);
     });
+    mobileContentStacks.forEach((el, i) => {
+      el.classList.toggle("isg-about-feature-card__content-stack--active", i === active);
+      el.setAttribute("aria-hidden", i === active ? "false" : "true");
+    });
   };
 
   const setActiveItem = (pFloat) => {
@@ -474,6 +510,25 @@ function initOneQualityScrollTrack(track, options = {}) {
     slidesScrollEl.addEventListener("scroll", onSlidesScroll, { passive: true });
     mobileOff.push(() => slidesScrollEl.removeEventListener("scroll", onSlidesScroll));
 
+    const onExternalDragIndex = (e) => {
+      const idx = Number(e?.detail?.index);
+      if (!Number.isFinite(idx)) return;
+      const clamped = Math.max(0, Math.min(n - 1, Math.round(idx)));
+      setActiveItem(progressForIndex(clamped, n));
+      if (listScrollEl && items[clamped]) {
+        suppressListScroll = true;
+        clearTimeout(suppressListTimer);
+        scrollChildToCenter(listScrollEl, items[clamped], "auto");
+        suppressListTimer = window.setTimeout(() => {
+          suppressListScroll = false;
+        }, 100);
+      }
+    };
+    slidesScrollEl.addEventListener("isg-mobile-drag-index", onExternalDragIndex);
+    mobileOff.push(() =>
+      slidesScrollEl.removeEventListener("isg-mobile-drag-index", onExternalDragIndex),
+    );
+
     if (listScrollEl) {
       let listTicking = false;
       const onListScroll = () => {
@@ -507,6 +562,7 @@ function initOneQualityScrollTrack(track, options = {}) {
   const build = () => {
     clearDesktop();
     clearMobile();
+    ensureMobileContentStacks();
 
     if (reduced || !mq.matches) {
       if (slidesScrollEl) slidesScrollEl.setAttribute("data-lenis-prevent", "");

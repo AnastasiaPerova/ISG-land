@@ -4,7 +4,8 @@ import { Autoplay, FreeMode, Navigation } from "swiper/modules";
 
 function setupSliderDragCursor() {
   const finePointer = matchMedia("(hover: hover) and (pointer: fine)");
-  if (!finePointer.matches) {
+  const mobileViewport = matchMedia("(max-width: 1099px)");
+  if (!finePointer.matches || mobileViewport.matches) {
     return { bind: () => () => {}, destroy: () => {} };
   }
 
@@ -181,7 +182,7 @@ function teamOptions(gapPx, prev, next) {
     rewind: true,
     grabCursor: true,
     watchOverflow: true,
-    slidesPerView: 1,
+    slidesPerView: 1.1,
     spaceBetween: gapPx,
     navigation:
       prev && next

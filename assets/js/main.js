@@ -17,6 +17,7 @@ import { initProductContentLineDraw } from "./blocks/product-content-line-draw.j
 import { initIsgButtonHover } from "./blocks/rfq-intro-btn-hover.js";
 import { initRfqCustomSelects } from "./blocks/rfq-custom-select.js";
 import { initSpecCardsReveal } from "./blocks/spec-cards-reveal.js";
+import { initMobileHorizontalDrag } from "./blocks/mobile-horizontal-drag.js";
 import { initSectionAnchors } from "./blocks/section-anchors.js";
 import { initFooterReveal } from "./blocks/footer-reveal.js";
 import { initLightbox } from "./blocks/lightbox.js";
@@ -175,6 +176,7 @@ export async function initIsgPage(root = document.body) {
   disposers.push(initIsgButtonHover(root));
   disposers.push(initRfqCustomSelects(root));
   disposers.push(initSpecCardsReveal(root));
+  disposers.push(initMobileHorizontalDrag(root));
   disposers.push(initLightbox(root));
   disposers.push(initTitleAnim(root));
   disposers.push(initFilledItemsAnim(root));
