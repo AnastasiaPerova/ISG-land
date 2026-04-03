@@ -175,20 +175,12 @@ function syncNavThumb(thumb, state) {
 
 function teamOptions(gapPx, prev, next) {
   return {
-    modules: [Navigation, Autoplay, FreeMode],
-    speed: 5200,
-    loop: true,
-    rewind: false,
+    modules: [Navigation],
+    speed: 400,
+    loop: false,
+    rewind: true,
     grabCursor: true,
-    allowTouchMove: true,
     watchOverflow: true,
-    freeMode: {
-      enabled: true,
-      momentum: false,
-      minimumVelocity: 0.02,
-      sticky: false,
-    },
-    centeredSlides: false,
     slidesPerView: 1,
     spaceBetween: gapPx,
     navigation:
@@ -198,12 +190,6 @@ function teamOptions(gapPx, prev, next) {
             nextEl: next,
           }
         : undefined,
-    autoplay: {
-      delay: 0,
-      disableOnInteraction: false,
-      pauseOnMouseEnter: true,
-      waitForTransition: true,
-    },
     breakpoints: {
       560: { slidesPerView: 2, spaceBetween: gapPx },
       1024: { slidesPerView: 3, spaceBetween: gapPx },
@@ -530,7 +516,7 @@ export async function initSliders(root = document) {
     swiper.on("transitionEnd", syncBar);
     swiper.on("resize", syncBar);
     swiper.on("breakpoint", syncBar);
-    if (isGallery || isTeam) {
+    if (isGallery) {
       swiper.on("touchStart", () => swiper?.autoplay?.stop?.());
       swiper.on("touchEnd", () => swiper?.autoplay?.start?.());
     }
@@ -542,9 +528,7 @@ export async function initSliders(root = document) {
           swiper?.autoplay?.start?.();
         })
       : isTeam
-        ? bindTeamReveal(slider, () => {
-            swiper?.autoplay?.start?.();
-          })
+        ? bindTeamReveal(slider)
         : () => {};
 
     disposers.push(() => {
