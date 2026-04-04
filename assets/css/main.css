@@ -4535,6 +4535,7 @@ body.isg-nav-drawer-open {
     display: none;
   }
   .isg-quality-row .isg-quality-visual__slide .isg-about-feature-card__content-stack--mobile {
+    display: block;
     position: absolute;
     z-index: 3;
     left: 2.1rem;
@@ -4629,6 +4630,7 @@ body.isg-nav-drawer-open {
   min-height: 320px;
   align-self: stretch;
   position: relative;
+  isolation: isolate;
   border-radius: 1.6rem;
   overflow: hidden;
   box-sizing: border-box;
@@ -4708,9 +4710,17 @@ body.isg-nav-drawer-open {
   overflow: hidden;
   border-radius: 1.8rem;
   background: rgba(255, 255, 255, 0.1);
+  -webkit-backdrop-filter: blur(23px);
   backdrop-filter: blur(23px);
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  contain: paint;
   pointer-events: none;
   box-sizing: border-box;
+}
+
+.isg-about-feature-card__content-stack--mobile {
+  display: none;
 }
 
 /* Как Relats .inner: столбец всех box'ов; двигается yPercent = -(100/n)*t */
