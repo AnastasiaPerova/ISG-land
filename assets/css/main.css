@@ -71,8 +71,8 @@ html {
   --isg-type-display: 8.4rem;
   --isg-type-headline:6.2rem;
   --isg-type-featured-title: clamp(1.85rem, 3.7vw, 3.2rem);
-  --isg-type-lead: 2.2rem;
-  --isg-type-stat: 4.4rem;
+  --isg-type-lead: 4.2rem;
+  --isg-type-stat: 5.6rem;
   --isg-type-nav: 1.5rem;
   --isg-type-body-lg: 1.8rem;
   --isg-type-body: 1.5rem;
@@ -98,6 +98,7 @@ html {
     --isg-gap: 1.55rem;
     --isg-header-height: 5.6rem;
     --isg-type-display: 6.1rem;
+    --isg-type-lead: 3.2rem;
     --isg-type-h3: 4.2rem;
     --isg-type-h4: 3.1rem;
     --isg-type-body-lg: 2rem;
@@ -2254,7 +2255,7 @@ body.isg-nav-drawer-open {
     padding-bottom: 6px;
     box-sizing: border-box;
     overflow: hidden;
-    touch-action: pan-y;
+    touch-action: pan-y pinch-zoom;
     scrollbar-width: thin;
   }
   .isg-digits-section.component--featured .columns--start::-webkit-scrollbar {
@@ -3022,6 +3023,7 @@ body.isg-nav-drawer-open {
 
 .isg-spec-card__head {
   display: flex;
+  flex-direction: row-reverse;
   justify-content: space-between;
   align-items: flex-start;
   gap: isg-space-sm;
@@ -3035,6 +3037,7 @@ body.isg-nav-drawer-open {
   margin: 0;
   color: #4a4a4a;
   text-transform: uppercase;
+  text-align: right;
 }
 
 .isg-spec-card__value {
@@ -3058,7 +3061,7 @@ body.isg-nav-drawer-open {
 }
 
 .isg-product-intro .isg-spec-card__value {
-  font-size: var(--isg-type-stat);
+  font-size: var(--isg-type-lead);
   line-height: 1.12;
   letter-spacing: -0.032em;
   font-weight: 500;
@@ -4240,7 +4243,7 @@ body.isg-nav-drawer-open {
     box-sizing: border-box;
     overflow: hidden;
     scrollbar-width: thin;
-    touch-action: pan-y;
+    touch-action: pan-y pinch-zoom;
   }
   .isg-quality-visual__slides::-webkit-scrollbar {
     height: 4px;
@@ -5352,6 +5355,7 @@ button.isg-slider-item__img,
 
 .isg-rfq-section {
   width: 100%;
+  background: #111;
 }
 
 .isg-rfq-intro__conteiner {

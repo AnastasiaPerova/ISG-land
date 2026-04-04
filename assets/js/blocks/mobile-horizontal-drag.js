@@ -149,7 +149,6 @@ function initRail(rail, itemSelector) {
     startOffset = offset;
     dragging = false;
     moved = false;
-    rail.setPointerCapture(pointerId);
   };
 
   const onPointerMove = (e) => {
@@ -157,20 +156,27 @@ function initRail(rail, itemSelector) {
 
     const dx = e.clientX - startX;
     const dy = e.clientY - startY;
+    const absDx = Math.abs(dx);
+    const absDy = Math.abs(dy);
 
     if (!dragging) {
-      if (Math.abs(dx) < 4 && Math.abs(dy) < 4) return;
-      if (Math.abs(dx) <= Math.abs(dy)) {
+      if (absDx < 8 && absDy < 8) return;
+
+      // Start horizontal drag only when X intent is clearly stronger than Y.
+      // Otherwise let the browser keep the native vertical page scroll.
+      if (absDx <= absDy * 1.2) {
         pointerId = null;
-        try {
-          rail.releasePointerCapture(e.pointerId);
-        } catch (_) {
-          /* noop */
-        }
         return;
       }
+
       dragging = true;
       rail.classList.add("isg-mobile-draggable--dragging");
+
+      try {
+        rail.setPointerCapture(e.pointerId);
+      } catch (_) {
+        /* noop */
+      }
     }
 
     moved = true;
