@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>ISG — static preview (WordPress + ACF template-parts)</title>
+    <title>ISG - static preview (WordPress + ACF template-parts)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -26,9 +26,9 @@
   </head>
   <body class="isg-preloader-active">
     <!--
-      Локальный просмотр: из каталога wp-theme-isg выполните npm run dev
-      (SCSS watch + сервер на http://localhost:5173 с автообновлением).
-      fetch() для partials не работает с file://.
+      Local preview: from the theme directory run npm run dev
+      (SCSS watch + server at http://localhost:5173 with auto-reload).
+      fetch() for partials does not work from file://.
     -->
     <div
       id="isg-preloader"
@@ -41,38 +41,46 @@
       <div class="isg-preloader__inner">
         <span class="isg-preloader__value" data-isg-preloader-value>0%</span>
         <span class="isg-preloader__label" data-isg-preloader-label>Preparing assets</span>
-        <div
-          class="isg-preloader__bar"
-          role="progressbar"
-          aria-label="Page loading progress"
-          aria-valuemin="0"
-          aria-valuemax="100"
-          aria-valuenow="0"
-        >
-          <span class="isg-preloader__bar-fill" data-isg-preloader-bar></span>
-        </div>
-        <span class="isg-preloader__sr">Loading…</span>
+        <span class="isg-preloader__sr">Loading...</span>
       </div>
     </div>
     <main id="isg-main"></main>
     <script type="module" src="assets/js/main.js"></script>
     <script>
-    // DEBUG: check sticky ancestors for About
-    setTimeout(function(){
-      var s = document.querySelector('#isg-about .isg-quality-content__sticky');
-      if(!s){console.warn('DIAG: sticky element NOT FOUND'); return;}
-      var computed = getComputedStyle(s);
-      console.warn('DIAG: sticky position=' + computed.position + ' top=' + computed.top);
-      var el = s.parentElement;
-      while(el){
-        var cs = getComputedStyle(el);
-        var tag = el.tagName + (el.id?'#'+el.id:'') + '.' + (el.className||'').toString().split(' ')[0];
-        console.warn('DIAG: ' + tag + ' overflow=' + cs.overflow + ' overflowX=' + cs.overflowX + ' overflowY=' + cs.overflowY);
-        el = el.parentElement;
-      }
-      var track = s.parentElement;
-      console.warn('DIAG: track minHeight=' + (track?track.style.minHeight:'?') + ' offsetHeight=' + (track?track.offsetHeight:'?'));
-    }, 3000);
+      // DEBUG: check sticky ancestors for About
+      setTimeout(function () {
+        var s = document.querySelector("#isg-about .isg-quality-content__sticky");
+        if (!s) {
+          console.warn("DIAG: sticky element NOT FOUND");
+          return;
+        }
+        var computed = getComputedStyle(s);
+        console.warn("DIAG: sticky position=" + computed.position + " top=" + computed.top);
+        var el = s.parentElement;
+        while (el) {
+          var cs = getComputedStyle(el);
+          var tag =
+            el.tagName + (el.id ? "#" + el.id : "") + "." + (el.className || "").toString().split(" ")[0];
+          console.warn(
+            "DIAG: " +
+              tag +
+              " overflow=" +
+              cs.overflow +
+              " overflowX=" +
+              cs.overflowX +
+              " overflowY=" +
+              cs.overflowY,
+          );
+          el = el.parentElement;
+        }
+        var track = s.parentElement;
+        console.warn(
+          "DIAG: track minHeight=" +
+            (track ? track.style.minHeight : "?") +
+            " offsetHeight=" +
+            (track ? track.offsetHeight : "?"),
+        );
+      }, 3000);
     </script>
   </body>
 </html>

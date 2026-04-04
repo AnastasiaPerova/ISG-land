@@ -26,8 +26,8 @@ export function initFilledItemsAnim(root = document) {
         x: -28,
         y: 0,
         scale: 1,
-        clipPath: "inset(0 100% 0 0 round 22px)",
-        webkitClipPath: "inset(0 100% 0 0 round 22px)",
+        clipPath: "inset(0 100% 0 0 round 1.8rem)",
+        webkitClipPath: "inset(0 100% 0 0 round 1.8rem)",
         filter: "blur(4px)",
         transformOrigin: "0% 50%",
       });
@@ -42,8 +42,8 @@ export function initFilledItemsAnim(root = document) {
       const tl = gsap.timeline();
       tl.to(items, {
         x: 0,
-        clipPath: "inset(0 0% 0 0 round 22px)",
-        webkitClipPath: "inset(0 0% 0 0 round 22px)",
+        clipPath: "inset(0 0% 0 0 round 1.8rem)",
+        webkitClipPath: "inset(0 0% 0 0 round 1.8rem)",
         filter: "blur(0px)",
         stagger: 0.08,
         duration: 0.88,

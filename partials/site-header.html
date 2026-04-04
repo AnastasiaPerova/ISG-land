@@ -1,6 +1,9 @@
 <!-- Site header (общий с hero; в #isg-main после partials/site-logo.html) -->
 <header class="isg-site-header isg-hero__header" data-isg-sticky-header>
   <div class="isg-site-header__chrome">
+    <a class="isg-header-mobile-logo" href="#isg-hero" aria-label="ISG - Home">
+      <img class="isg-header-mobile-logo__img" src="assets/img/logo.svg" alt="ISG" width="170" height="62" decoding="async" />
+    </a>
     <div class="isg-hero__nav-wrap isg-header-desktop-only">
       <nav class="isg-nav-pill" aria-label="Primary" data-isg-section-nav>
         <a class="isg-hero__logo isg-nav-pill__brand" href="#isg-hero" aria-label="ISG - Home">
@@ -55,27 +58,36 @@
       aria-label="Close menu"></button>
     <div class="isg-nav-drawer__panel">
       <nav class="isg-nav-drawer__nav" aria-label="Primary mobile" data-isg-section-nav>
-        <a class="isg-btn isg-btn--ghost-dark" href="#isg-product">Products</a>
-        <a class="isg-btn isg-btn--ghost-dark" href="#isg-application">Applications</a>
-        <a class="isg-btn isg-btn--ghost-dark" href="#isg-quality">Production</a>
-        <a class="isg-btn isg-btn--ghost-dark" href="#isg-about">Certificates</a>
-        <a class="isg-btn isg-btn--ghost-dark" href="#isg-rfq-content">Send RFQ</a>
+        <a class="isg-btn isg-btn--ghost-dark isg-nav-drawer__link" href="#isg-product">Products</a>
+        <a class="isg-btn isg-btn--ghost-dark isg-nav-drawer__link" href="#isg-application">Applications</a>
+        <a class="isg-btn isg-btn--ghost-dark isg-nav-drawer__link" href="#isg-quality">Production</a>
+        <a class="isg-btn isg-btn--ghost-dark isg-nav-drawer__link" href="#isg-about">Certificates</a>
+        <a class="isg-btn isg-btn--ghost-dark isg-nav-drawer__link" href="#isg-rfq-content">Send RFQ</a>
       </nav>
-      <div class="isg-nav-drawer__lang">
-        <span class="isg-nav-drawer__lang-label">Language</span>
-        <div class="isg-lang-dropdown isg-lang-dropdown--drawer" data-isg-lang-nav>
-          <button type="button" class="isg-lang-dropdown__toggle isg-btn isg-btn--ghost-dark" data-isg-lang-toggle
-            aria-haspopup="listbox" aria-expanded="false">
-            <span class="isg-lang-dropdown__current" data-isg-lang-current>EN</span>
-            <span class="isg-lang-dropdown__chevron" aria-hidden="true"></span>
-          </button>
-          <div class="isg-lang-dropdown__menu" data-isg-lang-menu role="listbox" hidden>
-            <button type="button" class="isg-lang-dropdown__option isg-btn isg-btn--ghost-dark isg-btn--active"
-              data-isg-lang="en" role="option" aria-selected="true">EN</button>
-            <button type="button" class="isg-lang-dropdown__option isg-btn isg-btn--ghost-dark" data-isg-lang="pl"
-              role="option" aria-selected="false">PL</button>
-            <button type="button" class="isg-lang-dropdown__option isg-btn isg-btn--ghost-dark" data-isg-lang="de"
-              role="option" aria-selected="false">DE</button>
+      <div class="isg-nav-drawer__footer">
+        <div class="isg-nav-drawer__contact" aria-label="Contact information">
+          <span class="isg-nav-drawer__contact-dot" aria-hidden="true"></span>
+          <div class="isg-nav-drawer__contact-text">
+            <span>Mon-Fri | 8:00-16:00</span>
+            <span>Phone | +48 881 560 845</span>
+          </div>
+        </div>
+        <div class="isg-nav-drawer__lang">
+          <span class="isg-nav-drawer__lang-label">Language</span>
+          <div class="isg-lang-dropdown isg-lang-dropdown--drawer" data-isg-lang-nav>
+            <button type="button" class="isg-lang-dropdown__toggle isg-btn isg-btn--ghost-dark" data-isg-lang-toggle
+              aria-haspopup="listbox" aria-expanded="false">
+              <span class="isg-lang-dropdown__current" data-isg-lang-current>EN</span>
+              <span class="isg-lang-dropdown__chevron" aria-hidden="true"></span>
+            </button>
+            <div class="isg-lang-dropdown__menu" data-isg-lang-menu role="listbox" hidden>
+              <button type="button" class="isg-lang-dropdown__option isg-btn isg-btn--ghost-dark isg-btn--active"
+                data-isg-lang="en" role="option" aria-selected="true">EN</button>
+              <button type="button" class="isg-lang-dropdown__option isg-btn isg-btn--ghost-dark" data-isg-lang="pl"
+                role="option" aria-selected="false">PL</button>
+              <button type="button" class="isg-lang-dropdown__option isg-btn isg-btn--ghost-dark" data-isg-lang="de"
+                role="option" aria-selected="false">DE</button>
+            </div>
           </div>
         </div>
       </div>

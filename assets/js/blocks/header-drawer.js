@@ -7,6 +7,7 @@ export function initHeaderDrawer(root = document) {
   const btn = root.querySelector("[data-isg-burger]");
   const drawer = root.querySelector("#isg-nav-drawer");
   if (!btn || !drawer) return () => {};
+  const navLinks = Array.from(drawer.querySelectorAll(".isg-nav-drawer__nav a[href]"));
 
   const open = () => {
     drawer.classList.add("isg-nav-drawer--open");
@@ -30,6 +31,7 @@ export function initHeaderDrawer(root = document) {
   };
 
   const onCloseEvent = () => close();
+  const onNavLinkClick = () => close();
 
   const onEsc = (e) => {
     if (e.key === "Escape" && drawer.classList.contains("isg-nav-drawer--open")) {
@@ -41,6 +43,7 @@ export function initHeaderDrawer(root = document) {
   drawer.querySelectorAll("[data-isg-drawer-close]").forEach((el) => {
     el.addEventListener("click", close);
   });
+  navLinks.forEach((link) => link.addEventListener("click", onNavLinkClick));
   document.addEventListener(CLOSE_EVENT, onCloseEvent);
   document.addEventListener("keydown", onEsc);
 
@@ -49,6 +52,7 @@ export function initHeaderDrawer(root = document) {
     drawer.querySelectorAll("[data-isg-drawer-close]").forEach((el) => {
       el.removeEventListener("click", close);
     });
+    navLinks.forEach((link) => link.removeEventListener("click", onNavLinkClick));
     document.removeEventListener(CLOSE_EVENT, onCloseEvent);
     document.removeEventListener("keydown", onEsc);
     close();

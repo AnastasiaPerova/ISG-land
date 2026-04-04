@@ -68,9 +68,9 @@ function createPreloaderController() {
 
   gsap.set(root, { opacity: 1, clearProps: "visibility" });
   if (barEl) gsap.set(barEl, { scaleX: 0, transformOrigin: "left center" });
-  gsap.set(valueEl, { clearProps: "all", autoAlpha: 1 });
-  gsap.set(labelEl, { clearProps: "all", autoAlpha: 1 });
-  gsap.set(progressEl, { clearProps: "all", autoAlpha: 1 });
+  if (valueEl) gsap.set(valueEl, { clearProps: "all", autoAlpha: 1 });
+  if (labelEl) gsap.set(labelEl, { clearProps: "all", autoAlpha: 1 });
+  if (progressEl) gsap.set(progressEl, { clearProps: "all", autoAlpha: 1 });
 
   const animateBar = (value) => {
     if (!barEl) return;
@@ -101,11 +101,19 @@ function createPreloaderController() {
     playExit() {
       if (reduced) return Promise.resolve();
       return new Promise((resolve) => {
-        gsap.timeline({ defaults: { ease: "power2.inOut" }, onComplete: resolve })
-          .to(labelEl, { autoAlpha: 0, xPercent: -10, duration: 0.26 }, 0)
-          .to(valueEl, { autoAlpha: 0, yPercent: 10, duration: 0.32 }, 0.04)
-          .to(progressEl, { autoAlpha: 0, duration: 0.24 }, 0.08)
-          .to(root, { opacity: 0, duration: 0.28 }, 0.12);
+        const tl = gsap.timeline({ defaults: { ease: "power2.inOut" }, onComplete: resolve });
+
+        if (labelEl) {
+          tl.to(labelEl, { autoAlpha: 0, duration: 0.18 }, 0);
+        }
+        if (progressEl) {
+          tl.to(progressEl, { autoAlpha: 0, duration: 0.2 }, 0);
+        }
+        if (valueEl) {
+          tl.to(valueEl, { autoAlpha: 0, yPercent: 8, scale: 0.96, duration: 0.3 }, 0.02);
+        }
+
+        tl.to(root, { opacity: 0, duration: 0.28 }, 0.12);
       });
     },
     setProgress(value, label) {
