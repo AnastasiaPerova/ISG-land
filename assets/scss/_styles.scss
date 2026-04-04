@@ -2219,7 +2219,7 @@ body.isg-nav-drawer-open {
     /* Иначе обрезается горизонтальная лента с отриц. margin — карточки не «уезжают» за край */
     overflow-x: visible;
     overflow-y: visible;
-    touch-action: pan-x;
+    touch-action: pan-y;
     /* На мобильной — сплошная подложка (без полупрозрачности как на десктопе поверх фото) */
     background-color: #f3f2ee;
   }
@@ -2264,25 +2264,31 @@ body.isg-nav-drawer-open {
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-x: contain;
     overscroll-behavior-y: auto;
-    scroll-snap-type: x proximity;
-    scroll-padding-left: 3.2rem;
-    scroll-padding-right: 3.2rem;
-    touch-action: auto;
-    scrollbar-width: thin;
+    touch-action: pan-y;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
   .isg-digits-section.component--featured .columns--start::-webkit-scrollbar {
-    height: 4px;
-  }
-  .isg-digits-section.component--featured .columns--start::-webkit-scrollbar-thumb {
-    background: rgba(17, 17, 17, 0.2);
-    border-radius: 4px;
+    display: none;
   }
   .isg-digits-section.component--featured .columns--start .columns__item {
     flex: 0 0 min(82vw, 360px);
     width: min(82vw, 360px);
     min-width: min(82vw, 360px);
     max-width: min(82vw, 360px);
-    scroll-snap-align: start;
+  }
+  .isg-digits-section.component--featured .columns--start .columns__item,
+  .isg-digits-section.component--featured .columns--start .columns__item *,
+  .isg-quality-visual__slide,
+  .isg-quality-visual__slide * {
+    touch-action: pan-y;
+  }
+  .isg-digits-section.component--featured .columns--start .columns__item img,
+  .isg-quality-visual__slide img {
+    -webkit-user-drag: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
   }
   .isg-digits-section.component--featured .card.card--featured.isg-digit-card {
     width: 100%;
@@ -2808,8 +2814,8 @@ body.isg-nav-drawer-open {
 
 @media (max-width: 1099px) {
   .isg-quality-wrapper.isg-section-surface {
-    --isg-section-surface-pad-top: 6rem;
-    --isg-section-surface-pad-bottom: calc(6rem + 3.2rem);
+    --isg-section-surface-pad-top: 8rem;
+    --isg-section-surface-pad-bottom: calc(8rem + 3.2rem);
        padding-top: var(--isg-section-surface-pad-top) !important;
   padding-bottom: var(--isg-section-surface-pad-bottom) !important;
 }
@@ -4288,18 +4294,12 @@ body.isg-nav-drawer-open {
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-x: contain;
     overscroll-behavior-y: auto;
-    scroll-snap-type: x proximity;
-    scroll-padding-left: 3.2rem;
-    scroll-padding-right: 3.2rem;
-    scrollbar-width: thin;
-    touch-action: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    touch-action: pan-y;
   }
   .isg-quality-visual__slides::-webkit-scrollbar {
-    height: 4px;
-  }
-  .isg-quality-visual__slides::-webkit-scrollbar-thumb {
-    background: rgba(17, 17, 17, 0.2);
-    border-radius: 4px;
+    display: none;
   }
   .isg-mobile-draggable-rail {
     user-select: none;
@@ -4336,7 +4336,6 @@ body.isg-nav-drawer-open {
     pointer-events: auto;
     will-change: auto;
     clip-path: none;
-    scroll-snap-align: start;
   }
   .isg-quality-visual__caption {
     display: flex;
