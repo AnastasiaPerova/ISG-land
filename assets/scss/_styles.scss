@@ -2255,12 +2255,19 @@ body.isg-nav-drawer-open {
     width: 100%;
     left: 0;
     padding: 0;
-    padding-left: 0;
-    padding-right: 0;
+    padding-left: 3.2rem;
+    padding-right: 3.2rem;
     padding-bottom: 6px;
     box-sizing: border-box;
-    overflow: hidden;
-    touch-action: pan-y pinch-zoom;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    overscroll-behavior-y: auto;
+    scroll-snap-type: x proximity;
+    scroll-padding-left: 3.2rem;
+    scroll-padding-right: 3.2rem;
+    touch-action: auto;
     scrollbar-width: thin;
   }
   .isg-digits-section.component--featured .columns--start::-webkit-scrollbar {
@@ -2275,6 +2282,7 @@ body.isg-nav-drawer-open {
     width: min(82vw, 360px);
     min-width: min(82vw, 360px);
     max-width: min(82vw, 360px);
+    scroll-snap-align: start;
   }
   .isg-digits-section.component--featured .card.card--featured.isg-digit-card {
     width: 100%;
@@ -4271,14 +4279,20 @@ body.isg-nav-drawer-open {
     max-width: none;
     margin-inline: 0;
     left: 0;
-    padding-left: 0;
-    padding-right: 0;
+    padding-left: 3.2rem;
+    padding-right: 3.2rem;
     padding-bottom: 6px;
     box-sizing: border-box;
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    overscroll-behavior-y: auto;
+    scroll-snap-type: x proximity;
+    scroll-padding-left: 3.2rem;
+    scroll-padding-right: 3.2rem;
     scrollbar-width: thin;
-
-    touch-action: pan-y pinch-zoom;
+    touch-action: auto;
   }
   .isg-quality-visual__slides::-webkit-scrollbar {
     height: 4px;
@@ -4298,14 +4312,15 @@ body.isg-nav-drawer-open {
     align-items: inherit;
     gap: inherit;
     width: max-content;
-    padding-left: 3.2rem;
-    padding-right: 3.2rem;
+    min-width: max-content;
+    padding-left: 0;
+    padding-right: 0;
     box-sizing: border-box;
-    will-change: transform;
-    transform: translate3d(0, 0, 0);
+    will-change: auto;
+    transform: none !important;
   }
   .isg-mobile-draggable-rail.isg-mobile-draggable--dragging .isg-mobile-draggable-track {
-    will-change: transform;
+    will-change: auto;
   }
   .isg-quality-visual__slide {
     position: relative;
@@ -4321,6 +4336,7 @@ body.isg-nav-drawer-open {
     pointer-events: auto;
     will-change: auto;
     clip-path: none;
+    scroll-snap-align: start;
   }
   .isg-quality-visual__caption {
     display: flex;

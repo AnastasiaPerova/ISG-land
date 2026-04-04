@@ -130,13 +130,8 @@ export function initDigitsFeatured(root = document) {
 
     const syncMobileSwipeAttrs = () => {
       if (!colsEl) return;
-      if (mm.matches) {
-        cardsEl.removeAttribute("data-lenis-prevent");
-        colsEl.removeAttribute("data-lenis-prevent");
-        return;
-      }
-      cardsEl.setAttribute("data-lenis-prevent", "");
-      colsEl.setAttribute("data-lenis-prevent", "");
+      cardsEl.removeAttribute("data-lenis-prevent");
+      colsEl.removeAttribute("data-lenis-prevent");
     };
 
     let refreshRaf = 0;

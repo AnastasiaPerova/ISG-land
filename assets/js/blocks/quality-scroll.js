@@ -510,25 +510,6 @@ function initOneQualityScrollTrack(track, options = {}) {
     slidesScrollEl.addEventListener("scroll", onSlidesScroll, { passive: true });
     mobileOff.push(() => slidesScrollEl.removeEventListener("scroll", onSlidesScroll));
 
-    const onExternalDragIndex = (e) => {
-      const idx = Number(e?.detail?.index);
-      if (!Number.isFinite(idx)) return;
-      const clamped = Math.max(0, Math.min(n - 1, Math.round(idx)));
-      setActiveItem(progressForIndex(clamped, n));
-      if (listScrollEl && items[clamped]) {
-        suppressListScroll = true;
-        clearTimeout(suppressListTimer);
-        scrollChildToCenter(listScrollEl, items[clamped], "auto");
-        suppressListTimer = window.setTimeout(() => {
-          suppressListScroll = false;
-        }, 100);
-      }
-    };
-    slidesScrollEl.addEventListener("isg-mobile-drag-index", onExternalDragIndex);
-    mobileOff.push(() =>
-      slidesScrollEl.removeEventListener("isg-mobile-drag-index", onExternalDragIndex),
-    );
-
     if (listScrollEl) {
       let listTicking = false;
       const onListScroll = () => {
@@ -565,7 +546,7 @@ function initOneQualityScrollTrack(track, options = {}) {
     ensureMobileContentStacks();
 
     if (reduced || !mq.matches) {
-      if (slidesScrollEl) slidesScrollEl.setAttribute("data-lenis-prevent", "");
+      if (slidesScrollEl) slidesScrollEl.removeAttribute("data-lenis-prevent");
       if (listCol) {
         gsap.set(listCol, { clearProps: "transform" });
       }
