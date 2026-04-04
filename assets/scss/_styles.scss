@@ -2865,7 +2865,7 @@ body.isg-nav-drawer-open {
   width: 100%;
   max-width: min(100%, 36ch);
   margin-left: auto;
-  margin-bottom: 8rem;
+  margin-bottom: 0;
   margin-right: auto;
   text-align: center;
   /* transform на этом узле ломает position:absolute у букв — только opacity из JS */
@@ -3025,6 +3025,7 @@ body.isg-nav-drawer-open {
   gap: 2.4rem;
   width: 100%;
   overflow: hidden;
+  margin-top: 8rem;
 }
 
 .isg-product-intro__content {
@@ -3135,7 +3136,7 @@ body.isg-nav-drawer-open {
     gap: 1.2rem;
     width: 100%;
     min-width: 0;
-    margin: 0;
+
     padding: 0;
     box-sizing: border-box;
     overflow: visible;
