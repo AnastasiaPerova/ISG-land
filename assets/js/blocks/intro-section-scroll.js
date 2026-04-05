@@ -1,3 +1,4 @@
+import gsap from "gsap";
 import { getLenis } from "./smooth-scroll.js";
 
 function clamp01(t) {
@@ -29,6 +30,15 @@ const EXIT_HOLD_MIN_VISIBLE_FRAC = 0.1;
 
 /** Смягчение кривой заливки по прогрессу скролла */
 const FILL_PROGRESS_POWER = 1.08;
+const CHAR_FILL_WINDOW = 1.18;
+const CHAR_FILL_LEAD = 0.72;
+const CHAR_FILL_TAIL = 0.9;
+const TITLE_REVEAL_DELAY = 0.28;
+const TITLE_REVEAL_DURATION = 1.1;
+const TITLE_REVEAL_Y = 28;
+const BODY_REVEAL_DELAY = 0.52;
+const BODY_REVEAL_DURATION = 1;
+const BODY_REVEAL_Y = 22;
 
 /**
  * Прогресс 0→1 от видимой части секции в вьюпорте; peakP — плавный откат при уходе блока.
@@ -127,9 +137,17 @@ export function setCharFillsInScope(scopeEl, tLetters) {
   const chars = scopeEl.querySelectorAll(".isg-intro-char");
   const n = chars.length;
   if (!n) return;
+  const travel = Math.max(1, n - 1) + CHAR_FILL_LEAD + CHAR_FILL_TAIL;
   chars.forEach((el, i) => {
-    const raw = tLetters * n - i;
-    el.style.setProperty("--isg-char-fill", String(clamp01(raw)));
+    const cursor = tLetters * travel - i + CHAR_FILL_LEAD;
+    const local = clamp01(cursor / CHAR_FILL_WINDOW);
+    const fill = easeInOutCubic(local);
+    const opacity = 0.18 + easeOutCubic(local) * 0.82;
+    const y = (1 - easeOutCubic(local)) * 0.34;
+
+    el.style.setProperty("--isg-char-fill", String(fill));
+    el.style.setProperty("--isg-char-opacity", String(opacity));
+    el.style.setProperty("--isg-char-y", `${y.toFixed(4)}em`);
   });
 }
 
@@ -140,13 +158,15 @@ export function initIntroSectionScroll(root = document) {
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const disposers = [];
 
-  /** @type {{ introRoot: Element; h2List: HTMLHeadingElement[]; peakP: number; tick: () => void }[]} */
+  /** @type {{ introRoot: Element; h2List: HTMLHeadingElement[]; titleGroup: HTMLElement | null; bodyNodes: HTMLElement[]; peakP: number; tick: () => void }[]} */
   const sessions = [];
 
   root.querySelectorAll("[data-isg-intro-scroll]").forEach((introRoot) => {
     if (introRoot.dataset.isgIntroInit === "1") return;
     const h2List = Array.from(introRoot.querySelectorAll(".isg-title-group h2.isg-display"));
     if (!h2List.length) return;
+    const titleGroup = introRoot.querySelector(".isg-title-group");
+    const bodyNodes = Array.from(introRoot.querySelectorAll(".isg-body")).filter((node) => node instanceof HTMLElement);
 
     if (reduced) return;
 
@@ -170,6 +190,8 @@ export function initIntroSectionScroll(root = document) {
     const session = {
       introRoot,
       h2List,
+      titleGroup: titleGroup instanceof HTMLElement ? titleGroup : null,
+      bodyNodes,
       peakP: 0,
       tick: () => {},
     };
@@ -182,6 +204,104 @@ export function initIntroSectionScroll(root = document) {
   if (!sessions.length) {
     return () => {};
   }
+
+  const titleRevealObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const session = sessions.find((item) => item.introRoot === entry.target);
+        const titleGroup = session?.titleGroup;
+        if (!session || !titleGroup || titleGroup.dataset.isgTitleRevealDone === "1") return;
+
+        titleGroup.dataset.isgTitleRevealDone = "1";
+        gsap.to(titleGroup, {
+          autoAlpha: 1,
+          y: 0,
+          duration: TITLE_REVEAL_DURATION,
+          delay: TITLE_REVEAL_DELAY,
+          ease: "power2.out",
+          overwrite: true,
+        });
+        titleRevealObserver.unobserve(entry.target);
+      });
+    },
+    {
+      threshold: 0.2,
+      rootMargin: "0px 0px -10% 0px",
+    },
+  );
+
+  sessions.forEach((session) => {
+    if (!session.titleGroup) return;
+    gsap.set(session.titleGroup, {
+      autoAlpha: 0,
+      y: TITLE_REVEAL_Y,
+      willChange: "transform, opacity",
+    });
+
+    const rect = session.introRoot.getBoundingClientRect();
+    const inView = rect.bottom > 0 && rect.top < (window.innerHeight || 1) * 0.9;
+    if (inView) {
+      session.titleGroup.dataset.isgTitleRevealDone = "1";
+      gsap.to(session.titleGroup, {
+        autoAlpha: 1,
+        y: 0,
+        duration: TITLE_REVEAL_DURATION,
+        delay: TITLE_REVEAL_DELAY,
+        ease: "power2.out",
+        overwrite: true,
+      });
+      return;
+    }
+
+    titleRevealObserver.observe(session.introRoot);
+  });
+
+  sessions.forEach((session) => {
+    if (!session.bodyNodes.length) return;
+
+    const animateBodies = () => {
+      gsap.to(session.bodyNodes, {
+        autoAlpha: 1,
+        y: 0,
+        duration: BODY_REVEAL_DURATION,
+        delay: BODY_REVEAL_DELAY,
+        stagger: 0.08,
+        ease: "power2.out",
+        overwrite: true,
+      });
+    };
+
+    gsap.set(session.bodyNodes, {
+      autoAlpha: 0,
+      y: BODY_REVEAL_Y,
+      willChange: "transform, opacity",
+    });
+
+    const rect = session.introRoot.getBoundingClientRect();
+    const inView = rect.bottom > 0 && rect.top < (window.innerHeight || 1) * 0.9;
+    if (inView) {
+      animateBodies();
+      return;
+    }
+
+    const bodyObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          animateBodies();
+          bodyObserver.disconnect();
+        });
+      },
+      {
+        threshold: 0.2,
+        rootMargin: "0px 0px -10% 0px",
+      },
+    );
+
+    bodyObserver.observe(session.introRoot);
+    disposers.push(() => bodyObserver.disconnect());
+  });
 
   const runAll = () => {
     sessions.forEach((s) => s.tick());
@@ -212,8 +332,18 @@ export function initIntroSectionScroll(root = document) {
   });
 
   disposers.push(() => {
+    titleRevealObserver.disconnect();
     window.removeEventListener("load", onLoad);
     sessions.forEach((s) => {
+      if (s.titleGroup) {
+        gsap.killTweensOf(s.titleGroup);
+        gsap.set(s.titleGroup, { clearProps: "opacity,visibility,transform,y,willChange" });
+        delete s.titleGroup.dataset.isgTitleRevealDone;
+      }
+      if (s.bodyNodes.length) {
+        gsap.killTweensOf(s.bodyNodes);
+        gsap.set(s.bodyNodes, { clearProps: "opacity,visibility,transform,y,willChange" });
+      }
       s.h2List.forEach((h2) => {
         restoreHeading(h2);
       });

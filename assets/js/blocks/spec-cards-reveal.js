@@ -29,20 +29,39 @@ export function initSpecCardsReveal(root = document) {
       defaults: { immediateRender: false },
     });
 
-    const step = 0.13;
-    cards.forEach((card, i) => {
-      tl.from(
-        card,
-        {
-          autoAlpha: 0,
-          y: 48,
-          scale: 0.9,
-          duration: 0.75,
-          ease: "power3.out",
-        },
-        i * step,
-      );
+    gsap.set(wrap, { opacity: 0 });
+    gsap.set(cards, {
+      opacity: 0,
+      y: 72,
+      rotateY: 18,
+      rotateZ: -1.4,
+      scale: 0.92,
+      transformOrigin: "50% 100%",
+      filter: "blur(10px)",
     });
+
+    tl.to(wrap, {
+      opacity: 1,
+      duration: 0.2,
+      ease: "power1.out",
+    }).to(
+      cards,
+      {
+        opacity: 1,
+        y: 0,
+        rotateY: 0,
+        rotateZ: 0,
+        scale: 1,
+        filter: "blur(0px)",
+        duration: 1.15,
+        stagger: {
+          each: 0.08,
+          from: "start",
+        },
+        ease: "power4.out",
+      },
+      0,
+    );
   }, root);
 
   requestAnimationFrame(() => {
