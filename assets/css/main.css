@@ -4696,6 +4696,7 @@ body.isg-nav-drawer-open {
 }
 
 .isg-about-intro {
+  border-radius: 3rem 3rem 0 0;
   /* inherits base intro-section module */
 }
 

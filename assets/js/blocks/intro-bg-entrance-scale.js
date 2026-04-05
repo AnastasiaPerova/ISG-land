@@ -5,7 +5,7 @@ const BG_MEDIA_INNER_CLASS = "isg-intro-media__inner";
 const BG_MEDIA_IMG_CLASS = "isg-intro-media__img";
 const REVEAL_DURATION = 2.8;
 const REVEAL_EASE = "power2.out";
-const REVEAL_SCALE_FROM = 1.14;
+const REVEAL_SCALE_FROM = 1.16;
 const REVEAL_Y_FROM = 132;
 
 function extractUrl(source) {
