@@ -1,55 +1,80 @@
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { getLenis } from "./smooth-scroll.js";
 
-gsap.registerPlugin(ScrollTrigger);
+function clamp01(value) {
+  return Math.max(0, Math.min(1, value));
+}
+
+function smoothstep(value) {
+  const x = clamp01(value);
+  return x * x * (3 - 2 * x);
+}
 
 export function initProductContentParallax(root = document) {
-  const sections = Array.from(root.querySelectorAll(".isg-product-content"));
+  const sections = Array.from(root.querySelectorAll(".isg-intro-section"));
   if (!sections.length) return () => {};
 
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (reduced) return () => {};
 
-  const MAX_BLUR_PX = 4.5;
-  /** @type {ScrollTrigger[]} */
-  const triggers = [];
+  const pairs = sections
+    .map((section) => {
+      const mediaInner = section.querySelector(":scope > .isg-intro-media .isg-intro-media__inner");
+      if (!(section instanceof HTMLElement) || !(mediaInner instanceof HTMLElement)) {
+        return null;
+      }
+      return { section, mediaInner };
+    })
+    .filter(Boolean);
 
-  sections.forEach((section) => {
-    const inner = section.querySelector(".isg-product-content__inner");
-    if (!(inner instanceof HTMLElement)) return;
+  if (!pairs.length) return () => {};
 
-    gsap.set(inner, {
-      y: 0,
-      filter: "blur(0px)",
-      willChange: "filter",
-    });
+  const tick = () => {
+    const vh = window.innerHeight || 1;
 
-    const st = ScrollTrigger.create({
-      trigger: section,
-      start: "top bottom",
-      end: "bottom top",
-      scrub: 0.6,
-      invalidateOnRefresh: true,
-      onUpdate: (self) => {
-        // 0->1->0 curve: blur appears while scrolling through the section
-        const p = self.progress;
-        const envelope = Math.sin(p * Math.PI);
-        const blur = Math.max(0, envelope * MAX_BLUR_PX);
-        gsap.set(inner, { filter: `blur(${blur.toFixed(3)}px)` });
-      },
-      onLeave: () => gsap.set(inner, { filter: "blur(0px)" }),
-      onLeaveBack: () => gsap.set(inner, { filter: "blur(0px)" }),
-    });
-    triggers.push(st);
-  });
+    pairs.forEach(({ section, mediaInner }) => {
+      const rect = section.getBoundingClientRect();
+      const progress = clamp01((vh - rect.top) / (vh + rect.height));
+      const eased = smoothstep(progress);
+      const maxOffset = Math.max(72, Math.min(160, rect.height * 0.14));
+      const y = (0.5 - eased) * maxOffset * 2;
 
-  return () => {
-    triggers.forEach((st) => st.kill());
-    triggers.length = 0;
-    sections.forEach((section) => {
-      section.querySelectorAll(".isg-product-content__inner").forEach((node) => {
-        gsap.set(node, { clearProps: "transform,y,filter,willChange" });
+      gsap.set(mediaInner, {
+        y,
+        force3D: true,
       });
+
+      if (rect.bottom > 0 && rect.top < vh) {
+        mediaInner.style.willChange = "transform";
+      } else {
+        mediaInner.style.removeProperty("will-change");
+      }
     });
   };
+
+  const disposers = [];
+  const lenis = getLenis();
+  if (lenis) {
+    lenis.on("scroll", tick);
+    disposers.push(() => lenis.off("scroll", tick));
+  } else {
+    window.addEventListener("scroll", tick, { passive: true });
+    disposers.push(() => window.removeEventListener("scroll", tick));
+  }
+
+  const onResize = () => tick();
+  window.addEventListener("resize", onResize);
+  disposers.push(() => window.removeEventListener("resize", onResize));
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(tick);
+  });
+
+  disposers.push(() => {
+    pairs.forEach(({ mediaInner }) => {
+      gsap.set(mediaInner, { clearProps: "transform,y,willChange" });
+    });
+  });
+
+  return () => disposers.forEach((dispose) => dispose());
 }

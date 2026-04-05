@@ -5,23 +5,16 @@ function clamp01(t) {
 }
 
 const INTRO_BLUR_SELECTOR = ".isg-intro-section, .isg-hero";
-
-/** Уже существующие обёртки контента в разметке (без новых контейнеров) */
 const INTRO_INNER_SELECTOR = ".isg-intro-section__container, .isg-hero__conteiner";
-
-/** Размытие с этой доли «проскролла» блока (35% высоты блока ушло вверх) */
 const BLUR_SCROLL_START = 0.35;
 const MAX_BLUR_PX = 14;
-
-/** Смещение фона по вертикали (%), нарастает с проскроллом — картинка «уезжает» вверх */
 const BG_SHIFT_MAX_PCT = 22;
-/** Смещение контента вверх (px), не больше доли высоты блока */
 const CONTENT_SHIFT_RATIO = 0.26;
 const CONTENT_SHIFT_CAP_PX = 160;
 
 /**
- * Intro + hero: по мере скролла фон (или object-position у видео) и контент смещаются вверх.
- * Размытие — только у intro-блоков; hero без filter:blur (в т.ч. при скролле назад вверх).
+ * Moves intro content on exit and keeps hero video parallax. Intro image parallax is handled
+ * by the shared media-inner transform module, so we avoid touching background-position here.
  */
 export function initIntroExitBlur(root = document) {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -36,16 +29,15 @@ export function initIntroExitBlur(root = document) {
   const pairs = sections.map((el) => {
     const inner = el.querySelector(INTRO_INNER_SELECTOR);
     const isHero = el.classList.contains("isg-hero");
-    const bgMedia = el.querySelector(":scope > .isg-intro-bg-media");
+    const mediaInner = el.querySelector(":scope > .isg-intro-media .isg-intro-media__inner");
     const videoMedia = isHero ? el.querySelector(".isg-hero__video-media") : null;
-    const bgTarget = bgMedia || el;
-    return { el, inner, bgTarget, videoMedia, isHero };
+    return { el, inner, mediaInner, videoMedia, isHero };
   });
 
   const span = 1 - BLUR_SCROLL_START;
 
   const tick = () => {
-    pairs.forEach(({ el, inner, bgTarget, videoMedia, isHero }) => {
+    pairs.forEach(({ el, inner, mediaInner, videoMedia, isHero }) => {
       const rect = el.getBoundingClientRect();
       const blockH = rect.height || 1;
       const pastTop = Math.max(0, -rect.top);
@@ -55,12 +47,10 @@ export function initIntroExitBlur(root = document) {
         if (videoMedia) {
           videoMedia.style.removeProperty("object-position");
           videoMedia.style.removeProperty("will-change");
-        } else {
-          bgTarget.style.removeProperty("background-position");
-          bgTarget.style.removeProperty("will-change");
         }
         el.style.removeProperty("filter");
         el.style.removeProperty("will-change");
+        mediaInner?.style.removeProperty("will-change");
         if (inner) {
           inner.style.removeProperty("transform");
           inner.style.removeProperty("will-change");
@@ -68,11 +58,9 @@ export function initIntroExitBlur(root = document) {
         return;
       }
 
-      const bgY = 48 + scrolled * BG_SHIFT_MAX_PCT;
       if (videoMedia) {
+        const bgY = 48 + scrolled * BG_SHIFT_MAX_PCT;
         videoMedia.style.objectPosition = `50% ${bgY}%`;
-      } else {
-        bgTarget.style.backgroundPosition = `50% ${bgY}%`;
       }
 
       if (inner) {
@@ -82,28 +70,24 @@ export function initIntroExitBlur(root = document) {
         inner.style.willChange = "transform";
       }
 
-      const bgWill = videoMedia ? "object-position" : "background-position";
-      const bgEl = videoMedia || bgTarget;
-
-      /* Hero: без blur при скролле (в т.ч. при возврате вверх) — только параллакс видео и сдвиг контента */
       if (isHero) {
         el.style.removeProperty("filter");
         el.style.removeProperty("will-change");
-        bgEl.style.setProperty("will-change", bgWill);
+        videoMedia?.style.setProperty("will-change", "object-position");
         return;
       }
 
       const u =
         span > 0 ? clamp01((scrolled - BLUR_SCROLL_START) / span) : scrolled >= BLUR_SCROLL_START ? 1 : 0;
       const px = u * MAX_BLUR_PX;
+      mediaInner?.style.setProperty("will-change", "transform");
+
       if (px > 0.35) {
         el.style.filter = `blur(${px.toFixed(2)}px)`;
         el.style.setProperty("will-change", "filter");
-        bgEl.style.setProperty("will-change", bgWill);
       } else {
         el.style.filter = "";
         el.style.removeProperty("will-change");
-        bgEl.style.setProperty("will-change", bgWill);
       }
     });
   };
@@ -127,15 +111,13 @@ export function initIntroExitBlur(root = document) {
   });
 
   disposers.push(() => {
-    pairs.forEach(({ el, inner, bgTarget, videoMedia }) => {
+    pairs.forEach(({ el, inner, mediaInner, videoMedia }) => {
       el.style.removeProperty("filter");
       el.style.removeProperty("will-change");
+      mediaInner?.style.removeProperty("will-change");
       if (videoMedia) {
         videoMedia.style.removeProperty("object-position");
         videoMedia.style.removeProperty("will-change");
-      } else {
-        bgTarget.style.removeProperty("background-position");
-        bgTarget.style.removeProperty("will-change");
       }
       if (inner) {
         inner.style.removeProperty("transform");

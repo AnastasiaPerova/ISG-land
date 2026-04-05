@@ -23,6 +23,8 @@ import { initFooterReveal } from "./blocks/footer-reveal.js";
 import { initLightbox } from "./blocks/lightbox.js";
 import { initTitleAnim } from "./blocks/title-anim.js";
 import { initFilledItemsAnim } from "./blocks/filled-items-anim.js";
+import { initSectionSurfaceOverlap } from "./blocks/section-surface-overlap.js";
+import { initProductContentParallax } from "./blocks/product-content-parallax.js";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -188,6 +190,8 @@ export async function initIsgPage(root = document.body) {
   disposers.push(initLightbox(root));
   disposers.push(initTitleAnim(root));
   disposers.push(initFilledItemsAnim(root));
+  disposers.push(initSectionSurfaceOverlap(root));
+  disposers.push(initProductContentParallax(root));
   await stabilizeScrollLayout(2);
 }
 

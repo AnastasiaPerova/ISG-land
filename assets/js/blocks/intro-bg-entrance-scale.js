@@ -1,121 +1,148 @@
 import gsap from "gsap";
-import { getLenis } from "./smooth-scroll.js";
 
-function clamp01(t) {
-  return Math.max(0, Math.min(1, t));
-}
+const BG_MEDIA_CLASS = "isg-intro-media";
+const BG_MEDIA_INNER_CLASS = "isg-intro-media__inner";
+const BG_MEDIA_IMG_CLASS = "isg-intro-media__img";
+const REVEAL_DURATION = 2.8;
+const REVEAL_EASE = "power2.out";
+const REVEAL_SCALE_FROM = 1.14;
+const REVEAL_Y_FROM = 132;
 
-/** Perlin smootherstep — нулевая производная на 0 и 1, визуально мягче smoothstep. */
-function smootherstep01(u) {
-  const x = clamp01(u);
-  return x * x * x * (x * (x * 6 - 15) + 10);
+function extractUrl(source) {
+  const match = typeof source === "string" ? source.match(/url\((['"]?)(.*?)\1\)/i) : null;
+  return match?.[2] || null;
 }
 
 /**
- * Шире диапазон по скроллу + smootherstep — медленнее и плавнее, ближе к ощущению дрейфа фона-«видео».
- */
-const RANGE_START_FRAC = 1.1;
-const RANGE_END_FRAC = -0.1;
-/** Стартовый масштаб фона (выше = заметнее «зум» к финальному 1) */
-const SCALE_FROM = 1.22;
-
-const BG_MEDIA_CLASS = "isg-intro-bg-media";
-
-/**
- * Интро с data-isg-intro-scroll: фон выносится в слой, scale уменьшается по мере появления блока во viewport.
+ * Converts intro section background images into a dedicated img layer so scroll effects
+ * can move the media without relying on background-position or scale transforms.
  */
 export function initIntroBgEntranceScale(root = document) {
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    return () => {};
-  }
+  /** @type {{ section: HTMLElement; media: HTMLElement }[]} */
+  const createdPairs = [];
+  /** @type {{ section: HTMLElement; image: HTMLElement }[]} */
+  const revealTargets = [];
 
-  /** @type { { section: HTMLElement; media: HTMLElement }[] } */
-  const pairs = [];
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   root.querySelectorAll("[data-isg-intro-scroll]").forEach((node) => {
-    if (!(node instanceof HTMLElement) || node.dataset.isgIntroBgMediaInit) {
+    if (!(node instanceof HTMLElement) || node.dataset.isgIntroBgMediaInit === "1") {
       return;
     }
+
+    const existingMedia = node.querySelector(":scope > .isg-intro-media");
+    if (existingMedia instanceof HTMLElement) {
+      node.dataset.isgIntroBgMediaInit = "1";
+      const existingImage = existingMedia.querySelector("img");
+      if (existingImage instanceof HTMLElement) {
+        revealTargets.push({ section: node, image: existingImage });
+      }
+      return;
+    }
+
     const inlineBg = node.style.backgroundImage;
     const computedBg = window.getComputedStyle(node).backgroundImage;
-    const src =
-      inlineBg && inlineBg !== "none" && inlineBg.includes("url")
-        ? inlineBg
-        : computedBg && computedBg !== "none" && computedBg.includes("url")
-          ? computedBg
-          : null;
+    const src = extractUrl(inlineBg) || extractUrl(computedBg);
     if (!src) {
       return;
     }
 
-    const pos = window.getComputedStyle(node).backgroundPosition || "center center";
     const media = document.createElement("div");
     media.className = BG_MEDIA_CLASS;
     media.setAttribute("aria-hidden", "true");
-    media.style.backgroundImage = src;
-    media.style.backgroundSize = "cover";
-    media.style.backgroundPosition = pos;
-    media.style.backgroundRepeat = "no-repeat";
 
-    node.dataset.isgIntroBgImageBackup = src;
+    const mediaInner = document.createElement("div");
+    mediaInner.className = BG_MEDIA_INNER_CLASS;
+
+    const img = document.createElement("img");
+    img.className = BG_MEDIA_IMG_CLASS;
+    img.src = src;
+    img.alt = "";
+    img.decoding = "async";
+    img.loading = "eager";
+
+    mediaInner.appendChild(img);
+    media.appendChild(mediaInner);
+
+    node.dataset.isgIntroBgImageBackup = inlineBg || computedBg;
     node.style.backgroundImage = "none";
     node.insertBefore(media, node.firstChild);
     node.dataset.isgIntroBgMediaInit = "1";
-
-    gsap.set(media, { scale: SCALE_FROM, force3D: true });
-    pairs.push({ section: node, media });
+    createdPairs.push({ section: node, media });
+    revealTargets.push({ section: node, image: img });
   });
 
-  if (!pairs.length) {
-    return () => {};
-  }
+  const observer =
+    reduced || !revealTargets.length
+      ? null
+      : new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return;
+              const section = entry.target;
+              const target = revealTargets.find((item) => item.section === section);
+              if (!target || section.dataset.isgIntroMediaRevealed === "1") return;
 
-  const tick = () => {
-    const vh = window.innerHeight || 1;
-    const rangeStart = vh * RANGE_START_FRAC;
-    const rangeEnd = vh * RANGE_END_FRAC;
-    const denom = Math.max(1e-6, rangeStart - rangeEnd);
+              section.dataset.isgIntroMediaRevealed = "1";
+              gsap.to(target.image, {
+                scale: 1,
+                y: 0,
+                duration: REVEAL_DURATION,
+                ease: REVEAL_EASE,
+                overwrite: true,
+              });
+              observer?.unobserve(section);
+            });
+          },
+          {
+            threshold: 0.18,
+            rootMargin: "0px 0px -10% 0px",
+          },
+        );
 
-    pairs.forEach(({ section, media }) => {
-      const top = section.getBoundingClientRect().top;
-      let u = (rangeStart - top) / denom;
-      u = clamp01(u);
-      const t = smootherstep01(u);
-      const scale = SCALE_FROM + (1 - SCALE_FROM) * t;
+  revealTargets.forEach(({ section, image }) => {
+    if (reduced) {
+      gsap.set(image, { scale: 1, y: 0, clearProps: "transform" });
+      section.dataset.isgIntroMediaRevealed = "1";
+      return;
+    }
 
-      gsap.set(media, { scale, force3D: true });
-      if (u > 0.02 && u < 0.98) {
-        media.style.willChange = "transform";
-      } else {
-        media.style.removeProperty("will-change");
-      }
+    gsap.set(image, {
+      scale: REVEAL_SCALE_FROM,
+      y: REVEAL_Y_FROM,
+      transformOrigin: "center center",
+      force3D: true,
+      willChange: "transform",
     });
-  };
 
-  const disposers = [];
-  const lenis = getLenis();
-  if (lenis) {
-    lenis.on("scroll", tick);
-    disposers.push(() => lenis.off("scroll", tick));
-  } else {
-    window.addEventListener("scroll", tick, { passive: true });
-    disposers.push(() => window.removeEventListener("scroll", tick));
-  }
+    const rect = section.getBoundingClientRect();
+    const inView = rect.bottom > 0 && rect.top < (window.innerHeight || 1) * 0.92;
+    if (inView) {
+      section.dataset.isgIntroMediaRevealed = "1";
+      gsap.to(image, {
+        scale: 1,
+        y: 0,
+        duration: REVEAL_DURATION,
+        ease: REVEAL_EASE,
+        overwrite: true,
+      });
+      return;
+    }
 
-  const onResize = () => tick();
-  window.addEventListener("resize", onResize);
-  disposers.push(() => window.removeEventListener("resize", onResize));
-
-  requestAnimationFrame(() => {
-    requestAnimationFrame(tick);
+    observer?.observe(section);
   });
 
-  disposers.push(() => {
-    pairs.forEach(({ section, media }) => {
-      gsap.set(media, { clearProps: "scale,transform,will-change" });
+  return () => {
+    observer?.disconnect();
+    revealTargets.forEach(({ section, image }) => {
+      gsap.killTweensOf(image);
+      gsap.set(image, { clearProps: "scale,y,transform,transformOrigin,willChange" });
+      delete section.dataset.isgIntroMediaRevealed;
+    });
+    createdPairs.forEach(({ section, media }) => {
       media.remove();
       const backup = section.dataset.isgIntroBgImageBackup;
-      if (backup) {
+      if (backup && backup !== "none") {
         section.style.backgroundImage = backup;
       } else {
         section.style.removeProperty("background-image");
@@ -123,7 +150,5 @@ export function initIntroBgEntranceScale(root = document) {
       delete section.dataset.isgIntroBgImageBackup;
       delete section.dataset.isgIntroBgMediaInit;
     });
-  });
-
-  return () => disposers.forEach((fn) => fn());
+  };
 }

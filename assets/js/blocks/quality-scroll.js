@@ -220,7 +220,12 @@ function initOneQualityScrollTrack(track, options = {}) {
   };
 
   const ensureMobileContentStacks = () => {
-    if (!aboutTrack || !contentStackSlides.length) {
+    const existingMobileStacks = Array.from(
+      track.querySelectorAll(".isg-about-feature-card__content-stack--mobile"),
+    );
+
+    if (!aboutTrack || !contentStackSlides.length || mq.matches) {
+      existingMobileStacks.forEach((el) => el.remove());
       mobileContentStacks = [];
       return;
     }
