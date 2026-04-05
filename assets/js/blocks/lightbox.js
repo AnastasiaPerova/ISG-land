@@ -21,7 +21,13 @@ function isAllowedLightboxSrc(src) {
   if (!src || typeof src !== "string") return false;
   const t = src.trim();
   if (t.startsWith("javascript:") || t.startsWith("data:")) return false;
-  return t.startsWith("assets/") || t.startsWith("./assets/") || t.startsWith("/");
+  return (
+    t.startsWith("assets/") ||
+    t.startsWith("./assets/") ||
+    t.startsWith("/") ||
+    t.startsWith("http://") ||
+    t.startsWith("https://")
+  );
 }
 
 function isVideoSrc(src) {

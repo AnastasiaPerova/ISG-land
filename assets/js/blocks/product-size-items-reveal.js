@@ -1,10 +1,13 @@
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
 
 const SPEC_SELECTOR = ".isg-size-spec";
 const ITEM_SELECTOR = ".isg-size-spec__item";
+
+function isInRevealZone(node) {
+  const rect = node.getBoundingClientRect();
+  const triggerY = window.innerHeight * 0.82;
+  return rect.top <= triggerY && rect.bottom >= 0;
+}
 
 export function initProductSizeItemsReveal(root = document) {
   const specs = Array.from(root.querySelectorAll(SPEC_SELECTOR));
@@ -30,26 +33,49 @@ export function initProductSizeItemsReveal(root = document) {
       willChange: "transform, opacity, filter",
     });
 
-    const tl = gsap.timeline({ paused: true });
-    tl.to(items, {
-      autoAlpha: 1,
-      y: 0,
-      filter: "blur(0px)",
-      duration: 0.72,
-      stagger: 0.09,
-      ease: "power2.out",
-      overwrite: true,
+    let hasPlayed = false;
+    let observer = null;
+
+    const playReveal = () => {
+      if (hasPlayed) return;
+      hasPlayed = true;
+      observer?.disconnect();
+      gsap.to(items, {
+        autoAlpha: 1,
+        y: 0,
+        filter: "blur(0px)",
+        duration: 0.72,
+        stagger: 0.09,
+        ease: "power2.out",
+        overwrite: true,
+        clearProps: "opacity,visibility,transform,y,filter,willChange",
+      });
+    };
+
+    observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting || isInRevealZone(spec)) {
+            playReveal();
+          }
+        });
+      },
+      {
+        threshold: 0.12,
+        rootMargin: "0px 0px -18% 0px",
+      },
+    );
+
+    observer.observe(spec);
+
+    requestAnimationFrame(() => {
+      if (isInRevealZone(spec)) {
+        playReveal();
+      }
     });
 
-    const st = ScrollTrigger.create({
-      trigger: spec,
-      start: "top 82%",
-      once: true,
-      onEnter: () => tl.play(0),
-    });
-
-    cleanups.push(() => st.kill());
-    cleanups.push(() => tl.kill());
+    cleanups.push(() => observer?.disconnect());
+    cleanups.push(() => gsap.killTweensOf(items));
   });
 
   return () => {

@@ -26,11 +26,11 @@ function setupSliderDragCursor() {
   let currentX = 0;
   let currentY = 0;
   let hasPos = false;
-  const SMOOTHING = 0.18;
+  const SMOOTHING = 0.14;
   const STOP_EPS = 0.15;
 
   const applyPos = () => {
-    const half = 36;
+    const half = el.offsetWidth * 0.5;
     if (!hasPos) {
       currentX = targetX;
       currentY = targetY;
@@ -69,27 +69,54 @@ function setupSliderDragCursor() {
     return px >= r.left && px <= r.right && py >= r.top && py <= r.bottom;
   };
 
+  const refreshInsideFromPoint = (px = targetX, py = targetY) => {
+    inside.clear();
+    Array.from(labels.keys()).forEach((target) => {
+      if (isPointInsideTarget(target, px, py)) {
+        inside.add(target);
+      }
+    });
+    syncDom();
+  };
+
+  const refreshInsideFromEvent = (e) => {
+    if (!e) {
+      refreshInsideFromPoint();
+      return;
+    }
+    targetX = e.clientX;
+    targetY = e.clientY;
+    refreshInsideFromPoint(targetX, targetY);
+    if (!raf) raf = requestAnimationFrame(applyPos);
+  };
+
   const onMove = (e) => {
     targetX = e.clientX;
     targetY = e.clientY;
-    if (inside.size > 0) {
-      const inAnyTarget = Array.from(labels.keys()).some((target) =>
-        isPointInsideTarget(target, targetX, targetY),
-      );
-      if (!inAnyTarget) {
-        inside.clear();
-        syncDom();
-      }
+    if (labels.size > 0) {
+      refreshInsideFromPoint(targetX, targetY);
     }
     if (!raf) raf = requestAnimationFrame(applyPos);
   };
 
+  const onPointerEnd = () => {
+    refreshInsideFromPoint();
+  };
+
   window.addEventListener("pointermove", onMove, { passive: true });
+  window.addEventListener("pointerup", onPointerEnd, { passive: true });
+  window.addEventListener("pointercancel", onPointerEnd, { passive: true });
 
   return {
     bind(slider) {
       const label = "Drag";
-      const targets = Array.from(slider.querySelectorAll(".isg-slider-item__img"));
+      const targets = Array.from(
+        new Set(
+          Array.from(
+            slider.querySelectorAll(".isg-slider__track.swiper-wrapper, .isg-slider__track"),
+          ),
+        ),
+      );
       if (!targets.length) {
         return () => {};
       }
@@ -97,30 +124,32 @@ function setupSliderDragCursor() {
       const handlers = targets.map((target) => {
         labels.set(target, { defaultLabel: label });
 
-        const onEnter = () => {
-          inside.add(target);
-          syncDom();
+        const onEnter = (e) => {
+          refreshInsideFromEvent(e);
         };
-        const onLeave = () => {
-          inside.delete(target);
-          syncDom();
+        const onLeave = (e) => {
+          refreshInsideFromEvent(e);
+        };
+        const onDown = (e) => {
+          refreshInsideFromEvent(e);
         };
         target.addEventListener("pointerenter", onEnter);
         target.addEventListener("pointerleave", onLeave);
-        return { target, onEnter, onLeave };
+        target.addEventListener("pointerdown", onDown);
+        return { target, onEnter, onLeave, onDown };
       });
 
-      const onSliderLeave = () => {
-        handlers.forEach(({ target }) => inside.delete(target));
-        syncDom();
+      const onSliderLeave = (e) => {
+        refreshInsideFromEvent(e);
       };
       slider.addEventListener("pointerleave", onSliderLeave);
 
       return () => {
         slider.removeEventListener("pointerleave", onSliderLeave);
-        handlers.forEach(({ target, onEnter, onLeave }) => {
+        handlers.forEach(({ target, onEnter, onLeave, onDown }) => {
           target.removeEventListener("pointerenter", onEnter);
           target.removeEventListener("pointerleave", onLeave);
+          target.removeEventListener("pointerdown", onDown);
           inside.delete(target);
           labels.delete(target);
         });
@@ -129,6 +158,8 @@ function setupSliderDragCursor() {
     },
     destroy() {
       window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onPointerEnd);
+      window.removeEventListener("pointercancel", onPointerEnd);
       if (raf) cancelAnimationFrame(raf);
       document.body.classList.remove("isg-drag-cursor-active");
       el.remove();
@@ -200,8 +231,8 @@ function teamOptions(gapPx, prev, next) {
 
 function galleryOptions(gapPx, prev, next) {
   return {
-    modules: [Navigation, Autoplay, FreeMode],
-    speed: 5200,
+    modules: [Navigation, FreeMode],
+    speed: 520,
     loop: true,
     rewind: false,
     grabCursor: true,
@@ -228,12 +259,6 @@ function galleryOptions(gapPx, prev, next) {
             nextEl: next,
           }
         : undefined,
-    autoplay: {
-      delay: 0,
-      disableOnInteraction: false,
-      pauseOnMouseEnter: true,
-      waitForTransition: true,
-    },
     breakpoints: {
       480: { slidesPerView: 1.35, slidesOffsetBefore: 24, slidesOffsetAfter: 36, spaceBetween: gapPx },
       768: { slidesPerView: 2.12, slidesOffsetBefore: 16, slidesOffsetAfter: 64, spaceBetween: gapPx },
@@ -517,17 +542,11 @@ export async function initSliders(root = document) {
     swiper.on("transitionEnd", syncBar);
     swiper.on("resize", syncBar);
     swiper.on("breakpoint", syncBar);
-    if (isGallery) {
-      swiper.on("touchStart", () => swiper?.autoplay?.stop?.());
-      swiper.on("touchEnd", () => swiper?.autoplay?.start?.());
-    }
     syncBar();
 
     const unbindDragCursor = dragCursorApi.bind(slider);
     const unbindSliderReveal = isGallery
-      ? bindSliderReveal(slider, swiper, () => {
-          swiper?.autoplay?.start?.();
-        })
+      ? bindSliderReveal(slider, swiper)
       : isTeam
         ? bindTeamReveal(slider)
         : () => {};
