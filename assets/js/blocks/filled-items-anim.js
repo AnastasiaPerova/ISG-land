@@ -13,6 +13,7 @@ export function initFilledItemsAnim(root = document) {
   groups.forEach((group) => {
     const items = Array.from(group.querySelectorAll(".isg-filled-item"));
     if (!items.length) return;
+    const disableInteractiveHover = !!group.closest(".isg-product-content__grades-stacks");
     const contentNodes = Array.from(
       new Set(
         items.flatMap((item) =>
@@ -74,7 +75,13 @@ export function initFilledItemsAnim(root = document) {
     observer.observe(group);
     observers.push(observer);
 
-    if (reduced || !window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+    if (
+      reduced ||
+      disableInteractiveHover ||
+      !window.matchMedia("(hover: hover) and (pointer: fine)").matches
+    ) {
+      return;
+    }
 
     items.forEach((item) => {
       const move = (e) => {

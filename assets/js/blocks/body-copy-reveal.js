@@ -3,63 +3,70 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const GROUP_SELECTOR = ".isg-about-text-grid__left, .isg-about-text-grid__right, .isg-product-content__col";
+const BODY_SELECTOR = ".isg-body, .isg-body-lg";
 
-function collectRevealNodes(group) {
-  return Array.from(group.querySelectorAll(".isg-body, .isg-body-lg")).filter((node) => node instanceof HTMLElement);
+function getRevealConfig(node) {
+  return {
+    y: 36,
+    filter: "blur(6px)",
+    duration: 1.28,
+    ease: "power3.out",
+    delay: 0.08,
+    start: "top 94%",
+  };
 }
 
 export function initBodyCopyReveal(root = document) {
-  const groups = Array.from(root.querySelectorAll(GROUP_SELECTOR)).filter((node) => node instanceof HTMLElement);
-  if (!groups.length) return () => {};
+  const nodes = Array.from(root.querySelectorAll(BODY_SELECTOR)).filter(
+    (node) => node instanceof HTMLElement && !node.closest(".isg-intro-section"),
+  );
+  if (!nodes.length) return () => {};
 
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const cleanups = [];
 
-  groups.forEach((group) => {
-    const nodes = collectRevealNodes(group);
-    if (!nodes.length) return;
+  nodes.forEach((node) => {
+    const config = getRevealConfig(node);
 
     if (reduced) {
-      gsap.set(nodes, { clearProps: "opacity,visibility,transform,y,willChange" });
+      gsap.set(node, { clearProps: "opacity,visibility,transform,y,filter,willChange" });
       return;
     }
 
-    gsap.set(nodes, {
+    gsap.set(node, {
       autoAlpha: 0,
-      y: 24,
-      willChange: "transform, opacity",
+      y: config.y,
+      filter: config.filter,
+      willChange: "transform, opacity, filter",
     });
 
-    const tl = gsap.timeline({ paused: true });
-    tl.to(nodes, {
+    const tween = gsap.to(node, {
       autoAlpha: 1,
       y: 0,
-      duration: 1.02,
-      stagger: 0.12,
-      ease: "power2.out",
+      filter: "blur(0px)",
+      duration: config.duration,
+      ease: config.ease,
+      delay: config.delay,
+      paused: true,
       overwrite: true,
-      delay: 0.22,
     });
 
     const st = ScrollTrigger.create({
-      trigger: group,
-      start: "top 88%",
+      trigger: node,
+      start: config.start,
       once: true,
       invalidateOnRefresh: true,
-      onEnter: () => tl.play(0),
+      onEnter: () => tween.play(0),
     });
 
     cleanups.push(() => st.kill());
-    cleanups.push(() => tl.kill());
+    cleanups.push(() => tween.kill());
   });
 
   return () => {
     cleanups.forEach((fn) => fn());
-    groups.forEach((group) => {
-      collectRevealNodes(group).forEach((node) => {
-        gsap.set(node, { clearProps: "opacity,visibility,transform,y,willChange" });
-      });
+    nodes.forEach((node) => {
+      gsap.set(node, { clearProps: "opacity,visibility,transform,y,filter,willChange" });
     });
   };
 }
