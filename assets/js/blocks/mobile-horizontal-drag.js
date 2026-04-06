@@ -1,4 +1,4 @@
-const MOBILE_QUERY = "(max-width: 1100px)";
+const MOBILE_QUERY = "(max-width: 1099px)";
 const DRAG_THRESHOLD = 6;
 const AXIS_LOCK_RATIO = 1.1;
 const SWIPE_DISTANCE_THRESHOLD = 24;

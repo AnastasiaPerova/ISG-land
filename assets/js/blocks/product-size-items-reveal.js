@@ -14,7 +14,7 @@ export function initProductSizeItemsReveal(root = document) {
   if (!specs.length) return () => {};
 
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const isMobile = window.matchMedia("(max-width: 900px)").matches;
+  const isMobile = window.matchMedia("(max-width: 1099px)").matches;
   const cleanups = [];
 
   specs.forEach((spec) => {

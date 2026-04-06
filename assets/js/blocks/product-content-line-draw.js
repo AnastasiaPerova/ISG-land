@@ -63,7 +63,7 @@ export function initProductContentLineDraw(root = document) {
   if (!inners.length) {
     return () => {};
   }
-  const isMobile = window.matchMedia("(max-width: 900px)").matches;
+  const isMobile = window.matchMedia("(max-width: 1099px)").matches;
   if (isMobile) {
     inners.forEach((inner) => {
       inner.classList.remove(LINES_CLASS);

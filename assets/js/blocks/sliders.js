@@ -271,8 +271,8 @@ function teamOptions(gapPx, prev, next) {
           }
         : undefined,
     breakpoints: {
-      560: { slidesPerView: 2, spaceBetween: gapPx },
-      1024: { slidesPerView: 3, spaceBetween: gapPx },
+      560: { slidesPerView: 2.2, spaceBetween: gapPx },
+      1100: { slidesPerView: 3, spaceBetween: gapPx },
     },
   };
 }
@@ -309,8 +309,8 @@ function galleryOptions(gapPx, prev, next) {
         : undefined,
     breakpoints: {
       480: { slidesPerView: 1.35, slidesOffsetBefore: 24, slidesOffsetAfter: 36, spaceBetween: gapPx },
-      768: { slidesPerView: 2.12, slidesOffsetBefore: 16, slidesOffsetAfter: 64, spaceBetween: gapPx },
-      1024: { slidesPerView: 2.14, slidesOffsetBefore: 16, slidesOffsetAfter: 96, spaceBetween: gapPx },
+      768: { slidesPerView: 1.5, slidesOffsetBefore: 16, slidesOffsetAfter: 64, spaceBetween: gapPx },
+      1100: { slidesPerView: 2.14, slidesOffsetBefore: 16, slidesOffsetAfter: 96, spaceBetween: gapPx },
       1400: { slidesPerView: 2.18, slidesOffsetBefore: 30, slidesOffsetAfter: 120, spaceBetween: gapPx },
     },
   };

@@ -4,6 +4,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 const BODY_SELECTOR = ".isg-body, .isg-body-lg";
+const BODY_REVEAL_EXCLUDE_SELECTOR = ".isg-about-feature-card__text";
 
 function getRevealConfig(node) {
   return {
@@ -18,7 +19,10 @@ function getRevealConfig(node) {
 
 export function initBodyCopyReveal(root = document) {
   const nodes = Array.from(root.querySelectorAll(BODY_SELECTOR)).filter(
-    (node) => node instanceof HTMLElement && !node.closest(".isg-intro-section"),
+    (node) =>
+      node instanceof HTMLElement &&
+      !node.closest(".isg-intro-section") &&
+      !node.matches(BODY_REVEAL_EXCLUDE_SELECTOR),
   );
   if (!nodes.length) return () => {};
 
