@@ -17,7 +17,8 @@ export function getLenis() {
  */
 export function initLenisSmoothScroll() {
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (reduced) {
+  const compactViewport = window.matchMedia("(max-width: 1099px)").matches;
+  if (reduced || compactViewport) {
     lenisInstance = null;
     return () => {};
   }
