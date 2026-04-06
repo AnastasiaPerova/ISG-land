@@ -2458,9 +2458,12 @@ body.isg-nav-drawer-open {
     min-height: 280px;
     max-height: none;
   }
+  .isg-digits-section.component--featured .scroll .inner > .image.isg-digits-featured__image {
+    display: none;
+  }
   .isg-digits-section.component--featured .scroll .inner .cards {
     position: relative;
-    padding: 6rem 0 6rem 0;
+    padding: 0 0 6rem 0;
     left: auto;
     right: auto;
     top: auto;
