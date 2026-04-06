@@ -311,7 +311,7 @@ function galleryOptions(gapPx, prev, next) {
       480: { slidesPerView: 1.35, slidesOffsetBefore: 24, slidesOffsetAfter: 36, spaceBetween: gapPx },
       768: { slidesPerView: 1.5, slidesOffsetBefore: 16, slidesOffsetAfter: 64, spaceBetween: gapPx },
       1100: { slidesPerView: 2.14, slidesOffsetBefore: 16, slidesOffsetAfter: 96, spaceBetween: gapPx },
-      1400: { slidesPerView: 2.18, slidesOffsetBefore: 30, slidesOffsetAfter: 120, spaceBetween: gapPx },
+      1440: { slidesPerView: 2.18, slidesOffsetBefore: 30, slidesOffsetAfter: 120, spaceBetween: gapPx },
     },
   };
 }

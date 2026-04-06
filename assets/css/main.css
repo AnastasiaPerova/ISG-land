@@ -37,7 +37,7 @@ html {
   max-width: 100%;
 }
 
-/* Breakpoints: mobile <= 767px, tablet 768px-1099px, desktop >= 1100px. */
+/* html font-size: <=499 / <=1099 / <=1439. Layout tokens: <=499, 500-767, 768-1099, 1100-1439, >=1440. */
 @media (max-width: 1439px) {
   html {
     font-size: 0.641025641vw;
@@ -70,8 +70,7 @@ html {
   --isg-header-height: 8rem;
   /* UI kit — типографика (см. _typography.scss); правки в одном месте или здесь в DevTools */
   --isg-type-display: 8.4rem;
-  --isg-type-headline:6.2rem;
-  --isg-type-featured-title: clamp(1.85rem, 3.7vw, 3.2rem);
+  --isg-type-headline: 6.2rem;
   --isg-type-lead: 4.2rem;
   --isg-type-stat: 5.6rem;
   --isg-type-nav: 1.5rem;
@@ -83,7 +82,6 @@ html {
   --isg-type-title: 1.85rem;
   --isg-type-title-sm: 1.15rem;
   --isg-type-button: 1.85rem;
-  --isg-font-size-base: var(--isg-type-body);
   /* Семантика заголовков (см. _typography.scss): h2 = headline; h3/h4 — отдельные clamp */
   --isg-type-h2: var(--isg-type-headline);
   --isg-type-h3: 5.6rem;
@@ -94,26 +92,44 @@ html {
   color: #ffffff;
 }
 
+@media (min-width: 500px) and (max-width: 767px) {
+  :root {
+    --isg-gap: 1.6rem;
+    --isg-header-height: 5.7rem;
+    --isg-type-display: 5.9rem;
+    --isg-type-headline: 5.05rem;
+    --isg-type-lead: 3.12rem;
+    --isg-type-stat: 4.2rem;
+    --isg-type-h2: var(--isg-type-headline);
+    --isg-type-h3: 4.1rem;
+    --isg-type-h4: 3.02rem;
+    --isg-type-body-lg: 1.82rem;
+    --isg-type-body: 1.6rem;
+    --isg-type-body-sm: 1.54rem;
+    --isg-type-caption: 1.22rem;
+  }
+}
 @media (min-width: 768px) and (max-width: 1099px) {
   :root {
     --isg-gap: 1.65rem;
     --isg-header-height: 5.9rem;
-    --isg-type-display: 5.8rem;
-    --isg-type-headline: 5rem;
-    --isg-type-lead: 3.1rem;
-    --isg-type-stat: 4.1rem;
+    --isg-type-display: 6.1rem;
+    --isg-type-headline: 5.3rem;
+    --isg-type-lead: 3.3rem;
+    --isg-type-stat: 4.3rem;
     --isg-type-h2: var(--isg-type-headline);
-    --isg-type-h3: 4.1rem;
-    --isg-type-h4: 3rem;
-    --isg-type-body-lg: 1.75rem;
-    --isg-type-body: 1.52rem;
+    --isg-type-h3: 4.3rem;
+    --isg-type-h4: 3.15rem;
+    --isg-type-body-lg: 1.82rem;
+    --isg-type-body: 1.58rem;
     --isg-type-body-sm: 1.3rem;
-    --isg-type-caption: 1.16rem;
+    --isg-type-caption: 1.2rem;
   }
 }
-@media (max-width: 767px) {
+@media (max-width: 499px) {
   :root {
     --isg-gap: 1.55rem;
+    --isg-type-stat: 4.1rem;
     --isg-header-height: 5.6rem;
     --isg-type-display: 5.4rem;
     --isg-type-headline: 4.6rem;
@@ -122,8 +138,8 @@ html {
     --isg-type-h3: 3.8rem;
     --isg-type-h4: 2.8rem;
     --isg-type-body-lg: 1.7rem;
-    --isg-type-body: 1.5rem;
-    --isg-type-body-sm: 1.28rem;
+    --isg-type-body: 1.56rem;
+    --isg-type-body-sm: 1.42rem;
     --isg-type-caption: 1.14rem;
   }
 }
@@ -297,96 +313,6 @@ select {
 
 .isg-text-center {
   text-align: center;
-}
-
-.isg-text-right {
-  text-align: right;
-}
-
-/* Вспомогательные классы UI kit: кегль + отрицательный трекинг (как у заголовков) */
-.isg-ui-type-display {
-  font-size: var(--isg-type-display);
-  letter-spacing: -0.048em;
-}
-
-.isg-ui-type-headline {
-  font-size: var(--isg-type-headline);
-  letter-spacing: -0.032em;
-}
-
-.isg-ui-type-h2 {
-  font-size: var(--isg-type-h2);
-  letter-spacing: -0.032em;
-}
-
-.isg-ui-type-intro-reveal {
-  font-size: var(--isg-type-intro-reveal);
-  letter-spacing: -0.032em;
-}
-
-.isg-ui-type-h3 {
-  font-size: var(--isg-type-h3);
-  letter-spacing: -0.022em;
-}
-
-.isg-ui-type-h4 {
-  font-size: var(--isg-type-h4);
-  letter-spacing: -0.022em;
-}
-
-.isg-ui-type-lead {
-  font-size: var(--isg-type-lead);
-  letter-spacing: -0.0032em;
-}
-
-.isg-ui-type-title-lg {
-  font-size: var(--isg-type-title-lg);
-  letter-spacing: -0.022em;
-}
-
-.isg-ui-type-title {
-  font-size: var(--isg-type-title);
-  letter-spacing: -0.022em;
-}
-
-.isg-ui-type-title-sm {
-  font-size: var(--isg-type-title-sm);
-  letter-spacing: -0.012em;
-}
-
-.isg-ui-type-body-lg {
-  font-size: var(--isg-type-body-lg);
-}
-
-.isg-ui-type-body {
-  font-size: var(--isg-type-body);
-}
-
-.isg-ui-type-body-sm {
-  font-size: var(--isg-type-body-sm);
-}
-
-.isg-ui-type-caption {
-  font-size: var(--isg-type-caption);
-}
-
-.isg-ui-type-button {
-  font-size: var(--isg-type-button);
-}
-
-.isg-ui-type-nav {
-  font-size: var(--isg-type-nav);
-}
-
-.isg-ui-type-stat {
-  font-size: var(--isg-type-stat);
-  font-weight: 500;
-  letter-spacing: -0.032em;
-  line-height: 1.15;
-}
-
-.isg-ui-type-stat-label {
-  font-size: var(--isg-type-stat-label);
 }
 
 .isg-btn-group {
@@ -3268,7 +3194,7 @@ body.isg-nav-drawer-open {
 }
 @media (max-width: 767px) {
   .isg-intro-section {
-    height: 76rem;
+    height: unset;
     min-height: 0;
     max-height: none;
   }
@@ -4123,7 +4049,6 @@ body.isg-nav-drawer-open {
 /* About: overflow:visible обязателен — position:sticky ломается при overflow:clip/hidden на предке */
 .isg-about-content-block {
   --isg-quality-gap-header: clamp(1.2rem, 2.2vw, 3rem);
-  --isg-about-gap-header: var(--isg-quality-gap-header);
   --isg-quality-content-pad-top: 0px;
   --isg-quality-content-pad-bottom: 0px;
   position: relative;
@@ -4701,7 +4626,7 @@ body.isg-nav-drawer-open {
     min-width: min(88vw, 420px);
     max-width: min(88vw, 420px);
     min-height: 0;
-    aspect-ratio: 4/5;
+    aspect-ratio: 3/4;
     border-radius: 2.1rem;
     overflow: hidden;
     pointer-events: auto;
@@ -4744,6 +4669,7 @@ body.isg-nav-drawer-open {
     -webkit-backdrop-filter: blur(23px);
     backdrop-filter: blur(23px);
     box-sizing: border-box;
+    height: 14.6rem;
     opacity: 1;
     visibility: visible;
     pointer-events: none;
@@ -4758,7 +4684,8 @@ body.isg-nav-drawer-open {
     display: none;
     gap: 1.6rem;
     padding: 2.4rem;
-    min-height: 0;
+    min-height: 100%;
+    height: 100%;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
   }
@@ -4793,6 +4720,10 @@ body.isg-nav-drawer-open {
   .isg-quality-row .isg-about-feature-card__text,
   .isg-quality-row .isg-about-feature-card__inner .isg-about-feature-card__text {
     color: #ffffff;
+    width: 100%;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    hyphens: auto;
   }
   .isg-quality-markers {
     display: none;
@@ -5434,7 +5365,7 @@ body.isg-nav-drawer-open {
     width: 480px;
   }
 }
-@media (min-width: 1400px) {
+@media (min-width: 1440px) {
   .isg-slider--gallery .isg-slider__item.swiper-slide {
     width: 560px;
   }
@@ -5869,6 +5800,37 @@ button.isg-slider-item__img,
     text-align: left;
   }
 }
+@media (max-width: 767px) {
+  .isg-title-group.isg-title-group--align-start {
+    margin-bottom: 2.6rem;
+  }
+  .isg-rfq-intro__content {
+    min-height: 0;
+    height: auto;
+    justify-content: center;
+  }
+  .isg-rfq-intro__content .isg-title-group {
+    align-items: center;
+    text-align: center;
+  }
+  .isg-rfq-intro .isg-display,
+  .isg-rfq-intro__lead {
+    text-align: center;
+  }
+  .isg-rfq-intro__split {
+    justify-content: center;
+    align-items: center;
+  }
+  .isg-rfq-intro__lead,
+  .isg-rfq-intro__split .isg-display,
+  .isg-rfq-intro__split .isg-btn-group {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .isg-rfq-intro__split .isg-btn-group {
+    justify-content: center;
+  }
+}
 .isg-rfq-content.isg-section-surface {
   margin-bottom: 0;
   padding-bottom: 12.8rem;
@@ -5915,7 +5877,7 @@ button.isg-slider-item__img,
   color: #111111;
 }
 
-@media (min-width: 768px) and (max-width: 1099px) {
+@media (min-width: 768px) {
   .isg-rfq-aside {
     min-height: 60rem;
   }
@@ -6703,8 +6665,18 @@ button.isg-slider-item__img,
 /* -------------------------------------------------------------------------- */
 /* Прелоадер: пока подгружаются partials, скрипты и изображения */
 /* -------------------------------------------------------------------------- */
+html.isg-preloader-active,
 body.isg-preloader-active {
   overflow: hidden;
+  overscroll-behavior: none;
+  height: 100%;
+}
+
+body.isg-preloader-active {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  touch-action: none;
 }
 
 .isg-preloader {
@@ -6714,6 +6686,9 @@ body.isg-preloader-active {
   display: grid;
   place-items: center;
   background: #1257A6;
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: none;
   transition: opacity 0.45s ease, visibility 0.45s ease;
 }
 

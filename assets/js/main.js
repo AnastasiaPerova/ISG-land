@@ -50,6 +50,12 @@ const PRELOADER_STEPS = {
   images: { from: 80, to: 96, label: "Loading images" },
   finalize: { from: 96, to: 100, label: "Finalizing page" },
 };
+const PRELOADER_LOCK_CLASS = "isg-preloader-active";
+
+function setPreloaderScrollLock(locked) {
+  document.documentElement.classList.toggle(PRELOADER_LOCK_CLASS, locked);
+  document.body.classList.toggle(PRELOADER_LOCK_CLASS, locked);
+}
 
 function createPreloaderController() {
   const root = document.getElementById("isg-preloader");
@@ -277,7 +283,7 @@ async function waitForFonts(onProgress = () => {}) {
 async function hidePreloader(preloader = null, { complete = true } = {}) {
   const el = document.getElementById("isg-preloader");
   if (!el) {
-    document.body.classList.remove("isg-preloader-active");
+    setPreloaderScrollLock(false);
     return;
   }
   if (complete) preloader?.complete("Ready");
@@ -286,13 +292,14 @@ async function hidePreloader(preloader = null, { complete = true } = {}) {
   el.classList.add("isg-preloader--done");
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   await new Promise((r) => setTimeout(r, reduced ? 0 : 460));
-  document.body.classList.remove("isg-preloader-active");
+  setPreloaderScrollLock(false);
   el.remove();
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
   const main = document.getElementById("isg-main");
   if (!main) return;
+  setPreloaderScrollLock(true);
   const preloader = createPreloaderController();
 
   try {
