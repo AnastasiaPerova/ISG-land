@@ -5859,16 +5859,20 @@ button.isg-slider-item__img,
 .isg-rfq-intro__conteiner {
   gap: 4rem;
   align-self: stretch;
+  justify-content: center;
 }
 
 .isg-rfq-intro__content {
-  gap: 4rem;
-  height: auto;
-  min-height: min(72rem, calc(100% - 8rem));
-  margin-block: auto;
+  position: relative;
+  gap: 4.8rem;
+  flex: 1 1 auto;
+  min-height: calc(100rem - 12rem);
+  padding-top: 6rem;
+  padding-bottom: 0;
+  margin-block: 0;
   justify-content: center;
   align-items: stretch;
-  text-align: left;
+  text-align: center;
 }
 
 .isg-rfq-intro__split {
@@ -5885,6 +5889,7 @@ button.isg-slider-item__img,
   max-width: 426px;
   width: 100%;
   margin: 0;
+  text-align: left;
   font-size: var(--isg-type-body);
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.76);
