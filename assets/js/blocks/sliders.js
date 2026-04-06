@@ -15,10 +15,8 @@ function setupSliderDragCursor() {
   el.textContent = "Drag";
   document.body.appendChild(el);
 
-  /** @type {Set<Element>} */
-  const inside = new Set();
-  /** @type {Map<Element, { defaultLabel: string }>} */
-  const labels = new Map();
+  /** @type {Map<Element, { label: string }>} */
+  const targets = new Map();
 
   let raf = 0;
   let targetX = 0;
@@ -26,11 +24,46 @@ function setupSliderDragCursor() {
   let currentX = 0;
   let currentY = 0;
   let hasPos = false;
-  const SMOOTHING = 0.14;
-  const STOP_EPS = 0.15;
+  let sizeHalf = 49;
+  let visible = false;
+  let activeTarget = null;
+  let destroyed = false;
+  const SMOOTHING = 0.16;
+  const STOP_EPS = 0.2;
 
-  const applyPos = () => {
-    const half = el.offsetWidth * 0.5;
+  const recalcSize = () => {
+    sizeHalf = el.offsetWidth * 0.5 || 49;
+  };
+
+  const show = (target) => {
+    activeTarget = target;
+    const meta = targets.get(target);
+    el.textContent = meta?.label || "Drag";
+    if (visible) return;
+    visible = true;
+    el.classList.add("isg-slider__drag-cursor--visible");
+    el.classList.remove("isg-slider__drag-cursor--click-to-see");
+    document.body.classList.add("isg-drag-cursor-active");
+  };
+
+  const hide = () => {
+    activeTarget = null;
+    if (!visible) return;
+    visible = false;
+    el.classList.remove("isg-slider__drag-cursor--visible", "isg-slider__drag-cursor--click-to-see");
+    document.body.classList.remove("isg-drag-cursor-active");
+  };
+
+  const queueFrame = () => {
+    if (!raf && visible) {
+      raf = requestAnimationFrame(tick);
+    }
+  };
+
+  function tick() {
+    raf = 0;
+    if (!visible) return;
+
     if (!hasPos) {
       currentX = targetX;
       currentY = targetY;
@@ -40,128 +73,143 @@ function setupSliderDragCursor() {
       currentY += (targetY - currentY) * SMOOTHING;
     }
 
-    el.style.setProperty("--isg-cursor-x", `${currentX - half}px`);
-    el.style.setProperty("--isg-cursor-y", `${currentY - half}px`);
+    el.style.setProperty("--isg-cursor-x", `${currentX - sizeHalf}px`);
+    el.style.setProperty("--isg-cursor-y", `${currentY - sizeHalf}px`);
 
     const dx = Math.abs(targetX - currentX);
     const dy = Math.abs(targetY - currentY);
     if (dx > STOP_EPS || dy > STOP_EPS) {
-      raf = requestAnimationFrame(applyPos);
+      raf = requestAnimationFrame(tick);
+    }
+  }
+
+  const findBoundTarget = (node) => {
+    if (!(node instanceof Element)) return null;
+
+    const direct = node.closest(".isg-slider__track.swiper-wrapper, .isg-slider__track");
+    if (direct && targets.has(direct)) return direct;
+
+    const slider = node.closest(".isg-slider");
+    if (!slider) return null;
+
+    for (const target of targets.keys()) {
+      if (slider.contains(target)) return target;
+    }
+    return null;
+  };
+
+  const activateFromNode = (node) => {
+    const nextTarget = findBoundTarget(node);
+    if (nextTarget) {
+      show(nextTarget);
+      queueFrame();
       return;
     }
-    raf = 0;
-  };
-
-  const syncDom = () => {
-    const on = inside.size > 0;
-    if (on) {
-      const active = Array.from(inside).at(-1);
-      const meta = labels.get(active);
-      el.textContent = meta?.defaultLabel || "Drag";
-    }
-    el.classList.toggle("isg-slider__drag-cursor--visible", on);
-    el.classList.remove("isg-slider__drag-cursor--click-to-see");
-    document.body.classList.toggle("isg-drag-cursor-active", on);
-  };
-
-  const isPointInsideTarget = (target, px, py) => {
-    const r = target.getBoundingClientRect();
-    return px >= r.left && px <= r.right && py >= r.top && py <= r.bottom;
-  };
-
-  const refreshInsideFromPoint = (px = targetX, py = targetY) => {
-    inside.clear();
-    Array.from(labels.keys()).forEach((target) => {
-      if (isPointInsideTarget(target, px, py)) {
-        inside.add(target);
-      }
-    });
-    syncDom();
-  };
-
-  const refreshInsideFromEvent = (e) => {
-    if (!e) {
-      refreshInsideFromPoint();
-      return;
-    }
-    targetX = e.clientX;
-    targetY = e.clientY;
-    refreshInsideFromPoint(targetX, targetY);
-    if (!raf) raf = requestAnimationFrame(applyPos);
+    hide();
   };
 
   const onMove = (e) => {
     targetX = e.clientX;
     targetY = e.clientY;
-    if (labels.size > 0) {
-      refreshInsideFromPoint(targetX, targetY);
-    }
-    if (!raf) raf = requestAnimationFrame(applyPos);
+    activateFromNode(document.elementFromPoint(targetX, targetY));
+  };
+
+  const syncFromPoint = () => {
+    activateFromNode(document.elementFromPoint(targetX, targetY));
   };
 
   const onPointerEnd = () => {
-    refreshInsideFromPoint();
+    syncFromPoint();
   };
 
+  const onLeaveViewport = () => {
+    hide();
+  };
+
+  const onVisibilityChange = () => {
+    if (document.visibilityState !== "visible") {
+      hide();
+    }
+  };
+
+  const onResize = () => {
+    recalcSize();
+    if (visible) queueFrame();
+  };
+
+  recalcSize();
   window.addEventListener("pointermove", onMove, { passive: true });
   window.addEventListener("pointerup", onPointerEnd, { passive: true });
   window.addEventListener("pointercancel", onPointerEnd, { passive: true });
+  window.addEventListener("blur", onLeaveViewport);
+  window.addEventListener("resize", onResize, { passive: true });
+  document.addEventListener("visibilitychange", onVisibilityChange);
 
   return {
     bind(slider) {
+      if (destroyed) return () => {};
+
       const label = "Drag";
-      const targets = Array.from(
+      const sliderTargets = Array.from(
         new Set(
           Array.from(
             slider.querySelectorAll(".isg-slider__track.swiper-wrapper, .isg-slider__track"),
           ),
         ),
       );
-      if (!targets.length) {
+      if (!sliderTargets.length) {
         return () => {};
       }
 
-      const handlers = targets.map((target) => {
-        labels.set(target, { defaultLabel: label });
-
-        const onEnter = (e) => {
-          refreshInsideFromEvent(e);
-        };
-        const onLeave = (e) => {
-          refreshInsideFromEvent(e);
-        };
-        const onDown = (e) => {
-          refreshInsideFromEvent(e);
-        };
-        target.addEventListener("pointerenter", onEnter);
-        target.addEventListener("pointerleave", onLeave);
-        target.addEventListener("pointerdown", onDown);
-        return { target, onEnter, onLeave, onDown };
+      sliderTargets.forEach((target) => {
+        targets.set(target, { label });
       });
 
-      const onSliderLeave = (e) => {
-        refreshInsideFromEvent(e);
+      const onPointerEnter = (e) => {
+        targetX = e.clientX;
+        targetY = e.clientY;
+        activateFromNode(e.target);
       };
-      slider.addEventListener("pointerleave", onSliderLeave);
+
+      const onPointerLeave = (e) => {
+        const nextTarget = e.relatedTarget instanceof Element ? findBoundTarget(e.relatedTarget) : null;
+        if (!nextTarget) {
+          hide();
+        }
+      };
+
+      const onPointerDown = (e) => {
+        targetX = e.clientX;
+        targetY = e.clientY;
+        activateFromNode(e.target);
+      };
+
+      slider.addEventListener("pointerenter", onPointerEnter, true);
+      slider.addEventListener("pointerleave", onPointerLeave, true);
+      slider.addEventListener("pointerdown", onPointerDown, true);
 
       return () => {
-        slider.removeEventListener("pointerleave", onSliderLeave);
-        handlers.forEach(({ target, onEnter, onLeave, onDown }) => {
-          target.removeEventListener("pointerenter", onEnter);
-          target.removeEventListener("pointerleave", onLeave);
-          target.removeEventListener("pointerdown", onDown);
-          inside.delete(target);
-          labels.delete(target);
+        slider.removeEventListener("pointerenter", onPointerEnter, true);
+        slider.removeEventListener("pointerleave", onPointerLeave, true);
+        slider.removeEventListener("pointerdown", onPointerDown, true);
+        sliderTargets.forEach((target) => {
+          targets.delete(target);
+          if (activeTarget === target) {
+            hide();
+          }
         });
-        syncDom();
       };
     },
     destroy() {
+      destroyed = true;
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerup", onPointerEnd);
       window.removeEventListener("pointercancel", onPointerEnd);
+      window.removeEventListener("blur", onLeaveViewport);
+      window.removeEventListener("resize", onResize);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
       if (raf) cancelAnimationFrame(raf);
-      document.body.classList.remove("isg-drag-cursor-active");
+      hide();
       el.remove();
     },
   };

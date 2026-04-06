@@ -22,9 +22,11 @@ function easeInOutCubic(t) {
 
 /** Когда видимая высота intro ≥ этой доли вьюпорта — начинаем прогресс (ранний, заметный старт) */
 const VIEWPORT_COVER_START = 0.26;
+const VIEWPORT_COVER_START_MOBILE = 0.14;
 
 /** Больше vh = дольше скролл до полного текста = анимация читается лучше */
 const HEADROOM_VH = 0.92;
+const HEADROOM_VH_MOBILE = 0.52;
 
 const EXIT_HOLD_MIN_VISIBLE_FRAC = 0.1;
 
@@ -46,16 +48,31 @@ const BODY_REVEAL_Y = 22;
 function introScrollProgress(introRoot, session) {
   const rect = introRoot.getBoundingClientRect();
   const vh = window.innerHeight || 1;
+  const mobile = window.matchMedia("(max-width: 1099px)").matches;
   const visibleH = Math.max(0, Math.min(rect.bottom, vh) - Math.max(rect.top, 0));
   const blockH = rect.height || 1;
-  const gate = Math.min(vh * VIEWPORT_COVER_START, blockH * 0.9);
+  const gate = Math.min(
+    vh * (mobile ? VIEWPORT_COVER_START_MOBILE : VIEWPORT_COVER_START),
+    blockH * (mobile ? 0.55 : 0.9),
+  );
   if (visibleH < gate) {
     session.peakP = 0;
     return 0;
   }
 
-  const headroom = vh * HEADROOM_VH;
-  const pRaw = clamp01((visibleH - gate) / headroom);
+  const headroom = Math.max(
+    mobile ? blockH * 0.28 : blockH * 0.16,
+    vh * (mobile ? HEADROOM_VH_MOBILE : HEADROOM_VH),
+  );
+  let pRaw = clamp01((visibleH - gate) / headroom);
+
+  if (mobile) {
+    const travelStart = vh;
+    const travelEnd = Math.max(1, -blockH * 0.24);
+    const travelProgress = clamp01((travelStart - rect.top) / (travelStart - travelEnd));
+    pRaw = Math.max(pRaw, travelProgress);
+  }
+
   session.peakP = Math.max(session.peakP, pRaw);
 
   if (session.peakP < 0.99) return pRaw;

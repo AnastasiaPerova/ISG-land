@@ -162,8 +162,8 @@ function disposeInternals() {
 }
 
 /**
- * Полное обновление интерактива после подмены DOM (Barba.js hooks).
- * @param {ParentNode} root — контейнер с блоками [data-isg-block]
+ * РџРѕР»РЅРѕРµ РѕР±РЅРѕРІР»РµРЅРёРµ РёРЅС‚РµСЂР°РєС‚РёРІР° РїРѕСЃР»Рµ РїРѕРґРјРµРЅС‹ DOM (Barba.js hooks).
+ * @param {ParentNode} root вЂ” РєРѕРЅС‚РµР№РЅРµСЂ СЃ Р±Р»РѕРєР°РјРё [data-isg-block]
  */
 export async function initIsgPage(root = document.body) {
   disposeInternals();
@@ -206,11 +206,12 @@ export function destroyIsgPage() {
 async function fetchPartialsInto(target, onProgress = () => {}) {
   const total = PARTIALS.length || 1;
   let done = 0;
+  const utf8 = new TextDecoder("utf-8");
   onProgress(0);
   for (const path of PARTIALS) {
     const res = await fetch(path);
     if (!res.ok) throw new Error(`Failed to load ${path}: ${res.status}`);
-    const html = await res.text();
+    const html = utf8.decode(await res.arrayBuffer());
     target.insertAdjacentHTML("beforeend", html);
     done += 1;
     onProgress(done / total);
@@ -218,7 +219,7 @@ async function fetchPartialsInto(target, onProgress = () => {}) {
 }
 
 /**
- * Ждёт decode всех <img> в контейнере (в т.ч. после вставки partials).
+ * Р–РґС‘С‚ decode РІСЃРµС… <img> РІ РєРѕРЅС‚РµР№РЅРµСЂРµ (РІ С‚.С‡. РїРѕСЃР»Рµ РІСЃС‚Р°РІРєРё partials).
  * @param {ParentNode} root
  * @param {number} [perImageCapMs]
  */
@@ -297,7 +298,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   } catch (e) {
     console.error(e);
     main.innerHTML =
-      "<p style=\"padding:2rem;font-family:sans-serif\">Запустите локальный сервер из папки темы (<code>npx serve .</code>), чтобы partials подгружались через fetch.</p>";
+      "<p style=\"padding:2rem;font-family:sans-serif\">Start a local server from the theme folder (<code>npx serve .</code>) so partials can be loaded via fetch.</p>";
     preloader.setProgress(100, "Failed to load page");
     await hidePreloader(preloader, { complete: false });
     return;
