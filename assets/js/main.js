@@ -176,8 +176,9 @@ export async function initIsgPage(root = document.body) {
   disposers.push(initHeaderDrawer(root));
   disposers.push(initLangNav(root));
   disposers.push(initDigitsFeatured(root));
-  // Temporarily disabled for mobile Safari debugging.
-  // disposers.push(initApplicationScroll(root));
+  if (!window.matchMedia("(max-width: 1099px)").matches) {
+    disposers.push(initApplicationScroll(root));
+  }
   disposers.push(initSectionAnchors(root));
   disposers.push(initFooterReveal(root));
   disposers.push(initQualityScroll(root, { getLenis }));
