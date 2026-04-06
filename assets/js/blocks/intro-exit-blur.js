@@ -50,6 +50,7 @@ export function initIntroExitBlur(root = document) {
         }
         el.style.removeProperty("filter");
         el.style.removeProperty("will-change");
+        mediaInner?.style.removeProperty("filter");
         mediaInner?.style.removeProperty("will-change");
         if (inner) {
           inner.style.removeProperty("transform");
@@ -80,14 +81,14 @@ export function initIntroExitBlur(root = document) {
       const u =
         span > 0 ? clamp01((scrolled - BLUR_SCROLL_START) / span) : scrolled >= BLUR_SCROLL_START ? 1 : 0;
       const px = u * MAX_BLUR_PX;
-      mediaInner?.style.setProperty("will-change", "transform");
+      mediaInner?.style.setProperty("will-change", "transform, filter");
 
       if (px > 0.35) {
-        el.style.filter = `blur(${px.toFixed(2)}px)`;
-        el.style.setProperty("will-change", "filter");
-      } else {
-        el.style.filter = "";
+        mediaInner?.style.setProperty("filter", `blur(${px.toFixed(2)}px)`);
+        el.style.removeProperty("filter");
         el.style.removeProperty("will-change");
+      } else {
+        mediaInner?.style.removeProperty("filter");
       }
     });
   };
@@ -114,6 +115,7 @@ export function initIntroExitBlur(root = document) {
     pairs.forEach(({ el, inner, mediaInner, videoMedia }) => {
       el.style.removeProperty("filter");
       el.style.removeProperty("will-change");
+      mediaInner?.style.removeProperty("filter");
       mediaInner?.style.removeProperty("will-change");
       if (videoMedia) {
         videoMedia.style.removeProperty("object-position");

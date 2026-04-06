@@ -2180,6 +2180,9 @@ body.isg-nav-drawer-open {
   --isg-digits-image-x: 0px;
   transform: translate3d(var(--isg-digits-image-x), 0, 0);
   will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
 }
 
 .isg-digits-section.component--featured .scroll .inner > .image img {
@@ -2197,13 +2200,15 @@ body.isg-nav-drawer-open {
   background-repeat: no-repeat;
   transform: translate3d(var(--isg-digits-img-shift-x, 0px), 0, 0) scale(calc(1.03 + var(--isg-digits-img-effect, 0) * 0.015));
   transform-origin: center center;
-  filter: blur(calc(var(--isg-digits-img-effect, 0) * 10px));
-  will-change: filter, transform;
+  filter: none;
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .isg-digits-section.component--featured .isg-digits-featured__image-media {
-    filter: none;
     transform: none;
     will-change: auto;
   }
@@ -3218,7 +3223,7 @@ body.isg-nav-drawer-open {
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 102.4rem;
+  height: 100rem;
   padding: 8rem 0 10rem;
   background-size: cover;
   background-position: center;

@@ -8,6 +8,11 @@ function clamp01(v) {
   return Math.max(0, Math.min(1, v));
 }
 
+function easeOutCubic(v) {
+  const t = clamp01(v);
+  return 1 - (1 - t) ** 3;
+}
+
 function setSlideWidthPx(section, scrollEl) {
   const w = scrollEl?.getBoundingClientRect().width ?? scrollEl?.clientWidth ?? 0;
   if (w > 0) {
@@ -58,7 +63,8 @@ function buildFeaturedTween(section, scrollEl, cardsEl, imageEl, mm, killTween) 
 
   const syncImageEffect = (self) => {
     const pFull = clamp01(self.progress);
-    const pEnter = panel > 0 ? clamp01((pFull * total) / panel) : pFull;
+    const pEnterRaw = panel > 0 ? clamp01((pFull * total) / panel) : pFull;
+    const pEnter = easeOutCubic(clamp01((pEnterRaw - 0.035) / 0.965));
     imageEl?.style.setProperty("--isg-digits-img-effect", pEnter.toFixed(5));
     imageEl?.style.setProperty("--isg-digits-image-x", `${(-imageBlockShiftMaxPx * pEnter).toFixed(2)}px`);
     imageEl?.style.setProperty("--isg-digits-img-shift-x", "0px");
@@ -72,7 +78,7 @@ function buildFeaturedTween(section, scrollEl, cardsEl, imageEl, mm, killTween) 
       pin: scrollEl,
       scrub: true,
       invalidateOnRefresh: true,
-      anticipatePin: 1,
+      anticipatePin: 0,
       onUpdate: syncImageEffect,
       onRefresh: syncImageEffect,
     },
