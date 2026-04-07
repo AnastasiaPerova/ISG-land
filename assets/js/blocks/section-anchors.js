@@ -48,7 +48,7 @@ function setActiveSectionLinkAll(root, id) {
   syncNavPillSliders(root);
 }
 
-/** Пока Lenis/браузер крутит страницу к якорю после клика — не затирать активный пункт старым scroll-spy. */
+
 let anchorNavLockId = null;
 let anchorNavLockTimer = null;
 
@@ -67,9 +67,9 @@ function clearAnchorNavigationLock() {
   anchorNavLockTimer = null;
 }
 
-/**
- * Плавный скролл к якорю с учётом высоты sticky-хедера.
- */
+
+
+
 export function initSectionAnchors(root = document) {
   if (!sectionNavs(root).length) return () => {};
 
@@ -97,7 +97,7 @@ export function initSectionAnchors(root = document) {
       try {
         history.pushState(null, "", `#${id}`);
       } catch (_) {
-        /* noop */
+        
       }
     }
     return true;
@@ -114,7 +114,7 @@ export function initSectionAnchors(root = document) {
     return ids.size ? ids : null;
   };
 
-  /** Верх секции в координатах документа (offsetTop у вложенных блоков — неверный) */
+  
   const getSectionDocumentTop = (el) => {
     if (!el) return -Infinity;
     return el.getBoundingClientRect().top + window.scrollY;

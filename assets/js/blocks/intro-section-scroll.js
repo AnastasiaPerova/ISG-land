@@ -20,17 +20,17 @@ function easeInOutCubic(t) {
   return u < 0.5 ? 4 * u * u * u : 1 - (-2 * u + 2) ** 3 / 2;
 }
 
-/** Когда видимая высота intro ≥ этой доли вьюпорта — начинаем прогресс (ранний, заметный старт) */
+
 const VIEWPORT_COVER_START = 0.26;
 const VIEWPORT_COVER_START_MOBILE = 0.14;
 
-/** Больше vh = дольше скролл до полного текста = анимация читается лучше */
+
 const HEADROOM_VH = 0.92;
 const HEADROOM_VH_MOBILE = 0.52;
 
 const EXIT_HOLD_MIN_VISIBLE_FRAC = 0.1;
 
-/** Смягчение кривой заливки по прогрессу скролла */
+
 const FILL_PROGRESS_POWER = 1.08;
 const CHAR_FILL_WINDOW = 1.18;
 const CHAR_FILL_LEAD = 0.72;
@@ -42,9 +42,9 @@ const BODY_REVEAL_DELAY = 0.52;
 const BODY_REVEAL_DURATION = 1;
 const BODY_REVEAL_Y = 22;
 
-/**
- * Прогресс 0→1 от видимой части секции в вьюпорте; peakP — плавный откат при уходе блока.
- */
+
+
+
 function introScrollProgress(introRoot, session) {
   const rect = introRoot.getBoundingClientRect();
   const vh = window.innerHeight || 1;
@@ -168,14 +168,14 @@ export function setCharFillsInScope(scopeEl, tLetters) {
   });
 }
 
-/**
- * Intro: только побуквенная заливка по скроллу (без fade по opacity).
- */
+
+
+
 export function initIntroSectionScroll(root = document) {
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const disposers = [];
 
-  /** @type {{ introRoot: Element; h2List: HTMLHeadingElement[]; titleGroup: HTMLElement | null; bodyNodes: HTMLElement[]; peakP: number; tick: () => void }[]} */
+  
   const sessions = [];
 
   root.querySelectorAll("[data-isg-intro-scroll]").forEach((introRoot) => {

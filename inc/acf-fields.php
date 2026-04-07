@@ -9,6 +9,27 @@ if (!defined('ABSPATH')) {
 	exit;
 }
 
+function isg_acf_json_path(): string {
+	return isg_theme_path('acf-json');
+}
+
+function isg_acf_save_json_path(string $path): string {
+	$json_path = isg_acf_json_path();
+
+	if (!is_dir($json_path)) {
+		wp_mkdir_p($json_path);
+	}
+
+	return $json_path;
+}
+add_filter('acf/settings/save_json', 'isg_acf_save_json_path');
+
+function isg_acf_load_json_paths(array $paths): array {
+	$paths[] = isg_acf_json_path();
+	return $paths;
+}
+add_filter('acf/settings/load_json', 'isg_acf_load_json_paths');
+
 function isg_acf_image_field(string $key, string $label, string $name): array {
 	return array(
 		'key'           => $key,

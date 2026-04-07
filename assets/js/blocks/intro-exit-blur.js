@@ -12,10 +12,10 @@ const BG_SHIFT_MAX_PCT = 22;
 const CONTENT_SHIFT_RATIO = 0.26;
 const CONTENT_SHIFT_CAP_PX = 160;
 
-/**
- * Moves intro content on exit and keeps hero video parallax. Intro image parallax is handled
- * by the shared media-inner transform module, so we avoid touching background-position here.
- */
+
+
+
+
 export function initIntroExitBlur(root = document) {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     return () => {};

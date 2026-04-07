@@ -25,11 +25,7 @@
     </script>
   </head>
   <body class="isg-preloader-active">
-    <!--
-      Local preview: from the theme directory run npm run dev
-      (SCSS watch + server at http://localhost:5173 with auto-reload).
-      fetch() for partials does not work from file://.
-    -->
+    
     <div
       id="isg-preloader"
       class="isg-preloader"
@@ -47,7 +43,6 @@
     <main id="isg-main"></main>
     <script type="module" src="assets/js/main.js"></script>
     <script>
-      // DEBUG: check sticky ancestors for About
       setTimeout(function () {
         var s = document.querySelector("#isg-about .isg-quality-content__sticky");
         if (!s) {

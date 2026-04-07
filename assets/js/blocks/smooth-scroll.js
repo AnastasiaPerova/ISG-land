@@ -4,17 +4,17 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-/** @type {InstanceType<typeof Lenis> | null} */
+
 let lenisInstance = null;
 
 export function getLenis() {
   return lenisInstance;
 }
 
-/**
- * Плавный скролл Lenis + ScrollTrigger.update.
- * Без scrollerProxy: Lenis обновляет rootElement.scrollTop — ScrollTrigger остаётся на нативном скролле.
- */
+
+
+
+
 export function initLenisSmoothScroll() {
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const compactViewport = window.matchMedia("(max-width: 1099px)").matches;

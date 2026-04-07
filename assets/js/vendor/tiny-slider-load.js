@@ -1,4 +1,4 @@
-/** Загрузка классического tiny-slider.min.js и возврат глобального `tns`. */
+
 let loadPromise = null;
 
 function resolveTns() {
@@ -6,7 +6,7 @@ function resolveTns() {
   return typeof fn === "function" ? fn : null;
 }
 
-/** @returns {Promise<(opts: object) => import("tiny-slider").TinySliderInstance>} */
+
 export function ensureTinySlider() {
   const existing = resolveTns();
   if (existing) return Promise.resolve(existing);

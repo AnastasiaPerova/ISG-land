@@ -1,8 +1,8 @@
 import gsap from "gsap";
 
-/**
- * Dropdown language switcher (desktop + drawer) with synced selected value.
- */
+
+
+
 export function initLangNav(root = document) {
   const navs = Array.from(root.querySelectorAll("[data-isg-lang-nav]"));
   if (!navs.length) {

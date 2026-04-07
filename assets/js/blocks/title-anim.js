@@ -1,8 +1,8 @@
 import gsap from "gsap";
 
-/**
- * Intro с побуквенной заливкой (intro-section-scroll) — не трогать .isg-about-intro h2.isg-display.
- */
+
+
+
 const HEADING_SELECTORS = [
   ".isg-section-head__title.isg-h2",
   ".isg-about-text-grid h2.isg-h2",
@@ -22,16 +22,16 @@ function doubleRafPromise() {
   });
 }
 
-/**
- * Разбивает текст на строки по фактическому переносу (offsetTop слов), затем строит маски.
- */
+
+
+
 function splitHeadingIntoLines(heading) {
   const raw = heading.textContent.replace(/\s+/g, " ").trim();
   if (!raw) {
     return [];
   }
   const words = raw.split(" ");
-  /* До измерения — тот же шрифт, что у финального .isg-h2.isg-title-anim (H3), иначе переносы считаются по headline и ломаются при меньшем размере. */
+  
   heading.classList.add("isg-title-anim");
   heading.textContent = "";
 
@@ -90,7 +90,7 @@ export function initTitleAnim(root = document) {
     return () => {};
   }
 
-  /** @type {HTMLElement[]} */
+  
   const headings = [];
   HEADING_SELECTORS.forEach((sel) => {
     root.querySelectorAll(sel).forEach((el) => {
@@ -105,9 +105,9 @@ export function initTitleAnim(root = document) {
   });
 
   const originals = new Map();
-  /** @type {IntersectionObserver[]} */
+  
   const observers = [];
-  /** @type {gsap.core.Tween[]} */
+  
   const tweens = [];
 
   function wireHeading(h2) {
@@ -161,13 +161,13 @@ export function initTitleAnim(root = document) {
     headings.forEach(wireHeading);
   };
 
-  /** После загрузки шрифтов и стабилизации ширины — иначе переносы «слова в одну строку» считаются неверно. */
+  
   const run = async () => {
     if (document.fonts?.ready) {
       try {
         await document.fonts.ready;
       } catch {
-        /* ignore */
+        
       }
     }
     await doubleRafPromise();

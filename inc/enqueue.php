@@ -9,22 +9,18 @@ if (!defined('ABSPATH')) {
 	exit;
 }
 
-function isg_output_importmap(): void {
-	?>
-	<script type="importmap">
-		{
-			"imports": {
-				"gsap": "https://esm.sh/gsap@3.12.5",
-				"gsap/ScrollTrigger": "https://esm.sh/gsap@3.12.5/ScrollTrigger",
-				"lenis": "https://esm.sh/lenis@1.1.18",
-				"swiper": "https://esm.sh/swiper@11",
-				"swiper/modules": "https://esm.sh/swiper@11/modules"
-			}
-		}
-	</script>
-	<?php
+function isg_resource_hints(array $urls, string $relation_type): array {
+	if ('preconnect' === $relation_type) {
+		$urls[] = 'https://fonts.googleapis.com';
+		$urls[] = array(
+			'href'        => 'https://fonts.gstatic.com',
+			'crossorigin' => 'anonymous',
+		);
+	}
+
+	return $urls;
 }
-add_action('wp_head', 'isg_output_importmap', 1);
+add_filter('wp_resource_hints', 'isg_resource_hints', 10, 2);
 
 function isg_enqueue_assets(): void {
 	wp_enqueue_style(
@@ -59,13 +55,15 @@ function isg_enqueue_assets(): void {
 
 	wp_enqueue_script(
 		'isg-main',
-		isg_asset_uri('js/main.js'),
+		isg_asset_uri('js/main.bundle.js'),
 		array(),
-		isg_file_version('assets/js/main.js'),
-		true
+		isg_file_version('assets/js/main.bundle.js'),
+		array(
+			'in_footer' => true,
+			'strategy'  => 'defer',
+		)
 	);
 
-	wp_script_add_data('isg-main', 'type', 'module');
 	wp_add_inline_script('isg-main', 'window.ISG_SERVER_RENDERED = true;', 'before');
 }
 add_action('wp_enqueue_scripts', 'isg_enqueue_assets');

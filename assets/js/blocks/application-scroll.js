@@ -17,15 +17,15 @@ function easeOutCubic(t) {
   return 1 - (1 - u) ** 3;
 }
 
-/** Высота хвоста под sticky = длина scrub (vh). */
+
 const APP_SCROLL_SCRUB_VH = 3.45;
 
-/** Заголовок: 0→1, пауза, 1→0; видео по скроллу только на fade-in, дальше — последний кадр */
+
 const P_TITLE_FADE_IN_END = 0.24;
 const P_TITLE_FADE_OUT_START = 0.3;
 const P_TITLE_FADE_OUT_END = 0.44;
 
-/** После окончания «титров» и видео: тело → табы по скроллу → CTA */
+
 const P_BODY_IN_START = 0.46;
 const P_BODY_IN_END = 0.58;
 const P_TABS_START = 0.52;
@@ -33,10 +33,10 @@ const P_TABS_END = 0.84;
 const P_CTA_START = 0.8;
 const P_CTA_END = 0.95;
 
-/**
- * Application scroll: заголовок — только побуквенная заливка (--isg-char-fill, как intro-section-scroll);
- * исчезновение группы заголовка через opacity; видео в фазе заливки; далее тело, табы, CTA.
- */
+
+
+
+
 export function initApplicationScroll(root = document) {
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const disposers = [];
@@ -85,7 +85,7 @@ export function initApplicationScroll(root = document) {
       } catch (_) {}
     };
 
-    /** Видео 0…duration синхронно с нормализованным прогрессом 0…1 (только фаза заголовка) */
+    
     const syncVideoToPhaseProgress = (vn) => {
       const d = video.duration;
       if (!d || !Number.isFinite(d)) return;

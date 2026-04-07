@@ -5,9 +5,9 @@ export function initFilledItemsAnim(root = document) {
   if (!groups.length) return () => {};
 
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  /** @type {IntersectionObserver[]} */
+  
   const observers = [];
-  /** @type {Array<() => void>} */
+  
   const disposers = [];
 
   groups.forEach((group) => {

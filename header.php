@@ -28,3 +28,35 @@
 		<span class="isg-preloader__sr"><?php esc_html_e('Loading...', 'isg'); ?></span>
 	</div>
 </div>
+<script>
+	window.ISG_PRELOADER_DONE = false;
+	window.setTimeout(function () {
+		var preloader = document.getElementById('isg-preloader');
+		if (window.ISG_PRELOADER_DONE || !preloader) {
+			return;
+		}
+
+		window.ISG_PRELOADER_DONE = true;
+		document.documentElement.classList.remove('isg-preloader-active');
+		document.body.classList.remove('isg-preloader-active');
+		preloader.setAttribute('aria-busy', 'false');
+		preloader.classList.add('isg-preloader--done');
+		window.setTimeout(function () {
+			if (preloader.parentNode) {
+				preloader.parentNode.removeChild(preloader);
+			}
+		}, 500);
+	}, 6000);
+</script>
+<noscript>
+	<style>
+		html.isg-preloader-active,
+		body.isg-preloader-active {
+			overflow: auto !important;
+		}
+
+		#isg-preloader {
+			display: none !important;
+		}
+	</style>
+</noscript>

@@ -12,14 +12,14 @@ html {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   font-size: 0.5787037037vw;
-  /* Плавность — Lenis (см. smooth-scroll.js); нативный smooth конфликтует с Lenis */
+  
   scroll-behavior: auto;
-  /* fixed-хедер не клипится #isg-main — режем горизонтальный вылет на корне */
+  
   overflow-x: clip;
   max-width: 100%;
 }
 
-/* html font-size: <=499 / <=1099 / <=1439. Layout tokens: <=499, 500-767, 768-1099, 1100-1439, >=1440. */
+
 
 @media (max-width: 1439px) {
     html {
@@ -108,7 +108,7 @@ html {
   --isg-hero-watch-pad-left: var(--isg-hero-action-pad-y);
   --isg-hero-watch-padding: var(--isg-hero-action-pad-y) var(--isg-hero-action-pad-x) var(--isg-hero-action-pad-y) var(--isg-hero-watch-pad-left);
   --isg-hero-watch-thumb-size: calc(var(--isg-hero-action-height) - (var(--isg-hero-action-pad-y) * 2));
-  /* UI kit — типографика (см. _typography.scss); правки в одном месте или здесь в DevTools */
+  
   --isg-type-display: 8.4rem;
   --isg-type-headline: 6.2rem;
   --isg-type-lead: 4.2rem;
@@ -123,7 +123,7 @@ html {
   --isg-type-title: 1.85rem;
   --isg-type-title-sm: 1.15rem;
   --isg-type-button: 1.6rem;
-  /* Семантика заголовков (см. _typography.scss): h2 = headline; h3/h4 — отдельные clamp */
+  
   --isg-type-h2: var(--isg-type-headline);
   --isg-type-h3: 5.6rem;
   --isg-type-h4: 3.6rem;
@@ -133,23 +133,23 @@ html {
   color: #ffffff;
 }
 
-// @media (min-width: 500px) and (max-width: 767px) {
-//   :root {
-//     --isg-gap: 1.6rem;
-//     --isg-header-height: 5.7rem;
-//     --isg-type-display: 5.9rem;
-//     --isg-type-headline: 5.05rem;
-//     --isg-type-lead: 3.12rem;
-//     --isg-type-stat: 4.2rem;
-//     --isg-type-h2: var(--isg-type-headline);
-//     --isg-type-h3: 4.1rem;
-//     --isg-type-h4: 3.02rem;
-//     --isg-type-body-lg: 1.82rem;
-//     --isg-type-body: 1.6rem;
 
-//     --isg-type-caption: 1.22rem;
-//   }
-// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @media  (max-width: 1099px) {
   :root {
@@ -202,8 +202,8 @@ body {
   max-width: 100%;
 }
 
-/* Горизонтальный скролл страницы от ширин 100vw / анимированных блоков;
-   z-index выше фиксированного футера — контент «съезжает», открывая футер снизу */
+
+
 #isg-main {
   overflow-x: clip;
   max-width: 100%;
@@ -214,18 +214,18 @@ body {
   box-shadow: 0 0.5rem 2.5rem rgba(17, 17, 17, 0.07);
 }
 
-/*
- * Футер fixed + z-index:0. Соседи с z-index:auto рисуются после него в DOM — «просвечивание».
- * Секции — слой 1. Спейсер НЕ в слое 1: иначе белая подложка перекрывает футер в зоне докрута.
- * Хедер не трогаем (position:fixed + z-index:200 на .isg-site-header).
- * Логотип .isg-site-logo — fixed + z-index:201, без слоя z-index:1 у секций.
- */
+
+
+
+
+
+
 #isg-main > *:not(footer):not(.isg-site-header):not(.isg-footer-spacer):not(.isg-site-logo) {
   position: relative;
   z-index: 1;
 }
 
-/* Высота задаётся JS; прозрачный — виден фиксированный футер под ним (тот же z-index:0, позже в DOM) */
+
 .isg-footer-spacer {
   position: relative;
   z-index: 0;
@@ -292,13 +292,13 @@ select {
   color: #111111;
 }
 
-/* Секции с title-anim: визуальный H3 (чуть меньше базового .isg-h2) */
+
 .isg-h2.isg-title-anim {
   font-size: var(--isg-type-h3);
   letter-spacing: -0.022em;
 }
 
-/* Заголовки: scroll-driven reveal — маска по строкам (title-anim.js) */
+
 .isg-title-anim {
   width: 100%;
   box-sizing: border-box;
@@ -372,7 +372,7 @@ select {
   align-items: center;
 }
 
-/* Пара «медиа + .isg-btn»: не переносить; квадрат медиа задаётся явным calc ниже */
+
 .isg-btn-group:has(> .isg-btn__media) {
   align-items: center;
   flex-wrap: nowrap;
@@ -418,7 +418,7 @@ select {
   outline-offset: 3px;
 }
 
-/* Подпись: клип + прокрутка по hover (GSAP), см. rfq-intro-btn-hover.js — в т.ч. hero */
+
 .isg-btn .isg-btn__scroll-track {
   flex: 1 1 auto;
   min-width: 0;
@@ -432,7 +432,7 @@ select {
   white-space: nowrap;
 }
 
-/* Как .button.--blur на toptier.relats.com — для тёмного фона */
+
 .isg-btn--blur {
   -webkit-backdrop-filter: blur(30px);
   backdrop-filter: blur(30px);
@@ -492,7 +492,7 @@ select {
   color: #111111;
 }
 
-/* Не наследовать оранжевый ховер Relats у навигации */
+
 .isg-btn--ghost-dark:hover {
   background: rgba(0, 0, 0, 0.5);
   border-color: transparent;
@@ -506,7 +506,7 @@ select {
 }
 
 .isg-btn__media {
-  /* Квадрат в рост кнопке Relats (.button) */
+  
   --isg-btn-media-side: var(--isg-btn-height);
   display: flex;
   align-items: center;
@@ -700,7 +700,7 @@ select {
   height: 100%;
 }
 
-/* Relats-style sliding hover / active pill (см. https://toptier.relats.com/) */
+
 .isg-nav-pill__row--slider {
   position: relative;
   isolation: isolate;
@@ -742,9 +742,9 @@ select {
   color: rgba(17, 17, 17, 0.68);
 }
 
-/*
- * Hover-slider (секции): подложка только при hover; активный пункт без отдельной обводки/заливки.
- */
+
+
+
 .isg-nav-pill__row--hover-slider.isg-nav-pill__row--slider--init .isg-btn--ghost-dark {
   transition: color 0.32s cubic-bezier(0.33, 1, 0.32, 1);
 }
@@ -930,7 +930,7 @@ padding: 0 1.3rem;
   padding: var(--isg-space-lg) var(--isg-space-xl);
 }
 
-/* Скрывается на мобильном — навигация и язык в drawer. */
+
 @media (max-width: 1099px) {
   .isg-header-desktop-only {
     display: none !important;
@@ -1308,7 +1308,7 @@ body.isg-nav-drawer-open {
 }
 .isg-hero {
   position: relative;
-  /* Полная высота экрана; хедер fixed и не занимает поток — фон с верхнего края вьюпорта */
+  
   min-height: 100dvh;
   min-height: 100svh;
   display: flex;
@@ -1317,15 +1317,15 @@ body.isg-nav-drawer-open {
   padding: 0 0 var(--isg-space-16xl);
   background-color: #2a2a2a;
   overflow: hidden;
-  /* Стабильный слой для filter (intro-exit-blur), меньше артефактов на краях */
+  
   transform: translateZ(0);
   backface-visibility: hidden;
 }
 
-/*
- * Стык hero → application: у #isg-main фон #fff; filter:blur на .isg-hero даёт субпиксельную щель —
- * видна «белая линия». Следующая секция с тёмным фоном наезжает на 1–2px и перекрывает шов.
- */
+
+
+
+
 #isg-hero + #isg-application {
   margin-top: -3px;
 }
@@ -1348,7 +1348,7 @@ body.isg-nav-drawer-open {
   display: none !important;
 }
 
-/* Затемнение поверх видео — читаемость типографики */
+
 .isg-hero::after {
   content: "";
   position: absolute;
@@ -1358,7 +1358,7 @@ body.isg-nav-drawer-open {
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.62) 0%, rgba(0, 0, 0, 0.38) 38%, rgba(0, 0, 0, 0.55) 100%);
 }
 
-/* Лёгкая тень у крупного текста на шумном фото (дополнение к ::after) */
+
 .isg-hero .isg-display,
 .isg-hero .isg-lead {
   color: #ffffff;
@@ -1438,7 +1438,7 @@ body.isg-nav-drawer-open {
   -webkit-backdrop-filter: blur(23px);
   backdrop-filter: blur(23px);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-  /* transform — только GSAP (hover-сдвиг как у .isg-btn), без CSS-transition */
+  
   transition: background 0.2s ease, color 0.2s ease;
   outline: none;
 }
@@ -1541,10 +1541,10 @@ body.isg-nav-drawer-open {
   flex-direction: column;
   align-items: stretch;
   gap: 0;
-  /*
-   * Ниже fixed-шапки: измеренный низ хедера + доп. зазор от шапки до контента.
-   * Кнопки прижаты к низу секции — см. .isg-hero .isg-hero__content.
-   */
+  
+
+
+
   padding-top: calc(var(--isg-sticky-header-offset, 5.5rem) + var(--isg-space-4xl) + var(--isg-space-4xl));
   padding-bottom: 0;
   flex: 1;
@@ -1588,7 +1588,7 @@ body.isg-nav-drawer-open {
   max-width: 100%;
   box-sizing: border-box;
   --isg-header-pad-inline: 6.4rem;
-  /* Навигация с overflow-x: auto не должна раздувать вьюпорт */
+  
   overflow-x: clip;
   overflow-y: visible;
   background: transparent;
@@ -1596,12 +1596,12 @@ body.isg-nav-drawer-open {
   box-shadow: none;
 }
 
-/*
- * Логотип вне header (partials/site-logo.html): без подложки.
- * mix-blend-mode только на <img> (один проход). Раньше multiply+difference на обёртке/ссылке
- * давали «невидимый» светлый logo_footer.svg на тёмном hero.
- * Drawer вне .isg-site-header__chrome, чтобы панель оставалась обычной.
- */
+
+
+
+
+
+
 .isg-site-logo {
   mix-blend-mode: difference;
   position: fixed;
@@ -1761,7 +1761,7 @@ body.isg-nav-drawer-open {
   box-shadow: none;
 }
 
-/* Навигация в шапке (как язык: слайдер за активной секцией): вне слайдера — #111 */
+
 .isg-site-header__chrome .isg-hero__nav-wrap .isg-nav-pill__row--slider--init .isg-btn--ghost-dark.isg-btn--active,
 .isg-site-header__chrome .isg-hero__nav-wrap .isg-nav-pill__row--slider--init .isg-btn--ghost-dark[aria-current=page] {
   color: #ffffff !important;
@@ -1773,7 +1773,7 @@ body.isg-nav-drawer-open {
   font-weight: 400;
 }
 
-/* Текст на чёрной подложке слайдера (после правил active — иначе #111 перебивает) */
+
 .isg-site-header__chrome .isg-lang-pill .isg-nav-pill__row--slider--init .isg-btn--ghost-dark.isg-nav-pill__link--slider-target,
 .isg-site-header__chrome .isg-hero__nav-wrap .isg-nav-pill__row--slider--init .isg-btn--ghost-dark.isg-nav-pill__link--slider-target {
   color: #fff !important;
@@ -1804,7 +1804,7 @@ body.isg-nav-drawer-open {
   color: #ffffff !important;
 }
 
-/* Белый текст над чёрным слайдером; без заливки самой кнопки — только скольжение подложки */
+
 .isg-site-header__chrome .isg-lang-pill .isg-nav-pill__row--slider--init .isg-btn--ghost-dark:is(:hover, :focus-visible, :active) {
   background: transparent !important;
   color: #fff !important;
@@ -1812,7 +1812,7 @@ body.isg-nav-drawer-open {
   border-color: transparent !important;
 }
 
-/* Header remix lock: desktop style from approved mock */
+
 .isg-site-header__chrome .isg-nav-pill {
   --isg-header-item-h: 4.1rem;
   --isg-header-control-h: calc(var(--isg-header-item-h) - 0.4rem);
@@ -1914,9 +1914,7 @@ body.isg-nav-drawer-open {
   color: #ffffff !important;
 }
 
-.isg-site-header__chrome .isg-header-nav.isg-nav-pill__row--slider--init .isg-btn--ghost-dark.isg-nav-pill__link--slider-target,
-.isg-site-header__chrome .isg-header-nav.isg-nav-pill__row--slider--init .isg-btn--ghost-dark.isg-btn--active,
-.isg-site-header__chrome .isg-header-nav.isg-nav-pill__row--slider--init .isg-btn--ghost-dark[aria-current=page] {
+.isg-site-header__chrome .isg-header-nav.isg-nav-pill__row--slider--init .isg-btn--ghost-dark.isg-nav-pill__link--slider-target {
   color: #111111 !important;
 }
 
@@ -2248,9 +2246,9 @@ body.isg-nav-drawer-open {
     min-height: var(--isg-space-7-2);
   }
 }
-/*
- * Digits featured: фон на всю .scroll (липкий кадр), .cards абсолютно справа и уезжают вливо (только GSAP x).
- */
+
+
+
 .isg-digits-section.component--featured {
   height: auto;
   padding: 0;
@@ -2259,10 +2257,10 @@ body.isg-nav-drawer-open {
   max-width: none;
   margin: 0;
   overflow-x: clip;
-  /*
-   * --isg-featured-slide задаётся в JS (clientWidth .scroll) вместо 100vw:
-   * так нет полосы прокрутки из‑за scrollbar + vw.
-   */
+  
+
+
+
 }
 
 .isg-digits-section.component--featured .scroll {
@@ -2411,7 +2409,7 @@ body.isg-nav-drawer-open {
 }
 
 .isg-digits-section.component--featured {
-  /* Карточки: фон на всю площадь, блок value + label снизу слева */
+  
 }
 
 .isg-digits-section.component--featured .card.card--featured.isg-digit-card {
@@ -2445,7 +2443,7 @@ body.isg-nav-drawer-open {
   pointer-events: none;
 }
 
-/* Классы title--large: размер как у крупного заголовка секции */
+
 .isg-digit-card {
   border-radius: 1.6rem;
 }
@@ -2456,7 +2454,7 @@ body.isg-nav-drawer-open {
   z-index: 1;
   pointer-events: none;
   border-radius: inherit;
-  /* Плавное «втапливание» без резкой линии: маска + мягкий градиент */
+  
   background: linear-gradient(180deg, rgba(10, 10, 10, 0) 0%, rgba(10, 10, 10, 0.03) 38%, rgba(10, 10, 10, 0.14) 58%, rgba(6, 6, 6, 0.42) 82%, rgba(6, 6, 6, 0.66) 100%);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
@@ -2518,7 +2516,7 @@ body.isg-nav-drawer-open {
   }
 }
 @media (max-width: 1099px) {
-  /* Иначе overflow-x: clip на .scroll режет полосу с отриц. margin (как на relats.com) */
+  
   .isg-digits-section.component--featured {
     overflow-x: visible;
   }
@@ -2574,11 +2572,11 @@ body.isg-nav-drawer-open {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    /* Иначе обрезается горизонтальная лента с отриц. margin — карточки не «уезжают» за край */
+    
     overflow-x: visible;
     overflow-y: visible;
     touch-action: pan-y;
-    /* На мобильной — сплошная подложка (без полупрозрачности как на десктопе поверх фото) */
+    
     background-color: #f3f2ee;
   }
   .isg-digits-section.component--featured .scroll .inner .cards .center {
@@ -2596,10 +2594,10 @@ body.isg-nav-drawer-open {
         margin-top: var(--isg-space-14xl);
 
   }
-  /*
-   * Карточки как на relats.com (моб.): горизонтальный скролл, «peek» справа до края экрана.
-   * Слева — выравнивание с текстом; справа — без поля (только safe-area), карточки визуально уходят за край.
-   */
+  
+
+
+
   .isg-digits-section.component--featured .columns--start {
     display: flex;
     flex-direction: row;
@@ -2657,8 +2655,8 @@ body.isg-nav-drawer-open {
     border-radius: 1.6rem;
   }
 }
-/* Application: sticky .isg-app__scene + .isg-app__post (высота хвоста = длина scrub, задаётся JS) */
-/* Без overflow-x: clip на секции — иначе в части браузеров ломается position:sticky у .isg-app__scene */
+
+
 .isg-app--scroll {
   position: relative;
   overflow-x: visible;
@@ -2667,7 +2665,7 @@ body.isg-nav-drawer-open {
   background: #1a1a1a;
 }
 
-/* Устаревший .isg-app__pre не используем — скрываем, если остался в старом шаблоне WP */
+
 .isg-app__pre {
   display: none !important;
   height: 0 !important;
@@ -2685,7 +2683,7 @@ body.isg-nav-drawer-open {
   background-color: #1a1a1a;
 }
 
-/* Один экран контента + видео, привязанный к верху окна на время прохода по секции */
+
 .isg-app__scene {
   position: sticky;
   top: 0;
@@ -2756,7 +2754,7 @@ body.isg-nav-drawer-open {
   overflow: hidden;
 }
 
-/* Аккордеон в потоке; min-height чтобы слой заголовка (inset:0) не схлопывался при opacity:0 у стадии */
+
 .isg-app-scroll__overlap {
   position: relative;
   width: 100%;
@@ -2809,7 +2807,7 @@ body.isg-nav-drawer-open {
   will-change: transform, opacity;
 }
 
-/* Application: побуквенная заливка — те же .isg-intro-char*, что и в intro-секциях */
+
 .isg-app-scroll__head .isg-intro-reveal__title,
 .isg-app-scroll__stage-intro .isg-intro-reveal__title {
   margin: 0;
@@ -2823,7 +2821,7 @@ body.isg-nav-drawer-open {
   color: rgba(255, 255, 255, 0.9);
 }
 
-/* Дубликат копирайта для мобилы / потока; на широком экране — только оверлей .isg-app-scroll__head */
+
 .isg-app-scroll__stage-intro {
   position: relative;
   width: 100%;
@@ -2925,11 +2923,11 @@ body.isg-nav-drawer-open {
     height: auto;
     max-height: none;
   }
-  /* Оверлей заголовка только на десктопе; на мобиле — .isg-app-scroll__stage-intro */
+  
   .isg-app-scroll__head {
     display: none;
   }
-  /* На узком экране без «залипания» — длинный контент не обрезается в 100vh-слое */
+  
   .isg-app__scene {
     position: relative;
     min-height: 100svh;
@@ -2971,7 +2969,7 @@ body.isg-nav-drawer-open {
   align-items: flex-end;
 }
 
-/* Компактный блок без внутреннего скролла колонки аккордеона */
+
 .isg-app--scroll .isg-accordion__img {
   min-height: 24rem;
   height: 100%;
@@ -3067,7 +3065,7 @@ body.isg-nav-drawer-open {
   padding-bottom: 0;
 }
 
-/* Плавное раскрытие: grid-template-rows 0fr → 1fr (без JS-анимации высоты) */
+
 .isg-accordion__body {
   display: grid;
   grid-template-rows: 0fr;
@@ -3175,7 +3173,7 @@ height:20rem;
       background-color: #e8e6e0;
 }
 
-/* После sticky-блока Advantages следующий intro должен идти в потоке без нахлёста */
+
 #isg-product > .isg-intro-section {
   margin-top: 0;
 }
@@ -3252,7 +3250,7 @@ height:20rem;
 }
 
 
-/* Обёртка about: intro + text-grid */
+
 .isg-intro-pin {
   width: 100%;
 }
@@ -3262,7 +3260,7 @@ height:20rem;
   color: transparent;
 }
 
-/* Побуквенное интро: меньше секционного headline */
+
 .isg-display.isg-intro-reveal__title {
   font-size: var(--isg-type-display);
   letter-spacing: -0.032em;
@@ -3276,11 +3274,11 @@ height:20rem;
   margin-bottom: 0;
   margin-right: auto;
   text-align: center;
-  /* transform на этом узле ломает position:absolute у букв — только opacity из JS */
+  
   will-change: opacity;
 }
 
-/* Слова целиком — иначе каждая буква inline-block и переносится по буквам */
+
 .isg-intro-word {
   display: inline-block;
   white-space: nowrap;
@@ -3301,9 +3299,9 @@ height:20rem;
 }
 
 .isg-intro-char__ghost {
-  /*
-   * Чуть ярче «каркас», чтобы заливка читалась до скролла
-   */
+  
+
+
   color: rgba(255, 255, 255, 0.22);
 }
 
@@ -3579,7 +3577,7 @@ height:20rem;
   flex-shrink: 0;
 }
 
-/* Product intro: карточки спецификаций — на мобильной горизонтальный скролл как .columns--start (digits featured) */
+
 @media (max-width: 767px) {
 
   .isg-intro-section__container,
@@ -3753,7 +3751,7 @@ height:20rem;
 
 
 
-/* Уже мера строки для текста в колонках (таблицы и сетка чипов без изменений) */
+
 .isg-product-content .isg-product-content__col .isg-body,
 .isg-about-team-block__lead .isg-body {
   max-width: min(100%, 30ch);
@@ -3771,7 +3769,7 @@ height:20rem;
   max-width: min(100%, 30ch);
 }
 
-/* About text grid: левая колонка — шире мера строки */
+
 .isg-about-text-grid__left .isg-body {
   max-width: min(100%, 34ch);
 }
@@ -3787,7 +3785,7 @@ height:20rem;
   min-width: 0;
 }
 
-/* Правая зона 8 колонок: три стека по равной доле */
+
 .isg-product-content__grades-stacks {
   grid-column: 5/13;
   display: grid;
@@ -3864,7 +3862,7 @@ height:20rem;
   color: #e8e6e0;
 }
 
-/* В product-range чипы без hover-состояния */
+
 .isg-product-content .isg-filled-item:hover,
 .isg-product-content .isg-filled-item:focus-visible {
   background: #1257A6;
@@ -3909,7 +3907,7 @@ height:20rem;
   grid-column: 1/-1;
 }
 
-/* Под .isg-rule до контента нижнего ряда: 1rem */
+
 .isg-product-content .isg-product-content__inner > .isg-product-content__row--rule + .isg-product-content__row--sizes {
   margin-top: var(--isg-space-4xl);
 }
@@ -3935,7 +3933,7 @@ height:20rem;
   max-width: 100%;
 }
 
-/* Две колонки без горизонтального скролла: равные доли ширины панели */
+
 .isg-size-tables {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -3958,7 +3956,7 @@ height:20rem;
   max-width: 100%;
 }
 
-/* Таблица размеров: список + линии для GSAP (product-content-line-draw.js) */
+
 .isg-size-spec {
   width: 100%;
 }
@@ -4063,7 +4061,7 @@ height:20rem;
   text-transform: uppercase;
 }
 
-/* Четыре колонки — один ряд параметров (Product range) */
+
 .isg-size-table--quad {
   table-layout: fixed;
 }
@@ -4099,7 +4097,7 @@ height:20rem;
   gap: 0;
 }
 
-/* display: block — иначе transform: scaleX на span не рисуется предсказуемо */
+
 .isg-size-table__rule-seg {
   display: block;
   flex: 1 1 25%;
@@ -4137,7 +4135,7 @@ height:20rem;
   transform-origin: left center;
 }
 
-/* Иначе видна полоса фона родителя на всю ширину — scaleX на span не заметен */
+
 .isg-product-content__inner--lines-draw .isg-rule {
   background: transparent !important;
   transform-origin: left center;
@@ -4241,14 +4239,14 @@ height:20rem;
 }
 
 .isg-quality-intro {
-  /* inherits base intro-section module */
+  
 }
 
 .isg-quality-intro__conteiner {
   gap: var(--isg-space-11xl);
 }
 
-/* Quality: scroll-driven блок (список | медиа; липкая сцена) */
+
 .isg-quality-content {
   --isg-quality-gap-header: clamp(1.2rem, 2.2vw, 3rem);
   --isg-quality-content-pad-top: 0px;
@@ -4264,7 +4262,7 @@ height:20rem;
   box-sizing: border-box;
 }
 
-/* About: overflow:visible обязателен — position:sticky ломается при overflow:clip/hidden на предке */
+
 .isg-about-content-block {
   --isg-quality-gap-header: clamp(1.2rem, 2.2vw, 3rem);
   --isg-quality-content-pad-top: 0px;
@@ -4343,7 +4341,7 @@ height:20rem;
 .isg-about-text-grid {
   margin-bottom: var(--isg-space-15xl);
 }
-/* Сертификаты в About team: бежевый фон + синий текст; hover — чёрный фон + бежевый текст */
+
 .isg-about-team-block .isg-filled-item--about {
   background: #e8e6e0;
   color: #1257A6;
@@ -4372,11 +4370,11 @@ height:20rem;
   z-index: 1;
   width: 100%;
   pointer-events: auto;
-  /* Точная высота = n×100vh задаётся в quality-scroll.js; до инициализации не схлопывать */
+  
   min-height: 100vh;
 }
 
-/* Невидимые якоря внутри трека — цели для lenis.scrollTo(), как маркеры у Relats slides */
+
 .isg-quality-markers {
   position: absolute;
   left: 0;
@@ -4395,7 +4393,7 @@ height:20rem;
   height: 1px;
 }
 
-/* На всю высоту вьюпорта — оболочка; контент по высоте области с учётом паддингов */
+
 .isg-quality-content__sticky {
   position: sticky;
   top: var(--isg-sticky-header-offset, 88px);
@@ -4410,10 +4408,10 @@ height:20rem;
 }
 
 @media (min-width: 1100px) {
-  /*
-   * Под хедером на одном экране: паддинг сверху белого блока + липкая сцена (border-box)
-   * = 100vh − хедер − safe-area.
-   */
+  
+
+
+
   .isg-quality-content__sticky {
     min-height: calc(100svh - var(--isg-sticky-header-offset, 88px) - env(safe-area-inset-bottom, 0px) - var(--isg-quality-content-pad-top));
     max-height: calc(100svh - var(--isg-sticky-header-offset, 88px) - env(safe-area-inset-bottom, 0px) - var(--isg-quality-content-pad-top));
@@ -4427,7 +4425,7 @@ height:20rem;
     box-sizing: border-box;
   }
 }
-/* Как .isg-rfq-row: полная ширина контентной области, wrap, без max-width на ряду */
+
 .isg-quality-row {
   display: flex;
   flex-wrap: wrap;
@@ -4462,7 +4460,7 @@ height:20rem;
   background: #1257A6;
 }
 
-/* Десктоп: в окне видно ~2 пункта; остальное уезжает translateY (quality-scroll.js) */
+
 @media (min-width: 1100px) {
   .isg-quality-list-wrap {
     overflow: hidden;
@@ -4525,7 +4523,7 @@ height:20rem;
   outline-offset: 2px;
 }
 
-/* Как Relats .center: окно списка по центру вертикали; label остаётся вверху */
+
 .isg-quality-list-center {
   display: flex;
   flex-direction: column;
@@ -4610,7 +4608,7 @@ height:20rem;
   border-radius: 6px;
 }
 
-/* Строка пункта списка в панели quality */
+
 .isg-quality-list-wrap .isg-quality-list-item {
   width: 100%;
   padding-left: var(--isg-quality-pad-x-mobile);
@@ -4636,7 +4634,7 @@ height:20rem;
   pointer-events: none;
 }
 
-/* Плоская подложка как на макете: без теней и blur; неактив — серый глиф, активный — синий */
+
 .isg-quality-list-item__icon {
   flex-shrink: 0;
   display: flex;
@@ -4697,18 +4695,18 @@ height:20rem;
   min-height: 320px;
   align-self: stretch;
   position: relative;
-  /* Как у .isg-quality-content (верх секции 64px) */
+  
   border-radius: 1.8rem;
   overflow: hidden;
   box-sizing: border-box;
 }
 
 @media (min-width: 1100px) {
-  /* Не фиксировать 320px — иначе ряд не влезает в calc-высоту липкой сцены */
+  
   .isg-quality-visual {
     min-height: 0;
   }
-  /* Подписи на фото только для мобильного слайдера */
+  
   .isg-quality-visual__caption {
     display: none;
   }
@@ -4720,7 +4718,7 @@ height:20rem;
   overflow: hidden;
 }
 
-/* clip-path / слой из GSAP (quality-scroll.js) — маска снизу вверх */
+
 .isg-quality-visual__slide {
   position: absolute;
   inset: 0;
@@ -4734,7 +4732,7 @@ height:20rem;
 }
 
 @media (max-width: 1099px) {
-  /* Горизонтальная лента «две коробки» (как .boxes на toptier.relats.com) */
+  
   .isg-quality-content, .isg-about-content-block {
     --isg-quality-gap-header: 1.6rem;
     --isg-quality-content-pad-top: 0px;
@@ -4964,12 +4962,12 @@ height:20rem;
   position: relative;
   background: #1257A6;
 
-  /* overflow НЕ hidden — иначе position:sticky внутри не работает */
+  
 }
 
 .isg-about-main {
   position: relative;
-  /* overflow:hidden убран — он ломал position:sticky для .isg-quality-content__sticky */
+  
 }
 
 .isg-about-intro {
@@ -4993,7 +4991,7 @@ height:20rem;
 }
 
 
-/* Карточка About: isg-quality-visual (clip-path) + абсолютный content-stack */
+
 .isg-about-feature-card {
   flex: 1 1 400px;
   min-width: 0;
@@ -5004,7 +5002,7 @@ height:20rem;
   border-radius: 1.6rem;
   overflow: hidden;
   box-sizing: border-box;
-  /* Иначе .isg-quality-visual с абсолютными слайдами даёт высоту 0 — фото не видно */
+  
   display: flex;
   flex-direction: column;
 }
@@ -5022,7 +5020,7 @@ height:20rem;
   min-height: 0;
 }
 
-/* Как Relats .image--cover: контейнер с clip-path, внутри <img> с translate3d */
+
 .isg-quality-visual__slide-img {
   display: block;
   position: absolute;
@@ -5041,7 +5039,7 @@ height:20rem;
     will-change: transform;
   }
 }
-/* Обёртка стеклянной панели — поверх фото, не участвует в расчёте высоты */
+
 .isg-about-feature-card__inner {
   position: absolute;
   inset: 0;
@@ -5094,7 +5092,7 @@ height:20rem;
   display: none;
 }
 
-/* Как Relats .inner: столбец всех box'ов; двигается yPercent = -(100/n)*t */
+
 .isg-about-feature-card__content-inner {
   display: flex;
   flex-direction: column;
@@ -5103,7 +5101,7 @@ height:20rem;
   backface-visibility: hidden;
 }
 
-/* Как Relats .box: обычный flow, не absolute */
+
 .isg-about-feature-card__content-slide {
   display: flex;
   flex-direction: column;
@@ -5157,7 +5155,7 @@ height:20rem;
 }
 
 @media (max-width: 1099px) {
-  /* Лента фото — общие правила .isg-quality-visual__slides; панель content-stack только на десктопе */
+  
   .isg-about-feature-card {
     width: 100%;
     max-width: none;
@@ -5168,7 +5166,7 @@ height:20rem;
     display: none;
   }
 }
-/* About team — макет Pencil PNDFj: padding 128 64 96, gap 96, текст 579px | слайдер вправо, трек↔нав 64px, карточка 430×458 */
+
 .isg-about-team-block {
 
 }
@@ -5230,7 +5228,7 @@ height:20rem;
   width: 100%;
 }
 
-/* team: items:3 — карточка на всю ширину ячейки tns, без min(430px) из общего правила */
+
 .isg-about-team-block__slider .isg-slider__item,
 .isg-about-team-block__slider .swiper-slide .isg-slider__item {
   width: 100%;
@@ -5258,7 +5256,7 @@ height:20rem;
   color: #e8e6e0;
 }
 
-/* Галерея: высота от aspect-ratio, без фиксированного vh */
+
 .isg-slider--gallery .isg-slider__item,
 .isg-slider--gallery .swiper-slide .isg-slider__item {
   width: 100%;
@@ -5321,7 +5319,7 @@ height:20rem;
   width: 100%;
 }
 
-/* Галерея: трек на ширину вьюпорта; края слайдов «режутся» через fixedWidth + edgePadding (sliders.js) */
+
 .isg-about-gallery-block__slider-bleed {
   position: relative;
   box-sizing: border-box;
@@ -5580,7 +5578,7 @@ height:20rem;
   }
 }
 
-/* Swiper wrapper overrides fallback track */
+
 .isg-slider__track.swiper-wrapper {
   display: flex;
   overflow: visible;
@@ -5596,7 +5594,7 @@ height:20rem;
   box-sizing: border-box;
 }
 
-/* Slide width is managed by Swiper; card fills slide cell */
+
 .isg-slider .swiper-slide .isg-slider__item {
   width: 100%;
   max-width: none;
@@ -5714,7 +5712,7 @@ button.isg-slider-item__img,
   max-width: 1186px;
 }
 
-/* Одна линия; ползунок по вертикали по центру линии (общая полоса 4px) */
+
 .isg-slider-nav__inner {
   position: relative;
   width: 100%;
@@ -5723,7 +5721,7 @@ button.isg-slider-item__img,
   align-items: center;
 }
 
-/* Светлее, чем thumb */
+
 .isg-slider-nav__line {
   position: absolute;
   left: 0;
@@ -5736,7 +5734,7 @@ button.isg-slider-item__img,
   pointer-events: none;
 }
 
-/* Темнее линии; margin-left задаёт sliders.js */
+
 .isg-slider-nav__thumb {
   position: relative;
   height: 4px;
@@ -5769,7 +5767,7 @@ button.isg-slider-item__img,
   justify-content: center;
 }
 
-/* team: стрелки в SVG — stroke="currentColor" */
+
 [data-isg-slider=team] .isg-slider__btn {
   color: #ffffff;
 }
@@ -5784,7 +5782,7 @@ button.isg-slider-item__img,
   outline-offset: 3px;
 }
 
-/* Кнопки целиком внутри .isg-slider (не «наполовину» снаружи как у −32px в макете-компенсации) */
+
 .isg-slider__btn--prev {
   left: -2.5rem;
 }
@@ -5861,7 +5859,7 @@ button.isg-slider-item__img,
   outline-offset: 2px;
 }
 
-/* Полноэкранный лайтбокс (#isg-lightbox вставляется из lightbox.js) */
+
 .isg-lightbox {
   position: fixed;
   inset: 0;
@@ -5871,7 +5869,7 @@ button.isg-slider-item__img,
   padding: max(var(--isg-space-lg), env(safe-area-inset-top)) max(var(--isg-space-lg), env(safe-area-inset-right)) max(var(--isg-space-lg), env(safe-area-inset-bottom)) max(var(--isg-space-lg), env(safe-area-inset-left));
 }
 
-/* Закрытие: visibility (не display:none) — чтобы GSAP мог анимировать появление */
+
 .isg-lightbox.isg-lightbox--inactive {
   visibility: hidden;
   pointer-events: none;
@@ -5911,7 +5909,7 @@ button.isg-slider-item__img,
   max-height: inherit;
 }
 
-/* display:flex у .isg-lightbox__nav перебивает [hidden] — явно скрываем */
+
 .isg-lightbox__nav[hidden] {
   display: none !important;
 }
@@ -5973,7 +5971,7 @@ button.isg-slider-item__img,
   background: rgba(255, 255, 255, 0.28);
 }
 
-/* Кнопка закрытия — вне .isg-lightbox__panel, фиксирована к вьюпорту */
+
 .isg-lightbox__close {
   position: fixed;
   top: max(1rem, env(safe-area-inset-top));
@@ -6168,7 +6166,7 @@ button.isg-slider-item__img,
   background: #1257A6;
 }
 
-/* Как .isg-quality-list-wrap: паддинги, скругление, лейбл .isg-subtitle */
+
 .isg-rfq-aside {
   border-radius: 1.8rem;
   background: #e8e6e0;
@@ -6255,7 +6253,7 @@ border: none;
   line-height: 1.4;
 }
 
-/* RFQ: плавающие подписи (input первым, затем span.isg-field__label; placeholder=" " для :placeholder-shown) */
+
 .isg-rfq-form .isg-field {
   flex: 1 1 200px;
   min-width: 0;
@@ -6327,7 +6325,7 @@ border: none;
   color: #111111;
 }
 
-/* Скрытый нативный select (значение + validation); UI — .isg-custom-select (см. rfq-custom-select.js) */
+
 .isg-rfq-form .isg-custom-select__native {
   position: absolute;
   width: 1px;
@@ -6404,7 +6402,7 @@ border: none;
   transform: rotate(180deg);
 }
 
-/* [hidden] даёт display:none, но общий display:flex перебивает его — явно скрываем закрытую панель */
+
 .isg-rfq-form .isg-custom-select__panel[hidden] {
   display: none !important;
 }
@@ -6541,7 +6539,7 @@ border: none;
   transform-origin: left center;
 }
 
-/* :not(:placeholder-shown) только для input/textarea; кастом-селект: :has(.isg-custom-select__native:valid) */
+
 .isg-rfq-form .isg-field--float:focus-within .isg-field__label,
 .isg-rfq-form .isg-field--float input.isg-field__control:not(:placeholder-shown) + .isg-field__label,
 .isg-rfq-form .isg-field--float textarea.isg-field__control:not(:placeholder-shown) + .isg-field__label,
@@ -6553,7 +6551,7 @@ border: none;
   opacity: 0.8;
 }
 
-/* textarea: лейбл у верха в полном размере; при фокусе/значении — только уменьшение (без сдвига top) */
+
 .isg-rfq-form .isg-field--textarea.isg-field--float .isg-field__label {
   top: 0;
   transform: translateY(0) scale(1);
@@ -6994,13 +6992,13 @@ border: none;
     grid-column: auto;
   }
 }
-/* -------------------------------------------------------------------------- */
-/* Мобильная плотность: yucca.co.za — читаемый кегль; relats.com — поля и скругления */
-/* -------------------------------------------------------------------------- */
 
-/* -------------------------------------------------------------------------- */
-/* Прелоадер: пока подгружаются partials, скрипты и изображения */
-/* -------------------------------------------------------------------------- */
+
+
+
+
+
+
 html.isg-preloader-active,
 body.isg-preloader-active {
   overflow: hidden;
@@ -7424,4 +7422,4 @@ body.isg-404-page {
   }
 }
 
-/*# sourceMappingURL=main.css.map */
+

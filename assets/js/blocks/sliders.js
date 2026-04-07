@@ -15,7 +15,7 @@ function setupSliderDragCursor() {
   el.textContent = "Drag";
   document.body.appendChild(el);
 
-  /** @type {Map<Element, { label: string }>} */
+  
   const targets = new Map();
 
   let raf = 0;
@@ -294,8 +294,8 @@ function galleryOptions(gapPx, prev, next) {
     },
     centeredSlides: false,
     slidesPerView: 1.18,
-    // Gallery slides are interactive buttons (lightbox trigger),
-    // so allow drag from these elements too.
+    
+    
     focusableElements: "input, select, option, textarea, label",
     spaceBetween: gapPx,
     slidesOffsetBefore: 16,
@@ -499,11 +499,11 @@ function bindTeamReveal(slider, onReady = () => {}) {
   };
 }
 
-/**
- * @param {ParentNode} [root]
- */
+
+
+
 export async function initSliders(root = document) {
-  /** @type {(() => void)[]} */
+  
   const disposers = [];
   const gapPx = getIsgGapPx();
   const dragCursorApi = setupSliderDragCursor();
@@ -608,13 +608,13 @@ export async function initSliders(root = document) {
         swiper?.off("resize", syncBar);
         swiper?.off("breakpoint", syncBar);
       } catch (_) {
-        /* noop */
+        
       }
       if (bar) bar.remove();
       try {
         swiper?.destroy(true, true);
       } catch (_) {
-        /* noop */
+        
       }
       swiper = null;
     });
@@ -625,7 +625,7 @@ export async function initSliders(root = document) {
       try {
         disposers.pop()?.();
       } catch (_) {
-        /* noop */
+        
       }
     }
     dragCursorApi.destroy();

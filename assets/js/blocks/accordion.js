@@ -1,6 +1,6 @@
-/**
- * Accordion: один открытый пункт; анимация высоты — CSS (grid 0fr → 1fr).
- */
+
+
+
 export function initAccordions(root = document) {
   const handlers = [];
 

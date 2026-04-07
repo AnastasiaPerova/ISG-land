@@ -1,7 +1,7 @@
-/**
- * Кастомный UI для RFQ-селектов: кнопка + панель с поиском и списком;
- * нативный <select> скрыт (значение, required, отправка формы).
- */
+
+
+
+
 function normalizeForSearch(str) {
   const s = String(str || "")
     .toLowerCase()
@@ -17,7 +17,7 @@ function normalizeForSearch(str) {
   }
 }
 
-/** Каждое слово из запроса должно встречаться в тексте опции (автопоиск). */
+
 function optionMatchesQuery(optionText, queryRaw) {
   const q = normalizeForSearch(queryRaw);
   if (!q) return true;
@@ -83,7 +83,7 @@ export function initRfqCustomSelects(root = document) {
     optionsRoot.className = "isg-custom-select__options";
     optionsRoot.setAttribute("role", "listbox");
 
-    /** @type {HTMLButtonElement[]} */
+    
     const optionEls = [];
 
     select.querySelectorAll("option").forEach((opt) => {
@@ -151,7 +151,7 @@ export function initRfqCustomSelects(root = document) {
     }
 
     let isOpen = false;
-    /** Игнорировать focusout сразу после открытии (фокус уходит с trigger на search). */
+    
     let suppressFocusOutUntil = 0;
 
     function focusSearch() {
@@ -222,7 +222,7 @@ export function initRfqCustomSelects(root = document) {
       }
     };
 
-    /** Закрытие по клику снаружи (click, не pointerdown — иначе «прокликивание» и ложные закрытия). */
+    
     const onDocClick = (e) => {
       if (!isOpen) return;
       if (!wrapper.contains(e.target)) setOpen(false);

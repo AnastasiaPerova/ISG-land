@@ -3,11 +3,11 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-/**
- * Product intro: у каждой `.isg-spec-card` своё появление — каскад по очереди
- * (timeline + offset), без scrub. `immediateRender: false`, чтобы до триггера
- * карточки не были скрыты.
- */
+
+
+
+
+
 export function initSpecCardsReveal(root = document) {
   const wrap = root.querySelector(".isg-product-intro .isg-spec-cards");
   if (!wrap) return () => {};

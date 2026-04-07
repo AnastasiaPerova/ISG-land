@@ -1,8 +1,8 @@
 const CLOSE_EVENT = "isg-close-nav-drawer";
 
-/**
- * Бургер и выезжающая панель навигации (мобильный вид).
- */
+
+
+
 export function initHeaderDrawer(root = document) {
   const btn = root.querySelector("[data-isg-burger]");
   const drawer = root.querySelector("#isg-nav-drawer");

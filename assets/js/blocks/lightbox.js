@@ -1,14 +1,14 @@
-/**
- * Лайтбокс: data-isg-lightbox="<url>". Альбом = все такие элементы в том же
- * [data-isg-slider] или в .isg-about-certs. Стрелки, ←/→, зацикливание.
- * Открытие/закрытие: GSAP (backdrop + panel + медиа).
- */
+
+
+
+
+
 
 import gsap from "gsap";
 
 const LB_ID = "isg-lightbox";
 
-/** @param {string} s */
+
 function normalizeSrcAttr(s) {
   if (!s || typeof s !== "string") return "";
   let t = s.trim();
@@ -16,7 +16,7 @@ function normalizeSrcAttr(s) {
   return t;
 }
 
-/** @param {string} src */
+
 function isAllowedLightboxSrc(src) {
   if (!src || typeof src !== "string") return false;
   const t = src.trim();
@@ -38,7 +38,7 @@ function prefersReducedMotion() {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
-/** @param {Element | null | undefined} node */
+
 function getSliderSwiper(node) {
   if (!(node instanceof Element)) return null;
   const slider = node.closest(".isg-slider.swiper");
@@ -46,7 +46,7 @@ function getSliderSwiper(node) {
   return slider.swiper || null;
 }
 
-/** @param {any} swiper */
+
 function resetSwiperInteraction(swiper) {
   if (!swiper || swiper.destroyed) return;
   swiper.allowClick = true;
@@ -60,14 +60,14 @@ function resetSwiperInteraction(swiper) {
   try {
     swiper.update();
   } catch (_) {
-    /* noop */
+    
   }
 }
 
-/**
- * @param {HTMLElement} overlay
- * @param {{ restoreFocus?: boolean, resumeAutoplay?: boolean }} [opts]
- */
+
+
+
+
 function resetOverlayState(overlay, opts = {}) {
   const { restoreFocus = false, resumeAutoplay = false } = opts;
   const img = overlay.querySelector(".isg-lightbox__img");
@@ -93,13 +93,13 @@ function resetOverlayState(overlay, opts = {}) {
     try {
       vid.pause();
     } catch (_) {
-      /* noop */
+      
     }
     vid.removeAttribute("src");
     try {
       vid.load();
     } catch (_) {
-      /* noop */
+      
     }
     vid.hidden = true;
   }
@@ -126,12 +126,12 @@ function resetOverlayState(overlay, opts = {}) {
     try {
       originAnchor.focus({ preventScroll: true });
     } catch (_) {
-      /* noop */
+      
     }
   }
 }
 
-/** @param {HTMLElement} overlay */
+
 function killLbTweens(overlay) {
   const nodes = overlay.querySelectorAll(
     ".isg-lightbox__backdrop, .isg-lightbox__panel, .isg-lightbox__img, .isg-lightbox__video, .isg-lightbox__counter, .isg-lightbox__nav",
@@ -143,7 +143,7 @@ function killLbTweens(overlay) {
   }
 }
 
-/** @param {HTMLElement} overlay */
+
 function waitActiveMedia(overlay) {
   const img = overlay.querySelector(".isg-lightbox__img");
   const vid = overlay.querySelector(".isg-lightbox__video");
@@ -159,11 +159,11 @@ function waitActiveMedia(overlay) {
   return Promise.resolve();
 }
 
-/**
- * Таймлайн открытия (paused): вызовите .play() после снятия --inactive и загрузки медиа.
- * @param {HTMLElement} overlay
- * @returns {gsap.core.Timeline}
- */
+
+
+
+
+
 function createOpenTimeline(overlay) {
   const backdrop = overlay.querySelector(".isg-lightbox__backdrop");
   const panel = overlay.querySelector(".isg-lightbox__panel");
@@ -171,7 +171,7 @@ function createOpenTimeline(overlay) {
   const vid = overlay.querySelector(".isg-lightbox__video");
   const reduce = prefersReducedMotion();
 
-  /** @type {Element | null} */
+  
   let media = null;
   if (img && !img.hidden) media = img;
   else if (vid && !vid.hidden) media = vid;
@@ -228,10 +228,10 @@ function createOpenTimeline(overlay) {
   return tl;
 }
 
-/**
- * @param {HTMLElement} overlay
- * @param {() => void} onComplete
- */
+
+
+
+
 function playCloseTimeline(overlay, onComplete) {
   const backdrop = overlay.querySelector(".isg-lightbox__backdrop");
   const panel = overlay.querySelector(".isg-lightbox__panel");
@@ -239,7 +239,7 @@ function playCloseTimeline(overlay, onComplete) {
   const vid = overlay.querySelector(".isg-lightbox__video");
   const reduce = prefersReducedMotion();
 
-  /** @type {Element | null} */
+  
   let media = null;
   if (img && !img.hidden) media = img;
   else if (vid && !vid.hidden) media = vid;
@@ -274,11 +274,11 @@ function playCloseTimeline(overlay, onComplete) {
   overlay._isgLbTl = tl;
 }
 
-/** @param {Element} anchor */
+
 function collectAlbum(anchor) {
   const slider = anchor.closest("[data-isg-slider]");
   const certs = anchor.closest(".isg-about-certs");
-  /** @type {Element[]} */
+  
   let nodes = [];
   if (slider) nodes = [...slider.querySelectorAll("[data-isg-lightbox]")];
   else if (certs) nodes = [...certs.querySelectorAll("[data-isg-lightbox]")];
@@ -303,7 +303,7 @@ function collectAlbum(anchor) {
 
 function patchOverlayAttrs(el) {
   resetOverlayState(el);
-  /* fixed у предка с transform (GSAP на .panel) ломает позицию — кнопка должна быть снаружи панели */
+  
   const closeInPanel = el.querySelector(".isg-lightbox__panel .isg-lightbox__close");
   if (closeInPanel) {
     const backdrop = el.querySelector(".isg-lightbox__backdrop");
@@ -355,7 +355,7 @@ function ensureOverlay() {
   return el;
 }
 
-/** @param {HTMLElement} overlay */
+
 function bindOverlayOnce(overlay) {
   if (overlay.dataset.isgBound === "1") return;
   overlay.dataset.isgBound = "1";
@@ -386,20 +386,20 @@ function bindOverlayOnce(overlay) {
         const p = vid.play();
         if (p && typeof p.catch === "function") p.catch(() => {});
       } catch (_) {
-        /* noop */
+        
       }
     } else {
       if (vid) {
         try {
           vid.pause();
         } catch (_) {
-          /* noop */
+          
         }
         vid.removeAttribute("src");
         try {
           vid.load();
         } catch (_) {
-          /* noop */
+          
         }
         vid.hidden = true;
       }
@@ -460,9 +460,9 @@ function bindOverlayOnce(overlay) {
   overlay._isgLightboxOnKey = onKey;
 }
 
-/**
- * @param {Element} anchor — элемент с data-isg-lightbox (триггер)
- */
+
+
+
 export function openLightbox(anchor) {
   if (!anchor || !(anchor instanceof Element)) return;
   const album = collectAlbum(anchor);
@@ -512,16 +512,16 @@ export function openLightbox(anchor) {
 
 const DRAG_PX = 14;
 
-/**
- * @param {ParentNode} [root]
- */
+
+
+
 export function initLightbox(root = document.body) {
   const overlay = ensureOverlay();
 
-  /** @type {{ t: Element; x: number; y: number; pid: number } | null} */
+  
   let ptr = null;
 
-  /** @param {PointerEvent} e */
+  
   const onPtrDown = (e) => {
     if (e.pointerType === "mouse" && e.button !== 0) return;
     const t = e.target instanceof Element ? e.target.closest("[data-isg-lightbox]") : null;
@@ -529,7 +529,7 @@ export function initLightbox(root = document.body) {
     ptr = { t, x: e.clientX, y: e.clientY, pid: e.pointerId };
   };
 
-  /** @param {PointerEvent} e */
+  
   const onPtrUp = (e) => {
     if (!ptr || e.pointerId !== ptr.pid) return;
     const swiper = getSliderSwiper(ptr.t);
@@ -549,7 +549,7 @@ export function initLightbox(root = document.body) {
     ptr = null;
   };
 
-  /** @param {MouseEvent} e */
+  
   const onClick = (e) => {
     const t = e.target instanceof Element ? e.target.closest("[data-isg-lightbox]") : null;
     if (!t || !root.contains(t)) return;

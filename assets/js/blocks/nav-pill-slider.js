@@ -1,9 +1,9 @@
-/**
- * Скользящая подложка под пунктами навигации.
- * Режим `data-isg-hover-slider`: подложка только при hover/focus внутри ряда, не следует за активным пунктом при клике/скролле.
- * На пункте под слайдером выставляется `isg-nav-pill__link--slider-target` (белый текст на чёрной подложке).
- * Обычный `data-isg-nav-slider`: hover + возврат к активному (для редких случаев без hover-only).
- */
+
+
+
+
+
+
 function getActiveLink(row) {
   return (
     row.querySelector(".isg-btn--active") ||
@@ -19,11 +19,11 @@ function targetKey(el) {
   return el.getAttribute("href") || el.getAttribute("aria-current") || el.textContent?.trim() || "";
 }
 
-/**
- * @param {HTMLElement} row
- * @param {HTMLElement} targetEl
- * @param {{ withTargetClasses?: boolean; opacity?: string }} [opts]
- */
+
+
+
+
+
 function placeSlider(row, targetEl, opts = {}) {
   const { withTargetClasses = true, opacity } = opts;
   const slider = row.querySelector(".isg-nav-pill__slider");
@@ -71,7 +71,7 @@ function placeSlider(row, targetEl, opts = {}) {
   });
 }
 
-/** После программной смены активного пункта (только ряды без data-isg-hover-slider). */
+
 export function syncNavPillSliders(root = document) {
   root
     .querySelectorAll(".isg-nav-pill__row--slider[data-isg-nav-slider]:not([data-isg-hover-slider])")
@@ -106,7 +106,7 @@ export function initNavPillSliders(root = document) {
     const showForTarget = (t) => {
       if (!links().includes(t)) return;
       lastHoverTarget = t;
-      /* slider-target на пункте под слайдером — белый текст на чёрной подложке (как у языка) */
+      
       placeSlider(row, t, { withTargetClasses: true, opacity: "1" });
     };
 

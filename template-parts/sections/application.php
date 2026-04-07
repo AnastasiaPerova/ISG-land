@@ -83,7 +83,7 @@ $items        = is_array($section['items'] ?? null) ? $section['items'] : $defau
 					class="isg-app__video"
 					muted
 					playsinline
-					preload="auto"
+					preload="metadata"
 					src="<?php echo esc_url($video_url); ?>"
 				></video>
 				<div class="isg-app__media-shade"></div>

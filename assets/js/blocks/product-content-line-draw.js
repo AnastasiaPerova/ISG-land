@@ -15,9 +15,9 @@ const STAGGER_SEG = 0.1;
 const TL_DELAY = 0.06;
 const CLIP_SUPPORTED = typeof CSS !== "undefined" && CSS.supports?.("clip-path", "inset(0 100% 0 0)");
 
-/** Когда верх триггера доходит до этой линии вьюпорта — запускаем рисование (не раньше). */
+
 const ST_START = "top 78%";
-/** Должно совпадать с логикой `start: top 78%` в ScrollTrigger. */
+
 const VIEWPORT_START_RATIO = 0.78;
 
 function doubleRaf(fn) {
@@ -26,9 +26,9 @@ function doubleRaf(fn) {
   });
 }
 
-/**
- * Триггер уже «пройден» при инициализации (например, якорь / перезагрузка со скроллом) — onEnter не сработает.
- */
+
+
+
 function isPastScrollTriggerStart(triggerEl) {
   if (!(triggerEl instanceof Element)) {
     return false;
@@ -39,9 +39,9 @@ function isPastScrollTriggerStart(triggerEl) {
   return rect.top <= startLine;
 }
 
-/**
- * Узкий элемент у линий: не весь inner (иначе срабатывает на заголовке секции).
- */
+
+
+
 function getLineDrawTrigger(inner, ruleLines, lineDrawEls, sizeRowLines) {
   return (
     inner.querySelector(".isg-product-content__row--rule") ||
@@ -53,11 +53,11 @@ function getLineDrawTrigger(inner, ruleLines, lineDrawEls, sizeRowLines) {
   );
 }
 
-/**
- * Горизонтальные линии: разделитель + сегменты под шапкой + линии над строками списка.
- * Рисуем как "въезд из-под маски": clipPath + x-сдвиг.
- * Чёрную полосу анимируем на `.isg-rule__line` — у родителя фон прозрачный при --lines-draw.
- */
+
+
+
+
+
 export function initProductContentLineDraw(root = document) {
   const inners = Array.from(root.querySelectorAll(INNER_SELECTOR));
   if (!inners.length) {

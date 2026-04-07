@@ -54,11 +54,11 @@ function findNextTarget(btn) {
   return target;
 }
 
-/**
- * Skip button in `.isg-quality-list-wrap` that scrolls to the next content section.
- * @param {ParentNode} [root]
- * @param {{ getLenis?: () => any }} [opts]
- */
+
+
+
+
+
 export function initQualitySkip(root = document, opts = {}) {
   const getLenis = typeof opts.getLenis === "function" ? opts.getLenis : null;
 

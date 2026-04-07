@@ -1,14 +1,14 @@
-// -----------------------------------------------------------------------------
-// Минимальный набор переменных, реально используемых в проекте
-// -----------------------------------------------------------------------------
+
+
+
 
 @import "typography";
 
-// Container
+
 $isg-container-max: 136rem;
 $isg-gutter: 1.6rem;
 
-// Breakpoints / paddings
+
 $isg-bp-md: 768px;
 $isg-section-pad-x: 6.4rem;
 $isg-section-pad-x-mobile: clamp(1.85rem, 6.25vw, 2.85rem);

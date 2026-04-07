@@ -27,9 +27,9 @@ function isHeaderButton(btn) {
   return btn.closest(".isg-site-header") !== null;
 }
 
-/**
- * Тот же сдвиг кнопки, что у `.isg-btn`, без прокрутки подписи (для составной кнопки «Watch video»).
- */
+
+
+
 function bindHeroWatchShift(btn) {
   if (btn.dataset.isgHeroWatchHoverInit === "1") return () => {};
 
@@ -64,10 +64,10 @@ function bindHeroWatchShift(btn) {
   };
 }
 
-/**
- * Лёгкий сдвиг кнопки + GSAP-прокрутка подписи (как в isg-rfq-intro).
- * Все `a.isg-btn` / `button.isg-btn`, включая hero; «Watch video» — отдельный биндинг с тем же сдвигом.
- */
+
+
+
+
 export function initIsgButtonHover(root = document) {
   const btns = Array.from(root.querySelectorAll("a.isg-btn, button.isg-btn")).filter(
     (btn) => !isHeaderButton(btn),
@@ -140,5 +140,5 @@ export function initIsgButtonHover(root = document) {
   return () => cleanups.forEach((fn) => fn());
 }
 
-/** @deprecated используйте initIsgButtonHover */
+
 export const initRfqIntroButtonHover = initIsgButtonHover;

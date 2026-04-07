@@ -96,9 +96,9 @@ function buildFeaturedTween(section, scrollEl, cardsEl, imageEl, mm, killTween) 
   return tl;
 }
 
-/**
- * Digits featured: фон «прилипает» к окну .scroll, карточки наезжают поверх по вертикальному скроллу.
- */
+
+
+
 export function initDigitsFeatured(root = document) {
   const cleanups = [];
 

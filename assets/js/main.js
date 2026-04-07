@@ -161,16 +161,16 @@ function disposeInternals() {
     try {
       off?.();
     } catch (_) {
-      /* noop */
+      
     }
   }
   ScrollTrigger.getAll().forEach((t) => t.kill());
 }
 
-/**
- * РџРѕР»РЅРѕРµ РѕР±РЅРѕРІР»РµРЅРёРµ РёРЅС‚РµСЂР°РєС‚РёРІР° РїРѕСЃР»Рµ РїРѕРґРјРµРЅС‹ DOM (Barba.js hooks).
- * @param {ParentNode} root вЂ” РєРѕРЅС‚РµР№РЅРµСЂ СЃ Р±Р»РѕРєР°РјРё [data-isg-block]
- */
+
+
+
+
 export async function initIsgPage(root = document.body) {
   disposeInternals();
   disposers.push(initLenisSmoothScroll());
@@ -226,11 +226,11 @@ async function fetchPartialsInto(target, onProgress = () => {}) {
   }
 }
 
-/**
- * Р–РґС‘С‚ decode РІСЃРµС… <img> РІ РєРѕРЅС‚РµР№РЅРµСЂРµ (РІ С‚.С‡. РїРѕСЃР»Рµ РІСЃС‚Р°РІРєРё partials).
- * @param {ParentNode} root
- * @param {number} [perImageCapMs]
- */
+
+
+
+
+
 function waitForImages(root, perImageCapMs = 12000, onProgress = () => {}) {
   const images = [...root.querySelectorAll("img")];
   if (!images.length) {
@@ -275,13 +275,14 @@ async function waitForFonts(onProgress = () => {}) {
   try {
     if (document.fonts?.ready) await document.fonts.ready;
   } catch (_) {
-    /* noop */
+    
   }
   onProgress(1);
 }
 
 async function hidePreloader(preloader = null, { complete = true } = {}) {
   const el = document.getElementById("isg-preloader");
+  window.ISG_PRELOADER_DONE = true;
   if (!el) {
     setPreloaderScrollLock(false);
     return;

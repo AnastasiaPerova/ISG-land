@@ -12,14 +12,14 @@ function extractUrl(source) {
   return match?.[2] || null;
 }
 
-/**
- * Converts intro section background images into a dedicated img layer so scroll effects
- * can move the media without relying on background-position or scale transforms.
- */
+
+
+
+
 export function initIntroBgEntranceScale(root = document) {
-  /** @type {{ section: HTMLElement; media: HTMLElement }[]} */
+  
   const createdPairs = [];
-  /** @type {{ section: HTMLElement; image: HTMLElement }[]} */
+  
   const revealTargets = [];
 
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;

@@ -125,7 +125,7 @@ $items        = is_array($section['items'] ?? null) ? $section['items'] : $defau
 											?>
 											<div class="isg-quality-visual__slide<?php echo $i === 0 ? ' isg-quality-visual__slide--active' : ''; ?>" data-isg-quality-slide="<?php echo esc_attr((string) $i); ?>"
 												role="img" aria-label="<?php echo esc_attr($title); ?>">
-												<img class="isg-quality-visual__slide-img" src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($image_alt); ?>" />
+												<img class="isg-quality-visual__slide-img" src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($image_alt); ?>" loading="lazy" decoding="async" />
 												<div class="isg-quality-visual__caption">
 													<h3 class="isg-quality-visual__caption-title"><?php echo esc_html($title); ?></h3>
 												</div>
@@ -144,7 +144,7 @@ $items        = is_array($section['items'] ?? null) ? $section['items'] : $defau
 												<div class="isg-about-feature-card__content-slide<?php echo $i === 0 ? ' isg-about-feature-card__content-slide--active' : ''; ?>"
 													data-isg-about-content-slide="<?php echo esc_attr((string) $i); ?>">
 													<span class="isg-about-feature-card__icon" aria-hidden="true">
-														<img src="<?php echo esc_url($icon_url); ?>" width="40" height="40" alt="" />
+														<img src="<?php echo esc_url($icon_url); ?>" width="40" height="40" alt="" loading="lazy" decoding="async" />
 													</span>
 													<p class="isg-body isg-about-feature-card__text"><?php echo esc_html($body); ?></p>
 												</div>

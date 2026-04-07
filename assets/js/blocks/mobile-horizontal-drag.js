@@ -244,7 +244,7 @@ function initRail(rail, itemSelector) {
 
 export function initMobileHorizontalDrag(root = document) {
   const mq = window.matchMedia(MOBILE_QUERY);
-  /** @type {(() => void)[]} */
+  
   let disposers = [];
 
   const destroyRails = () => {
@@ -252,7 +252,7 @@ export function initMobileHorizontalDrag(root = document) {
       try {
         disposers.pop()();
       } catch (_) {
-        /* noop */
+        
       }
     }
   };

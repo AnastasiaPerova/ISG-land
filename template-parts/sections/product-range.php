@@ -127,7 +127,7 @@ $render_size_table = static function (array $rows, string $left_head, string $ri
 					class="isg-product-intro__image"
 					src="<?php echo esc_url($intro_bg); ?>"
 					alt=""
-					loading="eager"
+					loading="lazy"
 					decoding="async"
 				/>
 			</div>

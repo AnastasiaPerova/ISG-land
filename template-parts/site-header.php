@@ -31,7 +31,7 @@ if (!is_array($languages) || empty($languages)) {
 $current_language = strtoupper((string) ($languages[0]['code'] ?? 'EN'));
 
 $logo_url        = isg_acf_image_url('header_logo', 'option', isg_asset_uri('img/logo.svg'));
-$mobile_logo_url = isg_acf_image_url('header_mobile_logo', 'option', $logo_url);
+$mobile_logo_url = isg_acf_image_url('header_mobile_logo', 'option', isg_asset_uri('img/logo_footer.svg'));
 $home_hero_url   = isg_anchor_url('#isg-hero', '#isg-hero');
 
 $contact_line_1 = (string) isg_acf_option('header_contact_line_1', 'Mon-Fri | 8:00-16:00');

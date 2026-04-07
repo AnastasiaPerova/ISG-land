@@ -1,25 +1,25 @@
 import gsap from "gsap";
 
-/**
- * Quality slides по принципу блока slides на https://toptier.relats.com/ :
- * — длинный трек, липкая сцена;
- * — прогресс 0…1 вдоль трека: при Lenis — lenis.scroll + только lenis «scroll» (без дубля window);
- * — клик по пункту (аналог .bottom .label): lenis.scrollTo(маркер, { offset: -1, … }).
- *
- * Список слева: как `.slides .info .center ul` на Relats — `yPercent = -(100/n)*t` на `ul`.
- *
- * About (`data-isg-quality-about` на треке): те же маски для фото + стек `.isg-about-feature-card__content-stack` (yPercent).
- * Lipkая сцена — CSS `position:sticky` (не fixed): работает корректно с Lenis и не ломается
- * от transform на родителе (#isg-about получает transform от GSAP intro-анимации).
- *
- * ScrollTrigger не используем: с Lenis без scrollerProxy scrub/onUpdate часто расходятся с реальным скроллом.
- */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function clamp01(x) {
   return Math.min(1, Math.max(0, x));
 }
 
-/** Центр контейнера → ближайший по центру дочерний элемент (горизонтальная лента). */
+
 function findBestIndexCentered(container, elements) {
   if (!container || !elements.length) return 0;
   const root = container.getBoundingClientRect();
@@ -38,7 +38,7 @@ function findBestIndexCentered(container, elements) {
   return best;
 }
 
-/** Прокрутить контейнер так, чтобы child оказался по центру по горизонтали. */
+
 function scrollChildToCenter(container, child, behavior = "auto") {
   if (!container || !child) return;
   const cr = container.getBoundingClientRect();
@@ -49,27 +49,27 @@ function scrollChildToCenter(container, child, behavior = "auto") {
   container.scrollTo({ left: next, behavior });
 }
 
-/**
- * Плавное раскрытие маски: smootherstep (Ken Perlin) — нулевые 1-я и 2-я производные на 0/1,
- * мягче, чем ease-in-out cubic/quint, при той же длительности фазы.
- */
+
+
+
+
 function smootherstep(t) {
   const x = clamp01(t);
   return x * x * x * (x * (x * 6 - 15) + 10);
 }
 
-/** Соответствует $isg-radius-2xl — скругление в clip-path: inset(… round …) */
+
 const ISG_QUALITY_SLIDE_CLIP_RADIUS = 18;
 
-/**
- * Прогресс стека 0…(n−1): строго линейно от p — наезд картинок 1:1 со скроллом (в т.ч. со сглаживанием Lenis).
- */
+
+
+
 function slideTFromProgress01(pFloat, n) {
   const maxT = Math.max(1, n - 1);
   return clamp01(pFloat) * maxT;
 }
 
-/** Согласовать с min-height трека и со sticky (svh/dvh в CSS) */
+
 function getViewportHeight() {
   if (typeof window !== "undefined" && window.visualViewport?.height) {
     return window.visualViewport.height;
@@ -82,15 +82,15 @@ function progressForIndex(index, n) {
   return clamp01(index / (n - 1));
 }
 
-/** Нативный scroll (без Lenis) */
+
 function getScrollY() {
   return window.pageYOffset ?? document.documentElement.scrollTop ?? 0;
 }
 
-/**
- * Текущая позиция скролла: с Lenis — lenis.scroll (animatedScroll), иначе DOM.
- * Так trackProgress01 совпадает с тем, что реально отрисовано при сглаженном скролле.
- */
+
+
+
+
 function getScrollYForProgress(getLenis) {
   const lenis = typeof getLenis === "function" ? getLenis() : null;
   if (lenis) {
@@ -100,7 +100,7 @@ function getScrollYForProgress(getLenis) {
   return getScrollY();
 }
 
-/** Как `section-anchors` / `scroll-margin`: низ фикс. хедера (px) */
+
 function getHeaderScrollOffset() {
   const raw = getComputedStyle(document.documentElement)
     .getPropertyValue("--isg-sticky-header-offset")
@@ -109,11 +109,11 @@ function getHeaderScrollOffset() {
   return Number.isFinite(v) ? v : 88;
 }
 
-/**
- * Один трек `[data-isg-quality-scroll]`.
- * @param {Element} track
- * @param {{ getLenis?: () => { on: Function; off: Function; scrollTo: Function } | null }} [options]
- */
+
+
+
+
+
 function initOneQualityScrollTrack(track, options = {}) {
   const getLenis =
     typeof options.getLenis === "function" ? options.getLenis : () => null;
@@ -157,11 +157,11 @@ function initOneQualityScrollTrack(track, options = {}) {
     ? slides.map((el) => el.querySelector(".isg-quality-visual__slide-img"))
     : [];
 
-  /** @type {(() => void)[]} */
+  
   const disposers = [];
-  /** @type {(() => void)[]} */
+  
   let desktopOff = [];
-  /** @type {(() => void)[]} */
+  
   let mobileOff = [];
 
   const clearDesktop = () => {
@@ -169,7 +169,7 @@ function initOneQualityScrollTrack(track, options = {}) {
       try {
         desktopOff.pop()();
       } catch (_) {
-        /* noop */
+        
       }
     }
   };
@@ -179,7 +179,7 @@ function initOneQualityScrollTrack(track, options = {}) {
       try {
         mobileOff.pop()();
       } catch (_) {
-        /* noop */
+        
       }
     }
   };
@@ -251,9 +251,9 @@ function initOneQualityScrollTrack(track, options = {}) {
     });
   };
 
-  /**
-   * Сдвиг ul: как Relats (GSAP `y: -100/n*o + "%"`). Окно — `.isg-quality-list-center`.
-   */
+  
+
+
   const setListColumnScrollFromT = (tFloat) => {
     if (!listCol || reduced) {
       if (listCol) gsap.set(listCol, { yPercent: 0, force3D: true });
@@ -270,10 +270,10 @@ function initOneQualityScrollTrack(track, options = {}) {
       track.style.minHeight = "";
       return;
     }
-    /**
-     * Нужно: span = end − start = (H − vh + header) = (n − 1) × vh (ровно n−1 «экрана» скролла).
-     * vh — тот же источник, что в trackProgress01 (visualViewport при наличии).
-     */
+    
+
+
+
     const vh = getViewportHeight();
     const header = getHeaderScrollOffset();
     const h = Math.max(0, n * vh - header);
@@ -292,10 +292,10 @@ function initOneQualityScrollTrack(track, options = {}) {
     });
   };
 
-  /**
-   * Прогресс 0…1: зона «липкости» от момента, когда верх трека — под хедером,
-   * до момента, когда низ трека — у низа вьюпорта (как на Relats), без лишнего хвоста.
-   */
+  
+
+
+
   const trackProgress01 = () => {
     const sy = getScrollYForProgress(getLenis);
     const rect = track.getBoundingClientRect();
@@ -347,11 +347,11 @@ function initOneQualityScrollTrack(track, options = {}) {
     });
   };
 
-  /**
-   * Как Relats `.boxes .inner`: один контейнер двигается yPercent = -(100/n)*t.
-   * Все `.box` (content-slide) в нормальном потоке внутри `.inner`;
-   * `.boxes` (content-stack) = overflow:hidden + фикс. высота одного box.
-   */
+  
+
+
+
+
   const setContentStackFromT = (t) => {
     if (!contentInnerEl || !contentStackSlides.length) return;
     if (reduced) {
@@ -363,7 +363,7 @@ function initOneQualityScrollTrack(track, options = {}) {
     gsap.set(contentInnerEl, { yPercent, force3D: true });
   };
 
-  /** Как Relats: задать высоту `.boxes` = высота одного `.box` */
+  
   const layoutBoxesHeight = () => {
     if (!contentStackEl || !contentStackSlides.length) return;
     if (!mq.matches) {
@@ -461,7 +461,7 @@ function initOneQualityScrollTrack(track, options = {}) {
     applyFrame(progressForIndex(idx, n));
   };
 
-  /** Подавить ответную синхронизацию на короткое время после программного scroll (без цикла). */
+  
   let suppressListScroll = false;
   let suppressSlidesScroll = false;
   let suppressListTimer = 0;
@@ -707,11 +707,11 @@ function initOneQualityScrollTrack(track, options = {}) {
   };
 }
 
-/**
- * Все треки `[data-isg-quality-scroll]` внутри root (Quality + About values).
- * @param {ParentNode} [root]
- * @param {{ getLenis?: () => { on: Function; off: Function; scrollTo: Function } | null }} [options]
- */
+
+
+
+
+
 export function initQualityScroll(root = document, options = {}) {
   const tracks = root.querySelectorAll("[data-isg-quality-scroll]");
   if (!tracks.length) return () => {};
