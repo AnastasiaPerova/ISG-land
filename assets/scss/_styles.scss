@@ -95,6 +95,7 @@ html {
   --isg-page-pad-x-mobile: clamp(1.85rem, 6.25vw, 2.85rem);
   --isg-surface-pad-fluid: clamp(1.75rem, 3vw, 3.5rem);
   --isg-quality-pad-x-mobile: clamp(1.25rem, 3.5vw, 2.75rem);
+  --isg-footer-social-icon-size: 30px;
   /* UI kit — типографика (см. _typography.scss); правки в одном месте или здесь в DevTools */
   --isg-type-display: 8.4rem;
   --isg-type-headline: 6.2rem;
@@ -148,7 +149,7 @@ html {
     --isg-type-stat: max(26px, calc(5.6rem - 1.8vw));;
     --isg-type-h2: var(--isg-type-headline);
     --isg-type-h3: max(36px, calc(6.2rem - 2.4vw));
-    --isg-type-h4: max(calc(20px - 0.3vw), calc(3.2rem - 0.68vw));
+    --isg-type-h4: max(calc(26px - 0.3vw), calc(3.2rem - 0.68vw));
     --isg-type-body-lg: max(calc(18px - 0.4vw), calc(1.82rem - 0.3vw));
       --isg-type-title-lg: max(20px, calc(2.1rem - 0.3vw));
     --isg-type-body: max(14px, calc(1.76rem - 0.4vw));
@@ -304,7 +305,7 @@ select {
 }
 
 .isg-lead {
-  font-size: 3.1rem;
+  font-size:var(--isg-type-title-lg);
   font-weight: 400;
   letter-spacing: -0.0032em;
   line-height: 1.3125;
@@ -447,7 +448,7 @@ select {
   .isg-btn {
     min-height: min(10.256vw, 46px);
     line-height: min(10.256vw, 46px);
-    border-radius: min(3.2vw, 14px);
+
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1482,7 +1483,7 @@ body.isg-nav-drawer-open {
   }
 
   .isg-hero .isg-btn-group--hero-actions > .isg-btn {
-    width: min(100%, 23.6rem);
+
     min-width: min(100%, 23.6rem);
   }
 
@@ -1496,7 +1497,7 @@ body.isg-nav-drawer-open {
     min-width: 0;
     justify-content: flex-start;
     padding: var(--isg-space-xs) var(--isg-space-4xl) var(--isg-space-xs) var(--isg-space-xs);
-    border-radius: 1.4rem;
+
   }
 
   .isg-hero-watch-btn__thumb {
@@ -3286,7 +3287,8 @@ height:20rem;
 @media (max-width: 767px) {
   .isg-intro-section {
     height: unset;
-    min-height: 0;
+    min-height: 450px;
+  
     max-height: none;
   }
 }
@@ -3669,7 +3671,7 @@ height:20rem;
 @media (max-width: 1099px) {
    .isg-product-content .isg-product-content__col .isg-body,
   .isg-about-team-block__lead .isg-body {
-    max-width: none;
+    max-width: min(100%, 48ch);
   }
 }
 
@@ -6014,6 +6016,7 @@ button.isg-slider-item__img,
   .isg-rfq-intro .isg-display,
   .isg-rfq-intro__lead {
     text-align: center;
+    max-width: 80%;
   }
 
   .isg-rfq-intro__split {
@@ -6748,8 +6751,8 @@ border: none;
 }
 
 .isg-footer__social-icon {
-  width: 34px;
-  height: 34px;
+  width: var(--isg-footer-social-icon-size);
+  height: var(--isg-footer-social-icon-size);
   display: block;
   flex-shrink: 0;
 }
