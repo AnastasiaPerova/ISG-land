@@ -42,6 +42,9 @@ export function initLangNav(root = document) {
   const useStableShell = (nav) =>
     desktopHeader.matches && nav.closest(".isg-header-desktop-only") !== null;
 
+  const useHoverBehavior = (nav) =>
+    nav instanceof Element && canHover.matches && nav.closest(".isg-nav-drawer") === null;
+
   const getShellHeight = (nav, parts) => {
     const navRect = nav.getBoundingClientRect();
     const toggleRect = parts.toggle.getBoundingClientRect();
@@ -325,14 +328,14 @@ export function initLangNav(root = document) {
   document.addEventListener("keydown", onKeyDown);
 
   const onMouseEnter = (e) => {
-    if (!canHover.matches) return;
     const nav = e.currentTarget;
+    if (!useHoverBehavior(nav)) return;
     openNav(nav);
   };
 
   const onMouseLeave = (e) => {
-    if (!canHover.matches) return;
     const nav = e.currentTarget;
+    if (!useHoverBehavior(nav)) return;
     const next = e.relatedTarget;
     if (next instanceof Node && nav instanceof Node && nav.contains(next)) {
       return;
