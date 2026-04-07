@@ -76,7 +76,7 @@ $items        = is_array($section['items'] ?? null) ? $section['items'] : $defau
 	data-isg-block="application"
 	data-isg-app-scroll
 >
-	<div class="isg-app__scene" hidden>
+	<div class="isg-app__scene">
 		<div class="isg-app__scene-reveal">
 			<div class="isg-app__media" aria-hidden="true">
 				<video
@@ -86,7 +86,6 @@ $items        = is_array($section['items'] ?? null) ? $section['items'] : $defau
 					preload="metadata"
 					src="<?php echo esc_url($video_url); ?>"
 				></video>
-				<div class="isg-app__media-shade"></div>
 			</div>
 
 			<div class="isg-app__inner">

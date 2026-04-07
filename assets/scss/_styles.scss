@@ -2725,13 +2725,6 @@ body.isg-nav-drawer-open {
   display: block;
 }
 
-.isg-app__media-shade {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.34) 0%, rgba(0, 0, 0, 0.52) 100%);
-  pointer-events: none;
-}
-
 .isg-app__inner {
   position: relative;
   z-index: 1;
