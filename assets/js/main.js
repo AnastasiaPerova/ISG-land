@@ -296,29 +296,49 @@ async function hidePreloader(preloader = null, { complete = true } = {}) {
   el.remove();
 }
 
+function isServerRenderedMode() {
+  return (
+    window.ISG_SERVER_RENDERED === true ||
+    document.body?.classList.contains("isg-wp-theme") ||
+    document.documentElement.hasAttribute("data-isg-server-rendered")
+  );
+}
+
+async function reinitIsgPage() {
+  const main = document.getElementById("isg-main");
+  const root = isServerRenderedMode() ? document : (main || document.body);
+  await initIsgPage(root);
+  await stabilizeScrollLayout(2);
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
   const main = document.getElementById("isg-main");
-  if (!main) return;
+  const serverRendered = isServerRenderedMode();
+  if (!main && !serverRendered) return;
+
   setPreloaderScrollLock(true);
   const preloader = createPreloaderController();
 
-  try {
-    await fetchPartialsInto(main, (ratio) => preloader.setStepProgress(PRELOADER_STEPS.partials, ratio));
-  } catch (e) {
-    console.error(e);
-    main.innerHTML =
-      "<p style=\"padding:2rem;font-family:sans-serif\">Start a local server from the theme folder (<code>npx serve .</code>) so partials can be loaded via fetch.</p>";
-    preloader.setProgress(100, "Failed to load page");
-    await hidePreloader(preloader, { complete: false });
-    return;
+  if (!serverRendered) {
+    try {
+      await fetchPartialsInto(main, (ratio) => preloader.setStepProgress(PRELOADER_STEPS.partials, ratio));
+    } catch (e) {
+      console.error(e);
+      main.innerHTML =
+        "<p style=\"padding:2rem;font-family:sans-serif\">Start a local server from the theme folder (<code>npx serve .</code>) so partials can be loaded via fetch.</p>";
+      preloader.setProgress(100, "Failed to load page");
+      await hidePreloader(preloader, { complete: false });
+      return;
+    }
   }
 
   try {
+    const root = serverRendered ? document : main;
     preloader.setStepProgress(PRELOADER_STEPS.init, 0);
-    await initIsgPage(main);
+    await initIsgPage(root);
     preloader.setStepProgress(PRELOADER_STEPS.init, 1);
     await waitForFonts((ratio) => preloader.setStepProgress(PRELOADER_STEPS.fonts, ratio));
-    await waitForImages(main, 12000, (ratio) => preloader.setStepProgress(PRELOADER_STEPS.images, ratio));
+    await waitForImages(root, 12000, (ratio) => preloader.setStepProgress(PRELOADER_STEPS.images, ratio));
     preloader.setStepProgress(PRELOADER_STEPS.finalize, 0.35);
     await stabilizeScrollLayout(3);
     preloader.setStepProgress(PRELOADER_STEPS.finalize, 1);
@@ -330,4 +350,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
-window.ISG = { initIsgPage, destroyIsgPage, syncNavPillSliders };
+window.addEventListener("isg:reinit", () => {
+  reinitIsgPage().catch((e) => console.error(e));
+});
+
+window.ISG = { initIsgPage, destroyIsgPage, syncNavPillSliders, reinitIsgPage, isServerRenderedMode };
