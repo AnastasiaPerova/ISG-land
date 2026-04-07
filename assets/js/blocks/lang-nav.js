@@ -9,6 +9,7 @@ export function initLangNav(root = document) {
     return () => {};
   }
   const canHover = window.matchMedia("(hover: hover) and (pointer: fine)");
+  const desktopHeader = window.matchMedia("(min-width: 1100px)");
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   let closeTimer = null;
   const CLOSE_DELAY_MS = 260;
@@ -37,6 +38,9 @@ export function initLangNav(root = document) {
 
   const getVisibleOptions = (parts) =>
     parts.options.filter((el) => window.getComputedStyle(el).display !== "none");
+
+  const useStableShell = (nav) =>
+    desktopHeader.matches && nav.closest(".isg-header-desktop-only") !== null;
 
   const getShellHeight = (nav, parts) => {
     const navRect = nav.getBoundingClientRect();
@@ -78,6 +82,7 @@ export function initLangNav(root = document) {
     }
     const options = getVisibleOptions(parts);
     const shellHeight = getShellHeight(nav, parts);
+    const stableShell = useStableShell(nav);
     clearAnimation(nav);
     toggle.setAttribute("aria-expanded", "false");
 
@@ -86,6 +91,14 @@ export function initLangNav(root = document) {
       nav.classList.remove("isg-lang-dropdown--open");
       resetAnimatedStyles(parts);
       return;
+    }
+
+    if (stableShell) {
+      gsap.set(nav, {
+        "--isg-lang-shell-scale": 1,
+        "--isg-lang-shell-opacity": 1,
+        "--isg-lang-shell-h": shellHeight,
+      });
     }
 
     const tl = gsap.timeline({
@@ -109,17 +122,6 @@ export function initLangNav(root = document) {
       0,
     )
       .to(
-        nav,
-        {
-          "--isg-lang-shell-scale": 0.82,
-          "--isg-lang-shell-opacity": 1,
-          "--isg-lang-shell-h": shellHeight,
-          duration: 0.16,
-          ease: "power1.inOut",
-        },
-        0,
-      )
-      .to(
         menu,
         {
           opacity: 0,
@@ -128,6 +130,19 @@ export function initLangNav(root = document) {
           transformOrigin: "top center",
           duration: 0.2,
           ease: "power2.in",
+        },
+        0,
+      );
+
+    if (!stableShell) {
+      tl.to(
+        nav,
+        {
+          "--isg-lang-shell-scale": 0.82,
+          "--isg-lang-shell-opacity": 1,
+          "--isg-lang-shell-h": shellHeight,
+          duration: 0.16,
+          ease: "power1.inOut",
         },
         0,
       )
@@ -141,6 +156,7 @@ export function initLangNav(root = document) {
         },
         0.04,
       );
+    }
 
     animations.set(nav, tl);
   };
@@ -177,6 +193,7 @@ export function initLangNav(root = document) {
 
     const options = getVisibleOptions(parts);
     const shellHeight = getShellHeight(nav, parts);
+    const stableShell = useStableShell(nav);
 
     gsap.set(menu, {
       opacity: 0,
@@ -187,11 +204,20 @@ export function initLangNav(root = document) {
       pointerEvents: "none",
     });
     gsap.set(options, { opacity: 0, y: -8 });
-    gsap.set(nav, {
-      "--isg-lang-shell-scale": 0,
-      "--isg-lang-shell-opacity": 0,
-      "--isg-lang-shell-h": shellHeight,
-    });
+    gsap.set(
+      nav,
+      stableShell
+        ? {
+            "--isg-lang-shell-scale": 1,
+            "--isg-lang-shell-opacity": 1,
+            "--isg-lang-shell-h": shellHeight,
+          }
+        : {
+            "--isg-lang-shell-scale": 0,
+            "--isg-lang-shell-opacity": 0,
+            "--isg-lang-shell-h": shellHeight,
+          },
+    );
 
     const tl = gsap.timeline({
       onComplete: () => {
@@ -200,12 +226,16 @@ export function initLangNav(root = document) {
       },
     });
 
-    tl.to(nav, {
-      "--isg-lang-shell-opacity": 1,
-      "--isg-lang-shell-scale": 1,
-      duration: 0.16,
-      ease: "power2.out",
-    })
+    if (!stableShell) {
+      tl.to(nav, {
+        "--isg-lang-shell-opacity": 1,
+        "--isg-lang-shell-scale": 1,
+        duration: 0.16,
+        ease: "power2.out",
+      });
+    }
+
+    tl
       .to(
         menu,
         {
