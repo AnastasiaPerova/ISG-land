@@ -5,6 +5,7 @@
 
 
 import gsap from "gsap";
+import { getLenis } from "./smooth-scroll.js";
 
 const LB_ID = "isg-lightbox";
 
@@ -64,6 +65,53 @@ function resetSwiperInteraction(swiper) {
   }
 }
 
+function lockDocumentScroll(overlay) {
+  if (!overlay || overlay._isgScrollLock) return;
+
+  const scrollY = window.scrollY || window.pageYOffset || 0;
+  const lenis = getLenis?.() || null;
+  overlay._isgScrollLock = {
+    scrollY,
+    lenis,
+    htmlOverflow: document.documentElement.style.overflow,
+    bodyOverflow: document.body.style.overflow,
+    bodyPosition: document.body.style.position,
+    bodyTop: document.body.style.top,
+    bodyWidth: document.body.style.width,
+    bodyLeft: document.body.style.left,
+    bodyRight: document.body.style.right,
+    bodyTouchAction: document.body.style.touchAction,
+  };
+
+  lenis?.stop?.();
+  document.documentElement.style.overflow = "hidden";
+  document.body.style.overflow = "hidden";
+  document.body.style.position = "fixed";
+  document.body.style.top = `-${scrollY}px`;
+  document.body.style.left = "0";
+  document.body.style.right = "0";
+  document.body.style.width = "100%";
+  document.body.style.touchAction = "none";
+}
+
+function unlockDocumentScroll(overlay) {
+  const lock = overlay?._isgScrollLock;
+  if (!lock) return;
+
+  document.documentElement.style.overflow = lock.htmlOverflow;
+  document.body.style.overflow = lock.bodyOverflow;
+  document.body.style.position = lock.bodyPosition;
+  document.body.style.top = lock.bodyTop;
+  document.body.style.width = lock.bodyWidth;
+  document.body.style.left = lock.bodyLeft;
+  document.body.style.right = lock.bodyRight;
+  document.body.style.touchAction = lock.bodyTouchAction;
+
+  window.scrollTo(0, lock.scrollY || 0);
+  lock.lenis?.start?.();
+  overlay._isgScrollLock = null;
+}
+
 
 
 
@@ -116,7 +164,7 @@ function resetOverlayState(overlay, opts = {}) {
     counter.textContent = "";
   }
 
-  document.body.style.overflow = "";
+  unlockDocumentScroll(overlay);
   const hk = overlay._isgLightboxOnKey;
   if (hk) document.removeEventListener("keydown", hk);
 
@@ -365,6 +413,8 @@ function bindOverlayOnce(overlay) {
   const btnPrev = overlay.querySelector(".isg-lightbox__nav--prev");
   const btnNext = overlay.querySelector(".isg-lightbox__nav--next");
   const counter = overlay.querySelector(".isg-lightbox__counter");
+  const backdrop = overlay.querySelector(".isg-lightbox__backdrop");
+  const panel = overlay.querySelector(".isg-lightbox__panel");
 
   const showAt = (i) => {
     const album = overlay._isgAlbum;
@@ -445,7 +495,25 @@ function bindOverlayOnce(overlay) {
     }
   };
 
-  overlay.querySelector(".isg-lightbox__backdrop")?.addEventListener("click", close);
+  const onBackdropPointer = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    close();
+  };
+
+  backdrop?.addEventListener("pointerdown", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  });
+  backdrop?.addEventListener("pointerup", onBackdropPointer);
+  backdrop?.addEventListener("click", onBackdropPointer);
+  panel?.addEventListener("click", (e) => e.stopPropagation());
+  overlay.addEventListener("click", (e) => {
+    const target = e.target;
+    if (!(target instanceof Element)) return;
+    if (target.closest(".isg-lightbox__panel") || target.closest(".isg-lightbox__close")) return;
+    if (target === overlay || target.closest(".isg-lightbox__backdrop")) close();
+  });
   overlay.querySelector(".isg-lightbox__close")?.addEventListener("click", close);
   btnPrev?.addEventListener("click", (e) => {
     e.stopPropagation();
@@ -497,7 +565,7 @@ export function openLightbox(anchor) {
   overlay.removeAttribute("hidden");
   overlay.classList.remove("isg-lightbox--inactive");
   overlay.setAttribute("aria-hidden", "false");
-  document.body.style.overflow = "hidden";
+  lockDocumentScroll(overlay);
   overlay._isgOriginSwiper?.autoplay?.stop?.();
   if (hk) document.addEventListener("keydown", hk);
 

@@ -27,7 +27,8 @@ function map01(value, start, end) {
 
 // Длина скролл-трека в высотах экрана (3.45 * 100vh).
 // Конфиг таймингов секции: видео (секунды), скролл-фазы [0..1], смещения (px).
-const APP_SCROLL_SCRUB_VH = 6.2;
+const APP_SCROLL_SCRUB_VH = 3.2;
+const VIDEO_SCRUB_LERP = 0.18;
 
 // Время видео (сек): когда слова заголовка начинают появляться.
 const TITLE_WORD_IN_START_SEC = 1.01;
@@ -44,23 +45,22 @@ const TITLE_WORD_OUT_DURATION_SEC = 1.2;
 const TITLE_WORD_OUT_SPREAD_SEC = 0.7;
 
 // Начальный сдвиг аккордеона по X для анимации выезда (px).
+const ACCORDION_IN_X_PX = 56;
 // Время видео (сек): момент начала выезда блока аккордеона.
 const ACCORDION_IN_START_SEC = 5;
 // Время видео (сек): длительность выезда аккордеона.
-const ACCORDION_IN_DURATION_SEC = 2;
+const ACCORDION_IN_DURATION_SEC = 0.9;
 
 // Прогресс скролла [0..1]: конец опциональной preplay-фазы (0 = отключена).
 const MASTER_PREPLAY_END = 0;
 // Прогресс скролла [0..1]: до этой точки видео управляется скроллом.
 const C_VIDEO_SCROLL_END = 0.88;
 // Прогресс скролла [0..1]: с этой точки стартует автопереключение вкладок аккордеона.
+const C_BODY_IN_START = 0.74;
+const C_BODY_IN_END = 0.9;
+const C_ACCORDION_START = C_BODY_IN_END;
 // Прогресс скролла [0..1]: здесь автопереключение вкладок аккордеона заканчивается.
 const C_ACCORDION_END = 1;
-
-// РџРѕСЂРѕРіРё РѕР±РЅРѕРІР»РµРЅРёР№: СѓРјРµРЅСЊС€Р°СЋС‚ С‡Р°СЃС‚РѕС‚Сѓ РґРѕСЂРѕРіРёС… РѕРїРµСЂР°С†РёР№ РЅР° РєР°Р¶РґРѕРј С‚РёРєРµ.
-const VIDEO_SEEK_EPS_SEC = 1 / 60;
-const TITLE_UPDATE_EPS_SEC = 1 / 45;
-const STYLE_UPDATE_EPS = 0.002;
 
 // Компиляция шейдера. При ошибке возвращаем null и отключаем WebGL-эффект.
 function createShader(gl, type, source) {
@@ -141,18 +141,31 @@ function createAppWebGLEffect(mediaEl, section) {
     void main() {
       vec2 uv = gl_FragCoord.xy / max(u_res, vec2(1.0));
       vec2 centered = uv - 0.5;
-      float dist = length(centered * vec2(1.1, 1.0));
+      float drift = sin((uv.y * 7.0) + u_time * 0.45) * 0.005 * u_strength;
+      float ripple = sin((uv.x * 15.0 - u_time * 0.6) + (uv.y * 9.0)) * 0.0035 * u_strength;
+      uv.x += drift;
+      uv.y += ripple;
+      float dist = length((uv - 0.5) * vec2(1.1, 1.0));
       float vignette = smoothstep(0.92, 0.16, dist);
 
       float grain = hash(uv * vec2(920.0, 640.0) + u_time * 18.0) - 0.5;
+      float fineNoise = hash(uv * vec2(1820.0, 1240.0) - u_time * 11.0) - 0.5;
       float waveA = sin((uv.y + u_time * 0.14) * 30.0) * 0.5 + 0.5;
       float waveB = sin((uv.x * 1.2 - u_time * 0.1) * 22.0) * 0.5 + 0.5;
-      float wave = (waveA * 0.58 + waveB * 0.42) * u_strength;
+      float radial = sin((dist * 18.0) - u_time * 1.15 + u_progress * 3.6) * 0.5 + 0.5;
+      float scan = sin((uv.y * u_res.y * 0.045) - u_time * 2.8) * 0.5 + 0.5;
+      float wave = (waveA * 0.42 + waveB * 0.28 + radial * 0.30) * u_strength;
 
-      float pulse = (sin(u_time * 0.9 + u_progress * 4.2) * 0.5 + 0.5) * 0.08 * u_strength;
-      vec3 tint = mix(vec3(0.08, 0.18, 0.32), vec3(0.16, 0.48, 0.84), wave);
-      vec3 color = tint * (0.14 + grain * 0.16 + pulse) * vignette;
-      float alpha = clamp((0.06 + 0.18 * u_strength) * vignette, 0.0, 0.34);
+      float pulse = (sin(u_time * 0.9 + u_progress * 4.2) * 0.5 + 0.5) * 0.11 * u_strength;
+      vec3 tintA = vec3(0.05, 0.16, 0.30);
+      vec3 tintB = vec3(0.09, 0.42, 0.94);
+      vec3 tintC = vec3(0.48, 0.86, 1.0);
+      vec3 tint = mix(mix(tintA, tintB, wave), tintC, scan * 0.18 * u_strength);
+      float energy = 0.14 + grain * 0.10 + fineNoise * 0.07 + pulse + scan * 0.04 * u_strength;
+      vec3 color = tint * energy * vignette;
+      color.r += (0.024 + radial * 0.03) * u_strength * vignette;
+      color.b += (0.03 + wave * 0.028) * u_strength * vignette;
+      float alpha = clamp((0.08 + 0.24 * u_strength + radial * 0.04 * u_strength) * vignette, 0.0, 0.44);
 
       gl_FragColor = vec4(color, alpha);
     }
@@ -237,8 +250,8 @@ function createAppWebGLEffect(mediaEl, section) {
     // Обновление интенсивности эффекта по прогрессу секции и прозрачности заголовка.
     update({ progress = 0, titleOpacity = 0 }) {
       currentProgress = clamp01(progress);
-      const manualBoost = section.classList.contains("isg-app--gl-boost") ? 1.2 : 1;
-      targetStrength = clamp01((0.24 + currentProgress * 0.62 + titleOpacity * 0.22) * manualBoost);
+      const manualBoost = section.classList.contains("isg-app--gl-boost") ? 1.35 : 1;
+      targetStrength = clamp01((0.32 + currentProgress * 0.72 + titleOpacity * 0.18) * manualBoost);
     },
     destroy() {
       running = false;
@@ -272,8 +285,6 @@ export function initApplicationScroll(root = document) {
     const appLeft = section.querySelector(".isg-app-left");
     const items = section.querySelectorAll(".isg-accordion__item");
     const acc = section.querySelector(".isg-accordion--app-scroll");
-    const firstAccordionImg = section.querySelector(".isg-accordion__img");
-    const mobileBgFromData = (section.getAttribute("data-isg-mobile-bg") || "").trim();
     const titleH2s = Array.from(scene.querySelectorAll(".isg-title-group h2.isg-display"));
 
     if (!video || !scene || !stageBody) return;
@@ -304,38 +315,36 @@ export function initApplicationScroll(root = document) {
     // Прогресс появления body-контента (аккордеонной части) по времени видео.
     const getBodyInFromVideoTime = (videoTime, duration) => {
       const d = duration && Number.isFinite(duration) ? duration : 0;
-      const safeStart = Math.min(ACCORDION_IN_START_SEC, Math.max(d - 0.25, 0));
+      const { outEnd } = resolveTitleTimeRanges(duration);
+      const safeStart = Math.min(outEnd, Math.max(d - 0.25, 0));
       const safeEnd = Math.min(safeStart + ACCORDION_IN_DURATION_SEC, Math.max(d - 0.04, safeStart + 0.12));
       return map01(videoTime, safeStart, safeEnd);
     };
 
-    // Стартовая позиция для slide-in: уводим аккордеон за левый край экрана.
-    const getAccordionOffscreenX = () => -Math.max(window.innerWidth + 48, 420);
+    // Прогресс автопереключения вкладок аккордеона в рамках scroll-фазы.
+    const getBodyInFromContentProgress = (contentP) => {
+      return easeOutCubic(map01(contentP, C_BODY_IN_START, C_BODY_IN_END));
+    };
 
-    const titleWordGroups = [];
-    let lastTitleVideoTime = Number.NaN;
-    const prepareTitleWords = () => {
-      titleWordGroups.length = 0;
-      titleH2s.forEach((h2) => {
-        if (h2.dataset.isgIntroSplit !== "1") return;
-        const words = Array.from(h2.querySelectorAll(".isg-intro-word"));
-        const chars = Array.from(h2.querySelectorAll(".isg-intro-char"));
-        chars.forEach((charEl) => {
-          charEl.style.setProperty("--isg-char-fill", "1");
-          charEl.style.setProperty("--isg-char-opacity", "1");
-          charEl.style.setProperty("--isg-char-y", "0em");
-        });
-        titleWordGroups.push({ words });
-      });
-      lastTitleVideoTime = Number.NaN;
+    const getAccordionProgressFromContentProgress = (contentP) => {
+      return map01(contentP, C_ACCORDION_START, C_ACCORDION_END);
     };
 
     // По-словная анимация заголовка по времени видео.
+    const getAccordionOffscreenX = () => {
+      const fallback = -Math.max(window.innerWidth + 48, 420);
+      if (!appLeft) return fallback;
+      const rect = appLeft.getBoundingClientRect();
+      if (!rect.width && !rect.right) return fallback;
+      return -(rect.right + 48);
+    };
+
     const setTitleWordsByVideoTime = (videoTime, duration) => {
-      if (Math.abs(videoTime - lastTitleVideoTime) < TITLE_UPDATE_EPS_SEC) return;
-      lastTitleVideoTime = videoTime;
       const { inStart, inEnd, outStart, outEnd } = resolveTitleTimeRanges(duration);
-      titleWordGroups.forEach(({ words }) => {
+      titleH2s.forEach((h2) => {
+        if (h2.dataset.isgIntroSplit !== "1") return;
+        const words = h2.querySelectorAll(".isg-intro-word");
+        const chars = h2.querySelectorAll(".isg-intro-char");
         const n = Math.max(1, words.length);
         const inStep = n > 1 ? TITLE_WORD_IN_SPREAD_SEC / (n - 1) : 0;
         const outStep = n > 1 ? TITLE_WORD_OUT_SPREAD_SEC / (n - 1) : 0;
@@ -348,50 +357,48 @@ export function initApplicationScroll(root = document) {
           wordEl.style.opacity = String(opacity);
         });
 
+        chars.forEach((charEl) => {
+          charEl.style.setProperty("--isg-char-fill", "1");
+          charEl.style.setProperty("--isg-char-opacity", "1");
+          charEl.style.setProperty("--isg-char-y", "0em");
+        });
       });
     };
 
     let videoSeekRaf = 0;
     let pendingVideoTime = null;
-    let lastQueuedVideoTime = Number.NaN;
-    let lastAppliedVideoTime = Number.NaN;
+    let accordionManual = false;
+    let manualAccordionIdx = -1;
+    let accordionAutoStartP = null;
+    let accordionOffscreenX = -Math.max(window.innerWidth + 48, 420);
     let st = null;
     let currentMode = "";
     let glFx = null;
-    let accordionAutoStartP = null;
-    let accordionOffscreenX = getAccordionOffscreenX();
-    let currentAccordionIndex = -999;
-    let currentBodyVisible = null;
-    let lastBodyOpacity = Number.NaN;
-    let lastBodyY = Number.NaN;
-    let currentHeadVisible = null;
-    let lastHeadOpacity = Number.NaN;
-    let lastAppLeftX = Number.NaN;
-    let lastGlProgress = Number.NaN;
-    let lastGlTitleOpacity = Number.NaN;
 
     // Реальный seek выполняем в rAF, чтобы снизить дерганье currentTime.
     const flushVideoSeek = () => {
       videoSeekRaf = 0;
       if (pendingVideoTime == null) return;
       const target = pendingVideoTime;
-      pendingVideoTime = null;
-      if (Math.abs(target - lastAppliedVideoTime) < VIDEO_SEEK_EPS_SEC) return;
+      const current = Number.isFinite(video.currentTime) ? video.currentTime : target;
+      const next =
+        Math.abs(target - current) <= 0.018
+          ? target
+          : current + (target - current) * VIDEO_SCRUB_LERP;
       try {
-        if (typeof video.fastSeek === "function") {
-          video.fastSeek(target);
-        } else {
-          video.currentTime = target;
-        }
-        lastAppliedVideoTime = target;
+        video.currentTime = next;
       } catch (_) {}
+      if (Math.abs(target - next) <= 0.018) {
+        pendingVideoTime = null;
+        return;
+      }
+      pendingVideoTime = target;
+      videoSeekRaf = requestAnimationFrame(flushVideoSeek);
     };
 
     // Буферизуем target currentTime и отдаём в flush.
     const queueVideoTime = (target) => {
-      if (Math.abs(target - lastQueuedVideoTime) < VIDEO_SEEK_EPS_SEC) return;
       pendingVideoTime = target;
-      lastQueuedVideoTime = target;
       if (!videoSeekRaf) {
         videoSeekRaf = requestAnimationFrame(flushVideoSeek);
       }
@@ -413,10 +420,9 @@ export function initApplicationScroll(root = document) {
 
     // Держим открытой только одну вкладку.
     const setAccordionIndex = (idx) => {
-      if (idx === currentAccordionIndex) return;
-      currentAccordionIndex = idx;
+      const nextIdx = idx < 0 && items.length ? 0 : idx;
       items.forEach((item, i) => {
-        const on = i === idx && idx >= 0;
+        const on = i === nextIdx && nextIdx >= 0;
         item.classList.toggle("isg-accordion__item--open", on);
         item.querySelector(".isg-accordion__trigger")?.setAttribute("aria-expanded", on ? "true" : "false");
       });
@@ -425,51 +431,12 @@ export function initApplicationScroll(root = document) {
     // Управляем видимостью и интерактивностью body-слоя.
     const setBodyLayer = (opacity, yPx) => {
       const vis = opacity > 0.02 ? "visible" : "hidden";
-      const pointer = opacity > 0.02 ? "auto" : "none";
-      const needOpacity = Math.abs(opacity - lastBodyOpacity) >= STYLE_UPDATE_EPS;
-      const needY = Math.abs(yPx - lastBodyY) >= 0.25;
-      const needVis = vis !== currentBodyVisible;
-      if (!needOpacity && !needY && !needVis) return;
-      const next = {};
-      if (needOpacity) next.opacity = opacity;
-      if (needY) next.y = yPx;
-      if (needVis) {
-        next.visibility = vis;
-        next.pointerEvents = pointer;
-        currentBodyVisible = vis;
-      }
-      gsap.set(stageBody, next);
-      if (needOpacity) lastBodyOpacity = opacity;
-      if (needY) lastBodyY = yPx;
-    };
-
-    const applyMobileBackground = () => {
-      section.classList.add("isg-app--mobile-static");
-      const src = mobileBgFromData || firstAccordionImg?.getAttribute("src");
-      if (mediaEl && src) {
-        mediaEl.style.backgroundImage = `url("${src}")`;
-        mediaEl.style.backgroundSize = "cover";
-        mediaEl.style.backgroundPosition = "center center";
-        mediaEl.style.backgroundRepeat = "no-repeat";
-      }
-      if (video) {
-        video.style.opacity = "0";
-        video.style.visibility = "hidden";
-      }
-    };
-
-    const clearMobileBackground = () => {
-      section.classList.remove("isg-app--mobile-static");
-      if (mediaEl) {
-        mediaEl.style.removeProperty("background-image");
-        mediaEl.style.removeProperty("background-size");
-        mediaEl.style.removeProperty("background-position");
-        mediaEl.style.removeProperty("background-repeat");
-      }
-      if (video) {
-        video.style.removeProperty("opacity");
-        video.style.removeProperty("visibility");
-      }
+      gsap.set(stageBody, {
+        opacity,
+        visibility: vis,
+        y: yPx,
+        pointerEvents: opacity > 0.02 ? "auto" : "none",
+      });
     };
 
     // Ручной клик переводит аккордеон в manual-mode.
@@ -481,6 +448,8 @@ export function initApplicationScroll(root = document) {
       if (idx < 0) return;
       const isOpen = item.classList.contains("isg-accordion__item--open");
       if (isOpen) return;
+      accordionManual = true;
+      manualAccordionIdx = idx;
       setAccordionIndex(idx);
     };
 
@@ -506,11 +475,7 @@ export function initApplicationScroll(root = document) {
       return;
     }
 
-    const prefersDataSaver = navigator.connection?.saveData === true;
-    const lowCpu = (navigator.hardwareConcurrency || 8) <= 4;
-    const lowMemory = (navigator.deviceMemory || 8) <= 4;
-    const forceDisableWebGL = section.getAttribute("data-isg-webgl") === "off";
-    const enableWebGL = !forceDisableWebGL && !prefersDataSaver && !lowCpu && !lowMemory;
+    glFx = createAppWebGLEffect(mediaEl, section);
 
     if (acc) {
       acc.addEventListener("click", onAccordionClick);
@@ -518,10 +483,6 @@ export function initApplicationScroll(root = document) {
     }
 
     titleH2s.forEach((h2) => splitHeadingIntoChars(h2));
-    prepareTitleWords();
-    if (enableWebGL) {
-      glFx = createAppWebGLEffect(mediaEl, section);
-    }
 
     video.pause();
     video.muted = true;
@@ -545,19 +506,9 @@ export function initApplicationScroll(root = document) {
 
     // Сброс секции в стартовый кадр.
     const applyInitialFrame = () => {
+      accordionManual = false;
+      manualAccordionIdx = -1;
       accordionAutoStartP = null;
-      pendingVideoTime = null;
-      lastQueuedVideoTime = Number.NaN;
-      lastAppliedVideoTime = Number.NaN;
-      lastTitleVideoTime = Number.NaN;
-      currentBodyVisible = null;
-      lastBodyOpacity = Number.NaN;
-      lastBodyY = Number.NaN;
-      currentHeadVisible = null;
-      lastHeadOpacity = Number.NaN;
-      lastAppLeftX = Number.NaN;
-      lastGlProgress = Number.NaN;
-      lastGlTitleOpacity = Number.NaN;
       try {
         video.pause();
       } catch (_) {}
@@ -580,26 +531,17 @@ export function initApplicationScroll(root = document) {
       titleHidden();
       setTitleWordsByVideoTime(0, video.duration);
       glFx?.update({ progress: 0, titleOpacity: 0 });
-      setBodyLayer(0, 28);
+      setBodyLayer(0, 0);
       if (appLeft) gsap.set(appLeft, { opacity: 1, x: accordionOffscreenX });
       setAccordionIndex(items.length ? 0 : -1);
     };
 
     // Статичный сценарий вне desktop-режима.
     const setStaticFrame = () => {
+      accordionManual = false;
+      manualAccordionIdx = -1;
       accordionAutoStartP = null;
       pendingVideoTime = null;
-      lastQueuedVideoTime = Number.NaN;
-      lastAppliedVideoTime = Number.NaN;
-      lastTitleVideoTime = Number.NaN;
-      currentBodyVisible = null;
-      lastBodyOpacity = Number.NaN;
-      lastBodyY = Number.NaN;
-      currentHeadVisible = null;
-      lastHeadOpacity = Number.NaN;
-      lastAppLeftX = Number.NaN;
-      lastGlProgress = Number.NaN;
-      lastGlTitleOpacity = Number.NaN;
       try {
         video.pause();
       } catch (_) {}
@@ -608,9 +550,9 @@ export function initApplicationScroll(root = document) {
         st.kill();
         st = null;
       }
-      applyMobileBackground();
+      stageIntro?.style.setProperty("display", "block");
       if (head) gsap.set(head, { opacity: 0, visibility: "hidden", y: 0 });
-      if (stageIntro) gsap.set(stageIntro, { opacity: 0, visibility: "hidden", y: 0 });
+      if (stageIntro) gsap.set(stageIntro, { opacity: 1, visibility: "visible", y: 0 });
       setTitleWordsByVideoTime(TITLE_WORD_IN_START_SEC + TITLE_WORD_IN_DURATION_SEC + 0.3, video.duration);
       glFx?.update({ progress: 1, titleOpacity: 0 });
       setBodyLayer(1, 0);
@@ -625,7 +567,6 @@ export function initApplicationScroll(root = document) {
 
     // Основная desktop-сцена со ScrollTrigger и scrub-синхронизацией.
     const buildDesktopScene = () => {
-      clearMobileBackground();
       stageIntro?.style.removeProperty("display");
       applyTrackHeights();
       applyInitialFrame();
@@ -637,14 +578,12 @@ export function initApplicationScroll(root = document) {
         trigger: scrollTriggerEl,
         start: scrollStart,
         end: () => "+=" + scrubEndPx(),
-        scrub: 0.55,
+        scrub: 0.9,
         invalidateOnRefresh: true,
         onLeaveBack: () => {
           applyInitialFrame();
           accordionAutoStartP = null;
           pendingVideoTime = null;
-          lastQueuedVideoTime = Number.NaN;
-          lastAppliedVideoTime = Number.NaN;
         },
         onUpdate: (self) => {
           // 1) Прогресс секции и синхронизация видео.
@@ -656,51 +595,27 @@ export function initApplicationScroll(root = document) {
           // 2) Заголовок + WebGL оверлей поверх видео.
           setTitleWordsByVideoTime(targetVideoTime, video.duration);
           const titleGroupOpacity = getTitleGroupOpacityFromVideoTime(targetVideoTime, video.duration);
-          if (
-            glFx &&
-            (Math.abs(contentP - lastGlProgress) >= STYLE_UPDATE_EPS ||
-              Math.abs(titleGroupOpacity - lastGlTitleOpacity) >= STYLE_UPDATE_EPS)
-          ) {
-            glFx.update({ progress: contentP, titleOpacity: titleGroupOpacity });
-            lastGlProgress = contentP;
-            lastGlTitleOpacity = titleGroupOpacity;
-          }
+          glFx?.update({ progress: contentP, titleOpacity: titleGroupOpacity });
 
           const tVis = titleGroupOpacity > 0.008 ? "visible" : "hidden";
-          if (head) {
-            const needHeadOpacity = Math.abs(titleGroupOpacity - lastHeadOpacity) >= STYLE_UPDATE_EPS;
-            const needHeadVis = tVis !== currentHeadVisible;
-            if (needHeadOpacity || needHeadVis) {
-              const headNext = { y: 0 };
-              if (needHeadOpacity) headNext.opacity = titleGroupOpacity;
-              if (needHeadVis) {
-                headNext.visibility = tVis;
-                currentHeadVisible = tVis;
-              }
-              gsap.set(head, headNext);
-              if (needHeadOpacity) lastHeadOpacity = titleGroupOpacity;
-            }
-          }
+          if (head) gsap.set(head, { opacity: titleGroupOpacity, visibility: tVis, y: 0 });
           if (stageIntro) gsap.set(stageIntro, { opacity: 0, visibility: "hidden", y: 0 });
 
           // 3) Ввод body-блока и сдвиг аккордеона.
           const bodyIn = getBodyInFromVideoTime(targetVideoTime, video.duration);
-          const bodyOp = bodyIn > 0.001 ? 1 : 0;
-          const bodyY = 28 * (1 - bodyIn);
+          const bodyOp = bodyIn;
+          const bodyY = 0;
           setBodyLayer(bodyOp, bodyY);
           if (appLeft) {
-            const leftX = accordionOffscreenX * (1 - bodyIn);
-            if (Math.abs(leftX - lastAppLeftX) >= 0.25) {
-              gsap.set(appLeft, { opacity: 1, x: leftX });
-              lastAppLeftX = leftX;
-            }
+            gsap.set(appLeft, { opacity: 1, x: accordionOffscreenX * (1 - bodyIn) });
           }
 
           // 4) Авто-переключение вкладок (если нет ручного override).
           const n = items.length;
-          let idx = n > 0 ? 0 : -1;
-          if (n > 0 && bodyIn > 0.98) {
-            // Запоминаем точку старта в момент полного появления аккордеона.
+          let idx = -1;
+          if (accordionManual) {
+            idx = manualAccordionIdx;
+          } else if (n > 0 && bodyIn > 0.98) {
             if (accordionAutoStartP == null) {
               accordionAutoStartP = contentP;
             }
@@ -710,7 +625,7 @@ export function initApplicationScroll(root = document) {
             else {
               idx = Math.min(Math.floor(tabP * n), n - 1);
             }
-          } else if (accordionAutoStartP != null && contentP < accordionAutoStartP - 0.001) {
+          } else if (accordionAutoStartP != null) {
             accordionAutoStartP = null;
           }
           setAccordionIndex(idx);
@@ -765,7 +680,6 @@ export function initApplicationScroll(root = document) {
         restoreHeading(h2);
       });
       clearTrackHeights();
-      clearMobileBackground();
       stageIntro?.style.removeProperty("display");
       if (head) gsap.set(head, { clearProps: "opacity,visibility,transform" });
       if (stageIntro) gsap.set(stageIntro, { clearProps: "opacity,visibility,transform" });

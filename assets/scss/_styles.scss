@@ -2740,8 +2740,9 @@ body.isg-nav-drawer-open {
   pointer-events: none;
   z-index: 1;
   mix-blend-mode: screen;
-  opacity: 0.9;
-  will-change: opacity;
+  opacity: 0.98;
+  filter: saturate(1.28) contrast(1.08) blur(0.2px);
+  will-change: opacity, filter;
 }
 
 .isg-app__inner {
