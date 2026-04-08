@@ -90,6 +90,8 @@ $terms_url      = (string) ($section['terms_url'] ?? '#');
 $diameter_opts  = is_array($section['diameter_options'] ?? null) ? $section['diameter_options'] : $default_diameter_options;
 $wall_opts      = is_array($section['wall_options'] ?? null) ? $section['wall_options'] : $default_wall_options;
 $steel_opts     = is_array($section['steel_options'] ?? null) ? $section['steel_options'] : $default_steel_options;
+$form_action    = esc_url(admin_url('admin-post.php'));
+$form_status    = isset($_GET['isg_rfq_status']) ? sanitize_key((string) wp_unslash($_GET['isg_rfq_status'])) : '';
 
 $label = static function (array $labels, string $key, string $fallback = ''): string {
 	$value = $labels[$key] ?? $fallback;
@@ -138,7 +140,18 @@ $label = static function (array $labels, string $key, string $fallback = ''): st
 				</aside>
 
 				<div class="isg-rfq-form-wrap">
-					<form class="isg-rfq-form" data-isg-rfq-form>
+					<form class="isg-rfq-form" data-isg-rfq-form method="post" action="<?php echo $form_action; ?>">
+						<input type="hidden" name="action" value="isg_submit_rfq" />
+						<?php wp_nonce_field('isg_submit_rfq', 'isg_rfq_nonce'); ?>
+						<?php if ($form_status === 'success') : ?>
+							<p class="isg-rfq-form__notice isg-rfq-form__notice--success" role="status"><?php esc_html_e('Thank you. Your request has been sent successfully.', 'isg'); ?></p>
+						<?php elseif ($form_status === 'invalid') : ?>
+							<p class="isg-rfq-form__notice isg-rfq-form__notice--error" role="alert"><?php esc_html_e('Please fill in all required fields correctly.', 'isg'); ?></p>
+						<?php elseif ($form_status === 'security') : ?>
+							<p class="isg-rfq-form__notice isg-rfq-form__notice--error" role="alert"><?php esc_html_e('Security check failed. Please try again.', 'isg'); ?></p>
+						<?php elseif ($form_status === 'error') : ?>
+							<p class="isg-rfq-form__notice isg-rfq-form__notice--error" role="alert"><?php esc_html_e('Message was not sent. Please try again later.', 'isg'); ?></p>
+						<?php endif; ?>
 						<div class="isg-rfq-inputs">
 							<div class="isg-rfq-inputs-row isg-rfq-inputs-row--full">
 								<label class="isg-field isg-field--float">

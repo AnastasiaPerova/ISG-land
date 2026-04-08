@@ -69,6 +69,17 @@ function isg_acf_textarea_field(
 	);
 }
 
+function isg_acf_file_field(string $key, string $label, string $name): array {
+	return array(
+		'key'           => $key,
+		'label'         => $label,
+		'name'          => $name,
+		'type'          => 'file',
+		'return_format' => 'array',
+		'library'       => 'all',
+	);
+}
+
 function isg_register_acf_fields(): void {
 	if (!function_exists('acf_add_local_field_group')) {
 		return;
@@ -253,19 +264,20 @@ function isg_register_acf_fields(): void {
 					'sub_fields' => array(
 						isg_acf_text_field('field_isg_app_intro_kicker', 'Intro Kicker', 'intro_kicker', 'Application Areas'),
 						isg_acf_textarea_field('field_isg_app_intro_title', 'Intro Title', 'intro_title', 'Spiral-welded pipes are used in various industries, such as:'),
+						array_merge(
+							isg_acf_file_field('field_isg_app_video_file', 'Video File', 'video_file'),
+							array(
+								'mime_types' => 'mp4,webm,ogg',
+							)
+						),
 						array(
 							'key'   => 'field_isg_app_video_url',
-							'label' => 'Video URL',
+							'label' => 'Video URL (fallback)',
 							'name'  => 'video_url',
 							'type'  => 'url',
 						),
-						isg_acf_text_field('field_isg_app_cta_label', 'CTA Label', 'cta_label', 'Download catalogue'),
-						array(
-							'key'   => 'field_isg_app_cta_url',
-							'label' => 'CTA URL',
-							'name'  => 'cta_url',
-							'type'  => 'url',
-						),
+						isg_acf_image_field('field_isg_app_video_poster', 'Video Poster', 'video_poster'),
+						isg_acf_image_field('field_isg_app_mobile_bg_image', 'Mobile Background Image', 'mobile_bg_image'),
 						array(
 							'key'          => 'field_isg_app_items',
 							'label'        => 'Accordion Items',

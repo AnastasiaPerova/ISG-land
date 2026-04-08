@@ -2697,6 +2697,7 @@ body.isg-nav-drawer-open {
   box-sizing: border-box;
   overflow: hidden;
   z-index: 0;
+  contain: layout paint;
 }
 
 .isg-app__scene-reveal {
@@ -2714,6 +2715,8 @@ body.isg-nav-drawer-open {
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 .isg-app__video {
@@ -2723,6 +2726,9 @@ body.isg-nav-drawer-open {
   height: 100%;
   object-fit: cover;
   display: block;
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .isg-app__glfx {
@@ -2735,6 +2741,7 @@ body.isg-nav-drawer-open {
   z-index: 1;
   mix-blend-mode: screen;
   opacity: 0.9;
+  will-change: opacity;
 }
 
 .isg-app__inner {
@@ -2756,7 +2763,7 @@ body.isg-nav-drawer-open {
   max-width: 1792px;
   margin: 0 auto;
   box-sizing: border-box;
-  overflow: hidden;
+  overflow: visible;
 }
 
 
@@ -2796,7 +2803,7 @@ body.isg-nav-drawer-open {
   padding: 0;
   box-sizing: border-box;
   visibility: visible;
-  will-change: transform;
+  will-change: transform, opacity;
 }
 
 .isg-app-scroll__head .isg-title-group {
@@ -2894,7 +2901,7 @@ body.isg-nav-drawer-open {
   border-radius: 2.4rem;
   background: #1257a6;
   border: 0.1rem solid rgba(255, 255, 255, 0.14);
-  box-shadow: 0 2rem 5rem rgba(10, 14, 58, 0.28);
+  box-shadow: none;
   padding: 0;
   align-self: center;
   overflow-x: hidden;
@@ -2925,8 +2932,11 @@ body.isg-nav-drawer-open {
 @media (max-width: 1099px) {
   .isg-app__scene-reveal {
     min-height: 100svh;
-    height: auto;
-    max-height: none;
+    min-height: 100dvh;
+    height: 100svh;
+    height: 100dvh;
+    max-height: 100svh;
+    max-height: 100dvh;
   }
   
   .isg-app-scroll__head {
@@ -2937,36 +2947,67 @@ body.isg-nav-drawer-open {
     position: relative;
     min-height: 100svh;
     min-height: 100dvh;
-    height: auto;
-    max-height: none;
-    overflow: visible;
+    height: 100svh;
+    height: 100dvh;
+    max-height: 100svh;
+    max-height: 100dvh;
+    overflow: hidden;
   }
   .isg-app__inner {
     padding-left: var(--isg-page-pad-x-mobile);
     padding-right: var(--isg-page-pad-x-mobile);
-    padding-top: calc(var(--isg-sticky-header-offset, var(--isg-space-13xl)) + var(--isg-space-6xl));
-    height: auto;
-    max-height: none;
+    padding-top: calc(var(--isg-sticky-header-offset, var(--isg-space-13xl)) + var(--isg-space-2xl));
+    padding-bottom: var(--isg-space-6xl);
+    height: 100svh;
+    height: 100dvh;
+    max-height: 100svh;
+    max-height: 100dvh;
     min-height: 100svh;
     min-height: 100dvh;
     overflow: visible;
+    justify-content: flex-end;
   }
   .isg-app-scroll__overlap {
-    min-height: min(58svh, 26rem);
+    min-height: 100%;
+    height: 100%;
   }
   .isg-app-scroll__rows,
   .isg-app-scroll__stage,
   .isg-app-scroll__stage-body,
   .isg-app-row {
-    flex: none;
+    flex: 1 1 auto;
+    min-height: 0;
+    height: 100%;
+  }
+  .isg-app-row {
+    display: block;
   }
   .isg-app-left {
-    max-height: none;
+    max-height: calc(100dvh - var(--isg-sticky-header-offset, var(--isg-space-13xl)) - var(--isg-space-10xl));
     overflow-y: visible;
+    overflow-x: hidden;
   }
   .isg-app-left,
   .isg-app-right {
     grid-column: 1/-1;
+  }
+}
+
+@media (max-width: 1099px) {
+  .isg-app--mobile-static .isg-app__media {
+    background-color: #0c1629;
+  }
+  .isg-app--mobile-static .isg-app__media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(7, 12, 24, 0.18) 0%,
+      rgba(7, 12, 24, 0.36) 44%,
+      rgba(7, 12, 24, 0.62) 100%
+    );
+    pointer-events: none;
   }
 }
 .isg-app-right__actions {
@@ -6222,6 +6263,24 @@ border: none;
   gap: var(--isg-space-10xl);
   flex: 1;
   min-height: 0;
+}
+
+.isg-rfq-form__notice {
+  margin: 0;
+  padding: 1.2rem 1.6rem;
+  border-radius: 1.2rem;
+  font-size: var(--isg-type-body-sm);
+  line-height: 1.4;
+}
+
+.isg-rfq-form__notice--success {
+  background: rgba(18, 87, 166, 0.1);
+  color: #1257a6;
+}
+
+.isg-rfq-form__notice--error {
+  background: rgba(204, 57, 57, 0.1);
+  color: #a82626;
 }
 
 .isg-rfq-inputs {
