@@ -27,17 +27,17 @@ function map01(value, start, end) {
 
 // Длина скролл-трека в высотах экрана (3.45 * 100vh).
 // Конфиг таймингов секции: видео (секунды), скролл-фазы [0..1], смещения (px).
-const APP_SCROLL_SCRUB_VH = 3.45;
+const APP_SCROLL_SCRUB_VH = 6.2;
 
 // Время видео (сек): когда слова заголовка начинают появляться.
-const TITLE_WORD_IN_START_SEC = 1.35;
+const TITLE_WORD_IN_START_SEC = 1.01;
 // Время видео (сек): длительность фазы появления слов заголовка.
 const TITLE_WORD_IN_DURATION_SEC = 3.2;
 // Время видео (сек): разброс по времени между словами при появлении.
 const TITLE_WORD_IN_SPREAD_SEC = 1.45;
 
 // Время видео (сек): когда слова заголовка начинают исчезать.
-const TITLE_WORD_OUT_START_SEC = 5;
+const TITLE_WORD_OUT_START_SEC = 3.4;
 // Время видео (сек): длительность фазы исчезновения слов заголовка.
 const TITLE_WORD_OUT_DURATION_SEC = 1.2;
 // Время видео (сек): разброс по времени между словами при исчезновении.
@@ -53,15 +53,11 @@ const ACCORDION_IN_DURATION_SEC = 0.9;
 // Прогресс скролла [0..1]: конец опциональной preplay-фазы (0 = отключена).
 const MASTER_PREPLAY_END = 0;
 // Прогресс скролла [0..1]: до этой точки видео управляется скроллом.
-const C_VIDEO_SCROLL_END = 0.8;
+const C_VIDEO_SCROLL_END = 0.88;
 // Прогресс скролла [0..1]: с этой точки стартует автопереключение вкладок аккордеона.
-const C_ACCORDION_START = 0.81;
+const C_ACCORDION_START = 0.9;
 // Прогресс скролла [0..1]: здесь автопереключение вкладок аккордеона заканчивается.
 const C_ACCORDION_END = 1;
-// Прогресс скролла [0..1]: начало появления правого CTA-блока.
-const C_CTA_START = 0.9;
-// Прогресс скролла [0..1]: конец появления правого CTA-блока.
-const C_CTA_END = 1;
 
 // Компиляция шейдера. При ошибке возвращаем null и отключаем WebGL-эффект.
 function createShader(gl, type, source) {
@@ -271,7 +267,6 @@ export function initApplicationScroll(root = document) {
     const stageIntro = section.querySelector(".isg-app-scroll__stage-intro");
     const stageBody = section.querySelector(".isg-app-scroll__stage-body");
     const appLeft = section.querySelector(".isg-app-left");
-    const appRight = section.querySelector(".isg-app-right");
     const items = section.querySelectorAll(".isg-accordion__item");
     const acc = section.querySelector(".isg-accordion--app-scroll");
     const titleH2s = Array.from(scene.querySelectorAll(".isg-title-group h2.isg-display"));
@@ -328,7 +323,8 @@ export function initApplicationScroll(root = document) {
         words.forEach((wordEl, i) => {
           const inLocal = easeOutCubic(map01(videoTime, inStart + i * inStep, inEnd + i * inStep));
           const outLocal = easeOutCubic(map01(videoTime, outStart + i * outStep, outEnd + i * outStep));
-          const opacity = clamp01((0.06 + inLocal * 0.94) * (1 - outLocal));
+          // Симметричный плавный профиль: мягкое появление и такое же мягкое исчезновение.
+          const opacity = clamp01(inLocal * (1 - outLocal));
           wordEl.style.opacity = String(opacity);
         });
 
@@ -431,7 +427,6 @@ export function initApplicationScroll(root = document) {
       if (stageIntro) gsap.set(stageIntro, { clearProps: "opacity,visibility,transform" });
       gsap.set(stageBody, { clearProps: "opacity,visibility,transform,pointerEvents" });
       if (appLeft) gsap.set(appLeft, { clearProps: "opacity,transform" });
-      if (appRight) gsap.set(appRight, { clearProps: "opacity,transform" });
       setAccordionIndex(items.length ? 0 : -1);
       const onEnd = () => {
         try {
@@ -502,7 +497,6 @@ export function initApplicationScroll(root = document) {
       glFx?.update({ progress: 0, titleOpacity: 0 });
       setBodyLayer(0, 28);
       if (appLeft) gsap.set(appLeft, { opacity: 1, x: -ACCORDION_IN_X_PX });
-      if (appRight) gsap.set(appRight, { opacity: 0, y: 20 });
       setAccordionIndex(items.length ? 0 : -1);
     };
 
@@ -526,7 +520,6 @@ export function initApplicationScroll(root = document) {
       glFx?.update({ progress: 1, titleOpacity: 0 });
       setBodyLayer(1, 0);
       if (appLeft) gsap.set(appLeft, { opacity: 1, x: 0 });
-      if (appRight) gsap.set(appRight, { opacity: 1, y: 0 });
       setAccordionIndex(items.length ? 0 : -1);
       try {
         if (video.duration && Number.isFinite(video.duration)) {
@@ -594,11 +587,6 @@ export function initApplicationScroll(root = document) {
           }
           setAccordionIndex(idx);
 
-          // 5) Появление правого блока (если он присутствует в DOM).
-          const ctaT = map01(contentP, C_CTA_START, C_CTA_END);
-          if (appRight) {
-            gsap.set(appRight, { opacity: ctaT, y: 18 * (1 - ctaT) });
-          }
         },
       });
     };
@@ -654,7 +642,6 @@ export function initApplicationScroll(root = document) {
       if (stageIntro) gsap.set(stageIntro, { clearProps: "opacity,visibility,transform" });
       gsap.set(stageBody, { clearProps: "opacity,visibility,transform,pointerEvents" });
       if (appLeft) gsap.set(appLeft, { clearProps: "opacity,transform" });
-      if (appRight) gsap.set(appRight, { clearProps: "opacity,transform" });
       glFx?.destroy();
       glFx = null;
       st?.kill();
