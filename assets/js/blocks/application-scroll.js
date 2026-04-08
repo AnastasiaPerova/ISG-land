@@ -28,7 +28,6 @@ function map01(value, start, end) {
 // Длина скролл-трека в высотах экрана (3.45 * 100vh).
 // Конфиг таймингов секции: видео (секунды), скролл-фазы [0..1], смещения (px).
 const APP_SCROLL_SCRUB_VH = 3.2;
-const VIDEO_SCRUB_LERP = 0.18;
 
 // Время видео (сек): когда слова заголовка начинают появляться.
 const TITLE_WORD_IN_START_SEC = 1.01;
@@ -141,31 +140,18 @@ function createAppWebGLEffect(mediaEl, section) {
     void main() {
       vec2 uv = gl_FragCoord.xy / max(u_res, vec2(1.0));
       vec2 centered = uv - 0.5;
-      float drift = sin((uv.y * 7.0) + u_time * 0.45) * 0.005 * u_strength;
-      float ripple = sin((uv.x * 15.0 - u_time * 0.6) + (uv.y * 9.0)) * 0.0035 * u_strength;
-      uv.x += drift;
-      uv.y += ripple;
-      float dist = length((uv - 0.5) * vec2(1.1, 1.0));
+      float dist = length(centered * vec2(1.1, 1.0));
       float vignette = smoothstep(0.92, 0.16, dist);
 
       float grain = hash(uv * vec2(920.0, 640.0) + u_time * 18.0) - 0.5;
-      float fineNoise = hash(uv * vec2(1820.0, 1240.0) - u_time * 11.0) - 0.5;
       float waveA = sin((uv.y + u_time * 0.14) * 30.0) * 0.5 + 0.5;
       float waveB = sin((uv.x * 1.2 - u_time * 0.1) * 22.0) * 0.5 + 0.5;
-      float radial = sin((dist * 18.0) - u_time * 1.15 + u_progress * 3.6) * 0.5 + 0.5;
-      float scan = sin((uv.y * u_res.y * 0.045) - u_time * 2.8) * 0.5 + 0.5;
-      float wave = (waveA * 0.42 + waveB * 0.28 + radial * 0.30) * u_strength;
+      float wave = (waveA * 0.58 + waveB * 0.42) * u_strength;
 
-      float pulse = (sin(u_time * 0.9 + u_progress * 4.2) * 0.5 + 0.5) * 0.11 * u_strength;
-      vec3 tintA = vec3(0.05, 0.16, 0.30);
-      vec3 tintB = vec3(0.09, 0.42, 0.94);
-      vec3 tintC = vec3(0.48, 0.86, 1.0);
-      vec3 tint = mix(mix(tintA, tintB, wave), tintC, scan * 0.18 * u_strength);
-      float energy = 0.14 + grain * 0.10 + fineNoise * 0.07 + pulse + scan * 0.04 * u_strength;
-      vec3 color = tint * energy * vignette;
-      color.r += (0.024 + radial * 0.03) * u_strength * vignette;
-      color.b += (0.03 + wave * 0.028) * u_strength * vignette;
-      float alpha = clamp((0.08 + 0.24 * u_strength + radial * 0.04 * u_strength) * vignette, 0.0, 0.44);
+      float pulse = (sin(u_time * 0.9 + u_progress * 4.2) * 0.5 + 0.5) * 0.08 * u_strength;
+      vec3 tint = mix(vec3(0.08, 0.18, 0.32), vec3(0.16, 0.48, 0.84), wave);
+      vec3 color = tint * (0.14 + grain * 0.16 + pulse) * vignette;
+      float alpha = clamp((0.06 + 0.18 * u_strength) * vignette, 0.0, 0.34);
 
       gl_FragColor = vec4(color, alpha);
     }
@@ -250,8 +236,8 @@ function createAppWebGLEffect(mediaEl, section) {
     // Обновление интенсивности эффекта по прогрессу секции и прозрачности заголовка.
     update({ progress = 0, titleOpacity = 0 }) {
       currentProgress = clamp01(progress);
-      const manualBoost = section.classList.contains("isg-app--gl-boost") ? 1.35 : 1;
-      targetStrength = clamp01((0.32 + currentProgress * 0.72 + titleOpacity * 0.18) * manualBoost);
+      const manualBoost = section.classList.contains("isg-app--gl-boost") ? 1.24 : 1;
+      targetStrength = clamp01((0.26 + currentProgress * 0.64 + titleOpacity * 0.2) * manualBoost);
     },
     destroy() {
       running = false;
@@ -380,20 +366,14 @@ export function initApplicationScroll(root = document) {
       videoSeekRaf = 0;
       if (pendingVideoTime == null) return;
       const target = pendingVideoTime;
-      const current = Number.isFinite(video.currentTime) ? video.currentTime : target;
-      const next =
-        Math.abs(target - current) <= 0.018
-          ? target
-          : current + (target - current) * VIDEO_SCRUB_LERP;
+      pendingVideoTime = null;
       try {
-        video.currentTime = next;
+        if (typeof video.fastSeek === "function") {
+          video.fastSeek(target);
+        } else {
+          video.currentTime = target;
+        }
       } catch (_) {}
-      if (Math.abs(target - next) <= 0.018) {
-        pendingVideoTime = null;
-        return;
-      }
-      pendingVideoTime = target;
-      videoSeekRaf = requestAnimationFrame(flushVideoSeek);
     };
 
     // Буферизуем target currentTime и отдаём в flush.
@@ -578,7 +558,7 @@ export function initApplicationScroll(root = document) {
         trigger: scrollTriggerEl,
         start: scrollStart,
         end: () => "+=" + scrubEndPx(),
-        scrub: 0.9,
+        scrub: 0.68,
         invalidateOnRefresh: true,
         onLeaveBack: () => {
           applyInitialFrame();
