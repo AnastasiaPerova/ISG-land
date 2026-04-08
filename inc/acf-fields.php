@@ -261,13 +261,26 @@ function isg_register_acf_fields(): void {
 					'name'       => 'application_section',
 					'type'       => 'group',
 					'layout'     => 'block',
+					'instructions' => 'Controls the video application section with mobile fallback and accordion items.',
 					'sub_fields' => array(
-						isg_acf_text_field('field_isg_app_intro_kicker', 'Intro Kicker', 'intro_kicker', 'Application Areas'),
-						isg_acf_textarea_field('field_isg_app_intro_title', 'Intro Title', 'intro_title', 'Spiral-welded pipes are used in various industries, such as:'),
+						array_merge(
+							isg_acf_text_field('field_isg_app_intro_kicker', 'Intro Kicker', 'intro_kicker', 'Application Areas'),
+							array(
+								'instructions' => 'Small label above the heading.',
+							)
+						),
+						array_merge(
+							isg_acf_textarea_field('field_isg_app_intro_title', 'Intro Title', 'intro_title', 'Spiral-welded pipes are used in various industries, such as:'),
+							array(
+								'instructions' => 'Main title shown in the animated desktop scene and static mobile layout.',
+								'required'     => 1,
+							)
+						),
 						array_merge(
 							isg_acf_file_field('field_isg_app_video_file', 'Video File', 'video_file'),
 							array(
-								'mime_types' => 'mp4,webm,ogg',
+								'instructions' => 'Preferred source for the desktop video. If empty, Video URL fallback will be used.',
+								'mime_types'   => 'mp4,webm,ogg',
 							)
 						),
 						array(
@@ -275,23 +288,68 @@ function isg_register_acf_fields(): void {
 							'label' => 'Video URL (fallback)',
 							'name'  => 'video_url',
 							'type'  => 'url',
+							'instructions' => 'Optional fallback when no video file is uploaded.',
 						),
-						isg_acf_image_field('field_isg_app_video_poster', 'Video Poster', 'video_poster'),
-						isg_acf_image_field('field_isg_app_mobile_bg_image', 'Mobile Background Image', 'mobile_bg_image'),
+						array_merge(
+							isg_acf_image_field('field_isg_app_video_poster', 'Video Poster', 'video_poster'),
+							array(
+								'instructions' => 'Poster image shown before the video loads.',
+							)
+						),
+						array_merge(
+							isg_acf_image_field('field_isg_app_mobile_bg_image', 'Mobile Background Image', 'mobile_bg_image'),
+							array(
+								'instructions' => 'Static background used on mobile instead of animated video.',
+							)
+						),
 						array(
 							'key'          => 'field_isg_app_items',
 							'label'        => 'Accordion Items',
 							'name'         => 'items',
 							'type'         => 'repeater',
 							'layout'       => 'block',
+							'min'          => 1,
+							'collapsed'    => 'field_isg_app_item_title',
 							'button_label' => 'Add Accordion Item',
+							'instructions' => 'Accordion entries for the section. The first item is used as the default open state on mobile.',
 							'sub_fields'   => array(
-								isg_acf_image_field('field_isg_app_item_icon', 'Icon', 'icon'),
-								isg_acf_text_field('field_isg_app_item_title', 'Title', 'title'),
-								isg_acf_text_field('field_isg_app_item_pill', 'Pill Label', 'pill'),
-								isg_acf_image_field('field_isg_app_item_image', 'Image', 'image'),
-								isg_acf_textarea_field('field_isg_app_item_hint', 'Image Caption', 'hint'),
-								isg_acf_text_field('field_isg_app_item_desc', 'Description', 'description'),
+								array_merge(
+									isg_acf_image_field('field_isg_app_item_icon', 'Icon', 'icon'),
+									array(
+										'instructions' => 'Small icon displayed in the tab.',
+									)
+								),
+								array_merge(
+									isg_acf_text_field('field_isg_app_item_title', 'Title', 'title'),
+									array(
+										'required' => 1,
+									)
+								),
+								array_merge(
+									isg_acf_text_field('field_isg_app_item_pill', 'Pill Label', 'pill'),
+									array(
+										'instructions' => 'Short spec tag shown on the right, e.g. API 5L.',
+									)
+								),
+								array_merge(
+									isg_acf_image_field('field_isg_app_item_image', 'Image', 'image'),
+									array(
+										'instructions' => 'Main image inside the expanded accordion panel.',
+									)
+								),
+								array_merge(
+									isg_acf_textarea_field('field_isg_app_item_hint', 'Image Caption', 'hint'),
+									array(
+										'instructions' => 'Optional helper text on the image.',
+									)
+								),
+								array_merge(
+									isg_acf_text_field('field_isg_app_item_desc', 'Description', 'description'),
+									array(
+										'instructions' => 'Short text shown above the image in the open state.',
+										'required'     => 1,
+									)
+								),
 							),
 						),
 					),

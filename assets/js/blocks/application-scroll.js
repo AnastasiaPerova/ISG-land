@@ -271,6 +271,7 @@ export function initApplicationScroll(root = document) {
     const appLeft = section.querySelector(".isg-app-left");
     const items = section.querySelectorAll(".isg-accordion__item");
     const acc = section.querySelector(".isg-accordion--app-scroll");
+    const mobileBg = section.dataset.isgMobileBg || "";
     const titleH2s = Array.from(scene.querySelectorAll(".isg-title-group h2.isg-display"));
 
     if (!video || !scene || !stageBody) return;
@@ -351,6 +352,20 @@ export function initApplicationScroll(root = document) {
       });
     };
 
+    const setTitleWordsStaticVisible = () => {
+      titleH2s.forEach((h2) => {
+        if (h2.dataset.isgIntroSplit !== "1") return;
+        h2.querySelectorAll(".isg-intro-word").forEach((wordEl) => {
+          wordEl.style.opacity = "1";
+        });
+        h2.querySelectorAll(".isg-intro-char").forEach((charEl) => {
+          charEl.style.setProperty("--isg-char-fill", "1");
+          charEl.style.setProperty("--isg-char-opacity", "1");
+          charEl.style.setProperty("--isg-char-y", "0em");
+        });
+      });
+    };
+
     let videoSeekRaf = 0;
     let pendingVideoTime = null;
     let accordionManual = false;
@@ -408,6 +423,43 @@ export function initApplicationScroll(root = document) {
       });
     };
 
+    const clearAccordionIndex = () => {
+      items.forEach((item) => {
+        item.classList.remove("isg-accordion__item--open");
+        item.querySelector(".isg-accordion__trigger")?.setAttribute("aria-expanded", "false");
+      });
+    };
+
+    const applyMobileStaticMedia = () => {
+      section.classList.add("isg-app--mobile-static");
+      if (mediaEl && mobileBg) {
+        mediaEl.style.backgroundImage = `url("${mobileBg}")`;
+        mediaEl.style.backgroundSize = "cover";
+        mediaEl.style.backgroundPosition = "center";
+      }
+      if (video) {
+        video.style.opacity = "0";
+        video.style.visibility = "hidden";
+      }
+      const glCanvas = mediaEl?.querySelector(".isg-app__glfx");
+      if (glCanvas) glCanvas.style.display = "none";
+    };
+
+    const clearMobileStaticMedia = () => {
+      section.classList.remove("isg-app--mobile-static");
+      if (mediaEl) {
+        mediaEl.style.removeProperty("background-image");
+        mediaEl.style.removeProperty("background-size");
+        mediaEl.style.removeProperty("background-position");
+      }
+      if (video) {
+        video.style.removeProperty("opacity");
+        video.style.removeProperty("visibility");
+      }
+      const glCanvas = mediaEl?.querySelector(".isg-app__glfx");
+      if (glCanvas) glCanvas.style.removeProperty("display");
+    };
+
     // Управляем видимостью и интерактивностью body-слоя.
     const setBodyLayer = (opacity, yPx) => {
       const vis = opacity > 0.02 ? "visible" : "hidden";
@@ -426,6 +478,16 @@ export function initApplicationScroll(root = document) {
       const item = btn.closest(".isg-accordion__item");
       const idx = Array.from(items).indexOf(item);
       if (idx < 0) return;
+      if (!mqDesktop.matches) {
+        const isOpen = item.classList.contains("isg-accordion__item--open");
+        if (isOpen) return;
+        items.forEach((entry) => {
+          const open = entry === item;
+          entry.classList.toggle("isg-accordion__item--open", open);
+          entry.querySelector(".isg-accordion__trigger")?.setAttribute("aria-expanded", open ? "true" : "false");
+        });
+        return;
+      }
       const isOpen = item.classList.contains("isg-accordion__item--open");
       if (isOpen) return;
       accordionManual = true;
@@ -434,7 +496,16 @@ export function initApplicationScroll(root = document) {
     };
 
     // Упрощенная ветка для prefers-reduced-motion.
+    if (acc) {
+      acc.addEventListener("click", onAccordionClick);
+      disposers.push(() => acc.removeEventListener("click", onAccordionClick));
+    }
+
     if (reduced) {
+      if (!mqDesktop.matches) {
+        applyMobileStaticMedia();
+        setTitleWordsStaticVisible();
+      }
       section.style.minHeight = "";
       if (postEl) postEl.style.height = "";
       if (head) gsap.set(head, { clearProps: "opacity,visibility,transform" });
@@ -452,15 +523,11 @@ export function initApplicationScroll(root = document) {
       };
       video.addEventListener("loadedmetadata", onEnd, { once: true });
       disposers.push(() => video.removeEventListener("loadedmetadata", onEnd));
+      disposers.push(() => clearMobileStaticMedia());
       return;
     }
 
     glFx = createAppWebGLEffect(mediaEl, section);
-
-    if (acc) {
-      acc.addEventListener("click", onAccordionClick);
-      disposers.push(() => acc.removeEventListener("click", onAccordionClick));
-    }
 
     titleH2s.forEach((h2) => splitHeadingIntoChars(h2));
 
@@ -522,6 +589,7 @@ export function initApplicationScroll(root = document) {
       manualAccordionIdx = -1;
       accordionAutoStartP = null;
       pendingVideoTime = null;
+      applyMobileStaticMedia();
       try {
         video.pause();
       } catch (_) {}
@@ -533,8 +601,8 @@ export function initApplicationScroll(root = document) {
       stageIntro?.style.setProperty("display", "block");
       if (head) gsap.set(head, { opacity: 0, visibility: "hidden", y: 0 });
       if (stageIntro) gsap.set(stageIntro, { opacity: 1, visibility: "visible", y: 0 });
-      setTitleWordsByVideoTime(TITLE_WORD_IN_START_SEC + TITLE_WORD_IN_DURATION_SEC + 0.3, video.duration);
-      glFx?.update({ progress: 1, titleOpacity: 0 });
+      setTitleWordsStaticVisible();
+      glFx?.update({ progress: 0, titleOpacity: 0 });
       setBodyLayer(1, 0);
       if (appLeft) gsap.set(appLeft, { opacity: 1, x: 0 });
       setAccordionIndex(items.length ? 0 : -1);
@@ -628,6 +696,7 @@ export function initApplicationScroll(root = document) {
       currentMode = nextMode;
 
       if (nextMode === "desktop") {
+        clearMobileStaticMedia();
         buildDesktopScene();
       } else {
         setStaticFrame();
@@ -659,6 +728,7 @@ export function initApplicationScroll(root = document) {
       titleH2s.forEach((h2) => {
         restoreHeading(h2);
       });
+      clearMobileStaticMedia();
       clearTrackHeights();
       stageIntro?.style.removeProperty("display");
       if (head) gsap.set(head, { clearProps: "opacity,visibility,transform" });
