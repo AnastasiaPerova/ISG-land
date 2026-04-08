@@ -2725,6 +2725,18 @@ body.isg-nav-drawer-open {
   display: block;
 }
 
+.isg-app__glfx {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+  z-index: 1;
+  mix-blend-mode: screen;
+  opacity: 0.9;
+}
+
 .isg-app__inner {
   position: relative;
   z-index: 1;

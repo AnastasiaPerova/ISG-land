@@ -145,18 +145,6 @@ $items        = is_array($section['items'] ?? null) ? $section['items'] : $defau
 											<?php endforeach; ?>
 										</div>
 									</div>
-									<div class="isg-app-right">
-										<div class="isg-btn-group isg-btn-group--spread isg-app-right__actions">
-											<div class="isg-btn-group">
-												<span class="isg-btn__media" aria-hidden="true">
-													<svg class="isg-btn__media-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-														<path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-													</svg>
-												</span>
-												<a class="isg-btn" href="<?php echo esc_url($cta_url); ?>"><?php echo esc_html($cta_label); ?></a>
-											</div>
-										</div>
-									</div>
 								</div>
 							</div>
 						</div>
