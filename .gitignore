@@ -1,2 +1,4 @@
 node_modules/
 assets/video/*.mp4
+scripts/deploy.local.ps1
+scripts/*.log
