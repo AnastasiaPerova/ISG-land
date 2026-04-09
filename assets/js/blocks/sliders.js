@@ -426,7 +426,7 @@ function bindTeamReveal(slider, onReady = () => {}) {
     filter: "blur(8px)",
   });
   gsap.set(images, {
-    clipPath: "inset(18% 0% 82% 0% round 1.8rem)",
+    clipPath: "inset(18% 0% 82% 0% round var(--isg-ui-br))",
     y: 34,
     scale: 1.04,
   });
@@ -453,7 +453,7 @@ function bindTeamReveal(slider, onReady = () => {}) {
       .to(
         images,
         {
-          clipPath: "inset(0% 0% 0% 0% round 1.8rem)",
+          clipPath: "inset(0% 0% 0% 0% round var(--isg-ui-br))",
           y: 0,
           scale: 1,
           duration: 1.05,
