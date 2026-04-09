@@ -59,6 +59,20 @@ function buildFeaturedTween(section, scrollEl, cardsEl, imageEl, mm, killTween) 
 
   void cardsEl.offsetHeight;
   const { panel, overflow, total } = measureScrollParams(cardsEl, scrollEl);
+  if (panel <= 0 || total <= 0) {
+    imageEl?.style.setProperty("--isg-digits-img-effect", "0");
+    imageEl?.style.setProperty("--isg-digits-image-x", "0px");
+    imageEl?.style.setProperty("--isg-digits-img-shift-x", "0px");
+    return null;
+  }
+  const viewportHeight = Math.max(
+    Math.round(scrollEl.getBoundingClientRect().height || 0),
+    Math.round(window.innerHeight || 0),
+  );
+  const rootStyle = window.getComputedStyle(document.documentElement);
+  const sectionMarginTopRaw = parseFloat(rootStyle.getPropertyValue("--isg-section-margin-top")) || 0;
+  const sectionOverlapCompensation = Math.max(0, Math.round(Math.abs(sectionMarginTopRaw)));
+  const pinDistance = Math.max(total, viewportHeight) + sectionOverlapCompensation;
   const imageBlockShiftMaxPx = Math.min(260, Math.max(64, Math.round(panel * 0.17)));
 
   const syncImageEffect = (self) => {
@@ -74,8 +88,9 @@ function buildFeaturedTween(section, scrollEl, cardsEl, imageEl, mm, killTween) 
     scrollTrigger: {
       trigger: section,
       start: "top top",
-      end: `+=${total}`,
-      pin: scrollEl,
+      end: `+=${pinDistance}`,
+      pin: section,
+      pinSpacing: true,
       scrub: true,
       invalidateOnRefresh: true,
       anticipatePin: 0,
@@ -127,6 +142,12 @@ export function initDigitsFeatured(root = document) {
     };
 
     const rebuild = () => {
+      const cardCount = colsEl ? colsEl.querySelectorAll(".columns__item").length : 0;
+      if (cardCount <= 1) {
+        killTween();
+        layoutKey = "single-card";
+        return;
+      }
       const { panel, overflow, content, visibleRow } = measureScrollParams(cardsEl, scrollEl);
       const nextKey = `${mm.matches ? 1 : 0}:${panel}:${visibleRow}:${content}:${overflow}`;
       if (nextKey === layoutKey && tween) return;

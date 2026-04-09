@@ -5,7 +5,7 @@
 @import "typography";
 
 
-$isg-container-max:86vw;
+$isg-container-max:calc(100% - max(4.4pc, min(5.556vw, 6.65pc)));
 $isg-gutter: 1.6rem;
 
 

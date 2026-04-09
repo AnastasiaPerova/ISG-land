@@ -3,23 +3,21 @@
 
 
 .container {
-  width: 100%;
-  max-width: $isg-container-max;
-  margin-left: auto;
-  margin-right: auto;
-  display: flex;
-
-    flex-direction: column;
-  
-
- 
+display: flex;
+flex-direction: column;
+    margin: auto;
+    max-width: calc(100% - max(4.4pc, min(5.556vw, 6.65pc)));
+    width: 100%;
 }
 
-@media (max-width: 1099px) {
-  .container {
-    max-width: 100%;
-    padding-left: 3.2rem;
-    padding-right: 3.2rem;
-  }
+@media (max-width: 1440px) {
+    .container {
+        max-width:calc(100% - max(2.2pc, min(2.778vw, 53.2px)));
+    }
 }
 
+@media (max-width: 1100px) {
+    .container {
+        max-width:calc(100% - min(8.333vw, 34.5px));
+    }
+}

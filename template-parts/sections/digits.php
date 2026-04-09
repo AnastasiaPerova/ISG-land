@@ -26,8 +26,66 @@ $section = isg_acf_group(
 );
 
 $bg_image = isg_image_url($section['background_image'] ?? '', isg_asset_uri('img/digits-img.jpg'));
-$title    = (string) ($section['title'] ?? 'Advantages');
-$cards    = is_array($section['cards'] ?? null) ? $section['cards'] : $default_cards;
+$title    = trim((string) ($section['title'] ?? ''));
+$cards    = is_array($section['cards'] ?? null) ? $section['cards'] : array();
+
+if ($title === '') {
+	$title = 'Advantages';
+}
+
+$cards = array_values(
+	array_filter(
+		$cards,
+		static function ($card): bool {
+			if (!is_array($card)) {
+				return false;
+			}
+
+			$value = trim((string) ($card['value'] ?? ''));
+			$label = trim((string) ($card['label'] ?? ''));
+
+			return $value !== '' || $label !== '';
+		}
+	)
+);
+
+if (empty($cards)) {
+	$cards = array();
+}
+
+$normalized_cards = array();
+$target_cards     = max(count($default_cards), count($cards));
+
+for ($index = 0; $index < $target_cards; $index++) {
+	$card         = is_array($cards[$index] ?? null) ? $cards[$index] : array();
+	$default_card = is_array($default_cards[$index] ?? null) ? $default_cards[$index] : $default_cards[0];
+
+	$image = isg_image_url($card['image'] ?? '', '');
+	$value = trim((string) ($card['value'] ?? ''));
+	$label = trim((string) ($card['label'] ?? ''));
+
+	if ($image === '') {
+		$image = isg_image_url($default_card['image'] ?? '', isg_asset_uri('img/advantages_1.jpg'));
+	}
+	if ($value === '') {
+		$value = (string) ($default_card['value'] ?? '');
+	}
+	if ($label === '') {
+		$label = (string) ($default_card['label'] ?? '');
+	}
+
+	$normalized_cards[] = array(
+		'image' => $image,
+		'value' => $value,
+		'label' => $label,
+	);
+}
+
+if (empty($normalized_cards)) {
+	$normalized_cards = $default_cards;
+}
+
+$cards = $normalized_cards;
 ?>
 <section
 	id="isg-digits"

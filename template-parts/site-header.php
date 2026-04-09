@@ -28,7 +28,77 @@ if (!is_array($languages) || empty($languages)) {
 	$languages = $default_languages;
 }
 
-$current_language = strtoupper((string) ($languages[0]['code'] ?? 'EN'));
+if (function_exists('pll_the_languages')) {
+	$polylang_languages = pll_the_languages(
+		array(
+			'raw'                    => 1,
+			'hide_if_no_translation' => 0,
+			'hide_current'           => 0,
+		)
+	);
+
+	if (is_array($polylang_languages) && !empty($polylang_languages)) {
+		$languages = array();
+
+		foreach ($polylang_languages as $polylang_language) {
+			$slug = strtolower(trim((string) ($polylang_language['slug'] ?? '')));
+			$code = strtoupper(trim((string) ($polylang_language['slug'] ?? $polylang_language['locale'] ?? $polylang_language['name'] ?? '')));
+			$url  = (string) ($polylang_language['url'] ?? '');
+
+			if ($code === '') {
+				continue;
+			}
+
+			$languages[] = array(
+				'code'      => $code,
+				'slug'      => $slug !== '' ? $slug : strtolower($code),
+				'url'       => $url,
+				'is_active' => !empty($polylang_language['current_lang']),
+			);
+		}
+	}
+}
+
+$normalized_languages = array();
+foreach ($languages as $language) {
+	$code = strtoupper(trim((string) ($language['code'] ?? '')));
+	if ($code === '') {
+		continue;
+	}
+
+	$slug = strtolower(trim((string) ($language['slug'] ?? $code)));
+	$url  = (string) ($language['url'] ?? '');
+
+	$normalized_languages[] = array(
+		'code'      => $code,
+		'slug'      => $slug !== '' ? $slug : strtolower($code),
+		'url'       => $url,
+		'is_active' => !empty($language['is_active']),
+	);
+}
+
+if (empty($normalized_languages)) {
+	$normalized_languages = $default_languages;
+}
+
+$active_index = null;
+foreach ($normalized_languages as $index => $language) {
+	if (!empty($language['is_active'])) {
+		$active_index = $index;
+		break;
+	}
+}
+
+if ($active_index === null) {
+	$active_index = 0;
+}
+
+foreach ($normalized_languages as $index => $language) {
+	$normalized_languages[$index]['is_active'] = $index === $active_index;
+}
+
+$languages        = $normalized_languages;
+$current_language = strtoupper((string) ($languages[$active_index]['code'] ?? 'EN'));
 
 $logo_url        = isg_acf_image_url('header_logo', 'option', isg_asset_uri('img/logo.svg'));
 $mobile_logo_url = isg_acf_image_url('header_mobile_logo', 'option', isg_asset_uri('img/logo_footer.svg'));
@@ -91,18 +161,21 @@ $language_label = (string) isg_acf_option('header_language_label', 'Language');
 							<?php foreach ($languages as $index => $lang) : ?>
 								<?php
 								$code      = strtoupper((string) ($lang['code'] ?? ''));
-								$is_active = $index === 0;
+								$slug      = strtolower((string) ($lang['slug'] ?? $code));
+								$url       = (string) ($lang['url'] ?? '');
+								$is_active = !empty($lang['is_active']);
 								if ($code === '') {
 									continue;
 								}
 								?>
-								<button
-									type="button"
+								<a
 									class="isg-lang-dropdown__option isg-btn isg-btn--ghost-dark<?php echo $is_active ? ' isg-btn--active' : ''; ?>"
-									data-isg-lang="<?php echo esc_attr(strtolower($code)); ?>"
+									data-isg-lang="<?php echo esc_attr($slug); ?>"
+									data-isg-lang-url="<?php echo esc_url($url); ?>"
 									role="option"
 									aria-selected="<?php echo $is_active ? 'true' : 'false'; ?>"
-								><?php echo esc_html($code); ?></button>
+									href="<?php echo esc_url($url !== '' ? $url : '#'); ?>"
+								><?php echo esc_html($code); ?></a>
 							<?php endforeach; ?>
 						</div>
 					</div>
@@ -152,18 +225,21 @@ $language_label = (string) isg_acf_option('header_language_label', 'Language');
 							<?php foreach ($languages as $index => $lang) : ?>
 								<?php
 								$code      = strtoupper((string) ($lang['code'] ?? ''));
-								$is_active = $index === 0;
+								$slug      = strtolower((string) ($lang['slug'] ?? $code));
+								$url       = (string) ($lang['url'] ?? '');
+								$is_active = !empty($lang['is_active']);
 								if ($code === '') {
 									continue;
 								}
 								?>
-								<button
-									type="button"
+								<a
 									class="isg-lang-dropdown__option isg-btn isg-btn--ghost-dark<?php echo $is_active ? ' isg-btn--active' : ''; ?>"
-									data-isg-lang="<?php echo esc_attr(strtolower($code)); ?>"
+									data-isg-lang="<?php echo esc_attr($slug); ?>"
+									data-isg-lang-url="<?php echo esc_url($url); ?>"
 									role="option"
 									aria-selected="<?php echo $is_active ? 'true' : 'false'; ?>"
-								><?php echo esc_html($code); ?></button>
+									href="<?php echo esc_url($url !== '' ? $url : '#'); ?>"
+								><?php echo esc_html($code); ?></a>
 							<?php endforeach; ?>
 						</div>
 					</div>

@@ -311,6 +311,14 @@ export function initLangNav(root = document) {
       if (!nav.contains(option)) return;
       const code = option.getAttribute("data-isg-lang");
       if (!code) return;
+      const nextUrl =
+        option.getAttribute("data-isg-lang-url") ||
+        (option instanceof HTMLAnchorElement ? option.href : "");
+      if (nextUrl) {
+        e.preventDefault();
+        window.location.assign(nextUrl);
+        return;
+      }
       e.preventDefault();
       setLang(code);
       closeNav(nav);
