@@ -215,18 +215,22 @@ function setupSliderDragCursor() {
   };
 }
 
-function getIsgGapPx() {
-  const root = document.documentElement;
-  const raw = getComputedStyle(root).getPropertyValue("--isg-gap").trim();
-  if (raw.endsWith("rem")) {
-    const rem = parseFloat(raw);
-    const fs = parseFloat(getComputedStyle(root).fontSize) || 16;
-    return Math.max(0, Math.round(rem * fs));
+function getCssVarPx(name, fallback = 0) {
+  const probe = document.createElement("div");
+  probe.style.position = "absolute";
+  probe.style.visibility = "hidden";
+  probe.style.pointerEvents = "none";
+  probe.style.width = `var(${name})`;
+  document.body.appendChild(probe);
+
+  const width = parseFloat(getComputedStyle(probe).width);
+  probe.remove();
+
+  if (Number.isFinite(width)) {
+    return Math.max(0, Math.round(width));
   }
-  if (raw.endsWith("px")) {
-    return Math.round(parseFloat(raw));
-  }
-  return 29;
+
+  return fallback;
 }
 
 function getSliderUiState(swiper) {
@@ -505,7 +509,7 @@ function bindTeamReveal(slider, onReady = () => {}) {
 export async function initSliders(root = document) {
   
   const disposers = [];
-  const gapPx = getIsgGapPx();
+  const gapPx = getCssVarPx("--isg-card-gap", 16);
   const dragCursorApi = setupSliderDragCursor();
 
   root.querySelectorAll(".isg-slider").forEach((slider) => {
@@ -556,7 +560,7 @@ export async function initSliders(root = document) {
 
       if (!bar) {
         bar = document.createElement("div");
-        bar.className = "isg-slider-bar";
+        bar.className = "isg-slider-bar container";
         bar.innerHTML = [
           '<div class="isg-slider-bar__line"><div class="isg-slider-bar__progress"></div></div>',
           '<div class="isg-slider-bar__controls">',
