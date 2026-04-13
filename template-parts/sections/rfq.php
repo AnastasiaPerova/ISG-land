@@ -68,6 +68,7 @@ $section = isg_acf_group(
 		'aside_title_accent'=> 'Please send your project specifications for review.',
 		'aside_title_text'  => 'Our team will assess the requirements and prepare a quotation based on the provided information',
 		'form_labels'       => $default_labels,
+		'cf7_shortcode'     => '',
 		'terms_url'         => '#',
 		'diameter_options'  => $default_diameter_options,
 		'wall_options'      => $default_wall_options,
@@ -86,10 +87,12 @@ $aside_kicker   = (string) ($section['aside_kicker'] ?? 'RFQ');
 $aside_accent   = (string) ($section['aside_title_accent'] ?? '');
 $aside_text     = (string) ($section['aside_title_text'] ?? '');
 $form_labels    = is_array($section['form_labels'] ?? null) ? $section['form_labels'] : $default_labels;
+$cf7_shortcode  = isg_prepare_rfq_cf7_shortcode((string) ($section['cf7_shortcode'] ?? ''));
 $terms_url      = (string) ($section['terms_url'] ?? '#');
 $diameter_opts  = is_array($section['diameter_options'] ?? null) ? $section['diameter_options'] : $default_diameter_options;
 $wall_opts      = is_array($section['wall_options'] ?? null) ? $section['wall_options'] : $default_wall_options;
 $steel_opts     = is_array($section['steel_options'] ?? null) ? $section['steel_options'] : $default_steel_options;
+$use_cf7        = isg_can_render_rfq_cf7($cf7_shortcode);
 $form_action    = esc_url(admin_url('admin-post.php'));
 $form_status    = isset($_GET['isg_rfq_status']) ? sanitize_key((string) wp_unslash($_GET['isg_rfq_status'])) : '';
 
@@ -114,7 +117,7 @@ $label = static function (array $labels, string $key, string $fallback = ''): st
 					<p class="isg-rfq-intro__lead"><?php echo esc_html($intro_body); ?></p>
 					<div class="isg-btn-group isg-btn-group--spread">
 						<div class="isg-btn-group">
-							<a class="isg-btn isg-btn--blur" href="<?php echo esc_url($intro_cta_url); ?>"><?php echo esc_html($intro_cta_lbl); ?></a>
+							<a class="isg-btn isg-btn--blur" href="<?php echo esc_url($intro_cta_url); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html($intro_cta_lbl); ?></a>
 						</div>
 					</div>
 				</div>
@@ -140,108 +143,112 @@ $label = static function (array $labels, string $key, string $fallback = ''): st
 				</aside>
 
 				<div class="isg-rfq-form-wrap">
-					<form class="isg-rfq-form" data-isg-rfq-form method="post" action="<?php echo $form_action; ?>">
-						<input type="hidden" name="action" value="isg_submit_rfq" />
-						<?php wp_nonce_field('isg_submit_rfq', 'isg_rfq_nonce'); ?>
-						<?php if ($form_status === 'success') : ?>
-							<p class="isg-rfq-form__notice isg-rfq-form__notice--success" role="status"><?php esc_html_e('Thank you. Your request has been sent successfully.', 'isg'); ?></p>
-						<?php elseif ($form_status === 'invalid') : ?>
-							<p class="isg-rfq-form__notice isg-rfq-form__notice--error" role="alert"><?php esc_html_e('Please fill in all required fields correctly.', 'isg'); ?></p>
-						<?php elseif ($form_status === 'security') : ?>
-							<p class="isg-rfq-form__notice isg-rfq-form__notice--error" role="alert"><?php esc_html_e('Security check failed. Please try again.', 'isg'); ?></p>
-						<?php elseif ($form_status === 'error') : ?>
-							<p class="isg-rfq-form__notice isg-rfq-form__notice--error" role="alert"><?php esc_html_e('Message was not sent. Please try again later.', 'isg'); ?></p>
-						<?php endif; ?>
-						<div class="isg-rfq-inputs">
-							<div class="isg-rfq-inputs-row isg-rfq-inputs-row--full">
-								<label class="isg-field isg-field--float">
-									<input class="isg-field__control" type="text" name="company" autocomplete="organization" placeholder=" " />
-									<span class="isg-field__label"><span class="isg-field__label-text"><?php echo esc_html($label($form_labels, 'company', 'company name')); ?></span></span>
+					<?php if ($use_cf7) : ?>
+						<?php echo do_shortcode($cf7_shortcode); ?>
+					<?php else : ?>
+						<form class="isg-rfq-form" data-isg-rfq-form method="post" action="<?php echo $form_action; ?>">
+							<input type="hidden" name="action" value="isg_submit_rfq" />
+							<?php wp_nonce_field('isg_submit_rfq', 'isg_rfq_nonce'); ?>
+							<?php if ($form_status === 'success') : ?>
+								<p class="isg-rfq-form__notice isg-rfq-form__notice--success" role="status"><?php esc_html_e('Thank you. Your request has been sent successfully.', 'isg'); ?></p>
+							<?php elseif ($form_status === 'invalid') : ?>
+								<p class="isg-rfq-form__notice isg-rfq-form__notice--error" role="alert"><?php esc_html_e('Please fill in all required fields correctly.', 'isg'); ?></p>
+							<?php elseif ($form_status === 'security') : ?>
+								<p class="isg-rfq-form__notice isg-rfq-form__notice--error" role="alert"><?php esc_html_e('Security check failed. Please try again.', 'isg'); ?></p>
+							<?php elseif ($form_status === 'error') : ?>
+								<p class="isg-rfq-form__notice isg-rfq-form__notice--error" role="alert"><?php esc_html_e('Message was not sent. Please try again later.', 'isg'); ?></p>
+							<?php endif; ?>
+							<div class="isg-rfq-inputs">
+								<div class="isg-rfq-inputs-row isg-rfq-inputs-row--full">
+									<label class="isg-field isg-field--float">
+										<input class="isg-field__control" type="text" name="company" autocomplete="organization" placeholder=" " />
+										<span class="isg-field__label"><span class="isg-field__label-text"><?php echo esc_html($label($form_labels, 'company', 'company name')); ?></span></span>
+									</label>
+								</div>
+
+								<div class="isg-rfq-inputs-row">
+									<label class="isg-field isg-field--float">
+										<input class="isg-field__control" type="email" name="email" autocomplete="email" required placeholder=" " />
+										<span class="isg-field__label"><span class="isg-field__label-text"><?php echo esc_html($label($form_labels, 'email', 'email address')); ?></span><abbr class="isg-field__req" title="required">*</abbr></span>
+									</label>
+									<label class="isg-field isg-field--float">
+										<input class="isg-field__control" type="tel" name="phone" autocomplete="tel" required placeholder=" " />
+										<span class="isg-field__label"><span class="isg-field__label-text"><?php echo esc_html($label($form_labels, 'phone', 'phone number')); ?></span><abbr class="isg-field__req" title="required">*</abbr></span>
+									</label>
+								</div>
+
+								<div class="isg-rfq-inputs-row isg-rfq-inputs-row--full">
+									<label class="isg-field isg-field--float">
+										<input class="isg-field__control" type="text" name="project_type" placeholder=" " />
+										<span class="isg-field__label"><span class="isg-field__label-text"><?php echo esc_html($label($form_labels, 'project_type', 'project type')); ?></span></span>
+									</label>
+								</div>
+
+								<div class="isg-rfq-inputs-row">
+									<label class="isg-field isg-field--float isg-field--select">
+										<select class="isg-field__control" name="diameter" required>
+											<option value="" disabled selected hidden> </option>
+											<?php foreach ($diameter_opts as $opt) : ?>
+												<option value="<?php echo esc_attr((string) ($opt['value'] ?? '')); ?>"><?php echo esc_html((string) ($opt['label'] ?? '')); ?></option>
+											<?php endforeach; ?>
+										</select>
+										<span class="isg-field__label"><span class="isg-field__label-text"><?php echo esc_html($label($form_labels, 'pipe_diameter', 'pipe diameter')); ?></span></span>
+									</label>
+									<label class="isg-field isg-field--float isg-field--select">
+										<select class="isg-field__control" name="wall_thickness" required>
+											<option value="" disabled selected hidden> </option>
+											<?php foreach ($wall_opts as $opt) : ?>
+												<option value="<?php echo esc_attr((string) ($opt['value'] ?? '')); ?>"><?php echo esc_html((string) ($opt['label'] ?? '')); ?></option>
+											<?php endforeach; ?>
+										</select>
+										<span class="isg-field__label"><span class="isg-field__label-text"><?php echo esc_html($label($form_labels, 'wall_thickness', 'wall thickness')); ?></span></span>
+									</label>
+								</div>
+
+								<div class="isg-rfq-inputs-row">
+									<label class="isg-field isg-field--float isg-field--select">
+										<select class="isg-field__control" name="steel_grade" required>
+											<option value="" disabled selected hidden> </option>
+											<?php foreach ($steel_opts as $opt) : ?>
+												<option value="<?php echo esc_attr((string) ($opt['value'] ?? '')); ?>"><?php echo esc_html((string) ($opt['label'] ?? '')); ?></option>
+											<?php endforeach; ?>
+										</select>
+										<span class="isg-field__label"><span class="isg-field__label-text"><?php echo esc_html($label($form_labels, 'steel_grade', 'steel grade')); ?></span></span>
+									</label>
+									<label class="isg-field isg-field--float">
+										<input class="isg-field__control" type="text" name="quantity" placeholder=" " />
+										<span class="isg-field__label"><span class="isg-field__label-text"><?php echo esc_html($label($form_labels, 'quantity', 'quantity')); ?></span></span>
+									</label>
+								</div>
+
+								<div class="isg-rfq-inputs-row isg-rfq-inputs-row--full">
+									<label class="isg-field isg-field--float">
+										<input class="isg-field__control" type="text" name="delivery" placeholder=" " />
+										<span class="isg-field__label"><span class="isg-field__label-text"><?php echo esc_html($label($form_labels, 'delivery', 'delivery location')); ?></span></span>
+									</label>
+								</div>
+
+								<div class="isg-rfq-inputs-row isg-rfq-inputs-row--full">
+									<label class="isg-field isg-field--float isg-field--textarea">
+										<textarea class="isg-field__control" name="message" rows="3" placeholder=" "></textarea>
+										<span class="isg-field__label"><span class="isg-field__label-text"><?php echo esc_html($label($form_labels, 'message', 'message')); ?></span></span>
+									</label>
+								</div>
+							</div>
+
+							<div class="isg-checkbox-row">
+								<input class="isg-checkbox" type="checkbox" name="terms" id="rfq-terms" value="1" required />
+								<label class="isg-checkbox-label" for="rfq-terms">
+									<?php echo esc_html($label($form_labels, 'terms_prefix', 'I have read and accept the')); ?>
+									<a class="isg-checkbox-label__link" href="<?php echo esc_url($terms_url); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html($label($form_labels, 'terms_link', 'Terms & Conditions')); ?></a>.
 								</label>
 							</div>
 
-							<div class="isg-rfq-inputs-row">
-								<label class="isg-field isg-field--float">
-									<input class="isg-field__control" type="email" name="email" autocomplete="email" required placeholder=" " />
-									<span class="isg-field__label"><span class="isg-field__label-text"><?php echo esc_html($label($form_labels, 'email', 'email address')); ?></span><abbr class="isg-field__req" title="required">*</abbr></span>
-								</label>
-								<label class="isg-field isg-field--float">
-									<input class="isg-field__control" type="tel" name="phone" autocomplete="tel" required placeholder=" " />
-									<span class="isg-field__label"><span class="isg-field__label-text"><?php echo esc_html($label($form_labels, 'phone', 'phone number')); ?></span><abbr class="isg-field__req" title="required">*</abbr></span>
-								</label>
+							<div class="isg-btn-group">
+								<button class="isg-btn" type="submit"><?php echo esc_html($label($form_labels, 'submit', 'Submit form')); ?></button>
 							</div>
-
-							<div class="isg-rfq-inputs-row isg-rfq-inputs-row--full">
-								<label class="isg-field isg-field--float">
-									<input class="isg-field__control" type="text" name="project_type" placeholder=" " />
-									<span class="isg-field__label"><span class="isg-field__label-text"><?php echo esc_html($label($form_labels, 'project_type', 'project type')); ?></span></span>
-								</label>
-							</div>
-
-							<div class="isg-rfq-inputs-row">
-								<label class="isg-field isg-field--float isg-field--select">
-									<select class="isg-field__control" name="diameter" required>
-										<option value="" disabled selected hidden> </option>
-										<?php foreach ($diameter_opts as $opt) : ?>
-											<option value="<?php echo esc_attr((string) ($opt['value'] ?? '')); ?>"><?php echo esc_html((string) ($opt['label'] ?? '')); ?></option>
-										<?php endforeach; ?>
-									</select>
-									<span class="isg-field__label"><span class="isg-field__label-text"><?php echo esc_html($label($form_labels, 'pipe_diameter', 'pipe diameter')); ?></span></span>
-								</label>
-								<label class="isg-field isg-field--float isg-field--select">
-									<select class="isg-field__control" name="wall_thickness" required>
-										<option value="" disabled selected hidden> </option>
-										<?php foreach ($wall_opts as $opt) : ?>
-											<option value="<?php echo esc_attr((string) ($opt['value'] ?? '')); ?>"><?php echo esc_html((string) ($opt['label'] ?? '')); ?></option>
-										<?php endforeach; ?>
-									</select>
-									<span class="isg-field__label"><span class="isg-field__label-text"><?php echo esc_html($label($form_labels, 'wall_thickness', 'wall thickness')); ?></span></span>
-								</label>
-							</div>
-
-							<div class="isg-rfq-inputs-row">
-								<label class="isg-field isg-field--float isg-field--select">
-									<select class="isg-field__control" name="steel_grade" required>
-										<option value="" disabled selected hidden> </option>
-										<?php foreach ($steel_opts as $opt) : ?>
-											<option value="<?php echo esc_attr((string) ($opt['value'] ?? '')); ?>"><?php echo esc_html((string) ($opt['label'] ?? '')); ?></option>
-										<?php endforeach; ?>
-									</select>
-									<span class="isg-field__label"><span class="isg-field__label-text"><?php echo esc_html($label($form_labels, 'steel_grade', 'steel grade')); ?></span></span>
-								</label>
-								<label class="isg-field isg-field--float">
-									<input class="isg-field__control" type="text" name="quantity" placeholder=" " />
-									<span class="isg-field__label"><span class="isg-field__label-text"><?php echo esc_html($label($form_labels, 'quantity', 'quantity')); ?></span></span>
-								</label>
-							</div>
-
-							<div class="isg-rfq-inputs-row isg-rfq-inputs-row--full">
-								<label class="isg-field isg-field--float">
-									<input class="isg-field__control" type="text" name="delivery" placeholder=" " />
-									<span class="isg-field__label"><span class="isg-field__label-text"><?php echo esc_html($label($form_labels, 'delivery', 'delivery location')); ?></span></span>
-								</label>
-							</div>
-
-							<div class="isg-rfq-inputs-row isg-rfq-inputs-row--full">
-								<label class="isg-field isg-field--float isg-field--textarea">
-									<textarea class="isg-field__control" name="message" rows="3" placeholder=" "></textarea>
-									<span class="isg-field__label"><span class="isg-field__label-text"><?php echo esc_html($label($form_labels, 'message', 'message')); ?></span></span>
-								</label>
-							</div>
-						</div>
-
-						<div class="isg-checkbox-row">
-							<input class="isg-checkbox" type="checkbox" name="terms" id="rfq-terms" value="1" required />
-							<label class="isg-checkbox-label" for="rfq-terms">
-								<?php echo esc_html($label($form_labels, 'terms_prefix', 'I have read and accept the')); ?>
-								<a class="isg-checkbox-label__link" href="<?php echo esc_url($terms_url); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html($label($form_labels, 'terms_link', 'Terms & Conditions')); ?></a>.
-							</label>
-						</div>
-
-						<div class="isg-btn-group">
-							<button class="isg-btn" type="submit"><?php echo esc_html($label($form_labels, 'submit', 'Submit form')); ?></button>
-						</div>
-					</form>
+						</form>
+					<?php endif; ?>
 				</div>
 			</div>
 		</div>

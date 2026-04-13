@@ -25,7 +25,7 @@ function Get-DeployConfig {
     RemoteDir = if ($env:ISG_FTP_REMOTE_DIR) {
       $env:ISG_FTP_REMOTE_DIR
     } else {
-      "/home/dev.industrialsteelgroup.com/wp-content/themes/isg-asf-theme/"
+      "/home/industrialsteelgroup.com/wp-content/themes/isg-asf-theme/"
     }
   }
 }
@@ -73,8 +73,8 @@ if (-not $remoteDir.EndsWith("/")) {
   $remoteDir += "/"
 }
 
-if ($remoteDir -notmatch "dev\.industrialsteelgroup\.com") {
-  throw "RemoteDir must point to the dev subdomain. Current value: $remoteDir"
+if ($remoteDir -notmatch "wp-content/themes/isg-asf-theme/?$") {
+  throw "RemoteDir must point to the isg-asf-theme directory inside wp-content/themes. Current value: $remoteDir"
 }
 
 $tempScript = [System.IO.Path]::GetTempFileName()

@@ -1,0 +1,73 @@
+<div class="isg-rfq-inputs">
+  <div class="isg-rfq-inputs-row isg-rfq-inputs-row--full">
+    <label class="isg-field isg-field--float">
+      [text company class:isg-field__control autocomplete:organization placeholder " "]
+      <span class="isg-field__label"><span class="isg-field__label-text">company name</span></span>
+    </label>
+  </div>
+
+  <div class="isg-rfq-inputs-row">
+    <label class="isg-field isg-field--float">
+      [email* email class:isg-field__control autocomplete:email placeholder " "]
+      <span class="isg-field__label"><span class="isg-field__label-text">email address</span><abbr class="isg-field__req" title="required">*</abbr></span>
+    </label>
+
+    <label class="isg-field isg-field--float">
+      [tel* phone class:isg-field__control autocomplete:tel placeholder " "]
+      <span class="isg-field__label"><span class="isg-field__label-text">phone number</span><abbr class="isg-field__req" title="required">*</abbr></span>
+    </label>
+  </div>
+
+  <div class="isg-rfq-inputs-row isg-rfq-inputs-row--full">
+    <label class="isg-field isg-field--float">
+      [text project_type class:isg-field__control placeholder " "]
+      <span class="isg-field__label"><span class="isg-field__label-text">project type</span></span>
+    </label>
+  </div>
+
+  <div class="isg-rfq-inputs-row">
+    <label class="isg-field isg-field--float isg-field--select">
+      [select* diameter class:isg-field__control first_as_label " " "406 mm" "508 mm" "610 mm" "762 mm" "914 mm" "1067 mm" "1219 mm" "Custom (specify in message)"]
+      <span class="isg-field__label"><span class="isg-field__label-text">pipe diameter</span></span>
+    </label>
+
+    <label class="isg-field isg-field--float isg-field--select">
+      [select* wall_thickness class:isg-field__control first_as_label " " "6 mm" "8 mm" "10 mm" "12 mm" "14 mm" "16 mm" "Custom"]
+      <span class="isg-field__label"><span class="isg-field__label-text">wall thickness</span></span>
+    </label>
+  </div>
+
+  <div class="isg-rfq-inputs-row">
+    <label class="isg-field isg-field--float isg-field--select">
+      [select* steel_grade class:isg-field__control first_as_label " " "S235 / S235JR" "S275 / S275J0" "S355 / S355J2" "API 5L Grade B" "API 5L X52" "API 5L X65" "EN 10219 S355J2H" "Other / specify"]
+      <span class="isg-field__label"><span class="isg-field__label-text">steel grade</span></span>
+    </label>
+
+    <label class="isg-field isg-field--float">
+      [text quantity class:isg-field__control placeholder " "]
+      <span class="isg-field__label"><span class="isg-field__label-text">quantity</span></span>
+    </label>
+  </div>
+
+  <div class="isg-rfq-inputs-row isg-rfq-inputs-row--full">
+    <label class="isg-field isg-field--float">
+      [text delivery class:isg-field__control placeholder " "]
+      <span class="isg-field__label"><span class="isg-field__label-text">delivery location</span></span>
+    </label>
+  </div>
+
+  <div class="isg-rfq-inputs-row isg-rfq-inputs-row--full">
+    <label class="isg-field isg-field--float isg-field--textarea">
+      [textarea message class:isg-field__control placeholder " " 3x40]
+      <span class="isg-field__label"><span class="isg-field__label-text">message</span></span>
+    </label>
+  </div>
+</div>
+
+<div class="isg-checkbox-row">
+  [acceptance* terms class:isg-checkbox]I have read and accept the <a class="isg-checkbox-label__link" href="/terms-of-use/" target="_blank" rel="noopener noreferrer">Terms &amp; Conditions</a>.[/acceptance]
+</div>
+
+<div class="isg-btn-group">
+  [submit class:isg-btn "Submit form"]
+</div>

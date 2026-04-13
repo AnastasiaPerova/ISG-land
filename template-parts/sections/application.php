@@ -9,43 +9,43 @@ $page_id = get_the_ID();
 
 $default_items = array(
 	array(
-		'icon'        => isg_asset_uri('img/icons/oil-gas.svg'),
-		'title'       => 'Oil & Gas',
-		'pill'        => 'API 5L',
-		'image'       => isg_asset_uri('img/advantages_1.jpg'),
-		'hint'        => 'Line pipe for upstream gathering, refineries, and high-pressure transmission to standard API 5L.',
+		'icon' => isg_asset_uri('img/icons/oil-gas.svg'),
+		'title' => 'Oil & Gas',
+		'pill' => 'API 5L',
+		'image' => isg_asset_uri('img/advantages_1.jpg'),
+		'hint' => 'Line pipe for upstream gathering, refineries, and high-pressure transmission to standard API 5L.',
 		'description' => 'Transmission systems',
 	),
 	array(
-		'icon'        => isg_asset_uri('img/icons/construction.svg'),
-		'title'       => 'Construction',
-		'pill'        => 'EN 10208-2',
-		'image'       => isg_asset_uri('img/img-test-1.jpg'),
-		'hint'        => 'Piles, casing, and structural tubulars for bridges, high-rises, and civil-engineering shells.',
+		'icon' => isg_asset_uri('img/icons/construction.svg'),
+		'title' => 'Construction',
+		'pill' => 'EN 10208-2',
+		'image' => isg_asset_uri('img/img-test-1.jpg'),
+		'hint' => 'Piles, casing, and structural tubulars for bridges, high-rises, and civil-engineering shells.',
 		'description' => 'Structural solutions',
 	),
 	array(
-		'icon'        => isg_asset_uri('img/icons/infrastructure.svg'),
-		'title'       => 'Infrastructure',
-		'pill'        => 'ISO 3183',
-		'image'       => isg_asset_uri('img/img-test-2.jpg'),
-		'hint'        => 'Water mains, storm drains, tunnels, and district networks that need long service life.',
+		'icon' => isg_asset_uri('img/icons/infrastructure.svg'),
+		'title' => 'Infrastructure',
+		'pill' => 'ISO 3183',
+		'image' => isg_asset_uri('img/img-test-2.jpg'),
+		'hint' => 'Water mains, storm drains, tunnels, and district networks that need long service life.',
 		'description' => 'Utility networks',
 	),
 	array(
-		'icon'        => isg_asset_uri('img/icons/industry.svg'),
-		'title'       => 'Industry',
-		'pill'        => 'EN 10208-2',
-		'image'       => isg_asset_uri('img/isg-quality-content-3.jpg'),
-		'hint'        => 'Process lines, cooling circuits, and plant piping where wall thickness and weld quality matter.',
+		'icon' => isg_asset_uri('img/icons/industry.svg'),
+		'title' => 'Industry',
+		'pill' => 'EN 10208-2',
+		'image' => isg_asset_uri('img/isg-quality-content-3.jpg'),
+		'hint' => 'Process lines, cooling circuits, and plant piping where wall thickness and weld quality matter.',
 		'description' => 'Process piping',
 	),
 	array(
-		'icon'        => isg_asset_uri('img/icons/agriculture.svg'),
-		'title'       => 'Agriculture',
-		'pill'        => 'GOST 20295',
-		'image'       => isg_asset_uri('img/about-us-intro.jpg'),
-		'hint'        => 'Low-pressure conveyance for irrigation laterals, drainage, and on-farm water distribution.',
+		'icon' => isg_asset_uri('img/icons/agriculture.svg'),
+		'title' => 'Agriculture',
+		'pill' => 'GOST 20295',
+		'image' => isg_asset_uri('img/about-us-intro.jpg'),
+		'hint' => 'Low-pressure conveyance for irrigation laterals, drainage, and on-farm water distribution.',
 		'description' => 'Irrigation systems',
 	),
 );
@@ -53,24 +53,24 @@ $default_items = array(
 $section = isg_acf_group(
 	'application_section',
 	array(
-		'intro_kicker'    => 'Application Areas',
-		'intro_title'     => 'Spiral-welded pipes are used in various industries, such as:',
-		'video_file'      => '',
-		'video_url'       => isg_asset_uri('video/test.mp4'),
-		'video_poster'    => '',
+		'intro_kicker' => 'Application Areas',
+		'intro_title' => 'Spiral-welded pipes are used in various industries, such as:',
+		'video_file' => '',
+		'video_url' => isg_asset_uri('video/test.mp4'),
+		'video_poster' => '',
 		'mobile_bg_image' => isg_asset_uri('img/advantages_1.jpg'),
-		'items'           => $default_items,
+		'items' => $default_items,
 	),
 	$page_id
 );
 
 $intro_kicker = (string) ($section['intro_kicker'] ?? 'Application Areas');
-$intro_title  = (string) ($section['intro_title'] ?? 'Spiral-welded pipes are used in various industries, such as:');
-$video_file   = $section['video_file'] ?? '';
-$video_url    = (string) ($section['video_url'] ?? '');
+$intro_title = (string) ($section['intro_title'] ?? 'Spiral-welded pipes are used in various industries, such as:');
+$video_file = $section['video_file'] ?? '';
+$video_url = (string) ($section['video_url'] ?? '');
 $video_poster = isg_image_url($section['video_poster'] ?? '', '');
-$mobile_bg    = isg_image_url($section['mobile_bg_image'] ?? '', isg_asset_uri('img/advantages_1.jpg'));
-$items        = is_array($section['items'] ?? null) ? $section['items'] : $default_items;
+$mobile_bg = isg_image_url($section['mobile_bg_image'] ?? '', isg_asset_uri('img/advantages_1.jpg'));
+$items = is_array($section['items'] ?? null) ? $section['items'] : $default_items;
 
 // Для WP/ACF поддерживаем оба варианта: video_file (file field) и video_url (url fallback).
 if (is_array($video_file) && !empty($video_file['url']) && is_string($video_file['url'])) {
@@ -86,41 +86,30 @@ if ($video_url === '') {
 	$video_url = isg_asset_uri('video/test.mp4');
 }
 ?>
-<section
-	id="isg-application"
-	class="isg-app isg-app--scroll"
-	data-isg-block="application"
-	data-isg-app-scroll
-	data-isg-mobile-bg="<?php echo esc_url($mobile_bg); ?>"
->
+<section id="isg-application" class="isg-app isg-app--scroll" data-isg-block="application" data-isg-app-scroll
+	data-isg-mobile-bg="<?php echo esc_url($mobile_bg); ?>">
 	<div class="isg-app__scene">
 		<div class="isg-app__scene-reveal">
 			<div class="isg-app__media" aria-hidden="true">
-				<video
-					class="isg-app__video"
-					muted
-					playsinline
-					preload="metadata"
-					src="<?php echo esc_url($video_url); ?>"
-					<?php if (!empty($video_poster)) : ?>
-						poster="<?php echo esc_url($video_poster); ?>"
-					<?php endif; ?>
-				></video>
+				<video class="isg-app__video" muted playsinline preload="metadata"
+					src="<?php echo esc_url($video_url); ?>" <?php if (!empty($video_poster)): ?>
+						poster="<?php echo esc_url($video_poster); ?>" <?php endif; ?>></video>
 			</div>
 
-			<div class="isg-app__inner">
+			<div class="isg-app__inner container">
 				<div class="isg-app-scroll__overlap">
 					<div class="isg-app-scroll__rows">
 						<div class="isg-app-scroll__stage">
 							<div class="isg-title-group isg-app-scroll__stage-intro">
-								<?php if (!empty($intro_kicker)) : ?>
+								<?php if (!empty($intro_kicker)): ?>
 									<div class="isg-subtitle">
 										<p class="isg-subtitle__text"><?php echo esc_html($intro_kicker); ?></p>
 										<span class="isg-subtitle__swatch" aria-hidden="true"></span>
 									</div>
 								<?php endif; ?>
-								<?php if (!empty($intro_title)) : ?>
-									<h2 class="isg-display isg-text-center" aria-label="<?php echo esc_attr(wp_strip_all_tags($intro_title)); ?>">
+								<?php if (!empty($intro_title)): ?>
+									<h2 class="isg-display isg-text-center"
+										aria-label="<?php echo esc_attr(wp_strip_all_tags($intro_title)); ?>">
 										<?php echo esc_html($intro_title); ?>
 									</h2>
 								<?php endif; ?>
@@ -130,44 +119,53 @@ if ($video_url === '') {
 								<div class="isg-app-row">
 									<div class="isg-app-left">
 										<div class="isg-accordion isg-accordion--app-scroll">
-											<?php foreach ($items as $item) : ?>
+											<?php foreach ($items as $item): ?>
 												<?php
-												$icon_url    = isg_image_url($item['icon'] ?? '', isg_asset_uri('img/icons/industry.svg'));
-												$item_title  = (string) ($item['title'] ?? '');
-												$item_pill   = (string) ($item['pill'] ?? '');
-												$image_url   = isg_image_url($item['image'] ?? '', isg_asset_uri('img/advantages_1.jpg'));
-												$image_alt   = isg_image_alt($item['image'] ?? '', '');
-												$item_hint   = (string) ($item['hint'] ?? '');
-												$item_desc   = (string) ($item['description'] ?? '');
+												$icon_url = isg_image_url($item['icon'] ?? '', '');
+												$item_title = (string) ($item['title'] ?? '');
+												$item_pill = (string) ($item['pill'] ?? '');
+												$image_url = isg_image_url($item['image'] ?? '', isg_asset_uri('img/advantages_1.jpg'));
+												$image_alt = isg_image_alt($item['image'] ?? '', '');
+												$item_hint = (string) ($item['hint'] ?? '');
+												$item_desc = (string) ($item['description'] ?? '');
 												?>
 												<div class="isg-accordion__item">
-													<button type="button" class="isg-accordion__trigger" aria-expanded="false">
+													<button type="button" class="isg-accordion__trigger"
+														aria-expanded="false">
 														<span class="isg-accordion__tab-content">
 															<span class="isg-accordion__title-group">
-																<span class="isg-accordion__icon" aria-hidden="true"><img src="<?php echo esc_url($icon_url); ?>" alt="" width="32" height="32" decoding="async" /></span>
-																<span class="isg-accordion__title"><?php echo esc_html($item_title); ?></span>
+																<?php if ($icon_url !== ''): ?>
+																	<span class="isg-accordion__icon" aria-hidden="true"><img
+																			src="<?php echo esc_url($icon_url); ?>" alt=""
+																			width="32" height="32" decoding="async" /></span>
+																<?php endif; ?>
+																<span
+																	class="isg-accordion__title"><?php echo esc_html($item_title); ?></span>
 															</span>
-															<?php if (!empty($item_pill)) : ?>
-																<span class="isg-pill isg-pill--on-dark"><?php echo esc_html($item_pill); ?></span>
+															<?php if (!empty($item_pill)): ?>
+																<span
+																	class="isg-pill isg-pill--on-dark"><?php echo esc_html($item_pill); ?></span>
 															<?php endif; ?>
 														</span>
 													</button>
 													<div class="isg-accordion__body">
 														<div class="isg-accordion__body-inner">
 															<div class="isg-accordion__media">
-																<img
-																	class="isg-accordion__img"
+																<img class="isg-accordion__img"
 																	src="<?php echo esc_url($image_url); ?>"
-																	alt="<?php echo esc_attr($image_alt); ?>"
-																	loading="lazy"
-																	decoding="async"
-																/>
-																<?php if (!empty($item_hint)) : ?>
-																	<p class="isg-accordion__hint isg-accordion__hint--on-media"><?php echo esc_html($item_hint); ?></p>
+																	alt="<?php echo esc_attr($image_alt); ?>" loading="lazy"
+																	decoding="async" />
+																<?php if (!empty($item_hint)): ?>
+																	<p
+																		class="isg-accordion__hint isg-accordion__hint--on-media">
+																		<?php echo esc_html($item_hint); ?>
+																	</p>
 																<?php endif; ?>
 															</div>
-															<?php if (!empty($item_desc)) : ?>
-																<p class="isg-accordion__desc"><?php echo esc_html($item_desc); ?></p>
+															<?php if (!empty($item_desc)): ?>
+																<p class="isg-accordion__desc">
+																	<?php echo esc_html($item_desc); ?>
+																</p>
 															<?php endif; ?>
 														</div>
 													</div>
@@ -182,14 +180,15 @@ if ($video_url === '') {
 
 					<div class="isg-app-scroll__head" aria-live="polite">
 						<div class="isg-title-group">
-							<?php if (!empty($intro_kicker)) : ?>
+							<?php if (!empty($intro_kicker)): ?>
 								<div class="isg-subtitle">
 									<p class="isg-subtitle__text"><?php echo esc_html($intro_kicker); ?></p>
 									<span class="isg-subtitle__swatch" aria-hidden="true"></span>
 								</div>
 							<?php endif; ?>
-							<?php if (!empty($intro_title)) : ?>
-								<h2 class="isg-display isg-text-center isg-app-scroll__title" aria-label="<?php echo esc_attr(wp_strip_all_tags($intro_title)); ?>">
+							<?php if (!empty($intro_title)): ?>
+								<h2 class="isg-display isg-text-center isg-app-scroll__title"
+									aria-label="<?php echo esc_attr(wp_strip_all_tags($intro_title)); ?>">
 									<?php echo esc_html($intro_title); ?>
 								</h2>
 							<?php endif; ?>

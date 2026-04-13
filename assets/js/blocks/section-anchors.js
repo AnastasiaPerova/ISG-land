@@ -9,19 +9,29 @@ const SECTION_IDS = [
   "isg-product",
   "isg-quality",
   "isg-about",
+  "isg-certificates",
   "isg-rfq",
   "isg-rfq-content",
   "isg-footer",
 ];
+
+const ANCHOR_DOWNWARD_NUDGE = 18;
 
 function stickyHeaderEl(root) {
   return root.querySelector("[data-isg-sticky-header]") || document.querySelector("[data-isg-sticky-header]");
 }
 
 function measureHeaderBottomGap(root, extra = 8) {
-  const el = stickyHeaderEl(root);
-  if (!el) return 96;
-  return Math.ceil(el.getBoundingClientRect().bottom + extra);
+  const header = stickyHeaderEl(root);
+  if (!(header instanceof HTMLElement)) return 96;
+
+  if (header.classList.contains("isg-site-header--hidden")) {
+    return extra;
+  }
+
+  const chrome = header.querySelector(".isg-site-header__chrome");
+  const measureEl = chrome instanceof HTMLElement ? chrome : header;
+  return Math.max(extra, Math.ceil(measureEl.getBoundingClientRect().bottom + extra));
 }
 
 function publishStickyHeaderVar(root) {
@@ -29,6 +39,35 @@ function publishStickyHeaderVar(root) {
     "--isg-sticky-header-offset",
     `${measureHeaderBottomGap(root)}px`,
   );
+}
+
+function getDocumentTop(el) {
+  if (!(el instanceof HTMLElement)) return -Infinity;
+  return el.getBoundingClientRect().top + window.scrollY;
+}
+
+function isAnchorStructuralChild(el) {
+  if (!(el instanceof HTMLElement)) return false;
+  return (
+    el.matches("section") ||
+    el.classList.contains("isg-section-surface") ||
+    el.classList.contains("isg-intro-pin") ||
+    el.classList.contains("isg-quality-wrapper") ||
+    el.classList.contains("isg-product-content") ||
+    el.classList.contains("isg-rfq-content")
+  );
+}
+
+function getSectionAnchorTop(el) {
+  if (!(el instanceof HTMLElement)) return -Infinity;
+
+  let top = getDocumentTop(el);
+  Array.from(el.children).forEach((child) => {
+    if (!isAnchorStructuralChild(child)) return;
+    top = Math.min(top, getDocumentTop(child));
+  });
+
+  return top;
 }
 
 function sectionNavs(root) {
@@ -73,23 +112,39 @@ function clearAnchorNavigationLock() {
 export function initSectionAnchors(root = document) {
   if (!sectionNavs(root).length) return () => {};
 
-  const getScrollOffset = () => measureHeaderBottomGap(root, 8);
+  const getCurrentScrollY = () => {
+    const lenis = getLenis();
+    if (lenis && typeof lenis.scroll === "number") {
+      return lenis.scroll;
+    }
+    return window.scrollY || window.pageYOffset || 0;
+  };
+
+  const getVisibleScrollOffset = () => measureHeaderBottomGap(root, 8);
+  const getScrollOffsetForTarget = (targetTop) => {
+    const currentY = Math.max(0, getCurrentScrollY());
+    const isScrollingDown = targetTop > currentY + 24;
+    return isScrollingDown
+      ? Math.max(0, 8 - ANCHOR_DOWNWARD_NUDGE)
+      : getVisibleScrollOffset();
+  };
 
   const scrollToSection = (id, { behavior = "smooth", updateHash = true } = {}) => {
     const el = document.getElementById(id);
     if (!el) return false;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const instant = behavior === "auto" || reduced;
+    const targetTop = getSectionAnchorTop(el);
+    const scrollOffset = getScrollOffsetForTarget(targetTop);
     const lenis = getLenis();
     if (lenis) {
-      lenis.scrollTo(`#${id}`, {
-        offset: -getScrollOffset(),
+      lenis.scrollTo(Math.max(0, targetTop - scrollOffset), {
         immediate: instant,
         duration: instant ? 0 : 1.28,
         easing: (t) => 1 - (1 - t) ** 3,
       });
     } else {
-      const top = el.getBoundingClientRect().top + window.scrollY - getScrollOffset();
+      const top = targetTop - scrollOffset;
       const motion = instant ? "auto" : "smooth";
       window.scrollTo({ top: Math.max(0, top), behavior: motion });
     }
@@ -115,20 +170,15 @@ export function initSectionAnchors(root = document) {
   };
 
   
-  const getSectionDocumentTop = (el) => {
-    if (!el) return -Infinity;
-    return el.getBoundingClientRect().top + window.scrollY;
-  };
-
   const applyActiveFromScroll = () => {
-    const probe = window.scrollY + getScrollOffset() + 28;
+    const probe = getCurrentScrollY() + getVisibleScrollOffset() + 28;
     const hrefIds = navHrefIdSet();
 
     let scrollId = SECTION_IDS[0];
     for (const id of SECTION_IDS) {
       const el = document.getElementById(id);
       if (!el) continue;
-      if (getSectionDocumentTop(el) <= probe) scrollId = id;
+      if (getSectionAnchorTop(el) <= probe) scrollId = id;
     }
 
     let activeId = null;
@@ -180,7 +230,7 @@ export function initSectionAnchors(root = document) {
     }
     e.preventDefault();
     lockAnchorNavigation(id);
-    scrollToSection(id, { behavior: "smooth", updateHash: true });
+    scrollToSection(id, { behavior: "smooth", updateHash: false });
     setActiveSectionLinkAll(root, id);
     if (a.closest("#isg-nav-drawer")) {
       document.dispatchEvent(new CustomEvent(CLOSE_EVENT));

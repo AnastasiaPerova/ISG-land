@@ -59,6 +59,9 @@ export function initRfqCustomSelects(root = document) {
     const panel = document.createElement("div");
     panel.className = "isg-custom-select__panel";
     panel.hidden = true;
+    panel.setAttribute("data-lenis-prevent", "");
+    panel.setAttribute("data-lenis-prevent-wheel", "");
+    panel.setAttribute("data-lenis-prevent-touch", "");
 
     const searchWrap = document.createElement("div");
     searchWrap.className = "isg-custom-select__search-wrap";
@@ -82,12 +85,15 @@ export function initRfqCustomSelects(root = document) {
     const optionsRoot = document.createElement("div");
     optionsRoot.className = "isg-custom-select__options";
     optionsRoot.setAttribute("role", "listbox");
+    optionsRoot.setAttribute("data-lenis-prevent", "");
+    optionsRoot.setAttribute("data-lenis-prevent-wheel", "");
+    optionsRoot.setAttribute("data-lenis-prevent-touch", "");
 
     
     const optionEls = [];
 
     select.querySelectorAll("option").forEach((opt) => {
-      const isEmptyPlaceholder = opt.value === "" && opt.hasAttribute("disabled");
+      const isEmptyPlaceholder = opt.value === "";
       if (isEmptyPlaceholder) return;
 
       const btn = document.createElement("button");
@@ -135,16 +141,18 @@ export function initRfqCustomSelects(root = document) {
       if (!sel || sel.value === "") {
         valueEl.textContent = "";
         valueEl.classList.add("isg-custom-select__value--placeholder");
+        wrapper.classList.add("isg-custom-select--placeholder");
       } else {
         valueEl.textContent = sel.textContent.replace(/\s+/g, " ").trim();
         valueEl.classList.remove("isg-custom-select__value--placeholder");
+        wrapper.classList.remove("isg-custom-select--placeholder");
       }
     }
 
     function highlightOptions() {
       const v = select.value;
       optionEls.forEach((btn) => {
-        const on = !btn.disabled && btn.dataset.value === v;
+        const on = v !== "" && !btn.disabled && btn.dataset.value === v;
         btn.classList.toggle("isg-custom-select__option--selected", on);
         btn.setAttribute("aria-selected", on ? "true" : "false");
       });
@@ -222,6 +230,14 @@ export function initRfqCustomSelects(root = document) {
       }
     };
 
+    const onPanelWheel = (e) => {
+      e.stopPropagation();
+    };
+
+    const onPanelTouchMove = (e) => {
+      e.stopPropagation();
+    };
+
     
     const onDocClick = (e) => {
       if (!isOpen) return;
@@ -246,6 +262,8 @@ export function initRfqCustomSelects(root = document) {
 
     trigger.addEventListener("click", onTriggerClick);
     panel.addEventListener("click", onPanelClick);
+    panel.addEventListener("wheel", onPanelWheel, { passive: true });
+    panel.addEventListener("touchmove", onPanelTouchMove, { passive: true });
     select.addEventListener("change", onSelectChange);
     searchInput.addEventListener("input", onSearchInput);
     searchInput.addEventListener("keydown", onSearchKeydown);
@@ -258,6 +276,8 @@ export function initRfqCustomSelects(root = document) {
     disposers.push(() => {
       trigger.removeEventListener("click", onTriggerClick);
       panel.removeEventListener("click", onPanelClick);
+      panel.removeEventListener("wheel", onPanelWheel);
+      panel.removeEventListener("touchmove", onPanelTouchMove);
       select.removeEventListener("change", onSelectChange);
       searchInput.removeEventListener("input", onSearchInput);
       searchInput.removeEventListener("keydown", onSearchKeydown);

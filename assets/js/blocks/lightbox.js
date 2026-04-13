@@ -8,6 +8,7 @@ import gsap from "gsap";
 import { getLenis } from "./smooth-scroll.js";
 
 const LB_ID = "isg-lightbox";
+const LIGHTBOX_OPEN_CLASS = "isg-lightbox-open";
 
 
 function normalizeSrcAttr(s) {
@@ -33,6 +34,56 @@ function isAllowedLightboxSrc(src) {
 
 function isVideoSrc(src) {
   return /\.(mp4|webm|ogg)(\?.*)?$/i.test(src.trim());
+}
+
+function getYouTubeEmbedUrl(src) {
+  try {
+    const url = new URL(src, window.location.origin);
+    const host = url.hostname.toLowerCase();
+    let videoId = "";
+
+    if (host === "youtu.be") {
+      videoId = url.pathname.replace(/^\/+/, "").split("/")[0] || "";
+    } else if (host.includes("youtube.com")) {
+      if (url.pathname.startsWith("/watch")) {
+        videoId = url.searchParams.get("v") || "";
+      } else if (url.pathname.startsWith("/embed/") || url.pathname.startsWith("/shorts/")) {
+        videoId = url.pathname.split("/")[2] || "";
+      }
+    }
+
+    return videoId ? `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0` : "";
+  } catch (_) {
+    return "";
+  }
+}
+
+function getVimeoEmbedUrl(src) {
+  try {
+    const url = new URL(src, window.location.origin);
+    const host = url.hostname.toLowerCase();
+    if (!host.includes("vimeo.com")) return "";
+
+    const parts = url.pathname.split("/").filter(Boolean);
+    const videoId = parts[0] === "video" ? parts[1] : parts[0];
+    return videoId && /^\d+$/.test(videoId)
+      ? `https://player.vimeo.com/video/${videoId}?autoplay=1`
+      : "";
+  } catch (_) {
+    return "";
+  }
+}
+
+function getEmbedUrl(src) {
+  return getYouTubeEmbedUrl(src) || getVimeoEmbedUrl(src) || "";
+}
+
+function getLightboxKind(src, kindAttr = "") {
+  if (kindAttr === "embed") return "embed";
+  if (isVideoSrc(src)) return "video";
+  if (getEmbedUrl(src)) return "embed";
+  if (kindAttr === "video") return "video";
+  return "image";
 }
 
 function prefersReducedMotion() {
@@ -73,24 +124,18 @@ function lockDocumentScroll(overlay) {
   overlay._isgScrollLock = {
     scrollY,
     lenis,
+    htmlClassHadOpen: document.documentElement.classList.contains(LIGHTBOX_OPEN_CLASS),
+    bodyClassHadOpen: document.body.classList.contains(LIGHTBOX_OPEN_CLASS),
     htmlOverflow: document.documentElement.style.overflow,
     bodyOverflow: document.body.style.overflow,
-    bodyPosition: document.body.style.position,
-    bodyTop: document.body.style.top,
-    bodyWidth: document.body.style.width,
-    bodyLeft: document.body.style.left,
-    bodyRight: document.body.style.right,
     bodyTouchAction: document.body.style.touchAction,
   };
 
   lenis?.stop?.();
+  document.documentElement.classList.add(LIGHTBOX_OPEN_CLASS);
+  document.body.classList.add(LIGHTBOX_OPEN_CLASS);
   document.documentElement.style.overflow = "hidden";
   document.body.style.overflow = "hidden";
-  document.body.style.position = "fixed";
-  document.body.style.top = `-${scrollY}px`;
-  document.body.style.left = "0";
-  document.body.style.right = "0";
-  document.body.style.width = "100%";
   document.body.style.touchAction = "none";
 }
 
@@ -100,12 +145,13 @@ function unlockDocumentScroll(overlay) {
 
   document.documentElement.style.overflow = lock.htmlOverflow;
   document.body.style.overflow = lock.bodyOverflow;
-  document.body.style.position = lock.bodyPosition;
-  document.body.style.top = lock.bodyTop;
-  document.body.style.width = lock.bodyWidth;
-  document.body.style.left = lock.bodyLeft;
-  document.body.style.right = lock.bodyRight;
   document.body.style.touchAction = lock.bodyTouchAction;
+  if (!lock.htmlClassHadOpen) {
+    document.documentElement.classList.remove(LIGHTBOX_OPEN_CLASS);
+  }
+  if (!lock.bodyClassHadOpen) {
+    document.body.classList.remove(LIGHTBOX_OPEN_CLASS);
+  }
 
   window.scrollTo(0, lock.scrollY || 0);
   lock.lenis?.start?.();
@@ -120,6 +166,7 @@ function resetOverlayState(overlay, opts = {}) {
   const { restoreFocus = false, resumeAutoplay = false } = opts;
   const img = overlay.querySelector(".isg-lightbox__img");
   const vid = overlay.querySelector(".isg-lightbox__video");
+  const frame = overlay.querySelector(".isg-lightbox__embed");
   const btnPrev = overlay.querySelector(".isg-lightbox__nav--prev");
   const btnNext = overlay.querySelector(".isg-lightbox__nav--next");
   const counter = overlay.querySelector(".isg-lightbox__counter");
@@ -129,6 +176,7 @@ function resetOverlayState(overlay, opts = {}) {
   overlay._isgOpenToken = (overlay._isgOpenToken || 0) + 1;
   killLbTweens(overlay);
   overlay.classList.add("isg-lightbox--inactive");
+  overlay.classList.remove("isg-lightbox--video", "isg-lightbox--embed", "isg-lightbox--image");
   overlay.setAttribute("hidden", "");
   overlay.setAttribute("aria-hidden", "true");
 
@@ -150,6 +198,10 @@ function resetOverlayState(overlay, opts = {}) {
       
     }
     vid.hidden = true;
+  }
+  if (frame) {
+    frame.removeAttribute("src");
+    frame.hidden = true;
   }
 
   overlay._isgAlbum = null;
@@ -182,7 +234,7 @@ function resetOverlayState(overlay, opts = {}) {
 
 function killLbTweens(overlay) {
   const nodes = overlay.querySelectorAll(
-    ".isg-lightbox__backdrop, .isg-lightbox__panel, .isg-lightbox__img, .isg-lightbox__video, .isg-lightbox__counter, .isg-lightbox__nav",
+    ".isg-lightbox__backdrop, .isg-lightbox__panel, .isg-lightbox__img, .isg-lightbox__video, .isg-lightbox__embed, .isg-lightbox__counter, .isg-lightbox__nav",
   );
   gsap.killTweensOf(nodes);
   if (overlay._isgLbTl) {
@@ -195,6 +247,7 @@ function killLbTweens(overlay) {
 function waitActiveMedia(overlay) {
   const img = overlay.querySelector(".isg-lightbox__img");
   const vid = overlay.querySelector(".isg-lightbox__video");
+  const frame = overlay.querySelector(".isg-lightbox__embed");
   if (img && !img.hidden && img.src) {
     if (img.complete && img.naturalWidth > 0) return Promise.resolve();
     return new Promise((resolve) => {
@@ -203,6 +256,7 @@ function waitActiveMedia(overlay) {
       img.addEventListener("error", done, { once: true });
     });
   }
+  if (frame && !frame.hidden && frame.src) return Promise.resolve();
   if (vid && !vid.hidden && vid.src) return Promise.resolve();
   return Promise.resolve();
 }
@@ -217,12 +271,14 @@ function createOpenTimeline(overlay) {
   const panel = overlay.querySelector(".isg-lightbox__panel");
   const img = overlay.querySelector(".isg-lightbox__img");
   const vid = overlay.querySelector(".isg-lightbox__video");
+  const frame = overlay.querySelector(".isg-lightbox__embed");
   const reduce = prefersReducedMotion();
 
   
   let media = null;
   if (img && !img.hidden) media = img;
   else if (vid && !vid.hidden) media = vid;
+  else if (frame && !frame.hidden) media = frame;
 
   gsap.set(backdrop, { opacity: 0 });
   gsap.set(panel, {
@@ -253,7 +309,7 @@ function createOpenTimeline(overlay) {
       if (backdrop) gsap.set(backdrop, { clearProps: "opacity" });
       if (panel) gsap.set(panel, { clearProps: "opacity,transform" });
       if (media && media.tagName === "IMG") gsap.set(media, { clearProps: "opacity,transform,filter" });
-      if (media && media.tagName === "VIDEO") gsap.set(media, { clearProps: "opacity,transform" });
+      if (media && (media.tagName === "VIDEO" || media.tagName === "IFRAME")) gsap.set(media, { clearProps: "opacity,transform" });
     },
   });
 
@@ -285,12 +341,14 @@ function playCloseTimeline(overlay, onComplete) {
   const panel = overlay.querySelector(".isg-lightbox__panel");
   const img = overlay.querySelector(".isg-lightbox__img");
   const vid = overlay.querySelector(".isg-lightbox__video");
+  const frame = overlay.querySelector(".isg-lightbox__embed");
   const reduce = prefersReducedMotion();
 
   
   let media = null;
   if (img && !img.hidden) media = img;
   else if (vid && !vid.hidden) media = vid;
+  else if (frame && !frame.hidden) media = frame;
 
   killLbTweens(overlay);
 
@@ -312,7 +370,7 @@ function playCloseTimeline(overlay, onComplete) {
   if (media) {
     tl.to(
       media,
-      media.tagName === "VIDEO"
+      media.tagName === "VIDEO" || media.tagName === "IFRAME"
         ? { opacity: 0, scale: 0.96, duration: 0.28, ease: "power2.in" }
         : { opacity: 0, scale: 0.96, filter: "blur(8px)", duration: 0.3, ease: "power2.in" },
       0.02,
@@ -342,9 +400,9 @@ function collectAlbum(anchor) {
       el.getAttribute("aria-label") ||
       el.querySelector(".isg-filled-item__text")?.textContent?.trim() ||
       "";
-    const kindAttr = el.getAttribute("data-isg-lightbox-kind");
-    const kind = kindAttr === "video" || isVideoSrc(src) ? "video" : "image";
-    out.push({ src, alt, kind });
+    const kindAttr = (el.getAttribute("data-isg-lightbox-kind") || "").trim().toLowerCase();
+    const kind = getLightboxKind(src, kindAttr);
+    out.push({ node: el, src, alt, kind, embedUrl: kind === "embed" ? getEmbedUrl(src) : "" });
   }
   return out;
 }
@@ -390,6 +448,7 @@ function ensureOverlay() {
       <div class="isg-lightbox__stage">
         <img class="isg-lightbox__img" alt="" decoding="async" />
         <video class="isg-lightbox__video" controls playsinline preload="none" hidden></video>
+        <iframe class="isg-lightbox__embed" hidden allow="autoplay; fullscreen; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen title="Video player"></iframe>
         <span class="isg-lightbox__counter" aria-live="polite" hidden></span>
       </div>
       <button type="button" class="isg-lightbox__nav isg-lightbox__nav--next" aria-label="Next image" hidden>
@@ -410,6 +469,7 @@ function bindOverlayOnce(overlay) {
 
   const img = overlay.querySelector(".isg-lightbox__img");
   const vid = overlay.querySelector(".isg-lightbox__video");
+  const frame = overlay.querySelector(".isg-lightbox__embed");
   const btnPrev = overlay.querySelector(".isg-lightbox__nav--prev");
   const btnNext = overlay.querySelector(".isg-lightbox__nav--next");
   const counter = overlay.querySelector(".isg-lightbox__counter");
@@ -423,8 +483,17 @@ function bindOverlayOnce(overlay) {
     overlay._isgIndex = ((i % n) + n) % n;
     const item = album[overlay._isgIndex];
     const isVideo = item.kind === "video";
+    const isEmbed = item.kind === "embed";
+
+    overlay.classList.toggle("isg-lightbox--video", isVideo);
+    overlay.classList.toggle("isg-lightbox--embed", isEmbed);
+    overlay.classList.toggle("isg-lightbox--image", !isVideo && !isEmbed);
 
     if (isVideo && vid) {
+      if (frame) {
+        frame.removeAttribute("src");
+        frame.hidden = true;
+      }
       img.removeAttribute("src");
       img.alt = "";
       img.hidden = true;
@@ -438,6 +507,27 @@ function bindOverlayOnce(overlay) {
       } catch (_) {
         
       }
+    } else if (isEmbed && frame) {
+      if (vid) {
+        try {
+          vid.pause();
+        } catch (_) {
+          
+        }
+        vid.removeAttribute("src");
+        try {
+          vid.load();
+        } catch (_) {
+          
+        }
+        vid.hidden = true;
+      }
+      img.removeAttribute("src");
+      img.alt = "";
+      img.hidden = true;
+      frame.hidden = false;
+      frame.src = item.embedUrl || item.src;
+      frame.setAttribute("title", item.alt || "Video player");
     } else {
       if (vid) {
         try {
@@ -452,6 +542,10 @@ function bindOverlayOnce(overlay) {
           
         }
         vid.hidden = true;
+      }
+      if (frame) {
+        frame.removeAttribute("src");
+        frame.hidden = true;
       }
       img.hidden = false;
       img.src = item.src;
@@ -541,7 +635,8 @@ export function openLightbox(anchor) {
 
   const raw = anchor.getAttribute("data-isg-lightbox");
   const targetSrc = normalizeSrcAttr(raw || "");
-  let start = album.findIndex((x) => x.src === targetSrc);
+  let start = album.findIndex((x) => x.node === anchor);
+  if (start < 0) start = album.findIndex((x) => x.src === targetSrc);
   if (start < 0) start = 0;
 
   killLbTweens(overlay);
@@ -561,6 +656,15 @@ export function openLightbox(anchor) {
   overlay._isgShowAt(start);
 
   const tl = createOpenTimeline(overlay);
+  const activeTrigger =
+    document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  if (activeTrigger && (activeTrigger === anchor || activeTrigger.contains(anchor))) {
+    try {
+      activeTrigger.blur();
+    } catch (_) {
+      
+    }
+  }
 
   overlay.removeAttribute("hidden");
   overlay.classList.remove("isg-lightbox--inactive");
@@ -568,6 +672,11 @@ export function openLightbox(anchor) {
   lockDocumentScroll(overlay);
   overlay._isgOriginSwiper?.autoplay?.stop?.();
   if (hk) document.addEventListener("keydown", hk);
+  try {
+    overlay.querySelector(".isg-lightbox__close")?.focus({ preventScroll: true });
+  } catch (_) {
+    overlay.querySelector(".isg-lightbox__close")?.focus();
+  }
 
   waitActiveMedia(overlay).then(() => {
     if (overlay._isgOpenToken !== openToken || overlay.classList.contains("isg-lightbox--inactive")) return;
@@ -588,6 +697,7 @@ export function initLightbox(root = document.body) {
 
   
   let ptr = null;
+  let suppressSliderClickUntil = 0;
 
   
   const onPtrDown = (e) => {
@@ -608,7 +718,10 @@ export function initLightbox(root = document.body) {
     const moved = Math.hypot(e.clientX - ptr.x, e.clientY - ptr.y);
     if (moved <= DRAG_PX) {
       const src = ptr.t.getAttribute("data-isg-lightbox");
-      if (src && isAllowedLightboxSrc(src)) openLightbox(ptr.t);
+      if (src && isAllowedLightboxSrc(src)) {
+        suppressSliderClickUntil = performance.now() + 350;
+        openLightbox(ptr.t);
+      }
     }
     ptr = null;
   };
@@ -621,7 +734,16 @@ export function initLightbox(root = document.body) {
   const onClick = (e) => {
     const t = e.target instanceof Element ? e.target.closest("[data-isg-lightbox]") : null;
     if (!t || !root.contains(t)) return;
-    if (t.closest("[data-isg-slider]")) return;
+    if (t.closest("[data-isg-slider]")) {
+      e.preventDefault();
+      e.stopPropagation();
+      const isKeyboardActivation = e.detail === 0;
+      if (isKeyboardActivation || performance.now() > suppressSliderClickUntil) {
+        const src = t.getAttribute("data-isg-lightbox");
+        if (src && isAllowedLightboxSrc(src)) openLightbox(t);
+      }
+      return;
+    }
     const src = t.getAttribute("data-isg-lightbox");
     if (!src) return;
     e.preventDefault();

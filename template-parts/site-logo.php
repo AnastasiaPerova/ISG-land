@@ -5,7 +5,7 @@
  * @package ISG
  */
 
-$logo_url = isg_acf_image_url('header_logo', 'option', isg_asset_uri('img/logo.svg'));
+$logo_url = isg_acf_image_url('header_logo', 'option', isg_asset_uri('img/logo_footer.svg'));
 $home_hero_url = isg_anchor_url('#isg-hero', '#isg-hero');
 ?>
 <div class="isg-site-logo" data-isg-section-nav>

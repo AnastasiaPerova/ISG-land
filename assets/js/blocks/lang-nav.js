@@ -76,6 +76,7 @@ export function initLangNav(root = document) {
     if (!parts) return;
     const { toggle, menu } = parts;
     const isOpen = isNavOpen(nav, parts);
+    const stableShell = useStableShell(nav);
     if (!isOpen) {
       toggle.setAttribute("aria-expanded", "false");
       menu.hidden = true;
@@ -85,11 +86,10 @@ export function initLangNav(root = document) {
     }
     const options = getVisibleOptions(parts);
     const shellHeight = getShellHeight(nav, parts);
-    const stableShell = useStableShell(nav);
     clearAnimation(nav);
     toggle.setAttribute("aria-expanded", "false");
 
-    if (immediate || reduceMotion) {
+    if (immediate || reduceMotion || stableShell) {
       menu.hidden = true;
       nav.classList.remove("isg-lang-dropdown--open");
       resetAnimatedStyles(parts);
@@ -188,15 +188,15 @@ export function initLangNav(root = document) {
     toggle.setAttribute("aria-expanded", "true");
     menu.hidden = false;
     nav.classList.add("isg-lang-dropdown--open");
+    const stableShell = useStableShell(nav);
 
-    if (immediate || reduceMotion) {
+    if (immediate || reduceMotion || stableShell) {
       resetAnimatedStyles(parts);
       return;
     }
 
     const options = getVisibleOptions(parts);
     const shellHeight = getShellHeight(nav, parts);
-    const stableShell = useStableShell(nav);
 
     gsap.set(menu, {
       opacity: 0,

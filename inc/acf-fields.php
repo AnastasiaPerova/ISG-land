@@ -85,16 +85,73 @@ function isg_register_acf_fields(): void {
 		return;
 	}
 
+	$theme_options_locations = array(
+	);
+
 	if (function_exists('acf_add_options_page')) {
-		acf_add_options_page(
-			array(
-				'page_title' => 'ISG Theme Settings',
-				'menu_title' => 'ISG Theme',
-				'menu_slug'  => 'isg-theme-settings',
-				'capability' => 'edit_theme_options',
-				'redirect'   => false,
-			)
-		);
+		$language_slugs = function_exists('pll_languages_list')
+			? pll_languages_list(array('fields' => 'slug'))
+			: array();
+
+		if (is_array($language_slugs) && !empty($language_slugs)) {
+			acf_add_options_page(
+				array(
+					'page_title' => 'ISG Theme Settings',
+					'menu_title' => 'ISG Theme',
+					'menu_slug'  => 'isg-theme-settings',
+					'capability' => 'edit_theme_options',
+					'redirect'   => true,
+				)
+			);
+
+			foreach ($language_slugs as $language_slug) {
+				$language_slug = strtolower(trim((string) $language_slug));
+				if ($language_slug === '') {
+					continue;
+				}
+
+				$subpage_slug = 'isg-theme-settings-' . $language_slug;
+
+				acf_add_options_sub_page(
+					array(
+						'page_title'  => sprintf('ISG Theme Settings (%s)', strtoupper($language_slug)),
+						'menu_title'  => strtoupper($language_slug),
+						'menu_slug'   => $subpage_slug,
+						'parent_slug' => 'isg-theme-settings',
+						'capability'  => 'edit_theme_options',
+						'post_id'     => 'options_' . $language_slug,
+					)
+				);
+
+				$theme_options_locations[] = array(
+					array(
+						'param'    => 'options_page',
+						'operator' => '==',
+						'value'    => $subpage_slug,
+					),
+				);
+			}
+		}
+
+		if (empty($theme_options_locations)) {
+			acf_add_options_page(
+				array(
+					'page_title' => 'ISG Theme Settings',
+					'menu_title' => 'ISG Theme',
+					'menu_slug'  => 'isg-theme-settings',
+					'capability' => 'edit_theme_options',
+					'redirect'   => false,
+				)
+			);
+
+			$theme_options_locations[] = array(
+				array(
+					'param'    => 'options_page',
+					'operator' => '==',
+					'value'    => 'isg-theme-settings',
+				),
+			);
+		}
 	}
 
 	acf_add_local_field_group(
@@ -126,7 +183,6 @@ function isg_register_acf_fields(): void {
 				isg_acf_text_field('field_isg_header_contact_line_2', 'Header Contact Line 2', 'header_contact_line_2', 'Phone | +48 881 560 845'),
 				isg_acf_text_field('field_isg_header_rfq_label', 'Header RFQ Label', 'header_rfq_label', 'Send RFQ'),
 				isg_acf_text_field('field_isg_header_rfq_link', 'Header RFQ Link', 'header_rfq_link', '#isg-rfq-content'),
-				isg_acf_text_field('field_isg_header_language_label', 'Header Language Label', 'header_language_label', 'Language'),
 				array(
 					'key'          => 'field_isg_header_languages',
 					'label'        => 'Languages',
@@ -201,16 +257,31 @@ function isg_register_acf_fields(): void {
 					'name'  => 'footer_credit_url',
 					'type'  => 'url',
 				),
-			),
-			'location' => array(
 				array(
-					array(
-						'param'    => 'options_page',
-						'operator' => '==',
-						'value'    => 'isg-theme-settings',
-					),
+					'key'   => 'field_isg_tab_404',
+					'label' => '404 Page',
+					'name'  => '',
+					'type'  => 'tab',
 				),
+				isg_acf_image_field('field_isg_404_background_image', '404 Background Image', '404_background_image'),
+				isg_acf_text_field('field_isg_404_kicker', '404 Kicker', '404_kicker', 'error'),
+				isg_acf_text_field('field_isg_404_code', '404 Code', '404_code', '404'),
+				isg_acf_textarea_field('field_isg_404_title', '404 Title', '404_title', "Sorry, we didn't find the page you were looking for.", 'br'),
+				isg_acf_text_field('field_isg_404_button_label', '404 Button Label', '404_button_label', 'Back to home'),
+				array(
+					'key'   => 'field_isg_404_button_url',
+					'label' => '404 Button URL',
+					'name'  => '404_button_url',
+					'type'  => 'url',
+				),
+				isg_acf_text_field('field_isg_404_location_label', '404 Location Label', '404_location_label', 'Location'),
+				isg_acf_textarea_field('field_isg_404_location', '404 Location Text', '404_location', "49 Sucharskiego Street\n97-500 Radomsko, Poland"),
+				isg_acf_text_field('field_isg_404_phone_label', '404 Phone Label', '404_phone_label', 'Phone'),
+				isg_acf_text_field('field_isg_404_phone', '404 Phone', '404_phone', '+48 881 560 845'),
+				isg_acf_text_field('field_isg_404_email_label', '404 Email Label', '404_email_label', 'Email'),
+				isg_acf_text_field('field_isg_404_email', '404 Email', '404_email', 'office@isg-poland.com'),
 			),
+			'location' => $theme_options_locations,
 			'active' => true,
 		)
 	);
@@ -228,6 +299,13 @@ function isg_register_acf_fields(): void {
 				),
 				isg_acf_textarea_field('field_isg_hero_title', 'Hero Title', 'hero_title', "Large-Diameter\nSpiral-Welded Pipes"),
 				isg_acf_text_field('field_isg_hero_subtitle', 'Hero Subtitle', 'hero_subtitle', 'Infrastructure & industrial projects'),
+				array_merge(
+					isg_acf_file_field('field_isg_hero_video_file', 'Hero Video File', 'hero_video_file'),
+					array(
+						'instructions' => 'Preferred source for the hero video. If empty, Hero Video URL will be used.',
+						'mime_types'   => 'mp4,webm,ogg',
+					)
+				),
 				array(
 					'key'   => 'field_isg_hero_video_url',
 					'label' => 'Hero Video URL',
@@ -356,13 +434,13 @@ function isg_register_acf_fields(): void {
 				),
 				array(
 					'key'   => 'field_isg_tab_digits',
-					'label' => 'Digits',
+					'label' => 'Advantages',
 					'name'  => '',
 					'type'  => 'tab',
 				),
 				array(
 					'key'        => 'field_isg_digits_section',
-					'label'      => 'Digits Section',
+					'label'      => 'Advantages Section',
 					'name'       => 'digits_section',
 					'type'       => 'group',
 					'layout'     => 'block',
@@ -456,15 +534,27 @@ function isg_register_acf_fields(): void {
 						isg_acf_text_field('field_isg_product_sizes_head_left', 'Size Header Left', 'sizes_head_left', 'Outside diameter (mm)'),
 						isg_acf_text_field('field_isg_product_sizes_head_right', 'Size Header Right', 'sizes_head_right', 'Wall thickness (mm)'),
 						array(
-							'key'          => 'field_isg_product_size_rows',
-							'label'        => 'Size Rows',
-							'name'         => 'size_rows',
+							'key'          => 'field_isg_product_size_rows_left',
+							'label'        => 'Size Rows Left Table',
+							'name'         => 'size_rows_left',
 							'type'         => 'repeater',
 							'layout'       => 'table',
 							'button_label' => 'Add Row',
 							'sub_fields'   => array(
-								isg_acf_text_field('field_isg_product_size_row_left', 'Left Value', 'left'),
-								isg_acf_text_field('field_isg_product_size_row_right', 'Right Value', 'right'),
+								isg_acf_text_field('field_isg_product_size_row_left_diameter', 'Outside Diameter', 'left'),
+								isg_acf_text_field('field_isg_product_size_row_left_thickness', 'Wall Thickness', 'right'),
+							),
+						),
+						array(
+							'key'          => 'field_isg_product_size_rows_right',
+							'label'        => 'Size Rows Right Table',
+							'name'         => 'size_rows_right',
+							'type'         => 'repeater',
+							'layout'       => 'table',
+							'button_label' => 'Add Row',
+							'sub_fields'   => array(
+								isg_acf_text_field('field_isg_product_size_row_right_diameter', 'Outside Diameter', 'left'),
+								isg_acf_text_field('field_isg_product_size_row_right_thickness', 'Wall Thickness', 'right'),
 							),
 						),
 					),
@@ -611,68 +701,12 @@ function isg_register_acf_fields(): void {
 						isg_acf_textarea_field('field_isg_rfq_aside_title_accent', 'Aside Title Accent', 'aside_title_accent'),
 						isg_acf_textarea_field('field_isg_rfq_aside_title_text', 'Aside Title Text', 'aside_title_text'),
 						array(
-							'key'        => 'field_isg_rfq_form_labels',
-							'label'      => 'Form Labels',
-							'name'       => 'form_labels',
-							'type'       => 'group',
-							'layout'     => 'table',
-							'sub_fields' => array(
-								isg_acf_text_field('field_isg_rfq_label_company', 'Company', 'company', 'company name'),
-								isg_acf_text_field('field_isg_rfq_label_email', 'Email', 'email', 'email address'),
-								isg_acf_text_field('field_isg_rfq_label_phone', 'Phone', 'phone', 'phone number'),
-								isg_acf_text_field('field_isg_rfq_label_project_type', 'Project Type', 'project_type', 'project type'),
-								isg_acf_text_field('field_isg_rfq_label_pipe_diameter', 'Pipe Diameter', 'pipe_diameter', 'pipe diameter'),
-								isg_acf_text_field('field_isg_rfq_label_wall', 'Wall Thickness', 'wall_thickness', 'wall thickness'),
-								isg_acf_text_field('field_isg_rfq_label_steel', 'Steel Grade', 'steel_grade', 'steel grade'),
-								isg_acf_text_field('field_isg_rfq_label_quantity', 'Quantity', 'quantity', 'quantity'),
-								isg_acf_text_field('field_isg_rfq_label_delivery', 'Delivery', 'delivery', 'delivery location'),
-								isg_acf_text_field('field_isg_rfq_label_message', 'Message', 'message', 'message'),
-								isg_acf_text_field('field_isg_rfq_label_terms_prefix', 'Terms Prefix', 'terms_prefix', 'I have read and accept the'),
-								isg_acf_text_field('field_isg_rfq_label_terms_link', 'Terms Link Label', 'terms_link', 'Terms & Conditions'),
-								isg_acf_text_field('field_isg_rfq_label_submit', 'Submit', 'submit', 'Submit form'),
-							),
-						),
-						array(
-							'key'   => 'field_isg_rfq_terms_url',
-							'label' => 'Terms URL',
-							'name'  => 'terms_url',
-							'type'  => 'url',
-						),
-						array(
-							'key'          => 'field_isg_rfq_diameter_options',
-							'label'        => 'Pipe Diameter Options',
-							'name'         => 'diameter_options',
-							'type'         => 'repeater',
-							'layout'       => 'table',
-							'button_label' => 'Add Option',
-							'sub_fields'   => array(
-								isg_acf_text_field('field_isg_rfq_diameter_option_value', 'Value', 'value'),
-								isg_acf_text_field('field_isg_rfq_diameter_option_label', 'Label', 'label'),
-							),
-						),
-						array(
-							'key'          => 'field_isg_rfq_wall_options',
-							'label'        => 'Wall Thickness Options',
-							'name'         => 'wall_options',
-							'type'         => 'repeater',
-							'layout'       => 'table',
-							'button_label' => 'Add Option',
-							'sub_fields'   => array(
-								isg_acf_text_field('field_isg_rfq_wall_option_value', 'Value', 'value'),
-								isg_acf_text_field('field_isg_rfq_wall_option_label', 'Label', 'label'),
-							),
-						),
-						array(
-							'key'          => 'field_isg_rfq_steel_options',
-							'label'        => 'Steel Grade Options',
-							'name'         => 'steel_options',
-							'type'         => 'repeater',
-							'layout'       => 'table',
-							'button_label' => 'Add Option',
-							'sub_fields'   => array(
-								isg_acf_text_field('field_isg_rfq_steel_option_value', 'Value', 'value'),
-								isg_acf_text_field('field_isg_rfq_steel_option_label', 'Label', 'label'),
-							),
+							'key'           => 'field_isg_rfq_cf7_shortcode',
+							'label'         => 'Contact Form 7 Shortcode',
+							'name'          => 'cf7_shortcode',
+							'type'          => 'text',
+							'instructions'  => 'Optional. Paste the Contact Form 7 shortcode here to replace the built-in RFQ form without changing the layout.',
+							'placeholder'   => '[contact-form-7 id="123" title="ISG RFQ"]',
 						),
 					),
 				),

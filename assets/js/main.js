@@ -5,6 +5,8 @@ import { initScrollReveal } from "./blocks/scroll-reveal.js";
 import { initToTop } from "./blocks/to-top.js";
 import { initNavPillSliders, syncNavPillSliders } from "./blocks/nav-pill-slider.js";
 import { initHeaderDrawer } from "./blocks/header-drawer.js";
+import { initHeaderContactStatus } from "./blocks/header-contact-status.js";
+import { initHeaderScrollVisibility } from "./blocks/header-scroll-visibility.js";
 import { initLangNav } from "./blocks/lang-nav.js";
 import { initDigitsFeatured } from "./blocks/digits-featured.js";
 import { initApplicationScroll } from "./blocks/application-scroll.js";
@@ -180,6 +182,8 @@ export async function initIsgPage(root = document.body) {
   disposers.push(initToTop(root));
   disposers.push(initNavPillSliders(root));
   disposers.push(initHeaderDrawer(root));
+  disposers.push(initHeaderContactStatus(root));
+  disposers.push(initHeaderScrollVisibility(root));
   disposers.push(initLangNav(root));
   disposers.push(initDigitsFeatured(root));
   disposers.push(initApplicationScroll(root));

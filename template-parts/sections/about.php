@@ -44,11 +44,11 @@ $default_team_slides = array(
 );
 
 $default_cert_badges = array(
-	array('label' => 'ISO 9001', 'image' => isg_asset_uri('img/isg-quality-content-4.jpg')),
-	array('label' => 'ISO 14001', 'image' => isg_asset_uri('img/isg-quality-content-5.jpg')),
-	array('label' => 'CE', 'image' => isg_asset_uri('img/img-test-1.jpg')),
-	array('label' => 'API', 'image' => isg_asset_uri('img/img-test-2.jpg')),
-	array('label' => 'EN 10219', 'image' => isg_asset_uri('img/digits-img.jpg')),
+	array('label' => 'ISO 9001', 'image' => ''),
+	array('label' => 'ISO 14001', 'image' => ''),
+	array('label' => 'CE', 'image' => ''),
+	array('label' => 'API', 'image' => ''),
+	array('label' => 'EN 10219', 'image' => ''),
 );
 
 $default_gallery_slides = array(
@@ -194,13 +194,15 @@ $gallery_slides  = is_array($section['gallery_slides'] ?? null) ? $section['gall
 										<div class="isg-about-feature-card__content-inner">
 											<?php foreach ($values_items as $i => $item) : ?>
 												<?php
-												$icon = isg_image_url($item['icon'] ?? '', isg_asset_uri('img/icons/agriculture.svg'));
+												$icon = isg_image_url($item['icon'] ?? '', '');
 												$body = (string) ($item['body'] ?? '');
 												?>
 												<div class="isg-about-feature-card__content-slide<?php echo $i === 0 ? ' isg-about-feature-card__content-slide--active' : ''; ?>" data-isg-about-content-slide="<?php echo esc_attr((string) $i); ?>">
-													<span class="isg-about-feature-card__icon" aria-hidden="true">
-														<img src="<?php echo esc_url($icon); ?>" width="40" height="40" alt="" loading="lazy" decoding="async" />
-													</span>
+													<?php if ($icon !== '') : ?>
+														<span class="isg-about-feature-card__icon" aria-hidden="true">
+															<img src="<?php echo esc_url($icon); ?>" width="40" height="40" alt="" loading="lazy" decoding="async" />
+														</span>
+													<?php endif; ?>
 													<p class="isg-body isg-about-feature-card__text"><?php echo esc_html($body); ?></p>
 												</div>
 											<?php endforeach; ?>
@@ -270,7 +272,7 @@ $gallery_slides  = is_array($section['gallery_slides'] ?? null) ? $section['gall
 					</div>
 				</div>
 
-				<div class="isg-about-team-block__certs isg-grid-row isg-product-content__row--divider">
+				<div id="isg-certificates" class="isg-about-team-block__certs isg-grid-row isg-product-content__row--divider">
 					<div class="isg-about-team-block__certs-lead isg-grid-col isg-grid-col--left">
 						<p class="isg-body"><?php echo esc_html($certs_lead); ?></p>
 					</div>
@@ -279,12 +281,26 @@ $gallery_slides  = is_array($section['gallery_slides'] ?? null) ? $section['gall
 							<?php foreach ($cert_badges as $badge) : ?>
 								<?php
 								$label = (string) ($badge['label'] ?? '');
-								$image = isg_image_url($badge['image'] ?? '', isg_asset_uri('img/isg-quality-content-4.jpg'));
+								$image = isg_image_url($badge['image'] ?? '', '');
+								$is_clickable = $image !== '';
 								?>
-								<button type="button" class="isg-filled-item isg-filled-item--about" data-isg-lightbox="<?php echo esc_attr($image); ?>" aria-label="<?php echo esc_attr('View certificate: ' . $label); ?>">
+								<button
+									type="button"
+									class="isg-filled-item isg-filled-item--about"
+									<?php if ($is_clickable) : ?>
+										data-isg-lightbox="<?php echo esc_attr($image); ?>"
+										aria-label="<?php echo esc_attr('View certificate: ' . $label); ?>"
+									<?php else : ?>
+										disabled
+										aria-label="<?php echo esc_attr($label); ?>"
+									<?php endif; ?>
+								>
 									<span class="isg-filled-item__text"><?php echo esc_html($label); ?></span>
 									<span class="isg-filled-item__go" aria-hidden="true">
-										<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M14 3h7v7M10 14L21 3M21 14v7h-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+										<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path d="M12 5C6 5 2 12 2 12C2 12 6 19 12 19C18 19 22 12 22 12C22 12 18 5 12 5Z" stroke="#1257A6" stroke-width="2"/>
+											<path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" stroke="#1257A6" stroke-width="2"/>
+										</svg>
 									</span>
 								</button>
 							<?php endforeach; ?>

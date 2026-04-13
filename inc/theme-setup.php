@@ -38,6 +38,11 @@ add_action('after_setup_theme', 'isg_theme_setup');
 function isg_body_classes(array $classes): array {
 	$classes[] = 'isg-wp-theme';
 	$classes[] = 'isg-preloader-active';
+
+	if (is_404()) {
+		$classes[] = 'isg-404-page';
+	}
+
 	return $classes;
 }
 add_filter('body_class', 'isg_body_classes');

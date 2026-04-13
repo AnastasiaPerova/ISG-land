@@ -370,9 +370,11 @@ function initOneQualityScrollTrack(track, options = {}) {
       contentStackEl.style.removeProperty("height");
       return;
     }
-    const firstSlide = contentStackSlides[0];
-    if (firstSlide) {
-      contentStackEl.style.height = `${firstSlide.offsetHeight}px`;
+    const maxSlideHeight = contentStackSlides.reduce((maxHeight, slide) => {
+      return Math.max(maxHeight, slide.offsetHeight || 0);
+    }, 0);
+    if (maxSlideHeight > 0) {
+      contentStackEl.style.height = `${maxSlideHeight}px`;
     }
   };
 

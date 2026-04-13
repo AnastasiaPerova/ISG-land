@@ -6,7 +6,6 @@
  */
 
 get_header();
-get_template_part('template-parts/site-logo');
 get_template_part('template-parts/site-header');
 ?>
 <main id="isg-main">

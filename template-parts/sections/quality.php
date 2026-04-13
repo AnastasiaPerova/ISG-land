@@ -138,14 +138,16 @@ $items        = is_array($section['items'] ?? null) ? $section['items'] : $defau
 										<div class="isg-about-feature-card__content-inner">
 											<?php foreach ($items as $i => $item) : ?>
 												<?php
-												$icon_url = isg_image_url($item['icon'] ?? '', isg_asset_uri('img/icons/infrastructure.svg'));
+												$icon_url = isg_image_url($item['icon'] ?? '', '');
 												$body     = (string) ($item['body'] ?? '');
 												?>
 												<div class="isg-about-feature-card__content-slide<?php echo $i === 0 ? ' isg-about-feature-card__content-slide--active' : ''; ?>"
 													data-isg-about-content-slide="<?php echo esc_attr((string) $i); ?>">
-													<span class="isg-about-feature-card__icon" aria-hidden="true">
-														<img src="<?php echo esc_url($icon_url); ?>" width="40" height="40" alt="" loading="lazy" decoding="async" />
-													</span>
+													<?php if ($icon_url !== '') : ?>
+														<span class="isg-about-feature-card__icon" aria-hidden="true">
+															<img src="<?php echo esc_url($icon_url); ?>" width="40" height="40" alt="" loading="lazy" decoding="async" />
+														</span>
+													<?php endif; ?>
 													<p class="isg-body isg-about-feature-card__text"><?php echo esc_html($body); ?></p>
 												</div>
 											<?php endforeach; ?>

@@ -560,7 +560,7 @@ export async function initSliders(root = document) {
 
       if (!bar) {
         bar = document.createElement("div");
-        bar.className = "isg-slider-bar container";
+        bar.className = "isg-slider-bar";
         bar.innerHTML = [
           '<div class="isg-slider-bar__line"><div class="isg-slider-bar__progress"></div></div>',
           '<div class="isg-slider-bar__controls">',

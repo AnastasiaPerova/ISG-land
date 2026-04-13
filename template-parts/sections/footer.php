@@ -45,13 +45,13 @@ $phone_href = preg_replace('/[^\d+]/', '', $phone);
 			<div class="isg-footer__col">
 				<div class="isg-footer__label"><?php echo esc_html($label_production); ?></div>
 				<a class="isg-footer__value isg-footer__link" href="<?php echo esc_url($production_map_url); ?>" target="_blank" rel="noopener noreferrer">
-					<?php echo wp_kses_post(nl2br(esc_html($production_address))); ?>
+					<?php echo wp_kses_post(isg_format_text_with_breaks($production_address)); ?>
 				</a>
 			</div>
 			<div class="isg-footer__col">
 				<div class="isg-footer__label"><?php echo esc_html($label_office); ?></div>
 				<a class="isg-footer__value isg-footer__link" href="<?php echo esc_url($warsaw_map_url); ?>" target="_blank" rel="noopener noreferrer">
-					<?php echo wp_kses_post(nl2br(esc_html($warsaw_address))); ?>
+					<?php echo wp_kses_post(isg_format_text_with_breaks($warsaw_address)); ?>
 				</a>
 			</div>
 			<div class="isg-footer__col">

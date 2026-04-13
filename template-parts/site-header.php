@@ -9,7 +9,7 @@ $default_nav_items = array(
 	array('label' => 'Products', 'anchor' => '#isg-product'),
 	array('label' => 'Applications', 'anchor' => '#isg-application'),
 	array('label' => 'Production', 'anchor' => '#isg-quality'),
-	array('label' => 'Certificates', 'anchor' => '#isg-about'),
+	array('label' => 'Certificates', 'anchor' => '#isg-certificates'),
 );
 
 $nav_items = isg_acf_option('header_nav_items', $default_nav_items);
@@ -43,7 +43,7 @@ if (function_exists('pll_the_languages')) {
 		foreach ($polylang_languages as $polylang_language) {
 			$slug = strtolower(trim((string) ($polylang_language['slug'] ?? '')));
 			$code = strtoupper(trim((string) ($polylang_language['slug'] ?? $polylang_language['locale'] ?? $polylang_language['name'] ?? '')));
-			$url  = (string) ($polylang_language['url'] ?? '');
+			$url  = isg_language_switch_url($slug, (string) ($polylang_language['url'] ?? ''));
 
 			if ($code === '') {
 				continue;
@@ -67,7 +67,7 @@ foreach ($languages as $language) {
 	}
 
 	$slug = strtolower(trim((string) ($language['slug'] ?? $code)));
-	$url  = (string) ($language['url'] ?? '');
+	$url  = isg_language_switch_url($slug, (string) ($language['url'] ?? ''));
 
 	$normalized_languages[] = array(
 		'code'      => $code,
@@ -100,7 +100,7 @@ foreach ($normalized_languages as $index => $language) {
 $languages        = $normalized_languages;
 $current_language = strtoupper((string) ($languages[$active_index]['code'] ?? 'EN'));
 
-$logo_url        = isg_acf_image_url('header_logo', 'option', isg_asset_uri('img/logo.svg'));
+$logo_url        = isg_acf_image_url('header_logo', 'option', isg_asset_uri('img/logo_footer.svg'));
 $mobile_logo_url = isg_acf_image_url('header_mobile_logo', 'option', isg_asset_uri('img/logo_footer.svg'));
 $home_hero_url   = isg_anchor_url('#isg-hero', '#isg-hero');
 
@@ -108,14 +108,15 @@ $contact_line_1 = (string) isg_acf_option('header_contact_line_1', 'Mon-Fri | 8:
 $contact_line_2 = (string) isg_acf_option('header_contact_line_2', 'Phone | +48 881 560 845');
 $rfq_label      = (string) isg_acf_option('header_rfq_label', 'Send RFQ');
 $rfq_link       = isg_anchor_url((string) isg_acf_option('header_rfq_link', '#isg-rfq-content'), '#isg-rfq-content');
-$language_label = (string) isg_acf_option('header_language_label', 'Language');
+
+$contact_phone_match = array();
+preg_match('/\+[\d\s().-]+|\d[\d\s().-]{5,}/', $contact_line_2, $contact_phone_match);
+
+$contact_phone_display = trim((string) ($contact_phone_match[0] ?? ''));
+$contact_phone_href    = $contact_phone_display !== '' ? preg_replace('/(?!^\+)[^\d]/', '', $contact_phone_display) : '';
 ?>
 <header class="isg-site-header isg-hero__header" data-isg-sticky-header>
 	<div class="isg-site-header__chrome">
-		<a class="isg-header-mobile-logo" href="<?php echo esc_url($home_hero_url); ?>" aria-label="<?php esc_attr_e('ISG - Home', 'isg'); ?>">
-			<img class="isg-header-mobile-logo__img" src="<?php echo esc_url($mobile_logo_url); ?>" alt="ISG" width="170" height="62" decoding="async" />
-		</a>
-
 		<div class="isg-hero__nav-wrap isg-header-desktop-only">
 			<nav class="isg-nav-pill" aria-label="<?php esc_attr_e('Primary', 'isg'); ?>" data-isg-section-nav>
 				<a class="isg-hero__logo isg-nav-pill__brand" href="<?php echo esc_url($home_hero_url); ?>" aria-label="<?php esc_attr_e('ISG - Home', 'isg'); ?>">
@@ -145,7 +146,11 @@ $language_label = (string) isg_acf_option('header_language_label', 'Language');
 					<span class="isg-header-contact__dot" aria-hidden="true"></span>
 					<div class="isg-header-contact__text">
 						<span><?php echo esc_html($contact_line_1); ?></span>
-						<span><?php echo esc_html($contact_line_2); ?></span>
+						<?php if ($contact_phone_href !== '') : ?>
+							<a href="<?php echo esc_url('tel:' . $contact_phone_href); ?>"><?php echo esc_html($contact_line_2); ?></a>
+						<?php else : ?>
+							<span><?php echo esc_html($contact_line_2); ?></span>
+						<?php endif; ?>
 					</div>
 				</div>
 
@@ -183,6 +188,10 @@ $language_label = (string) isg_acf_option('header_language_label', 'Language');
 			</nav>
 		</div>
 
+		<a class="isg-header-mobile-logo" href="<?php echo esc_url($home_hero_url); ?>" aria-label="<?php esc_attr_e('ISG - Home', 'isg'); ?>">
+			<img class="isg-header-mobile-logo__img" src="<?php echo esc_url($mobile_logo_url); ?>" alt="" width="170" height="62" decoding="async" />
+		</a>
+
 		<button type="button" class="isg-burger" data-isg-burger aria-controls="isg-nav-drawer" aria-expanded="false" aria-label="<?php esc_attr_e('Open menu', 'isg'); ?>">
 			<span class="isg-burger__bars" aria-hidden="true"></span>
 		</button>
@@ -207,15 +216,18 @@ $language_label = (string) isg_acf_option('header_language_label', 'Language');
 
 			<div class="isg-nav-drawer__footer">
 				<div class="isg-nav-drawer__contact" aria-label="<?php esc_attr_e('Contact information', 'isg'); ?>">
-					<span class="isg-nav-drawer__contact-dot" aria-hidden="true"></span>
+					<span class="isg-header-contact__dot" aria-hidden="true"></span>
 					<div class="isg-nav-drawer__contact-text">
 						<span><?php echo esc_html($contact_line_1); ?></span>
-						<span><?php echo esc_html($contact_line_2); ?></span>
+						<?php if ($contact_phone_href !== '') : ?>
+							<a href="<?php echo esc_url('tel:' . $contact_phone_href); ?>"><?php echo esc_html($contact_line_2); ?></a>
+						<?php else : ?>
+							<span><?php echo esc_html($contact_line_2); ?></span>
+						<?php endif; ?>
 					</div>
 				</div>
 
 				<div class="isg-nav-drawer__lang">
-					<span class="isg-nav-drawer__lang-label"><?php echo esc_html($language_label); ?></span>
 					<div class="isg-lang-dropdown isg-lang-dropdown--drawer" data-isg-lang-nav>
 						<button type="button" class="isg-lang-dropdown__toggle isg-btn isg-btn--ghost-dark" data-isg-lang-toggle aria-haspopup="listbox" aria-expanded="false">
 							<span class="isg-lang-dropdown__current" data-isg-lang-current><?php echo esc_html($current_language); ?></span>

@@ -33,10 +33,13 @@ $default_pipeline = array(
 	array('text' => 'X70'),
 );
 
-$default_size_rows = array(
+$default_size_rows_left = array(
 	array('left' => '323.9 - 610', 'right' => '5.0 - 12.7'),
 	array('left' => '610 - 914', 'right' => '6.3 - 16.0'),
 	array('left' => '914 - 1219', 'right' => '8.0 - 18.0'),
+);
+
+$default_size_rows_right = array(
 	array('left' => '1219 - 1422', 'right' => '10.0 - 20.0'),
 	array('left' => '1422 - 1829', 'right' => '12.0 - 22.0'),
 	array('left' => '1829 - 2235', 'right' => '14.0 - 25.4'),
@@ -61,7 +64,8 @@ $section = isg_acf_group(
 		'sizes_lead'       => 'We produce spiral-welded steel pipes in the following size range:',
 		'sizes_head_left'  => 'Outside diameter (mm)',
 		'sizes_head_right' => 'Wall thickness (mm)',
-		'size_rows'        => $default_size_rows,
+		'size_rows_left'   => $default_size_rows_left,
+		'size_rows_right'  => $default_size_rows_right,
 	),
 	$page_id
 );
@@ -82,7 +86,27 @@ $pipeline        = is_array($section['pipeline_items'] ?? null) ? $section['pipe
 $sizes_lead      = (string) ($section['sizes_lead'] ?? 'We produce spiral-welded steel pipes in the following size range:');
 $head_left       = (string) ($section['sizes_head_left'] ?? 'Outside diameter (mm)');
 $head_right      = (string) ($section['sizes_head_right'] ?? 'Wall thickness (mm)');
-$size_rows       = is_array($section['size_rows'] ?? null) ? $section['size_rows'] : $default_size_rows;
+$spec_card_icons = array(
+	isg_asset_uri('img/icons/Outer Diameter .svg'),
+	isg_asset_uri('img/icons/Pipe Length.svg'),
+	isg_asset_uri('img/icons/Wall Thickness.svg'),
+	isg_asset_uri('img/icons/Steel Strength Grade up to.svg'),
+);
+$legacy_size_rows = is_array($section['size_rows'] ?? null) ? $section['size_rows'] : array();
+$size_rows_left   = is_array($section['size_rows_left'] ?? null) ? $section['size_rows_left'] : array();
+$size_rows_right  = is_array($section['size_rows_right'] ?? null) ? $section['size_rows_right'] : array();
+
+if (!$size_rows_left) {
+	$size_rows_left = $legacy_size_rows ? array_slice($legacy_size_rows, 0, 3) : $default_size_rows_left;
+}
+
+if (!$size_rows_right) {
+	$size_rows_right = $legacy_size_rows ? array_slice($legacy_size_rows, 3) : $default_size_rows_right;
+}
+
+if (!$size_rows_right) {
+	$size_rows_right = $default_size_rows_right;
+}
 
 $render_size_table = static function (array $rows, string $left_head, string $right_head): void {
 	?>
@@ -147,26 +171,13 @@ $render_size_table = static function (array $rows, string $left_head, string $ri
 						$label = (string) ($card['label'] ?? '');
 						$value = (string) ($card['value'] ?? '');
 						$meta  = (string) ($card['meta'] ?? '');
+						$icon  = $spec_card_icons[$idx] ?? '';
 						?>
 						<article class="isg-spec-card">
 							<div class="isg-spec-card__head">
 								<p class="isg-spec-card__label"><?php echo esc_html($label); ?></p>
-								<?php if ($idx === 0) : ?>
-									<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-										<circle cx="16" cy="16" r="14" stroke="currentColor" stroke-width="2" />
-									</svg>
-								<?php elseif ($idx === 1) : ?>
-									<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-										<rect x="4" y="10" width="24" height="12" stroke="currentColor" stroke-width="2" />
-									</svg>
-								<?php elseif ($idx === 2) : ?>
-									<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-										<path d="M6 16h20M18 10l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-									</svg>
-								<?php else : ?>
-									<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-										<path d="M8 24l8-16 8 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-									</svg>
+								<?php if ($icon !== '') : ?>
+									<img src="<?php echo esc_url($icon); ?>" alt="" width="32" height="32" loading="lazy" decoding="async" aria-hidden="true" />
 								<?php endif; ?>
 							</div>
 							<div>
@@ -241,10 +252,10 @@ $render_size_table = static function (array $rows, string $left_head, string $ri
 				<div class="isg-product-content__col isg-grid-col isg-grid-col--right isg-product-content__col--size-panel">
 					<div class="isg-size-tables">
 						<div class="isg-size-tables__pair">
-							<?php $render_size_table($size_rows, $head_left, $head_right); ?>
+							<?php $render_size_table($size_rows_left, $head_left, $head_right); ?>
 						</div>
 						<div class="isg-size-tables__pair">
-							<?php $render_size_table($size_rows, $head_left, $head_right); ?>
+							<?php $render_size_table($size_rows_right, $head_left, $head_right); ?>
 						</div>
 					</div>
 				</div>
@@ -256,10 +267,10 @@ $render_size_table = static function (array $rows, string $left_head, string $ri
 				<div class="isg-product-content__col isg-grid-col isg-grid-col--right isg-product-content__col--size-panel">
 					<div class="isg-size-tables">
 						<div class="isg-size-tables__pair">
-							<?php $render_size_table($size_rows, $head_left, $head_right); ?>
+							<?php $render_size_table($size_rows_left, $head_left, $head_right); ?>
 						</div>
 						<div class="isg-size-tables__pair">
-							<?php $render_size_table($size_rows, $head_left, $head_right); ?>
+							<?php $render_size_table($size_rows_right, $head_left, $head_right); ?>
 						</div>
 					</div>
 				</div>
