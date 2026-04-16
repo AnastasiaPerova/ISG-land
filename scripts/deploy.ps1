@@ -36,8 +36,13 @@ function Resolve-WinScpPath {
   $paths = @(
     $env:ISG_WINSCP_PATH,
     (Get-Command "WinSCP.com" -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source -ErrorAction SilentlyContinue),
+    (Get-Command "WinSCP.exe" -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source -ErrorAction SilentlyContinue),
+    "$env:LOCALAPPDATA\Programs\WinSCP\WinSCP.com",
+    "$env:LOCALAPPDATA\Programs\WinSCP\WinSCP.exe",
     "C:\Program Files\WinSCP\WinSCP.com",
+    "C:\Program Files\WinSCP\WinSCP.exe",
     "C:\Program Files (x86)\WinSCP\WinSCP.com"
+    "C:\Program Files (x86)\WinSCP\WinSCP.exe"
   ) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Select-Object -Unique
 
   foreach ($path in $paths) {
@@ -100,42 +105,6 @@ function Ensure-RemoteDirectory($sessionUrl, $remoteDir, $config, $createdDirs) 
   }
 }
 
-function Invoke-NativeFtpDeploy($sessionUrl, $repoRoot, $config) {
-  $excludeDirNames = @(".git", ".github", "node_modules", "scripts", "acf-json")
-  $excludeFileNames = @("preview.html", "package.json", "package-lock.json", "vercel.json", ".vercelignore", ".gitignore", ".gitattributes")
-  $createdDirs = @{}
-
-  $files = Get-ChildItem -LiteralPath $repoRoot -Recurse -File | Where-Object {
-    $relativePath = Get-RelativePathCompat $repoRoot $_.FullName
-    $segments = $relativePath -split "[\\/]"
-    foreach ($segment in $segments) {
-      if ($excludeDirNames -contains $segment) { return $false }
-    }
-    return -not ($excludeFileNames -contains $_.Name)
-  }
-
-  foreach ($file in $files) {
-    $relativePath = (Get-RelativePathCompat $repoRoot $file.FullName) -replace "\\", "/"
-    $remotePath = ([string]$config.RemoteDir).TrimEnd("/") + "/" + $relativePath
-    $remoteDir = Split-Path -Path $remotePath -Parent
-    $remoteUri = "$sessionUrl$($remotePath.TrimStart('/'))"
-
-    Ensure-RemoteDirectory $sessionUrl $remoteDir $config $createdDirs
-
-    $remoteTimestamp = Get-RemoteTimestamp $remoteUri $config
-    if ($remoteTimestamp -and $file.LastWriteTimeUtc -le $remoteTimestamp) { continue }
-
-    Write-Host "Uploading $relativePath"
-    $request = New-FtpRequest $remoteUri ([System.Net.WebRequestMethods+Ftp]::UploadFile) $config
-    $request.ContentLength = $file.Length
-    $requestStream = $request.GetRequestStream()
-    $fileStream = [System.IO.File]::OpenRead($file.FullName)
-    try { $fileStream.CopyTo($requestStream) } finally { $fileStream.Close(); $requestStream.Close() }
-    $response = [System.Net.FtpWebResponse]$request.GetResponse()
-    $response.Close()
-  }
-}
-
 if ($Build) {
   Write-Host "Building assets..."
   Push-Location $repoRoot
@@ -156,28 +125,32 @@ $winScpPath = Resolve-WinScpPath
 $logPath = Join-Path $scriptDir "deploy.log"
 
 Write-Host "Deploying theme to $remoteDir"
+if (-not $winScpPath) {
+  throw "WinSCP not found. Install WinSCP or set ISG_WINSCP_PATH to WinSCP.com or WinSCP.exe."
+}
 
-if ($winScpPath) {
-  $winscpScript = @"
+$winscpScript = @"
 option batch abort
 option confirm off
 open "$sessionUrl" -username="$($config.FtpUser)" -password="$($config.FtpPassword)"
 lcd "$repoRoot"
 cd "$remoteDir"
-put -neweronly -transfer=binary -nopermissions -preservetime -filemask="| .git/; .github/; node_modules/; scripts/; acf-json/; preview.html; package.json; package-lock.json; vercel.json; .vercelignore; .gitignore; .gitattributes" * "$remoteDir"
+put -transfer=binary -nopermissions -preservetime -filemask="| .git/; .github/; node_modules/; scripts/; acf-json/; preview.html; package.json; package-lock.json; vercel.json; .vercelignore; .gitignore; .gitattributes" * "$remoteDir"
 exit
 "@
-  $tempScript = [System.IO.Path]::GetTempFileName()
-  try {
-    Set-Content -LiteralPath $tempScript -Value $winscpScript -Encoding UTF8
+
+$tempScript = [System.IO.Path]::GetTempFileName()
+try {
+  Set-Content -LiteralPath $tempScript -Value $winscpScript -Encoding UTF8
+  $winScpName = [System.IO.Path]::GetFileName($winScpPath)
+  if ($winScpName -ieq "WinSCP.exe") {
+    & $winScpPath "/console" "/ini=nul" "/log=$logPath" "/script=$tempScript"
+  } else {
     & $winScpPath "/ini=nul" "/log=$logPath" "/script=$tempScript"
-    if ($LASTEXITCODE -ne 0) { throw "WinSCP exited with code $LASTEXITCODE. See $logPath for details." }
-  } finally {
-    Remove-Item -LiteralPath $tempScript -Force -ErrorAction SilentlyContinue
   }
-} else {
-  Write-Warning "WinSCP.com not found. Falling back to native PowerShell FTP deploy."
-  Invoke-NativeFtpDeploy $sessionUrl $repoRoot $config
+  if ($LASTEXITCODE -ne 0) { throw "WinSCP exited with code $LASTEXITCODE. See $logPath for details." }
+} finally {
+  Remove-Item -LiteralPath $tempScript -Force -ErrorAction SilentlyContinue
 }
 
 Write-Host "Deploy finished successfully."

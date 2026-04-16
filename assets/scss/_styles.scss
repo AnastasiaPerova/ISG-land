@@ -3564,9 +3564,22 @@ body.isg-nav-drawer-open {
   flex-shrink: 0;
 }
 
+.isg-product-intro .isg-spec-card__head img {
+  width: max(1.4pc, min(1.6vw, 2.1pc));
+  height: max(1.4pc, min(1.6vw, 2.1pc));
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
 @media (max-width: 768px) {
   .isg-spec-cards {
     flex-wrap: wrap;
+  }
+
+  .isg-product-intro .isg-spec-card__head svg,
+  .isg-product-intro .isg-spec-card__head img {
+    width: min(4.615vw, 18px);
+    height: min(4.615vw, 18px);
   }
 
   .isg-product-intro .isg-spec-card {
