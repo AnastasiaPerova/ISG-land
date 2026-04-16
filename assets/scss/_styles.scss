@@ -165,7 +165,7 @@ body.isg-lightbox-open {
     --isg-gap: 1.65rem;
     --isg-header-height: max(44px, min(3.472vw, 66.5px));
 
-    --isg-type-display: max(44px, min(3.472vw, 66.5px));
+    --isg-type-display: max(34px, min(2.7vw, 52px));
 
     --isg-type-lead: min(5.128vw, 23px);
     --isg-type-stat: max(26px, calc(5.6rem - 1.8vw));
@@ -3641,7 +3641,7 @@ body.isg-nav-drawer-open {
 @media (max-width: 1099px) {
   .isg-about-text-grid {
     width: 100%;
-    max-width: 100%;
+    // max-width: 100%;
     min-width: 0;
     box-sizing: border-box;
   }
