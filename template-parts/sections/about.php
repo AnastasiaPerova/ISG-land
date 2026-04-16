@@ -105,6 +105,16 @@ $cert_badges     = is_array($section['cert_badges'] ?? null) ? $section['cert_ba
 $gallery_kicker  = (string) ($section['gallery_kicker'] ?? 'Gallery');
 $gallery_heading = (string) ($section['gallery_heading'] ?? '');
 $gallery_slides  = is_array($section['gallery_slides'] ?? null) ? $section['gallery_slides'] : $default_gallery_slides;
+
+$normalize_wrap_text = static function ($value) {
+	$value = preg_replace('/[\x{00A0}\x{2007}\x{202F}]+/u', ' ', (string) $value);
+	$value = preg_replace('/[\x{2010}\x{2011}\x{00AD}]+/u', '-', $value);
+
+	return is_string($value) ? $value : '';
+};
+
+$text_heading = $normalize_wrap_text($text_heading);
+$text_lead    = $normalize_wrap_text($text_lead);
 ?>
 <div class="isg-intro-pin isg-intro-pin--about">
 	<section class="isg-intro-section isg-intro-section--align-center isg-about-intro" style="background-image: url('<?php echo esc_url($intro_bg); ?>');" data-isg-intro-scroll>
@@ -134,7 +144,7 @@ $gallery_slides  = is_array($section['gallery_slides'] ?? null) ? $section['gall
 					<p class="isg-body"><?php echo esc_html($text_left); ?></p>
 				</div>
 				<div class="isg-about-text-grid__right isg-grid-col isg-grid-col--right">
-					<h2 class="isg-h2"><?php echo esc_html($text_heading); ?></h2>
+					<h2 class="isg-h2" data-isg-title-anim-skip><?php echo esc_html($text_heading); ?></h2>
 					<p class="isg-body-lg"><?php echo esc_html($text_lead); ?></p>
 				</div>
 			</div>
