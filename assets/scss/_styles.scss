@@ -7187,6 +7187,7 @@ body.isg-preloader-active {
   overflow: hidden;
   overscroll-behavior: none;
   height: 100%;
+  scrollbar-gutter: auto;
 }
 
 body.isg-preloader-active {
@@ -7199,6 +7200,7 @@ body.isg-preloader-active {
 .isg-preloader {
   position: fixed;
   inset: 0;
+  width: 100vw;
   z-index: 100000;
   display: grid;
   place-items: center;
