@@ -6071,10 +6071,20 @@ button.isg-slider-item__img,
 
 @media (max-width: 767px) {
   .isg-rfq-intro__content {
+    position: relative;
     min-height: 0;
     height: auto;
     justify-content: center;
     align-items: center;
+    gap: var(--isg-space-md);
+    padding: clamp(1rem, 4vw, 1.5rem);
+    border-radius: 1.5rem;
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.58) 0%,
+      rgba(0, 0, 0, 0.42) 100%
+    );
+    backdrop-filter: blur(2px);
   }
 
   .isg-rfq-intro__content .isg-title-group {
@@ -6085,6 +6095,7 @@ button.isg-slider-item__img,
   .isg-rfq-intro .isg-display,
   .isg-rfq-intro__lead {
     text-align: center;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
   }
 
   .isg-rfq-intro__split {
@@ -6099,6 +6110,12 @@ button.isg-slider-item__img,
   .isg-rfq-intro__split .isg-btn-group {
     margin-left: auto;
     margin-right: auto;
+  }
+
+  .isg-rfq-intro__lead {
+    max-width: 32ch;
+    color: rgba(255, 255, 255, 0.92);
+    line-height: 1.45;
   }
 
   .isg-rfq-intro__split .isg-btn-group {
