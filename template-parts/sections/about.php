@@ -144,7 +144,7 @@ $text_lead    = $normalize_wrap_text($text_lead);
 					<p class="isg-body"><?php echo esc_html($text_left); ?></p>
 				</div>
 				<div class="isg-about-text-grid__right isg-grid-col isg-grid-col--right">
-					<h2 class="isg-h2" data-isg-title-anim-skip><?php echo esc_html($text_heading); ?></h2>
+					<h2 class="isg-h2"><?php echo esc_html($text_heading); ?></h2>
 					<p class="isg-body-lg"><?php echo esc_html($text_lead); ?></p>
 				</div>
 			</div>

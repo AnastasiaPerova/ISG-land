@@ -135,7 +135,7 @@ option confirm off
 open "$sessionUrl" -username="$($config.FtpUser)" -password="$($config.FtpPassword)"
 lcd "$repoRoot"
 cd "$remoteDir"
-put -transfer=binary -nopermissions -preservetime -filemask="| .git/; .github/; node_modules/; scripts/; acf-json/; preview.html; package.json; package-lock.json; vercel.json; .vercelignore; .gitignore; .gitattributes" * "$remoteDir"
+put -transfer=binary -nopermissions -filemask="| .git/; .github/; node_modules/; scripts/; acf-json/; preview.html; package.json; package-lock.json; vercel.json; .vercelignore; .gitignore; .gitattributes" * "$remoteDir"
 exit
 "@
 
