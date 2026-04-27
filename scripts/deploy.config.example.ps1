@@ -3,5 +3,5 @@ $DeployConfig = @{
   FtpPort = 21
   FtpUser = "industrialsteelgroup"
   FtpPassword = "Sla601601"
-  RemoteDir = "/industrialsteelgroup.com/wp-content/themes/isg-asf-theme/"
+  RemoteDir = "/dev.industrialsteelgroup.com/wp-content/themes/isg-asf-theme/"
 }

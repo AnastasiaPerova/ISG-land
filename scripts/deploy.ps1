@@ -20,7 +20,7 @@ function Get-DeployConfig {
     FtpPort = if ($env:ISG_FTP_PORT) { [int]$env:ISG_FTP_PORT } else { 21 }
     FtpUser = $env:ISG_FTP_USER
     FtpPassword = $env:ISG_FTP_PASSWORD
-    RemoteDir = if ($env:ISG_FTP_REMOTE_DIR) { $env:ISG_FTP_REMOTE_DIR } else { "/home/industrialsteelgroup.com/wp-content/themes/isg-asf-theme/" }
+    RemoteDir = if ($env:ISG_FTP_REMOTE_DIR) { $env:ISG_FTP_REMOTE_DIR } else { "/home/dev.industrialsteelgroup.com/wp-content/themes/isg-asf-theme/" }
   }
 }
 
