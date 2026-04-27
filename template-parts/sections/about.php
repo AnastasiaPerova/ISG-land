@@ -296,7 +296,7 @@ $text_lead    = $normalize_wrap_text($text_lead);
 								?>
 								<button
 									type="button"
-									class="isg-filled-item isg-filled-item--about"
+									class="isg-filled-item isg-filled-item--about<?php echo $is_clickable ? '' : ' isg-filled-item--static'; ?>"
 									<?php if ($is_clickable) : ?>
 										data-isg-lightbox="<?php echo esc_attr($image); ?>"
 										aria-label="<?php echo esc_attr('View certificate: ' . $label); ?>"
@@ -306,12 +306,14 @@ $text_lead    = $normalize_wrap_text($text_lead);
 									<?php endif; ?>
 								>
 									<span class="isg-filled-item__text"><?php echo esc_html($label); ?></span>
-									<span class="isg-filled-item__go" aria-hidden="true">
-										<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-											<path d="M12 5C6 5 2 12 2 12C2 12 6 19 12 19C18 19 22 12 22 12C22 12 18 5 12 5Z" stroke="#1257A6" stroke-width="2"/>
-											<path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" stroke="#1257A6" stroke-width="2"/>
-										</svg>
-									</span>
+									<?php if ($is_clickable) : ?>
+										<span class="isg-filled-item__go" aria-hidden="true">
+											<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<path d="M12 5C6 5 2 12 2 12C2 12 6 19 12 19C18 19 22 12 22 12C22 12 18 5 12 5Z" stroke="#1257A6" stroke-width="2"/>
+												<path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" stroke="#1257A6" stroke-width="2"/>
+											</svg>
+										</span>
+									<?php endif; ?>
 								</button>
 							<?php endforeach; ?>
 						</div>

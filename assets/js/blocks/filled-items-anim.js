@@ -84,6 +84,14 @@ export function initFilledItemsAnim(root = document) {
     }
 
     items.forEach((item) => {
+      if (
+        item.classList.contains("isg-filled-item--about") &&
+        !item.hasAttribute("data-isg-lightbox")
+      ) {
+        gsap.set(item, { clearProps: "x,y,scale" });
+        return;
+      }
+
       const move = (e) => {
         const r = item.getBoundingClientRect();
         const x = ((e.clientX - r.left) / r.width - 0.5) * 8;

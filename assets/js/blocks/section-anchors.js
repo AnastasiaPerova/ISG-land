@@ -15,7 +15,8 @@ const SECTION_IDS = [
   "isg-footer",
 ];
 
-const ANCHOR_DOWNWARD_NUDGE = 18;
+const DEFAULT_HEADER_OFFSET = 96;
+const ANCHOR_SETTLE_EPSILON = 2;
 
 function stickyHeaderEl(root) {
   return root.querySelector("[data-isg-sticky-header]") || document.querySelector("[data-isg-sticky-header]");
@@ -23,7 +24,7 @@ function stickyHeaderEl(root) {
 
 function measureHeaderBottomGap(root, extra = 8) {
   const header = stickyHeaderEl(root);
-  if (!(header instanceof HTMLElement)) return 96;
+  if (!(header instanceof HTMLElement)) return DEFAULT_HEADER_OFFSET;
 
   if (header.classList.contains("isg-site-header--hidden")) {
     return extra;
@@ -31,7 +32,16 @@ function measureHeaderBottomGap(root, extra = 8) {
 
   const chrome = header.querySelector(".isg-site-header__chrome");
   const measureEl = chrome instanceof HTMLElement ? chrome : header;
-  return Math.max(extra, Math.ceil(measureEl.getBoundingClientRect().bottom + extra));
+  const headerRect = header.getBoundingClientRect();
+  const measureRect = measureEl.getBoundingClientRect();
+  const visibleTop = Math.max(0, Math.min(headerRect.top, measureRect.top));
+  const visibleHeight = Math.max(
+    header.offsetHeight || 0,
+    measureEl.offsetHeight || 0,
+    Math.round(measureRect.height || 0),
+  );
+
+  return Math.max(extra, Math.ceil(visibleTop + visibleHeight + extra));
 }
 
 function publishStickyHeaderVar(root) {
@@ -111,6 +121,8 @@ function clearAnchorNavigationLock() {
 
 export function initSectionAnchors(root = document) {
   if (!sectionNavs(root).length) return () => {};
+  let activeAnchorId = null;
+  let layoutSyncRaf = 0;
 
   const getCurrentScrollY = () => {
     const lenis = getLenis();
@@ -121,12 +133,34 @@ export function initSectionAnchors(root = document) {
   };
 
   const getVisibleScrollOffset = () => measureHeaderBottomGap(root, 8);
-  const getScrollOffsetForTarget = (targetTop) => {
-    const currentY = Math.max(0, getCurrentScrollY());
-    const isScrollingDown = targetTop > currentY + 24;
-    return isScrollingDown
-      ? Math.max(0, 8 - ANCHOR_DOWNWARD_NUDGE)
-      : getVisibleScrollOffset();
+  const syncPublishedOffset = () => {
+    const offset = getVisibleScrollOffset();
+    document.documentElement.style.setProperty("--isg-sticky-header-offset", `${offset}px`);
+    return offset;
+  };
+  const getScrollOffsetForTarget = () => getVisibleScrollOffset();
+
+  const settleAtSection = (id) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    const targetTop = getSectionAnchorTop(el);
+    if (!Number.isFinite(targetTop)) return;
+
+    const expectedTop = Math.max(0, targetTop - getScrollOffsetForTarget(targetTop));
+    const currentTop = Math.max(0, getCurrentScrollY());
+    if (Math.abs(expectedTop - currentTop) <= ANCHOR_SETTLE_EPSILON) return;
+
+    const lenis = getLenis();
+    if (lenis) {
+      lenis.scrollTo(expectedTop, {
+        immediate: true,
+        force: true,
+      });
+      return;
+    }
+
+    window.scrollTo({ top: expectedTop, behavior: "auto" });
   };
 
   const scrollToSection = (id, { behavior = "smooth", updateHash = true } = {}) => {
@@ -135,6 +169,7 @@ export function initSectionAnchors(root = document) {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const instant = behavior === "auto" || reduced;
     const targetTop = getSectionAnchorTop(el);
+    if (!Number.isFinite(targetTop)) return false;
     const scrollOffset = getScrollOffsetForTarget(targetTop);
     const lenis = getLenis();
     if (lenis) {
@@ -142,11 +177,23 @@ export function initSectionAnchors(root = document) {
         immediate: instant,
         duration: instant ? 0 : 1.28,
         easing: (t) => 1 - (1 - t) ** 3,
+        onComplete: () => {
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              settleAtSection(id);
+            });
+          });
+        },
       });
     } else {
       const top = targetTop - scrollOffset;
       const motion = instant ? "auto" : "smooth";
       window.scrollTo({ top: Math.max(0, top), behavior: motion });
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          settleAtSection(id);
+        });
+      });
     }
     if (updateHash) {
       try {
@@ -155,7 +202,19 @@ export function initSectionAnchors(root = document) {
         
       }
     }
+    activeAnchorId = id;
     return true;
+  };
+
+  const syncAnchorLayout = (id, { behavior = "auto", updateHash = false } = {}) => {
+    if (!id || !document.getElementById(id)) return;
+    if (layoutSyncRaf) cancelAnimationFrame(layoutSyncRaf);
+    layoutSyncRaf = requestAnimationFrame(() => {
+      layoutSyncRaf = 0;
+      syncPublishedOffset();
+      scrollToSection(id, { behavior, updateHash });
+      setActiveSectionLinkAll(root, id);
+    });
   };
 
   const navHrefIdSet = () => {
@@ -243,24 +302,32 @@ export function initSectionAnchors(root = document) {
 
   const sticky = stickyHeaderEl(root);
   publishStickyHeaderVar(root);
-  const ro = sticky ? new ResizeObserver(() => publishStickyHeaderVar(root)) : null;
+  const ro = sticky
+    ? new ResizeObserver(() => {
+        syncPublishedOffset();
+        if (activeAnchorId) {
+          syncAnchorLayout(activeAnchorId);
+        }
+      })
+    : null;
   if (sticky) ro.observe(sticky);
 
   const onWinResize = () => {
-    publishStickyHeaderVar(root);
+    syncPublishedOffset();
+    if (activeAnchorId) {
+      syncAnchorLayout(activeAnchorId);
+    }
     applyActiveFromScroll();
   };
 
   const hash = window.location.hash?.slice(1);
   if (hash && SECTION_IDS.includes(hash)) {
     requestAnimationFrame(() => {
-      publishStickyHeaderVar(root);
-      scrollToSection(hash, { behavior: "auto", updateHash: false });
-      setActiveSectionLinkAll(root, hash);
+      syncAnchorLayout(hash, { behavior: "auto", updateHash: false });
     });
   } else {
     requestAnimationFrame(() => {
-      publishStickyHeaderVar(root);
+      syncPublishedOffset();
       applyActiveFromScroll();
     });
   }
@@ -277,16 +344,28 @@ export function initSectionAnchors(root = document) {
 
   window.addEventListener("scroll", onScroll, { passive: true });
   window.addEventListener("resize", onWinResize, { passive: true });
+  window.addEventListener("load", onWinResize);
 
   const onPopState = () => {
     const id = window.location.hash?.slice(1);
     if (id && SECTION_IDS.includes(id)) {
-      publishStickyHeaderVar(root);
-      scrollToSection(id, { behavior: "auto", updateHash: false });
-      setActiveSectionLinkAll(root, id);
+      syncAnchorLayout(id, { behavior: "auto", updateHash: false });
     }
   };
   window.addEventListener("popstate", onPopState);
+
+  document.fonts?.ready
+    ?.then(() => {
+      if (activeAnchorId || hash) {
+        syncAnchorLayout(activeAnchorId || hash, {
+          behavior: "auto",
+          updateHash: false,
+        });
+      } else {
+        onWinResize();
+      }
+    })
+    .catch(() => {});
 
   return () => {
     sectionNavs(root).forEach((nav) => {
@@ -294,7 +373,9 @@ export function initSectionAnchors(root = document) {
     });
     window.removeEventListener("scroll", onScroll);
     window.removeEventListener("resize", onWinResize);
+    window.removeEventListener("load", onWinResize);
     window.removeEventListener("popstate", onPopState);
     ro?.disconnect();
+    if (layoutSyncRaf) cancelAnimationFrame(layoutSyncRaf);
   };
 }

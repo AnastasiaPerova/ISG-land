@@ -96,14 +96,6 @@ export function initLangNav(root = document) {
       return;
     }
 
-    if (stableShell) {
-      gsap.set(nav, {
-        "--isg-lang-shell-scale": 1,
-        "--isg-lang-shell-opacity": 1,
-        "--isg-lang-shell-h": shellHeight,
-      });
-    }
-
     const tl = gsap.timeline({
       onComplete: () => {
         menu.hidden = true;
@@ -135,9 +127,7 @@ export function initLangNav(root = document) {
           ease: "power2.in",
         },
         0,
-      );
-
-    if (!stableShell) {
+      )
       tl.to(
         nav,
         {
@@ -159,7 +149,6 @@ export function initLangNav(root = document) {
         },
         0.04,
       );
-    }
 
     animations.set(nav, tl);
   };
@@ -207,20 +196,11 @@ export function initLangNav(root = document) {
       pointerEvents: "none",
     });
     gsap.set(options, { opacity: 0, y: -8 });
-    gsap.set(
-      nav,
-      stableShell
-        ? {
-            "--isg-lang-shell-scale": 1,
-            "--isg-lang-shell-opacity": 1,
-            "--isg-lang-shell-h": shellHeight,
-          }
-        : {
-            "--isg-lang-shell-scale": 0,
-            "--isg-lang-shell-opacity": 0,
-            "--isg-lang-shell-h": shellHeight,
-          },
-    );
+    gsap.set(nav, {
+      "--isg-lang-shell-scale": 0,
+      "--isg-lang-shell-opacity": 0,
+      "--isg-lang-shell-h": shellHeight,
+    });
 
     const tl = gsap.timeline({
       onComplete: () => {

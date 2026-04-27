@@ -5775,6 +5775,11 @@ button.isg-slider-item__img,
   appearance: none;
 }
 
+.isg-filled-item--about.isg-filled-item--static,
+.isg-filled-item--about:not([data-isg-lightbox]) {
+  cursor: default;
+}
+
 .isg-filled-item--about::after {
   content: "";
   position: absolute;
@@ -5788,6 +5793,33 @@ button.isg-slider-item__img,
 .isg-filled-item--about:hover::after,
 .isg-filled-item--about:focus-visible::after {
   background: transparent;
+}
+
+.isg-filled-item--about.isg-filled-item--static:hover,
+.isg-filled-item--about.isg-filled-item--static:focus-visible,
+.isg-filled-item--about:not([data-isg-lightbox]):hover,
+.isg-filled-item--about:not([data-isg-lightbox]):focus-visible {
+  background: #e8e6e0;
+  color: #1257a6;
+  outline: none;
+}
+
+.isg-filled-item--about.isg-filled-item--static:hover::after,
+.isg-filled-item--about.isg-filled-item--static:focus-visible::after,
+.isg-filled-item--about:not([data-isg-lightbox]):hover::after,
+.isg-filled-item--about:not([data-isg-lightbox]):focus-visible::after {
+  background: rgba(28, 28, 28, 0);
+}
+
+.isg-filled-item--about.isg-filled-item--static:hover span,
+.isg-filled-item--about.isg-filled-item--static:focus-visible span,
+.isg-filled-item--about.isg-filled-item--static:hover .isg-filled-item__text,
+.isg-filled-item--about.isg-filled-item--static:focus-visible .isg-filled-item__text,
+.isg-filled-item--about:not([data-isg-lightbox]):hover span,
+.isg-filled-item--about:not([data-isg-lightbox]):focus-visible span,
+.isg-filled-item--about:not([data-isg-lightbox]):hover .isg-filled-item__text,
+.isg-filled-item--about:not([data-isg-lightbox]):focus-visible .isg-filled-item__text {
+  color: #1257a6;
 }
 
 .isg-filled-item--about .isg-filled-item__text,
