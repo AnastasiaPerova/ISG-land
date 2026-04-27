@@ -2464,6 +2464,24 @@ body.isg-nav-drawer-open {
   min-width: 0;
 }
 
+.isg-digit-card__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: max(3.3rem, min(3.056vw, 5.85rem));
+  height: max(3.3rem, min(3.056vw, 5.85rem));
+  margin-bottom: var(--isg-space-xs);
+  color: #ffffff;
+  flex: 0 0 auto;
+}
+
+.isg-digit-card__icon img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
 .isg-digit-card__value {
   font-size: var(--isg-type-h4);
   font-weight: 400;

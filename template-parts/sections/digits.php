@@ -61,6 +61,7 @@ for ($index = 0; $index < $target_cards; $index++) {
 	$default_card = is_array($default_cards[$index] ?? null) ? $default_cards[$index] : $default_cards[0];
 
 	$image = isg_image_url($card['image'] ?? '', '');
+	$icon  = isg_image_url($card['icon'] ?? '', '');
 	$value = trim((string) ($card['value'] ?? ''));
 	$label = trim((string) ($card['label'] ?? ''));
 
@@ -76,6 +77,7 @@ for ($index = 0; $index < $target_cards; $index++) {
 
 	$normalized_cards[] = array(
 		'image' => $image,
+		'icon'  => $icon,
 		'value' => $value,
 		'label' => $label,
 	);
@@ -110,6 +112,7 @@ $cards = $normalized_cards;
 							<?php
 							$card_image = isg_image_url($card['image'] ?? '', isg_asset_uri('img/advantages_1.jpg'));
 							$card_alt   = isg_image_alt($card['image'] ?? '', '');
+							$icon_url   = isg_image_url($card['icon'] ?? '', '');
 							$value      = (string) ($card['value'] ?? '');
 							$label      = (string) ($card['label'] ?? '');
 							?>
@@ -125,6 +128,11 @@ $cards = $normalized_cards;
 									<div class="isg-digit-card__shade" aria-hidden="true"></div>
 									<div class="isg-digit-card__container">
 										<div class="isg-digit-card__inner">
+											<?php if ($icon_url !== '') : ?>
+												<span class="isg-digit-card__icon" aria-hidden="true">
+													<img src="<?php echo esc_url($icon_url); ?>" alt="" width="48" height="48" loading="lazy" decoding="async" />
+												</span>
+											<?php endif; ?>
 											<p class="isg-digit-card__value"><?php echo esc_html($value); ?></p>
 											<p class="isg-digit-card__label"><?php echo esc_html($label); ?></p>
 										</div>

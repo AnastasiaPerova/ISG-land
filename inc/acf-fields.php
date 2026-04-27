@@ -456,6 +456,13 @@ function isg_register_acf_fields(): void {
 							'button_label' => 'Add Card',
 							'sub_fields'   => array(
 								isg_acf_image_field('field_isg_digits_card_image', 'Card Image', 'image'),
+								array_merge(
+									isg_acf_image_field('field_isg_digits_card_icon', 'SVG Icon', 'icon'),
+									array(
+										'instructions' => 'Optional icon shown above the value.',
+										'mime_types'   => 'svg',
+									)
+								),
 								isg_acf_text_field('field_isg_digits_card_value', 'Value', 'value'),
 								isg_acf_text_field('field_isg_digits_card_label', 'Label', 'label'),
 							),
