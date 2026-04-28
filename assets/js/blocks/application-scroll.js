@@ -269,6 +269,7 @@ export function initApplicationScroll(root = document) {
     const stageIntro = section.querySelector(".isg-app-scroll__stage-intro");
     const stageBody = section.querySelector(".isg-app-scroll__stage-body");
     const appLeft = section.querySelector(".isg-app-left");
+    const appRight = section.querySelector(".isg-app-right");
     const items = section.querySelectorAll(".isg-accordion__item");
     const acc = section.querySelector(".isg-accordion--app-scroll");
     const mobileBg = section.dataset.isgMobileBg || "";
@@ -318,12 +319,20 @@ export function initApplicationScroll(root = document) {
     };
 
     // По-словная анимация заголовка по времени видео.
-    const getAccordionOffscreenX = () => {
+    const getLeftOffscreenX = () => {
       const fallback = -Math.max(window.innerWidth + 48, 420);
       if (!appLeft) return fallback;
       const rect = appLeft.getBoundingClientRect();
       if (!rect.width && !rect.right) return fallback;
       return -(rect.right + 48);
+    };
+
+    const getRightOffscreenX = () => {
+      const fallback = Math.max(window.innerWidth + 48, 420);
+      if (!appRight) return fallback;
+      const rect = appRight.getBoundingClientRect();
+      if (!rect.width && !rect.left) return fallback;
+      return Math.max(0, window.innerWidth - rect.left + 48);
     };
 
     const setTitleWordsByVideoTime = (videoTime, duration) => {
@@ -371,7 +380,8 @@ export function initApplicationScroll(root = document) {
     let accordionManual = false;
     let manualAccordionIdx = -1;
     let accordionAutoStartP = null;
-    let accordionOffscreenX = -Math.max(window.innerWidth + 48, 420);
+    let leftOffscreenX = -Math.max(window.innerWidth + 48, 420);
+    let accordionOffscreenX = Math.max(window.innerWidth + 48, 420);
     let st = null;
     let currentMode = "";
     let glFx = null;
@@ -512,6 +522,7 @@ export function initApplicationScroll(root = document) {
       if (stageIntro) gsap.set(stageIntro, { clearProps: "opacity,visibility,transform" });
       gsap.set(stageBody, { clearProps: "opacity,visibility,transform,pointerEvents" });
       if (appLeft) gsap.set(appLeft, { clearProps: "opacity,transform" });
+      if (appRight) gsap.set(appRight, { clearProps: "opacity,transform" });
       setAccordionIndex(items.length ? 0 : -1);
       const onEnd = () => {
         try {
@@ -542,7 +553,8 @@ export function initApplicationScroll(root = document) {
       const scrubPx = Math.round(H * APP_SCROLL_SCRUB_VH);
       if (postEl) postEl.style.height = `${scrubPx}px`;
       section.style.minHeight = "";
-      accordionOffscreenX = getAccordionOffscreenX();
+      leftOffscreenX = getLeftOffscreenX();
+      accordionOffscreenX = getRightOffscreenX();
     };
     const clearTrackHeights = () => {
       if (postEl) postEl.style.height = "";
@@ -579,7 +591,8 @@ export function initApplicationScroll(root = document) {
       setTitleWordsByVideoTime(0, video.duration);
       glFx?.update({ progress: 0, titleOpacity: 0 });
       setBodyLayer(0, 0);
-      if (appLeft) gsap.set(appLeft, { opacity: 1, x: accordionOffscreenX });
+      if (appLeft) gsap.set(appLeft, { opacity: 1, x: leftOffscreenX });
+      if (appRight) gsap.set(appRight, { opacity: 1, x: accordionOffscreenX });
       setAccordionIndex(items.length ? 0 : -1);
     };
 
@@ -605,6 +618,7 @@ export function initApplicationScroll(root = document) {
       glFx?.update({ progress: 0, titleOpacity: 0 });
       setBodyLayer(1, 0);
       if (appLeft) gsap.set(appLeft, { opacity: 1, x: 0 });
+      if (appRight) gsap.set(appRight, { opacity: 1, x: 0 });
       setAccordionIndex(items.length ? 0 : -1);
       try {
         if (video.duration && Number.isFinite(video.duration)) {
@@ -655,7 +669,10 @@ export function initApplicationScroll(root = document) {
           const bodyY = 0;
           setBodyLayer(bodyOp, bodyY);
           if (appLeft) {
-            gsap.set(appLeft, { opacity: 1, x: accordionOffscreenX * (1 - bodyIn) });
+            gsap.set(appLeft, { opacity: 1, x: leftOffscreenX * (1 - bodyIn) });
+          }
+          if (appRight) {
+            gsap.set(appRight, { opacity: 1, x: accordionOffscreenX * (1 - bodyIn) });
           }
 
           // 4) Авто-переключение вкладок (если нет ручного override).
@@ -735,6 +752,7 @@ export function initApplicationScroll(root = document) {
       if (stageIntro) gsap.set(stageIntro, { clearProps: "opacity,visibility,transform" });
       gsap.set(stageBody, { clearProps: "opacity,visibility,transform,pointerEvents" });
       if (appLeft) gsap.set(appLeft, { clearProps: "opacity,transform" });
+      if (appRight) gsap.set(appRight, { clearProps: "opacity,transform" });
       glFx?.destroy();
       glFx = null;
       st?.kill();

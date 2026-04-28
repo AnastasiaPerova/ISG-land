@@ -47,6 +47,7 @@ $section = isg_acf_group(
 		'intro_kicker'     => 'PRODUCT RANGE',
 		'intro_title'      => 'Quality control is an essential part of the production process',
 		'focus_kicker'     => 'Focus areas',
+		'focus_heading'    => 'Quality control focus areas cover every stage from production to final delivery',
 		'skip_label'       => 'Skip',
 		'items'            => $default_items,
 	),
@@ -57,8 +58,9 @@ $intro_bg     = isg_image_url($section['intro_background'] ?? '', isg_asset_uri(
 $intro_kicker = (string) ($section['intro_kicker'] ?? 'PRODUCT RANGE');
 $intro_title  = (string) ($section['intro_title'] ?? 'Quality control is an essential part of the production process');
 $focus_kicker = (string) ($section['focus_kicker'] ?? 'Focus areas');
-$skip_label   = (string) ($section['skip_label'] ?? 'Skip');
+$focus_heading = (string) ($section['focus_heading'] ?? 'Quality control focus areas cover every stage from production to final delivery');
 $items        = is_array($section['items'] ?? null) ? $section['items'] : $default_items;
+$items        = array_slice($items, 0, 4);
 ?>
 <div id="isg-quality" class="isg-quality-section" data-isg-block="quality">
 	<section class="isg-intro-section isg-intro-section--align-center isg-quality-intro" style="background-image: url('<?php echo esc_url($intro_bg); ?>');"
@@ -76,88 +78,41 @@ $items        = is_array($section['items'] ?? null) ? $section['items'] : $defau
 		</div>
 	</section>
 	<div class="isg-quality-wrapper isg-section-surface">
-		<div class="isg-quality-content">
-			<div class="isg-quality-content__track" data-isg-quality-scroll data-isg-quality-about
-				aria-label="Quality control focus areas">
-				<div class="isg-quality-markers" aria-hidden="true">
-					<?php foreach ($items as $i => $item) : ?>
-						<span class="isg-quality-marker" data-isg-quality-marker="<?php echo esc_attr((string) $i); ?>"></span>
-					<?php endforeach; ?>
+		<div class="isg-quality-content container">
+			<div class="isg-section-head isg-section-head--color-white isg-title-group isg-title-group--align-start isg-quality-cards-head">
+				<div class="isg-section-head__subtitle isg-subtitle">
+					<p class="isg-subtitle__text"><?php echo esc_html($focus_kicker); ?></p>
+					<span class="isg-subtitle__swatch" aria-hidden="true"></span>
 				</div>
-				<div class="isg-quality-content__sticky">
-					<div class="container">
-						<div class="isg-quality-row">
-							<div class="isg-quality-list-wrap">
-								<div class="isg-subtitle isg-quality-list-wrap__label">
-									<p class="isg-subtitle__text"><?php echo esc_html($focus_kicker); ?></p>
-									<span class="isg-subtitle__swatch" aria-hidden="true"></span>
-								</div>
-								<div class="isg-quality-list-center">
-									<ul class="isg-quality-list" data-isg-quality-list-scroll>
-										<?php foreach ($items as $i => $item) : ?>
-											<?php $title = (string) ($item['title'] ?? ''); ?>
-											<li class="isg-quality-list__li<?php echo $i === 0 ? ' isg-quality-list__item--active' : ''; ?>">
-												<button
-													type="button"
-													class="isg-quality-list-item isg-quality-label--plain isg-quality-list-item--text-only<?php echo $i === 0 ? ' isg-quality-list-item--active' : ''; ?>"
-													data-isg-quality-index="<?php echo esc_attr((string) $i); ?>"
-													aria-pressed="<?php echo $i === 0 ? 'true' : 'false'; ?>"
-												>
-													<span class="isg-quality-list-item__text isg-quality-list-item__title"><?php echo esc_html($title); ?></span>
-												</button>
-											</li>
-										<?php endforeach; ?>
-									</ul>
-								</div>
-								<button type="button" class="isg-quality-list-wrap__skip" data-isg-skip-next
-									aria-label="<?php echo esc_attr($skip_label); ?>">
-									<?php echo esc_html($skip_label); ?>
-								</button>
-							</div>
-							<div class="isg-about-feature-card">
-								<div class="isg-quality-visual">
-									<div class="isg-quality-visual__slides" data-isg-quality-mobile-slider>
-										<?php foreach ($items as $i => $item) : ?>
-											<?php
-											$title     = (string) ($item['title'] ?? '');
-											$image_url = isg_image_url($item['image'] ?? '', isg_asset_uri('img/isg-quality-content-1.jpg'));
-											$image_alt = isg_image_alt($item['image'] ?? '', '');
-											?>
-											<div class="isg-quality-visual__slide<?php echo $i === 0 ? ' isg-quality-visual__slide--active' : ''; ?>" data-isg-quality-slide="<?php echo esc_attr((string) $i); ?>"
-												role="img" aria-label="<?php echo esc_attr($title); ?>">
-												<img class="isg-quality-visual__slide-img" src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($image_alt); ?>" loading="lazy" decoding="async" />
-												<div class="isg-quality-visual__caption">
-													<h3 class="isg-quality-visual__caption-title"><?php echo esc_html($title); ?></h3>
-												</div>
-											</div>
-										<?php endforeach; ?>
-									</div>
-								</div>
-								<div class="isg-about-feature-card__inner">
-									<div class="isg-about-feature-card__content-stack">
-										<div class="isg-about-feature-card__content-inner">
-											<?php foreach ($items as $i => $item) : ?>
-												<?php
-												$icon_url = isg_image_url($item['icon'] ?? '', '');
-												$body     = (string) ($item['body'] ?? '');
-												?>
-												<div class="isg-about-feature-card__content-slide<?php echo $i === 0 ? ' isg-about-feature-card__content-slide--active' : ''; ?>"
-													data-isg-about-content-slide="<?php echo esc_attr((string) $i); ?>">
-													<?php if ($icon_url !== '') : ?>
-														<span class="isg-about-feature-card__icon" aria-hidden="true">
-															<img src="<?php echo esc_url($icon_url); ?>" width="40" height="40" alt="" loading="lazy" decoding="async" />
-														</span>
-													<?php endif; ?>
-													<p class="isg-body isg-about-feature-card__text"><?php echo esc_html($body); ?></p>
-												</div>
-											<?php endforeach; ?>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
+				<div class="isg-section-head__title-row">
+					<div class="isg-section-head__title-col">
+						<h2 class="isg-section-head__title isg-h2"><?php echo esc_html($focus_heading); ?></h2>
 					</div>
 				</div>
+			</div>
+			<div class="isg-quality-cards" aria-label="Quality control focus areas">
+				<?php foreach ($items as $item) : ?>
+					<?php
+					$title     = (string) ($item['title'] ?? '');
+					$body      = (string) ($item['body'] ?? '');
+					$image_url = isg_image_url($item['image'] ?? '', isg_asset_uri('img/isg-quality-content-1.jpg'));
+					$image_alt = isg_image_alt($item['image'] ?? '', '');
+					$icon_url  = isg_image_url($item['icon'] ?? '', '');
+					$icon_alt  = isg_image_alt($item['icon'] ?? '', '');
+					?>
+					<article class="isg-quality-card">
+						<img class="isg-quality-card__img" src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($image_alt); ?>" loading="lazy" decoding="async" />
+						<div class="isg-quality-card__content">
+							<?php if ($icon_url !== '') : ?>
+								<span class="isg-quality-card__icon">
+									<img src="<?php echo esc_url($icon_url); ?>" alt="<?php echo esc_attr($icon_alt); ?>" loading="lazy" decoding="async" />
+								</span>
+							<?php endif; ?>
+							<h3 class="isg-quality-card__title"><?php echo esc_html($title); ?></h3>
+							<p class="isg-quality-card__text"><?php echo esc_html($body); ?></p>
+						</div>
+					</article>
+				<?php endforeach; ?>
 			</div>
 		</div>
 	</div>

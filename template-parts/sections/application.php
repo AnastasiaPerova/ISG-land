@@ -55,6 +55,7 @@ $section = isg_acf_group(
 	array(
 		'intro_kicker' => 'Application Areas',
 		'intro_title' => 'Spiral-welded pipes are used in various industries, such as:',
+		'final_heading' => 'Application areas for large-diameter spiral-welded pipes',
 		'video_file' => '',
 		'video_url' => isg_asset_uri('video/test.mp4'),
 		'video_poster' => '',
@@ -66,6 +67,7 @@ $section = isg_acf_group(
 
 $intro_kicker = (string) ($section['intro_kicker'] ?? 'Application Areas');
 $intro_title = (string) ($section['intro_title'] ?? 'Spiral-welded pipes are used in various industries, such as:');
+$final_heading = (string) ($section['final_heading'] ?? 'Application areas for large-diameter spiral-welded pipes');
 $video_file = $section['video_file'] ?? '';
 $video_url = (string) ($section['video_url'] ?? '');
 $video_poster = isg_image_url($section['video_poster'] ?? '', '');
@@ -118,6 +120,11 @@ if ($video_url === '') {
 							<div class="isg-app-scroll__stage-body">
 								<div class="isg-app-row">
 									<div class="isg-app-left">
+										<?php if (!empty($final_heading)): ?>
+											<h3 class="isg-app-final-title"><?php echo esc_html($final_heading); ?></h3>
+										<?php endif; ?>
+									</div>
+									<div class="isg-app-right">
 										<div class="isg-accordion isg-accordion--app-scroll">
 											<?php foreach ($items as $item): ?>
 												<?php

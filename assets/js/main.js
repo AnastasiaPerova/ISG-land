@@ -19,6 +19,7 @@ import { initProductContentLineDraw } from "./blocks/product-content-line-draw.j
 import { initIsgButtonHover } from "./blocks/rfq-intro-btn-hover.js";
 import { initRfqCustomSelects } from "./blocks/rfq-custom-select.js";
 import { initSpecCardsReveal } from "./blocks/spec-cards-reveal.js";
+import { initQualityCardsReveal } from "./blocks/quality-cards-reveal.js";
 import { initMobileHorizontalDrag } from "./blocks/mobile-horizontal-drag.js";
 import { initSectionAnchors } from "./blocks/section-anchors.js";
 import { initFooterReveal } from "./blocks/footer-reveal.js";
@@ -45,6 +46,8 @@ const PARTIALS = [
 ];
 
 let disposers = [];
+let qualityCardsRevealDisposer = null;
+let specCardsRevealDisposer = null;
 const PRELOADER_STEPS = {
   partials: { from: 0, to: 45, label: "Loading sections" },
   init: { from: 45, to: 70, label: "Initializing interface" },
@@ -158,6 +161,20 @@ async function stabilizeScrollLayout(passes = 2) {
 }
 
 function disposeInternals() {
+  try {
+    qualityCardsRevealDisposer?.();
+  } catch (_) {
+    
+  }
+  qualityCardsRevealDisposer = null;
+
+  try {
+    specCardsRevealDisposer?.();
+  } catch (_) {
+    
+  }
+  specCardsRevealDisposer = null;
+
   while (disposers.length) {
     const off = disposers.pop();
     try {
@@ -167,6 +184,82 @@ function disposeInternals() {
     }
   }
   ScrollTrigger.getAll().forEach((t) => t.kill());
+}
+
+function bootQualityCardsReveal(root = document) {
+  try {
+    qualityCardsRevealDisposer?.();
+  } catch (_) {
+    
+  }
+  qualityCardsRevealDisposer = initQualityCardsReveal(root);
+  return qualityCardsRevealDisposer;
+}
+
+function bootSpecCardsReveal(root = document) {
+  try {
+    specCardsRevealDisposer?.();
+  } catch (_) {
+    
+  }
+  specCardsRevealDisposer = initSpecCardsReveal(root);
+  return specCardsRevealDisposer;
+}
+
+function scheduleQualityCardsRevealBoot() {
+  const run = () => {
+    const root = isServerRenderedMode() ? document : document.getElementById("isg-main") || document;
+    if (root.querySelector?.(".isg-quality-wrapper .isg-quality-cards")) {
+      bootQualityCardsReveal(root);
+      return true;
+    }
+    return false;
+  };
+
+  if (run()) return;
+
+  const observer = new MutationObserver(() => {
+    if (run()) observer.disconnect();
+  });
+  observer.observe(document.documentElement, { childList: true, subtree: true });
+
+  window.addEventListener(
+    "load",
+    () => {
+      run();
+      setTimeout(run, 300);
+      setTimeout(run, 1200);
+    },
+    { once: true },
+  );
+}
+
+function scheduleSpecCardsRevealBoot() {
+  const run = () => {
+    const root = isServerRenderedMode() ? document : document.getElementById("isg-main") || document;
+    if (root.querySelector?.(".isg-product-intro .isg-spec-cards")) {
+      bootSpecCardsReveal(root);
+      return true;
+    }
+    return false;
+  };
+
+  if (run()) return;
+
+  const observer = new MutationObserver(() => {
+    if (run()) observer.disconnect();
+  });
+  observer.observe(document.documentElement, { childList: true, subtree: true });
+
+  window.addEventListener(
+    "load",
+    () => {
+      run();
+      setTimeout(run, 300);
+      setTimeout(run, 1200);
+    },
+    { once: true },
+  );
 }
 
 
@@ -197,7 +290,8 @@ export async function initIsgPage(root = document.body) {
   disposers.push(initProductContentLineDraw(root));
   disposers.push(initIsgButtonHover(root));
   disposers.push(initRfqCustomSelects(root));
-  disposers.push(initSpecCardsReveal(root));
+  bootSpecCardsReveal(root);
+  bootQualityCardsReveal(root);
   disposers.push(initMobileHorizontalDrag(root));
   disposers.push(initLightbox(root));
   disposers.push(initTitleAnim(root));
@@ -306,6 +400,9 @@ function isServerRenderedMode() {
     document.documentElement.hasAttribute("data-isg-server-rendered")
   );
 }
+
+scheduleQualityCardsRevealBoot();
+scheduleSpecCardsRevealBoot();
 
 async function reinitIsgPage() {
   const main = document.getElementById("isg-main");

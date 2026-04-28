@@ -354,6 +354,7 @@ function isg_register_acf_fields(): void {
 								'required'     => 1,
 							)
 						),
+						isg_acf_textarea_field('field_isg_app_final_heading', 'Final Frame Heading', 'final_heading', 'Application areas for large-diameter spiral-welded pipes'),
 						array_merge(
 							isg_acf_file_field('field_isg_app_video_file', 'Video File', 'video_file'),
 							array(
@@ -583,6 +584,7 @@ function isg_register_acf_fields(): void {
 						isg_acf_text_field('field_isg_quality_intro_kicker', 'Intro Kicker', 'intro_kicker', 'PRODUCT RANGE'),
 						isg_acf_textarea_field('field_isg_quality_intro_title', 'Intro Title', 'intro_title', 'Quality control is an essential part of the production process'),
 						isg_acf_text_field('field_isg_quality_focus_kicker', 'Focus Kicker', 'focus_kicker', 'Focus areas'),
+						isg_acf_textarea_field('field_isg_quality_focus_heading', 'Focus Heading', 'focus_heading', 'Quality control focus areas cover every stage from production to final delivery'),
 						isg_acf_text_field('field_isg_quality_skip_label', 'Skip Label', 'skip_label', 'Skip'),
 						array(
 							'key'          => 'field_isg_quality_items',
