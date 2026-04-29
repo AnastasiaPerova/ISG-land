@@ -86,7 +86,7 @@ $intro_cta_lbl  = (string) ($section['intro_cta_label'] ?? 'Download catalogue')
 $intro_cta_url  = (string) ($section['intro_cta_url'] ?? '#');
 $aside_kicker   = (string) ($section['aside_kicker'] ?? 'RFQ');
 $aside_accent   = (string) ($section['aside_title_accent'] ?? '');
-$aside_text     = (string) ($section['aside_title_text'] ?? '');
+
 $aside_heading  = (string) ($section['aside_heading'] ?? ($section['form_heading'] ?? 'Request a quotation'));
 $form_labels    = is_array($section['form_labels'] ?? null) ? $section['form_labels'] : $default_labels;
 $cf7_shortcode  = isg_prepare_rfq_cf7_shortcode((string) ($section['cf7_shortcode'] ?? ''));
@@ -137,17 +137,22 @@ $label = static function (array $labels, string $key, string $fallback = ''): st
 							<span class="isg-subtitle__swatch" aria-hidden="true"></span>
 						</div>
 
-						<?php if ($aside_heading !== '') : ?>
-							<h3 class="isg-rfq-aside__heading"><?php echo esc_html($aside_heading); ?></h3>
-						<?php endif; ?>
-
 						<p class="isg-rfq-aside__text">
-							<span class="isg-rfq-aside__title-accent"><?php echo esc_html($aside_accent); ?></span><br />
-							<span><?php echo esc_html($aside_text); ?></span>
+							<?php echo esc_html($aside_accent); ?>
 						</p>
 					</div>
 				</aside>
 
+				<div class="isg-rfq-copy">
+					<?php if ($aside_heading !== '') : ?>
+						<h3 class="isg-rfq-copy__heading"><?php echo esc_html($aside_heading); ?></h3>
+					<?php endif; ?>
+
+			
+				</div>
+			</div>
+
+			<div class="isg-rfq-form-row">
 				<div class="isg-rfq-form-wrap">
 					<?php if ($use_cf7) : ?>
 						<?php echo do_shortcode($cf7_shortcode); ?>
