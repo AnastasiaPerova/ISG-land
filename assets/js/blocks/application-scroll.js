@@ -250,10 +250,6 @@ function createAppWebGLEffect(mediaEl, section) {
   };
 }
 
-
-
-
-
 export function initApplicationScroll(root = document) {
   // Инициализация scroll-сцены секции application (desktop/mobile/reduced).
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -500,8 +496,8 @@ export function initApplicationScroll(root = document) {
       }
       const isOpen = item.classList.contains("isg-accordion__item--open");
       if (isOpen) return;
-      accordionManual = true;
-      manualAccordionIdx = idx;
+      accordionManual = false;
+      manualAccordionIdx = -1;
       setAccordionIndex(idx);
     };
 
@@ -672,7 +668,11 @@ export function initApplicationScroll(root = document) {
             gsap.set(appLeft, { opacity: 1, x: leftOffscreenX * (1 - bodyIn) });
           }
           if (appRight) {
-            gsap.set(appRight, { opacity: 1, x: accordionOffscreenX * (1 - bodyIn) });
+            if (bodyIn > 0.995) {
+              gsap.set(appRight, { opacity: 1, clearProps: "transform" });
+            } else {
+              gsap.set(appRight, { opacity: 1, x: accordionOffscreenX * (1 - bodyIn) });
+            }
           }
 
           // 4) Авто-переключение вкладок (если нет ручного override).

@@ -43,8 +43,8 @@ export function initSpecCardsReveal(root = document) {
       const vars = getCardVars(index, cards.length, mobile);
       gsap.set(card, {
         autoAlpha: 0,
-        clipPath: "inset(100% 0% 0% 0% round var(--isg-card-br))",
-        webkitClipPath: "inset(100% 0% 0% 0% round var(--isg-card-br))",
+        clipPath: "inset(100% 0% -14% 0% round var(--isg-card-br))",
+        webkitClipPath: "inset(100% 0% -14% 0% round var(--isg-card-br))",
         rotateX: vars.rotateX,
         rotateY: vars.rotateY,
         rotateZ: vars.rotateZ,
@@ -53,6 +53,7 @@ export function initSpecCardsReveal(root = document) {
         scale: vars.scale,
         transformOrigin: "50% 112%",
         transformStyle: "preserve-3d",
+        backfaceVisibility: "hidden",
         willChange: "opacity, transform, clip-path",
       });
     });
@@ -79,8 +80,8 @@ export function initSpecCardsReveal(root = document) {
       cards,
       {
         autoAlpha: 1,
-        clipPath: "inset(0% 0% 0% 0% round var(--isg-card-br))",
-        webkitClipPath: "inset(0% 0% 0% 0% round var(--isg-card-br))",
+        clipPath: "inset(0% 0% -1% 0% round var(--isg-card-br))",
+        webkitClipPath: "inset(0% 0% -1% 0% round var(--isg-card-br))",
         rotateX: 0,
         rotateY: 0,
         rotateZ: 0,
@@ -115,7 +116,7 @@ export function initSpecCardsReveal(root = document) {
       gsap.killTweensOf([wrap, ...cards, ...contentNodes]);
       gsap.set([wrap, ...cards, ...contentNodes], {
         clearProps:
-          "opacity,visibility,transform,clipPath,webkitClipPath,filter,willChange,transformStyle,perspective",
+          "opacity,visibility,transform,clipPath,webkitClipPath,filter,backfaceVisibility,willChange,transformStyle,perspective",
       });
     });
   });

@@ -67,6 +67,7 @@ $section = isg_acf_group(
 		'aside_kicker'      => 'RFQ',
 		'aside_title_accent'=> 'Please send your project specifications for review.',
 		'aside_title_text'  => 'Our team will assess the requirements and prepare a quotation based on the provided information',
+		'aside_heading'     => 'Request a quotation',
 		'form_labels'       => $default_labels,
 		'cf7_shortcode'     => '',
 		'terms_url'         => '#',
@@ -86,6 +87,7 @@ $intro_cta_url  = (string) ($section['intro_cta_url'] ?? '#');
 $aside_kicker   = (string) ($section['aside_kicker'] ?? 'RFQ');
 $aside_accent   = (string) ($section['aside_title_accent'] ?? '');
 $aside_text     = (string) ($section['aside_title_text'] ?? '');
+$aside_heading  = (string) ($section['aside_heading'] ?? ($section['form_heading'] ?? 'Request a quotation'));
 $form_labels    = is_array($section['form_labels'] ?? null) ? $section['form_labels'] : $default_labels;
 $cf7_shortcode  = isg_prepare_rfq_cf7_shortcode((string) ($section['cf7_shortcode'] ?? ''));
 $terms_url      = (string) ($section['terms_url'] ?? '#');
@@ -135,10 +137,14 @@ $label = static function (array $labels, string $key, string $fallback = ''): st
 							<span class="isg-subtitle__swatch" aria-hidden="true"></span>
 						</div>
 
-						<h2 class="isg-section-head__title isg-h2">
+						<?php if ($aside_heading !== '') : ?>
+							<h3 class="isg-rfq-aside__heading"><?php echo esc_html($aside_heading); ?></h3>
+						<?php endif; ?>
+
+						<p class="isg-rfq-aside__text">
 							<span class="isg-rfq-aside__title-accent"><?php echo esc_html($aside_accent); ?></span><br />
 							<span><?php echo esc_html($aside_text); ?></span>
-						</h2>
+						</p>
 					</div>
 				</aside>
 

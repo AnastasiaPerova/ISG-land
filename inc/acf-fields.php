@@ -405,12 +405,6 @@ function isg_register_acf_fields(): void {
 									)
 								),
 								array_merge(
-									isg_acf_text_field('field_isg_app_item_pill', 'Pill Label', 'pill'),
-									array(
-										'instructions' => 'Short spec tag shown on the right, e.g. API 5L.',
-									)
-								),
-								array_merge(
 									isg_acf_image_field('field_isg_app_item_image', 'Image', 'image'),
 									array(
 										'instructions' => 'Main image inside the expanded accordion panel.',
@@ -709,6 +703,7 @@ function isg_register_acf_fields(): void {
 						isg_acf_text_field('field_isg_rfq_aside_kicker', 'Aside Kicker', 'aside_kicker', 'RFQ'),
 						isg_acf_textarea_field('field_isg_rfq_aside_title_accent', 'Aside Title Accent', 'aside_title_accent'),
 						isg_acf_textarea_field('field_isg_rfq_aside_title_text', 'Aside Title Text', 'aside_title_text'),
+						isg_acf_text_field('field_isg_rfq_aside_heading', 'Aside Heading', 'aside_heading', 'Request a quotation'),
 						array(
 							'key'           => 'field_isg_rfq_cf7_shortcode',
 							'label'         => 'Contact Form 7 Shortcode',

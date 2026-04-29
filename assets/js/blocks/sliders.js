@@ -28,6 +28,7 @@ function setupSliderDragCursor() {
   let visible = false;
   let activeTarget = null;
   let destroyed = false;
+  let scrollRaf = 0;
   const SMOOTHING = 0.16;
   const STOP_EPS = 0.2;
 
@@ -115,7 +116,16 @@ function setupSliderDragCursor() {
   };
 
   const syncFromPoint = () => {
+    if (!hasPos) return;
     activateFromNode(document.elementFromPoint(targetX, targetY));
+  };
+
+  const queueScrollSync = () => {
+    if (scrollRaf || !hasPos) return;
+    scrollRaf = requestAnimationFrame(() => {
+      scrollRaf = 0;
+      syncFromPoint();
+    });
   };
 
   const onPointerEnd = () => {
@@ -141,6 +151,7 @@ function setupSliderDragCursor() {
   window.addEventListener("pointermove", onMove, { passive: true });
   window.addEventListener("pointerup", onPointerEnd, { passive: true });
   window.addEventListener("pointercancel", onPointerEnd, { passive: true });
+  window.addEventListener("scroll", queueScrollSync, { passive: true });
   window.addEventListener("blur", onLeaveViewport);
   window.addEventListener("resize", onResize, { passive: true });
   document.addEventListener("visibilitychange", onVisibilityChange);
@@ -205,10 +216,12 @@ function setupSliderDragCursor() {
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerup", onPointerEnd);
       window.removeEventListener("pointercancel", onPointerEnd);
+      window.removeEventListener("scroll", queueScrollSync);
       window.removeEventListener("blur", onLeaveViewport);
       window.removeEventListener("resize", onResize);
       document.removeEventListener("visibilitychange", onVisibilityChange);
       if (raf) cancelAnimationFrame(raf);
+      if (scrollRaf) cancelAnimationFrame(scrollRaf);
       hide();
       el.remove();
     },

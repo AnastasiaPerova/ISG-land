@@ -11,7 +11,6 @@ $default_items = array(
 	array(
 		'icon' => isg_asset_uri('img/icons/oil-gas.svg'),
 		'title' => 'Oil & Gas',
-		'pill' => 'API 5L',
 		'image' => isg_asset_uri('img/advantages_1.jpg'),
 		'hint' => 'Line pipe for upstream gathering, refineries, and high-pressure transmission to standard API 5L.',
 		'description' => 'Transmission systems',
@@ -19,7 +18,6 @@ $default_items = array(
 	array(
 		'icon' => isg_asset_uri('img/icons/construction.svg'),
 		'title' => 'Construction',
-		'pill' => 'EN 10208-2',
 		'image' => isg_asset_uri('img/img-test-1.jpg'),
 		'hint' => 'Piles, casing, and structural tubulars for bridges, high-rises, and civil-engineering shells.',
 		'description' => 'Structural solutions',
@@ -27,7 +25,6 @@ $default_items = array(
 	array(
 		'icon' => isg_asset_uri('img/icons/infrastructure.svg'),
 		'title' => 'Infrastructure',
-		'pill' => 'ISO 3183',
 		'image' => isg_asset_uri('img/img-test-2.jpg'),
 		'hint' => 'Water mains, storm drains, tunnels, and district networks that need long service life.',
 		'description' => 'Utility networks',
@@ -35,7 +32,6 @@ $default_items = array(
 	array(
 		'icon' => isg_asset_uri('img/icons/industry.svg'),
 		'title' => 'Industry',
-		'pill' => 'EN 10208-2',
 		'image' => isg_asset_uri('img/isg-quality-content-3.jpg'),
 		'hint' => 'Process lines, cooling circuits, and plant piping where wall thickness and weld quality matter.',
 		'description' => 'Process piping',
@@ -43,7 +39,6 @@ $default_items = array(
 	array(
 		'icon' => isg_asset_uri('img/icons/agriculture.svg'),
 		'title' => 'Agriculture',
-		'pill' => 'GOST 20295',
 		'image' => isg_asset_uri('img/about-us-intro.jpg'),
 		'hint' => 'Low-pressure conveyance for irrigation laterals, drainage, and on-farm water distribution.',
 		'description' => 'Irrigation systems',
@@ -130,7 +125,6 @@ if ($video_url === '') {
 												<?php
 												$icon_url = isg_image_url($item['icon'] ?? '', '');
 												$item_title = (string) ($item['title'] ?? '');
-												$item_pill = (string) ($item['pill'] ?? '');
 												$image_url = isg_image_url($item['image'] ?? '', isg_asset_uri('img/advantages_1.jpg'));
 												$image_alt = isg_image_alt($item['image'] ?? '', '');
 												$item_hint = (string) ($item['hint'] ?? '');
@@ -149,10 +143,6 @@ if ($video_url === '') {
 																<span
 																	class="isg-accordion__title"><?php echo esc_html($item_title); ?></span>
 															</span>
-															<?php if (!empty($item_pill)): ?>
-																<span
-																	class="isg-pill isg-pill--on-dark"><?php echo esc_html($item_pill); ?></span>
-															<?php endif; ?>
 														</span>
 													</button>
 													<div class="isg-accordion__body">
