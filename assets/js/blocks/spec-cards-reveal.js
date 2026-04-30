@@ -17,7 +17,7 @@ function getCardVars(index, total, mobile) {
 }
 
 export function initSpecCardsReveal(root = document) {
-  const wraps = Array.from(root.querySelectorAll(".isg-product-intro .isg-spec-cards"));
+  const wraps = Array.from(root.querySelectorAll(".isg-spec-cards"));
   if (!wraps.length) return () => {};
 
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -110,7 +110,24 @@ export function initSpecCardsReveal(root = document) {
       0.28,
     );
 
+    const syncInitialProgress = () => {
+      const st = tl.scrollTrigger;
+      if (!st) return;
+      st.refresh();
+      if (st.progress > 0 || wrap.getBoundingClientRect().top <= window.innerHeight * 0.88) {
+        tl.progress(Math.max(tl.progress(), st.progress || 0.001));
+      }
+    };
+
+    requestAnimationFrame(() => {
+      syncInitialProgress();
+      requestAnimationFrame(syncInitialProgress);
+    });
+
+    window.addEventListener("load", syncInitialProgress, { once: true });
+
     cleanups.push(() => {
+      window.removeEventListener("load", syncInitialProgress);
       tl.scrollTrigger?.kill();
       tl.kill();
       gsap.killTweensOf([wrap, ...cards, ...contentNodes]);

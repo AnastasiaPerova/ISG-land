@@ -209,7 +209,7 @@ function bootSpecCardsReveal(root = document) {
 function scheduleQualityCardsRevealBoot() {
   const run = () => {
     const root = isServerRenderedMode() ? document : document.getElementById("isg-main") || document;
-    if (root.querySelector?.(".isg-quality-wrapper .isg-quality-cards")) {
+    if (root.querySelector?.(".isg-quality-cards")) {
       bootQualityCardsReveal(root);
       return true;
     }
@@ -237,7 +237,7 @@ function scheduleQualityCardsRevealBoot() {
 function scheduleSpecCardsRevealBoot() {
   const run = () => {
     const root = isServerRenderedMode() ? document : document.getElementById("isg-main") || document;
-    if (root.querySelector?.(".isg-product-intro .isg-spec-cards")) {
+    if (root.querySelector?.(".isg-spec-cards")) {
       bootSpecCardsReveal(root);
       return true;
     }
