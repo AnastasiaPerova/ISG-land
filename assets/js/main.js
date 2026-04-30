@@ -268,6 +268,8 @@ function scheduleSpecCardsRevealBoot() {
 
 export async function initIsgPage(root = document.body) {
   disposeInternals();
+  bootSpecCardsReveal(root);
+  bootQualityCardsReveal(root);
   disposers.push(initLenisSmoothScroll());
   disposers.push(initAccordions(root));
   disposers.push(await initSliders(root));
@@ -290,8 +292,6 @@ export async function initIsgPage(root = document.body) {
   disposers.push(initProductContentLineDraw(root));
   disposers.push(initIsgButtonHover(root));
   disposers.push(initRfqCustomSelects(root));
-  bootSpecCardsReveal(root);
-  bootQualityCardsReveal(root);
   disposers.push(initMobileHorizontalDrag(root));
   disposers.push(initLightbox(root));
   disposers.push(initTitleAnim(root));
@@ -444,8 +444,14 @@ async function bootOnDomReady() {
     preloader.setStepProgress(PRELOADER_STEPS.finalize, 1);
   } catch (e) {
     console.error(e);
+    const root = serverRendered ? document : main;
+    bootSpecCardsReveal(root);
+    bootQualityCardsReveal(root);
   } finally {
     await hidePreloader(preloader);
+    const root = serverRendered ? document : main;
+    bootSpecCardsReveal(root);
+    bootQualityCardsReveal(root);
     await stabilizeScrollLayout(3);
   }
 }

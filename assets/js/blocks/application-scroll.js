@@ -269,9 +269,10 @@ export function initApplicationScroll(root = document) {
     const items = section.querySelectorAll(".isg-accordion__item");
     const acc = section.querySelector(".isg-accordion--app-scroll");
     const mobileBg = section.dataset.isgMobileBg || "";
-    const titleH2s = Array.from(scene.querySelectorAll(".isg-title-group h2.isg-display"));
 
     if (!video || !scene || !stageBody) return;
+
+    const titleH2s = Array.from(scene.querySelectorAll(".isg-title-group h2.isg-display"));
 
     // Нормализуем диапазоны появления/исчезновения заголовка под реальную длину видео.
     const resolveTitleTimeRanges = (duration) => {
