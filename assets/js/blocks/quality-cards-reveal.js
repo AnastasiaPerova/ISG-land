@@ -74,14 +74,16 @@ export function initQualityCardsReveal(root = document) {
       willChange: "opacity, transform, filter",
     });
 
+    let played = false;
+    let observer = null;
+
     const tl = gsap.timeline({
-      defaults: { ease: "none" },
-      scrollTrigger: {
-        trigger: wrap,
-        start: "top 112%",
-        end: "bottom 48%",
-        scrub: mobile ? 1.15 : 1.85,
-        invalidateOnRefresh: true,
+      paused: true,
+      defaults: { ease: "power3.out" },
+      onComplete: () => {
+        gsap.set([wrap, ...cards, ...images, ...contents], {
+          clearProps: "willChange,transformStyle,perspective",
+        });
       },
     });
 
@@ -134,12 +136,44 @@ export function initQualityCardsReveal(root = document) {
         0.42,
       );
 
+    const play = () => {
+      if (played) return;
+      played = true;
+      observer?.disconnect();
+      tl.play(0);
+    };
+
+    const isInRevealZone = () => {
+      const rect = wrap.getBoundingClientRect();
+      return rect.top <= (window.innerHeight || 1) * 0.92 && rect.bottom >= 0;
+    };
+
+    const st = ScrollTrigger.create({
+      trigger: wrap,
+      start: "top 92%",
+      once: true,
+      invalidateOnRefresh: true,
+      onEnter: play,
+    });
+
+    if ("IntersectionObserver" in window) {
+      observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting || isInRevealZone()) {
+              play();
+            }
+          });
+        },
+        { threshold: 0.06, rootMargin: "0px 0px 8% 0px" },
+      );
+      observer.observe(wrap);
+    }
+
     const syncInitialProgress = () => {
-      const st = tl.scrollTrigger;
-      if (!st) return;
-      st.refresh();
-      if (st.progress > 0 || wrap.getBoundingClientRect().top <= window.innerHeight * 0.98) {
-        tl.progress(Math.max(tl.progress(), st.progress || 0.001));
+      ScrollTrigger.refresh();
+      if (isInRevealZone()) {
+        play();
       }
     };
 
@@ -152,7 +186,8 @@ export function initQualityCardsReveal(root = document) {
 
     cleanups.push(() => {
       window.removeEventListener("load", syncInitialProgress);
-      tl.scrollTrigger?.kill();
+      observer?.disconnect();
+      st.kill();
       tl.kill();
       gsap.killTweensOf([wrap, ...cards, ...images, ...contents]);
       gsap.set([wrap, ...cards, ...images, ...contents], {

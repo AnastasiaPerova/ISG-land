@@ -65,14 +65,16 @@ export function initSpecCardsReveal(root = document) {
       willChange: "opacity, transform, filter",
     });
 
+    let played = false;
+    let observer = null;
+
     const tl = gsap.timeline({
-      defaults: { ease: "none" },
-      scrollTrigger: {
-        trigger: wrap,
-        start: "top 88%",
-        end: "bottom 42%",
-        scrub: mobile ? 1.15 : 1.6,
-        invalidateOnRefresh: true,
+      paused: true,
+      defaults: { ease: "power3.out" },
+      onComplete: () => {
+        gsap.set([wrap, ...cards, ...contentNodes], {
+          clearProps: "willChange,transformStyle,perspective,backfaceVisibility",
+        });
       },
     });
 
@@ -110,12 +112,44 @@ export function initSpecCardsReveal(root = document) {
       0.28,
     );
 
+    const play = () => {
+      if (played) return;
+      played = true;
+      observer?.disconnect();
+      tl.play(0);
+    };
+
+    const isInRevealZone = () => {
+      const rect = wrap.getBoundingClientRect();
+      return rect.top <= (window.innerHeight || 1) * 0.88 && rect.bottom >= 0;
+    };
+
+    const st = ScrollTrigger.create({
+      trigger: wrap,
+      start: "top 88%",
+      once: true,
+      invalidateOnRefresh: true,
+      onEnter: play,
+    });
+
+    if ("IntersectionObserver" in window) {
+      observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting || isInRevealZone()) {
+              play();
+            }
+          });
+        },
+        { threshold: 0.06, rootMargin: "0px 0px 8% 0px" },
+      );
+      observer.observe(wrap);
+    }
+
     const syncInitialProgress = () => {
-      const st = tl.scrollTrigger;
-      if (!st) return;
-      st.refresh();
-      if (st.progress > 0 || wrap.getBoundingClientRect().top <= window.innerHeight * 0.88) {
-        tl.progress(Math.max(tl.progress(), st.progress || 0.001));
+      ScrollTrigger.refresh();
+      if (isInRevealZone()) {
+        play();
       }
     };
 
@@ -128,7 +162,8 @@ export function initSpecCardsReveal(root = document) {
 
     cleanups.push(() => {
       window.removeEventListener("load", syncInitialProgress);
-      tl.scrollTrigger?.kill();
+      observer?.disconnect();
+      st.kill();
       tl.kill();
       gsap.killTweensOf([wrap, ...cards, ...contentNodes]);
       gsap.set([wrap, ...cards, ...contentNodes], {
