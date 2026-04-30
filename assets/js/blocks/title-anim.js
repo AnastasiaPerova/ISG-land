@@ -133,8 +133,8 @@ export function initTitleAnim(root = document) {
         opacity: 1,
         scale: 1,
         filter: "blur(0px)",
-        duration: 0.95,
-        stagger: 0.1,
+        duration: 0.78,
+        stagger: 0.075,
         ease: "power3.out",
       });
       tweens.push(tw);
@@ -150,7 +150,7 @@ export function initTitleAnim(root = document) {
           doubleRaf(play);
         });
       },
-      { root: null, rootMargin: "0px", threshold: 0 }
+      { root: null, rootMargin: "0px 0px 10% 0px", threshold: 0 }
     );
 
     observers.push(obs);

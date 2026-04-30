@@ -5,7 +5,7 @@ const ITEM_SELECTOR = ".isg-size-spec__item";
 
 function isInRevealZone(node) {
   const rect = node.getBoundingClientRect();
-  const triggerY = window.innerHeight * 0.82;
+  const triggerY = window.innerHeight * 0.9;
   return rect.top <= triggerY && rect.bottom >= 0;
 }
 
@@ -44,8 +44,8 @@ export function initProductSizeItemsReveal(root = document) {
         autoAlpha: 1,
         y: 0,
         filter: "blur(0px)",
-        duration: 0.72,
-        stagger: 0.09,
+        duration: 0.58,
+        stagger: 0.06,
         ease: "power2.out",
         overwrite: true,
         clearProps: "opacity,visibility,transform,y,filter,willChange",
@@ -61,8 +61,8 @@ export function initProductSizeItemsReveal(root = document) {
         });
       },
       {
-        threshold: 0.12,
-        rootMargin: "0px 0px -18% 0px",
+        threshold: 0.06,
+        rootMargin: "0px 0px 8% 0px",
       },
     );
 

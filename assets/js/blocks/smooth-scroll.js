@@ -24,7 +24,7 @@ export function initLenisSmoothScroll() {
   }
 
   const lenis = new Lenis({
-    duration: 1.12,
+    duration: 0.92,
     easing: (t) => 1 - (1 - t) ** 3,
     smoothWheel: true,
     smoothTouch: false,

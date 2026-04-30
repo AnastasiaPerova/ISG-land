@@ -8,12 +8,12 @@ const BODY_REVEAL_EXCLUDE_SELECTOR = ".isg-about-feature-card__text";
 
 function getRevealConfig(node) {
   return {
-    y: 36,
-    filter: "blur(6px)",
-    duration: 1.28,
+    y: 26,
+    filter: "blur(4px)",
+    duration: 0.86,
     ease: "power3.out",
-    delay: 0.08,
-    start: "top 94%",
+    delay: 0,
+    start: "top 90%",
   };
 }
 

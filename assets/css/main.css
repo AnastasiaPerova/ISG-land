@@ -4735,7 +4735,7 @@ body.isg-nav-drawer-open {
 
 .isg-quality-wrapper {
   position: relative;
-  background: #111;
+  background: #1d1d1d;
 }
 
 .isg-quality-wrapper .isg-quality-content {
@@ -4746,7 +4746,7 @@ body.isg-nav-drawer-open {
 }
 
 .isg-quality-cards-head {
-  margin-bottom: var(--isg-space-md);
+  margin-bottom: var(--isg-space-xl);
 }
 
 .isg-quality-cards-head .isg-subtitle__text {

@@ -348,12 +348,12 @@ function bindSliderReveal(slider, swiper, onReady = () => {}) {
   gsap.set(slider, { opacity: 0 });
   gsap.set(items, {
     opacity: 0,
-    y: 72,
-    rotateY: 18,
-    rotateZ: -1.4,
-    scale: 0.92,
+    y: 48,
+    rotateY: 10,
+    rotateZ: -0.8,
+    scale: 0.96,
     transformOrigin: "50% 100%",
-    filter: "blur(10px)",
+    filter: "blur(6px)",
   });
 
   const play = () => {
@@ -379,9 +379,9 @@ function bindSliderReveal(slider, swiper, onReady = () => {}) {
         rotateZ: 0,
         scale: 1,
         filter: "blur(0px)",
-        duration: 1.15,
+        duration: 0.84,
         stagger: {
-          each: 0.08,
+          each: 0.055,
           from: "start",
         },
         ease: "power4.out",
@@ -398,7 +398,7 @@ function bindSliderReveal(slider, swiper, onReady = () => {}) {
         rafId = requestAnimationFrame(play);
       });
     },
-    { threshold: 0.15 },
+    { threshold: 0.08, rootMargin: "0px 0px 12% 0px" },
   );
 
   observer.observe(slider);
@@ -432,22 +432,22 @@ function bindTeamReveal(slider, onReady = () => {}) {
   let rafId = 0;
   const sectionRoot = slider.closest("[data-isg-block]") || slider.closest("section") || slider.parentElement;
   const sectionHeading = sectionRoot?.querySelector(".isg-section-head__title.isg-h2");
-  const headingAnimDelay = sectionHeading?.classList.contains("isg-title-anim") ? 1.25 : 0.45;
+  const headingAnimDelay = sectionHeading?.classList.contains("isg-title-anim") ? 0.58 : 0.22;
 
   gsap.set(cards, {
     opacity: 0,
-    y: 88,
-    scale: 0.94,
-    rotateX: 8,
+    y: 56,
+    scale: 0.97,
+    rotateX: 5,
     transformOrigin: "50% 100%",
-    filter: "blur(8px)",
+    filter: "blur(6px)",
   });
   gsap.set(images, {
-    clipPath: "inset(18% 0% 82% 0% round var(--isg-ui-br))",
-    y: 34,
-    scale: 1.04,
+    clipPath: "inset(12% 0% 76% 0% round var(--isg-ui-br))",
+    y: 22,
+    scale: 1.025,
   });
-  gsap.set(captions, { opacity: 0, y: 22 });
+  gsap.set(captions, { opacity: 0, y: 16 });
 
   const play = () => {
     if (hasPlayed) return;
@@ -463,8 +463,8 @@ function bindTeamReveal(slider, onReady = () => {}) {
       scale: 1,
       rotateX: 0,
       filter: "blur(0px)",
-      duration: 1.35,
-      stagger: 0.17,
+      duration: 0.95,
+      stagger: 0.1,
       ease: "expo.out",
     })
       .to(
@@ -473,22 +473,22 @@ function bindTeamReveal(slider, onReady = () => {}) {
           clipPath: "inset(0% 0% 0% 0% round var(--isg-ui-br))",
           y: 0,
           scale: 1,
-          duration: 1.05,
-          stagger: 0.17,
+          duration: 0.82,
+          stagger: 0.1,
           ease: "expo.out",
         },
-        0.18,
+        0.1,
       )
       .to(
         captions,
         {
           opacity: 1,
           y: 0,
-          duration: 0.78,
-          stagger: 0.14,
+          duration: 0.55,
+          stagger: 0.075,
           ease: "power3.out",
         },
-        0.62,
+        0.38,
       );
   };
 
@@ -500,7 +500,7 @@ function bindTeamReveal(slider, onReady = () => {}) {
         rafId = requestAnimationFrame(play);
       });
     },
-    { threshold: 0.15 },
+    { threshold: 0.08, rootMargin: "0px 0px 12% 0px" },
   );
   observer.observe(slider);
 
