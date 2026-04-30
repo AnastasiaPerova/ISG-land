@@ -81,18 +81,14 @@ export function initQualityCardsReveal(root = document) {
       willChange: "opacity, transform, filter",
     });
 
-    let played = false;
-    let observer = null;
-    let fallbackRaf = 0;
-    const fallbackTimers = [];
-
     const tl = gsap.timeline({
-      paused: true,
-      defaults: { ease: "power3.out" },
-      onComplete: () => {
-        gsap.set([wrap, ...cards, ...images, ...contents], {
-          clearProps: "willChange,transformStyle,perspective",
-        });
+      defaults: { ease: "none" },
+      scrollTrigger: {
+        trigger: wrap,
+        start: "top 112%",
+        end: "bottom 48%",
+        scrub: mobile ? 1.15 : 1.85,
+        invalidateOnRefresh: true,
       },
     });
 
@@ -145,85 +141,13 @@ export function initQualityCardsReveal(root = document) {
         0.42,
       );
 
-    function play() {
-      if (played) return;
-      played = true;
-      observer?.disconnect();
-      if (fallbackRaf) cancelAnimationFrame(fallbackRaf);
-      fallbackTimers.forEach((id) => clearTimeout(id));
-      window.removeEventListener("scroll", queueFallbackCheck);
-      window.removeEventListener("resize", queueFallbackCheck);
-      window.removeEventListener("pageshow", syncInitialProgress);
-      tl.play(0);
-    }
-
-    function isInRevealZone() {
-      const rect = wrap.getBoundingClientRect();
-      return rect.top <= (window.innerHeight || 1) * 0.92 && rect.bottom >= 0;
-    }
-
-    function queueFallbackCheck() {
-      if (played || fallbackRaf) return;
-      fallbackRaf = requestAnimationFrame(() => {
-        fallbackRaf = 0;
-        if (isInRevealZone()) {
-          play();
-        }
-      });
-    }
-
-    const st = ScrollTrigger.create({
-      trigger: wrap,
-      start: "top 92%",
-      once: true,
-      invalidateOnRefresh: true,
-      onEnter: play,
-    });
-
-    if ("IntersectionObserver" in window) {
-      observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting || isInRevealZone()) {
-              play();
-            }
-          });
-        },
-        { threshold: 0.06, rootMargin: "0px 0px 8% 0px" },
-      );
-      observer.observe(wrap);
-    }
-
-    function syncInitialProgress() {
-      ScrollTrigger.refresh();
-      if (isInRevealZone()) {
-        play();
-      }
-    }
-
-    requestAnimationFrame(() => {
-      syncInitialProgress();
-      requestAnimationFrame(syncInitialProgress);
-    });
-
+    const syncInitialProgress = () => ScrollTrigger.refresh();
+    requestAnimationFrame(() => requestAnimationFrame(syncInitialProgress));
     window.addEventListener("load", syncInitialProgress, { once: true });
-    window.addEventListener("pageshow", syncInitialProgress);
-    window.addEventListener("scroll", queueFallbackCheck, { passive: true });
-    window.addEventListener("resize", queueFallbackCheck, { passive: true });
-
-    [120, 450, 900, 1600, 2600].forEach((delay) => {
-      fallbackTimers.push(setTimeout(syncInitialProgress, delay));
-    });
 
     cleanups.push(() => {
       window.removeEventListener("load", syncInitialProgress);
-      window.removeEventListener("pageshow", syncInitialProgress);
-      window.removeEventListener("scroll", queueFallbackCheck);
-      window.removeEventListener("resize", queueFallbackCheck);
-      if (fallbackRaf) cancelAnimationFrame(fallbackRaf);
-      fallbackTimers.forEach((id) => clearTimeout(id));
-      observer?.disconnect();
-      st.kill();
+      tl.scrollTrigger?.kill();
       tl.kill();
       gsap.killTweensOf([wrap, ...cards, ...images, ...contents]);
       gsap.set([wrap, ...cards, ...images, ...contents], {
