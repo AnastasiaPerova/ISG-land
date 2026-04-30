@@ -69,9 +69,9 @@ export function initSpecCardsReveal(root = document) {
       defaults: { ease: "none" },
       scrollTrigger: {
         trigger: wrap,
-        start: "top 92%",
-        end: "top 42%",
-        scrub: mobile ? 0.7 : 0.9,
+        start: "top 88%",
+        end: "bottom 42%",
+        scrub: mobile ? 1.15 : 1.6,
         invalidateOnRefresh: true,
       },
     });
@@ -89,10 +89,10 @@ export function initSpecCardsReveal(root = document) {
         yPercent: 0,
         scale: 1,
         stagger: {
-          each: mobile ? 0.06 : 0.05,
+          each: mobile ? 0.08 : 0.065,
           from: "start",
         },
-        duration: 0.86,
+        duration: 1.12,
       },
       0,
     ).to(
@@ -102,12 +102,12 @@ export function initSpecCardsReveal(root = document) {
         yPercent: 0,
         filter: "blur(0px)",
         stagger: {
-          each: mobile ? 0.035 : 0.028,
+          each: mobile ? 0.045 : 0.035,
           from: "start",
         },
-        duration: 0.58,
+        duration: 0.75,
       },
-      0.18,
+      0.28,
     );
 
     cleanups.push(() => {

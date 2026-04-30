@@ -78,9 +78,9 @@ export function initQualityCardsReveal(root = document) {
       defaults: { ease: "none" },
       scrollTrigger: {
         trigger: wrap,
-        start: "top 98%",
-        end: "top 44%",
-        scrub: mobile ? 0.72 : 0.95,
+        start: "top 112%",
+        end: "bottom 48%",
+        scrub: mobile ? 1.15 : 1.85,
         invalidateOnRefresh: true,
       },
     });
@@ -98,10 +98,10 @@ export function initQualityCardsReveal(root = document) {
         yPercent: 0,
         scale: 1,
         stagger: {
-          each: mobile ? 0.065 : 0.052,
+          each: mobile ? 0.09 : 0.075,
           from: "start",
         },
-        duration: 0.9,
+        duration: 1.22,
       },
       0,
     )
@@ -112,10 +112,10 @@ export function initQualityCardsReveal(root = document) {
           yPercent: 0,
           filter: "saturate(1) contrast(1) brightness(1)",
           stagger: {
-            each: mobile ? 0.065 : 0.052,
+            each: mobile ? 0.09 : 0.075,
             from: "start",
           },
-          duration: 0.9,
+          duration: 1.22,
         },
         0,
       )
@@ -126,12 +126,12 @@ export function initQualityCardsReveal(root = document) {
           yPercent: 0,
           filter: "blur(0px)",
           stagger: {
-            each: mobile ? 0.05 : 0.04,
+            each: mobile ? 0.07 : 0.055,
             from: "start",
           },
-          duration: 0.6,
+          duration: 0.78,
         },
-        0.26,
+        0.42,
       );
 
     cleanups.push(() => {

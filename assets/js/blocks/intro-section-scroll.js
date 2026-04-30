@@ -35,12 +35,12 @@ const FILL_PROGRESS_POWER = 1.08;
 const CHAR_FILL_WINDOW = 1.18;
 const CHAR_FILL_LEAD = 0.72;
 const CHAR_FILL_TAIL = 0.9;
-const TITLE_REVEAL_DELAY = 0.14;
-const TITLE_REVEAL_DURATION = 0.86;
-const TITLE_REVEAL_Y = 22;
-const BODY_REVEAL_DELAY = 0.24;
-const BODY_REVEAL_DURATION = 0.76;
-const BODY_REVEAL_Y = 16;
+const TITLE_REVEAL_DELAY = 0.28;
+const TITLE_REVEAL_DURATION = 1.1;
+const TITLE_REVEAL_Y = 28;
+const BODY_REVEAL_DELAY = 0.52;
+const BODY_REVEAL_DURATION = 1;
+const BODY_REVEAL_Y = 22;
 
 
 
@@ -243,8 +243,8 @@ export function initIntroSectionScroll(root = document) {
       });
     },
     {
-      threshold: 0.08,
-      rootMargin: "0px 0px 8% 0px",
+      threshold: 0.2,
+      rootMargin: "0px 0px -10% 0px",
     },
   );
 
@@ -257,7 +257,7 @@ export function initIntroSectionScroll(root = document) {
     });
 
     const rect = session.introRoot.getBoundingClientRect();
-    const inView = rect.bottom > 0 && rect.top < (window.innerHeight || 1) * 0.94;
+    const inView = rect.bottom > 0 && rect.top < (window.innerHeight || 1) * 0.9;
     if (inView) {
       session.titleGroup.dataset.isgTitleRevealDone = "1";
       gsap.to(session.titleGroup, {
@@ -311,8 +311,8 @@ export function initIntroSectionScroll(root = document) {
         });
       },
       {
-        threshold: 0.08,
-        rootMargin: "0px 0px 8% 0px",
+        threshold: 0.2,
+        rootMargin: "0px 0px -10% 0px",
       },
     );
 

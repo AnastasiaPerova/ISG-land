@@ -11,12 +11,12 @@ export function initScrollReveal(root = document) {
   const reveal = (el) => {
     const tw = gsap.from(el, {
       opacity: 0,
-      y: 36,
-      duration: 0.72,
+      y: 48,
+      duration: 0.85,
       ease: "power2.out",
       scrollTrigger: {
         trigger: el,
-        start: "top 90%",
+        start: "top 92%",
         toggleActions: "play none none none",
         invalidateOnRefresh: true,
       },

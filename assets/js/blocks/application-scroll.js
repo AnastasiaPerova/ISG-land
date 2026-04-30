@@ -27,36 +27,36 @@ function map01(value, start, end) {
 
 // Длина скролл-трека в высотах экрана (3.45 * 100vh).
 // Конфиг таймингов секции: видео (секунды), скролл-фазы [0..1], смещения (px).
-const APP_SCROLL_SCRUB_VH = 2.75;
+const APP_SCROLL_SCRUB_VH = 3.2;
 
 // Время видео (сек): когда слова заголовка начинают появляться.
-const TITLE_WORD_IN_START_SEC = 0.62;
+const TITLE_WORD_IN_START_SEC = 1.01;
 // Время видео (сек): длительность фазы появления слов заголовка.
-const TITLE_WORD_IN_DURATION_SEC = 2.45;
+const TITLE_WORD_IN_DURATION_SEC = 3.2;
 // Время видео (сек): разброс по времени между словами при появлении.
-const TITLE_WORD_IN_SPREAD_SEC = 0.95;
+const TITLE_WORD_IN_SPREAD_SEC = 1.45;
 
 // Время видео (сек): когда слова заголовка начинают исчезать.
-const TITLE_WORD_OUT_START_SEC = 3.05;
+const TITLE_WORD_OUT_START_SEC = 3.4;
 // Время видео (сек): длительность фазы исчезновения слов заголовка.
-const TITLE_WORD_OUT_DURATION_SEC = 0.9;
+const TITLE_WORD_OUT_DURATION_SEC = 1.2;
 // Время видео (сек): разброс по времени между словами при исчезновении.
-const TITLE_WORD_OUT_SPREAD_SEC = 0.5;
+const TITLE_WORD_OUT_SPREAD_SEC = 0.7;
 
 // Начальный сдвиг аккордеона по X для анимации выезда (px).
-const ACCORDION_IN_X_PX = 42;
+const ACCORDION_IN_X_PX = 56;
 // Время видео (сек): момент начала выезда блока аккордеона.
-const ACCORDION_IN_START_SEC = 4.35;
+const ACCORDION_IN_START_SEC = 5;
 // Время видео (сек): длительность выезда аккордеона.
-const ACCORDION_IN_DURATION_SEC = 0.72;
+const ACCORDION_IN_DURATION_SEC = 0.9;
 
 // Прогресс скролла [0..1]: конец опциональной preplay-фазы (0 = отключена).
 const MASTER_PREPLAY_END = 0;
 // Прогресс скролла [0..1]: до этой точки видео управляется скроллом.
-const C_VIDEO_SCROLL_END = 0.82;
+const C_VIDEO_SCROLL_END = 0.88;
 // Прогресс скролла [0..1]: с этой точки стартует автопереключение вкладок аккордеона.
-const C_BODY_IN_START = 0.58;
-const C_BODY_IN_END = 0.76;
+const C_BODY_IN_START = 0.74;
+const C_BODY_IN_END = 0.9;
 const C_ACCORDION_START = C_BODY_IN_END;
 // Прогресс скролла [0..1]: здесь автопереключение вкладок аккордеона заканчивается.
 const C_ACCORDION_END = 1;
@@ -636,7 +636,7 @@ export function initApplicationScroll(root = document) {
         trigger: scrollTriggerEl,
         start: scrollStart,
         end: () => "+=" + scrubEndPx(),
-        scrub: 0.42,
+        scrub: 0.68,
         invalidateOnRefresh: true,
         onLeaveBack: () => {
           applyInitialFrame();

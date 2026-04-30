@@ -9,16 +9,16 @@ const LINE_DRAW_SELECTOR = ".isg-product-content__line-draw";
 const SIZE_ROW_LINE_SELECTOR = ".isg-size-spec__row-line";
 
 const EASE_LINE = "power2.out";
-const DUR_H = 0.68;
-const DUR_SEG = 0.56;
-const STAGGER_SEG = 0.07;
-const TL_DELAY = 0.02;
+const DUR_H = 0.88;
+const DUR_SEG = 0.72;
+const STAGGER_SEG = 0.1;
+const TL_DELAY = 0.06;
 const CLIP_SUPPORTED = typeof CSS !== "undefined" && CSS.supports?.("clip-path", "inset(0 100% 0 0)");
 
 
-const ST_START = "top 88%";
+const ST_START = "top 78%";
 
-const VIEWPORT_START_RATIO = 0.88;
+const VIEWPORT_START_RATIO = 0.78;
 
 function doubleRaf(fn) {
   requestAnimationFrame(() => {

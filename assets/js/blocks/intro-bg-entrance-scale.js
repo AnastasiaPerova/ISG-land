@@ -3,9 +3,9 @@ import gsap from "gsap";
 const BG_MEDIA_CLASS = "isg-intro-media";
 const BG_MEDIA_INNER_CLASS = "isg-intro-media__inner";
 const BG_MEDIA_IMG_CLASS = "isg-intro-media__img";
-const REVEAL_DURATION = 2.4;
+const REVEAL_DURATION = 4.6;
 const REVEAL_EASE = "power4.out";
-const REVEAL_SCALE_FROM = 1.1;
+const REVEAL_SCALE_FROM = 1.16;
 
 function extractUrl(source) {
   const match = typeof source === "string" ? source.match(/url\((['"]?)(.*?)\1\)/i) : null;
@@ -93,8 +93,8 @@ export function initIntroBgEntranceScale(root = document) {
             });
           },
           {
-            threshold: 0.08,
-            rootMargin: "0px 0px 12% 0px",
+            threshold: 0.24,
+            rootMargin: "0px 0px -14% 0px",
           },
         );
 
@@ -113,7 +113,7 @@ export function initIntroBgEntranceScale(root = document) {
     });
 
     const rect = section.getBoundingClientRect();
-    const inView = rect.bottom > 0 && rect.top < (window.innerHeight || 1) * 0.9;
+    const inView = rect.bottom > 0 && rect.top < (window.innerHeight || 1) * 0.78;
     if (inView) {
       section.dataset.isgIntroMediaRevealed = "1";
       gsap.to(image, {
