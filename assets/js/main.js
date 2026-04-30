@@ -411,7 +411,7 @@ async function reinitIsgPage() {
   await stabilizeScrollLayout(2);
 }
 
-document.addEventListener("DOMContentLoaded", async () => {
+async function bootOnDomReady() {
   const main = document.getElementById("isg-main");
   const serverRendered = isServerRenderedMode();
   if (!main && !serverRendered) return;
@@ -448,7 +448,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     await hidePreloader(preloader);
     await stabilizeScrollLayout(3);
   }
-});
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", () => {
+    bootOnDomReady().catch((e) => console.error(e));
+  }, { once: true });
+} else {
+  bootOnDomReady().catch((e) => console.error(e));
+}
 
 window.addEventListener("isg:reinit", () => {
   reinitIsgPage().catch((e) => console.error(e));

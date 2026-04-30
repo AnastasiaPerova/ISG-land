@@ -17,7 +17,9 @@ function getCardVars(index, total, mobile) {
 }
 
 export function initSpecCardsReveal(root = document) {
-  const wraps = Array.from(root.querySelectorAll(".isg-spec-cards"));
+  const wraps = Array.from(root.querySelectorAll(".isg-spec-cards")).filter(
+    (wrap) => wrap instanceof HTMLElement && wrap.dataset.isgSpecCardsRevealInit !== "1",
+  );
   if (!wraps.length) return () => {};
 
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -27,8 +29,13 @@ export function initSpecCardsReveal(root = document) {
   const cleanups = [];
 
   wraps.forEach((wrap) => {
+    wrap.dataset.isgSpecCardsRevealInit = "1";
+
     const cards = Array.from(wrap.querySelectorAll(".isg-spec-card"));
-    if (!cards.length) return;
+    if (!cards.length) {
+      delete wrap.dataset.isgSpecCardsRevealInit;
+      return;
+    }
 
     const contentNodes = cards.flatMap((card) =>
       Array.from(card.querySelectorAll(".isg-spec-card__head, .isg-spec-card__value, .isg-spec-card__meta")),
@@ -67,6 +74,8 @@ export function initSpecCardsReveal(root = document) {
 
     let played = false;
     let observer = null;
+    let fallbackRaf = 0;
+    const fallbackTimers = [];
 
     const tl = gsap.timeline({
       paused: true,
@@ -112,17 +121,32 @@ export function initSpecCardsReveal(root = document) {
       0.28,
     );
 
-    const play = () => {
+    function play() {
       if (played) return;
       played = true;
       observer?.disconnect();
+      if (fallbackRaf) cancelAnimationFrame(fallbackRaf);
+      fallbackTimers.forEach((id) => clearTimeout(id));
+      window.removeEventListener("scroll", queueFallbackCheck);
+      window.removeEventListener("resize", queueFallbackCheck);
+      window.removeEventListener("pageshow", syncInitialProgress);
       tl.play(0);
-    };
+    }
 
-    const isInRevealZone = () => {
+    function isInRevealZone() {
       const rect = wrap.getBoundingClientRect();
       return rect.top <= (window.innerHeight || 1) * 0.88 && rect.bottom >= 0;
-    };
+    }
+
+    function queueFallbackCheck() {
+      if (played || fallbackRaf) return;
+      fallbackRaf = requestAnimationFrame(() => {
+        fallbackRaf = 0;
+        if (isInRevealZone()) {
+          play();
+        }
+      });
+    }
 
     const st = ScrollTrigger.create({
       trigger: wrap,
@@ -146,12 +170,12 @@ export function initSpecCardsReveal(root = document) {
       observer.observe(wrap);
     }
 
-    const syncInitialProgress = () => {
+    function syncInitialProgress() {
       ScrollTrigger.refresh();
       if (isInRevealZone()) {
         play();
       }
-    };
+    }
 
     requestAnimationFrame(() => {
       syncInitialProgress();
@@ -159,9 +183,21 @@ export function initSpecCardsReveal(root = document) {
     });
 
     window.addEventListener("load", syncInitialProgress, { once: true });
+    window.addEventListener("pageshow", syncInitialProgress);
+    window.addEventListener("scroll", queueFallbackCheck, { passive: true });
+    window.addEventListener("resize", queueFallbackCheck, { passive: true });
+
+    [120, 450, 900, 1600, 2600].forEach((delay) => {
+      fallbackTimers.push(setTimeout(syncInitialProgress, delay));
+    });
 
     cleanups.push(() => {
       window.removeEventListener("load", syncInitialProgress);
+      window.removeEventListener("pageshow", syncInitialProgress);
+      window.removeEventListener("scroll", queueFallbackCheck);
+      window.removeEventListener("resize", queueFallbackCheck);
+      if (fallbackRaf) cancelAnimationFrame(fallbackRaf);
+      fallbackTimers.forEach((id) => clearTimeout(id));
       observer?.disconnect();
       st.kill();
       tl.kill();
@@ -170,6 +206,7 @@ export function initSpecCardsReveal(root = document) {
         clearProps:
           "opacity,visibility,transform,clipPath,webkitClipPath,filter,backfaceVisibility,willChange,transformStyle,perspective",
       });
+      delete wrap.dataset.isgSpecCardsRevealInit;
     });
   });
 

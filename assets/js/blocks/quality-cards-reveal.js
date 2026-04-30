@@ -24,7 +24,9 @@ function getCardVars(index, total, mobile, compact) {
 }
 
 export function initQualityCardsReveal(root = document) {
-  const wraps = Array.from(root.querySelectorAll(".isg-quality-cards"));
+  const wraps = Array.from(root.querySelectorAll(".isg-quality-cards")).filter(
+    (wrap) => wrap instanceof HTMLElement && wrap.dataset.isgQualityCardsRevealInit !== "1",
+  );
   if (!wraps.length) return () => {};
 
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return () => {};
@@ -34,8 +36,13 @@ export function initQualityCardsReveal(root = document) {
   const cleanups = [];
 
   wraps.forEach((wrap) => {
+    wrap.dataset.isgQualityCardsRevealInit = "1";
+
     const { cards, images, contents } = getParts(wrap);
-    if (!cards.length) return;
+    if (!cards.length) {
+      delete wrap.dataset.isgQualityCardsRevealInit;
+      return;
+    }
 
     gsap.set(wrap, {
       perspective: mobile ? 900 : 1560,
@@ -76,6 +83,8 @@ export function initQualityCardsReveal(root = document) {
 
     let played = false;
     let observer = null;
+    let fallbackRaf = 0;
+    const fallbackTimers = [];
 
     const tl = gsap.timeline({
       paused: true,
@@ -136,17 +145,32 @@ export function initQualityCardsReveal(root = document) {
         0.42,
       );
 
-    const play = () => {
+    function play() {
       if (played) return;
       played = true;
       observer?.disconnect();
+      if (fallbackRaf) cancelAnimationFrame(fallbackRaf);
+      fallbackTimers.forEach((id) => clearTimeout(id));
+      window.removeEventListener("scroll", queueFallbackCheck);
+      window.removeEventListener("resize", queueFallbackCheck);
+      window.removeEventListener("pageshow", syncInitialProgress);
       tl.play(0);
-    };
+    }
 
-    const isInRevealZone = () => {
+    function isInRevealZone() {
       const rect = wrap.getBoundingClientRect();
       return rect.top <= (window.innerHeight || 1) * 0.92 && rect.bottom >= 0;
-    };
+    }
+
+    function queueFallbackCheck() {
+      if (played || fallbackRaf) return;
+      fallbackRaf = requestAnimationFrame(() => {
+        fallbackRaf = 0;
+        if (isInRevealZone()) {
+          play();
+        }
+      });
+    }
 
     const st = ScrollTrigger.create({
       trigger: wrap,
@@ -170,12 +194,12 @@ export function initQualityCardsReveal(root = document) {
       observer.observe(wrap);
     }
 
-    const syncInitialProgress = () => {
+    function syncInitialProgress() {
       ScrollTrigger.refresh();
       if (isInRevealZone()) {
         play();
       }
-    };
+    }
 
     requestAnimationFrame(() => {
       syncInitialProgress();
@@ -183,9 +207,21 @@ export function initQualityCardsReveal(root = document) {
     });
 
     window.addEventListener("load", syncInitialProgress, { once: true });
+    window.addEventListener("pageshow", syncInitialProgress);
+    window.addEventListener("scroll", queueFallbackCheck, { passive: true });
+    window.addEventListener("resize", queueFallbackCheck, { passive: true });
+
+    [120, 450, 900, 1600, 2600].forEach((delay) => {
+      fallbackTimers.push(setTimeout(syncInitialProgress, delay));
+    });
 
     cleanups.push(() => {
       window.removeEventListener("load", syncInitialProgress);
+      window.removeEventListener("pageshow", syncInitialProgress);
+      window.removeEventListener("scroll", queueFallbackCheck);
+      window.removeEventListener("resize", queueFallbackCheck);
+      if (fallbackRaf) cancelAnimationFrame(fallbackRaf);
+      fallbackTimers.forEach((id) => clearTimeout(id));
       observer?.disconnect();
       st.kill();
       tl.kill();
@@ -194,6 +230,7 @@ export function initQualityCardsReveal(root = document) {
         clearProps:
           "opacity,visibility,transform,clipPath,webkitClipPath,filter,willChange,transformStyle,perspective",
       });
+      delete wrap.dataset.isgQualityCardsRevealInit;
     });
   });
 
