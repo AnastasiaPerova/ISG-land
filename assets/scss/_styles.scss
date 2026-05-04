@@ -7149,6 +7149,39 @@ button.isg-slider-item__img,
   opacity: 0.8;
 }
 
+@media (max-width: 1099px) {
+  .isg-rfq-form .isg-field--float:focus-within .isg-field__label,
+  .isg-rfq-form .isg-field--float input.isg-field__control:not(:placeholder-shown) + .isg-field__label,
+  .isg-rfq-form .isg-field--float textarea.isg-field__control:not(:placeholder-shown) + .isg-field__label,
+  .isg-rfq-form .isg-field--float input.isg-field__control:-webkit-autofill + .isg-field__label,
+  .isg-rfq-form .isg-field--float textarea.isg-field__control:-webkit-autofill + .isg-field__label,
+  .isg-rfq-form .isg-field--float:has(input.isg-field__control:not(:placeholder-shown)) .isg-field__label,
+  .isg-rfq-form .isg-field--float:has(textarea.isg-field__control:not(:placeholder-shown)) .isg-field__label,
+  .isg-rfq-form .isg-field--float:has(input.isg-field__control:-webkit-autofill) .isg-field__label,
+  .isg-rfq-form .isg-field--float:has(textarea.isg-field__control:-webkit-autofill) .isg-field__label,
+  .isg-rfq-form .isg-field--float:has(.isg-custom-select:not(.isg-custom-select--placeholder)) .isg-field__label {
+    transform: translateY(0) scale(0.78);
+  }
+
+  .isg-rfq-form .isg-field--textarea.isg-field--float:focus-within .isg-field__label,
+  .isg-rfq-form
+    .isg-field--textarea.isg-field--float
+    textarea.isg-field__control:not(:placeholder-shown)
+    + .isg-field__label,
+  .isg-rfq-form
+    .isg-field--textarea.isg-field--float
+    textarea.isg-field__control:-webkit-autofill
+    + .isg-field__label,
+  .isg-rfq-form
+    .isg-field--textarea.isg-field--float:has(textarea.isg-field__control:not(:placeholder-shown))
+    .isg-field__label,
+  .isg-rfq-form
+    .isg-field--textarea.isg-field--float:has(textarea.isg-field__control:-webkit-autofill)
+    .isg-field__label {
+    transform: translateY(0) scale(0.78);
+  }
+}
+
 .isg-rfq-form .isg-field__label-text {
   display: inline;
 }
