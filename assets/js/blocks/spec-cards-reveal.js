@@ -77,7 +77,7 @@ export function initSpecCardsReveal(root = document) {
       scrollTrigger: {
         trigger: wrap,
         start: "top 88%",
-        end: "bottom 42%",
+        end: "top 35%",
         scrub: mobile ? 1.15 : 1.6,
         invalidateOnRefresh: true,
       },

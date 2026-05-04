@@ -2976,6 +2976,7 @@ body.isg-nav-drawer-open {
     min-height: auto;
     height: auto;
     max-height: none;
+    background: #1a1a1a;
   }
 
   .isg-app-scroll__head {
@@ -3012,6 +3013,15 @@ body.isg-nav-drawer-open {
     min-height: 0;
     height: auto;
   }
+  .isg-app-scroll__stage-body {
+    position: relative;
+    z-index: 1;
+    padding-top: var(--isg-space-md);
+    padding-bottom: var(--isg-space-6xl);
+    background: #1a1a1a;
+    box-shadow: 0 0 0 100vmax #1a1a1a;
+    clip-path: inset(0 -100vmax);
+  }
   .isg-app-row {
     display: flex;
     flex-direction: column;
@@ -3021,12 +3031,13 @@ body.isg-nav-drawer-open {
   }
   .isg-app-left {
     width: 86vw;
-    margin-top: var(--isg-space-xl);
+    margin-top: 0;
   }
 
   .isg-app-final-title {
     width: min(100%, 12em);
-    font-size: var(--isg-type-h3);
+    font-size: var(--isg-type-h4);
+    line-height: 1.1;
   }
 
   .isg-app-right {
@@ -3062,16 +3073,20 @@ body.isg-nav-drawer-open {
     display: none;
   }
   .isg-app-scroll__stage-intro {
-    display: flex;
+    position: relative;
+    z-index: 1;
+    display: flex !important;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: var(--isg-space-11xl);
-    padding-top: var(--isg-space-xl);
+    padding: var(--isg-space-xl) 0 var(--isg-space-6xl);
 
-    margin-bottom: var(--isg-space-ьв);
     text-align: center;
     box-sizing: border-box;
+    min-height: calc(100svh - var(--isg-sticky-header-offset, 0px));
+    min-height: calc(100dvh - var(--isg-sticky-header-offset, 0px));
+    margin-bottom: 0;
   }
   .isg-app-scroll__stage-intro .isg-title-group {
     width: 100%;
@@ -5208,15 +5223,24 @@ body.isg-nav-drawer-open {
 
 @media (max-width: 640px) {
   .isg-quality-wrapper .isg-quality-content {
-    --isg-quality-card-min-h: min(118vw, 430px);
+    --isg-quality-card-min-h: clamp(340px, 108vw, 430px);
+    width: min(100%, var(--container-width));
+    max-width: var(--container-width);
+    overflow: hidden;
   }
 
   .isg-quality-cards {
     grid-template-columns: 1fr;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
   }
 
   .isg-quality-card {
-    aspect-ratio: 0.9;
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: auto;
+    justify-self: stretch;
   }
 
   .isg-quality-card__title {
@@ -6464,7 +6488,7 @@ button.isg-slider-item__img,
 }
 
 .isg-rfq-aside .isg-section-head {
-  max-width: min(100%, 36rem);
+  max-width:min(100%,29ch);
   min-height: 0;
   display: flex;
   flex-direction: column;
@@ -6567,6 +6591,7 @@ button.isg-slider-item__img,
 }
 
 .isg-rfq-form {
+  --isg-rfq-autofill-bg: #1257a6;
   --isg-rfq-field-float-padding-top: 1.08em;
   --isg-rfq-field-float-padding-bottom: 0.2em;
   display: flex;
@@ -6784,6 +6809,21 @@ button.isg-slider-item__img,
 
 .isg-rfq-form .isg-field--float .isg-field__control::placeholder {
   color: rgba(255, 255, 255, 0.58);
+}
+
+.isg-rfq-form .isg-field--float input.isg-field__control:-webkit-autofill,
+.isg-rfq-form .isg-field--float input.isg-field__control:-webkit-autofill:hover,
+.isg-rfq-form .isg-field--float input.isg-field__control:-webkit-autofill:focus,
+.isg-rfq-form .isg-field--float input.isg-field__control:-webkit-autofill:active,
+.isg-rfq-form .isg-field--float textarea.isg-field__control:-webkit-autofill,
+.isg-rfq-form .isg-field--float textarea.isg-field__control:-webkit-autofill:hover,
+.isg-rfq-form .isg-field--float textarea.isg-field__control:-webkit-autofill:focus,
+.isg-rfq-form .isg-field--float textarea.isg-field__control:-webkit-autofill:active {
+  -webkit-text-fill-color: #ffffff;
+  caret-color: #ffffff;
+  -webkit-box-shadow: 0 0 0 1000px var(--isg-rfq-autofill-bg) inset;
+  box-shadow: 0 0 0 1000px var(--isg-rfq-autofill-bg) inset;
+  transition: background-color 9999s ease-out;
 }
 
 .isg-rfq-form .isg-field--float select.isg-field__control option {
@@ -7069,6 +7109,17 @@ button.isg-slider-item__img,
   opacity: 0.8;
 }
 
+.isg-rfq-form .isg-field--float input.isg-field__control:-webkit-autofill + .isg-field__label,
+.isg-rfq-form .isg-field--float textarea.isg-field__control:-webkit-autofill + .isg-field__label,
+.isg-rfq-form .isg-field--float:has(input.isg-field__control:-webkit-autofill) .isg-field__label,
+.isg-rfq-form .isg-field--float:has(textarea.isg-field__control:-webkit-autofill) .isg-field__label {
+  top: 0;
+  transform: translateY(0) scale(0.68);
+  transform-origin: left top;
+  color: rgba(255, 255, 255, 0.68);
+  opacity: 0.8;
+}
+
 .isg-rfq-form .isg-field--textarea.isg-field--float .isg-field__label {
   top: 0;
   transform: translateY(0) scale(1);
@@ -7085,7 +7136,14 @@ button.isg-slider-item__img,
   textarea.isg-field__control:not(:placeholder-shown)
   + .isg-field__label,
 .isg-rfq-form
+  .isg-field--textarea.isg-field--float
+  textarea.isg-field__control:-webkit-autofill
+  + .isg-field__label,
+.isg-rfq-form
   .isg-field--textarea.isg-field--float:has(textarea.isg-field__control:not(:placeholder-shown))
+  .isg-field__label,
+.isg-rfq-form
+  .isg-field--textarea.isg-field--float:has(textarea.isg-field__control:-webkit-autofill)
   .isg-field__label {
   transform: translateY(0) scale(0.68);
   opacity: 0.8;
