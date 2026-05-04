@@ -48,6 +48,7 @@ const PARTIALS = [
 let disposers = [];
 let qualityCardsRevealDisposer = null;
 let specCardsRevealDisposer = null;
+const MOBILE_GSAP_DISABLE_MQ = "(max-width: 1099px)";
 const PRELOADER_STEPS = {
   partials: { from: 0, to: 45, label: "Loading sections" },
   init: { from: 45, to: 70, label: "Initializing interface" },
@@ -186,11 +187,19 @@ function disposeInternals() {
   ScrollTrigger.getAll().forEach((t) => t.kill());
 }
 
+function shouldDisableMobileGsapAnimations() {
+  return window.matchMedia(MOBILE_GSAP_DISABLE_MQ).matches;
+}
+
 function bootQualityCardsReveal(root = document) {
   try {
     qualityCardsRevealDisposer?.();
   } catch (_) {
     
+  }
+  if (shouldDisableMobileGsapAnimations()) {
+    qualityCardsRevealDisposer = null;
+    return () => {};
   }
   qualityCardsRevealDisposer = initQualityCardsReveal(root);
   return qualityCardsRevealDisposer;
@@ -201,6 +210,10 @@ function bootSpecCardsReveal(root = document) {
     specCardsRevealDisposer?.();
   } catch (_) {
     
+  }
+  if (shouldDisableMobileGsapAnimations()) {
+    specCardsRevealDisposer = null;
+    return () => {};
   }
   specCardsRevealDisposer = initSpecCardsReveal(root);
   return specCardsRevealDisposer;
@@ -268,38 +281,43 @@ function scheduleSpecCardsRevealBoot() {
 
 export async function initIsgPage(root = document.body) {
   disposeInternals();
-  bootSpecCardsReveal(root);
-  bootQualityCardsReveal(root);
+  const disableMobileGsapAnimations = shouldDisableMobileGsapAnimations();
+  if (!disableMobileGsapAnimations) {
+    bootSpecCardsReveal(root);
+    bootQualityCardsReveal(root);
+  }
   disposers.push(initLenisSmoothScroll());
   disposers.push(initAccordions(root));
   disposers.push(await initSliders(root));
-  disposers.push(initScrollReveal(root));
   disposers.push(initToTop(root));
   disposers.push(initNavPillSliders(root));
   disposers.push(initHeaderDrawer(root));
   disposers.push(initHeaderContactStatus(root));
-  disposers.push(initHeaderScrollVisibility(root));
   disposers.push(initLangNav(root));
-  disposers.push(initDigitsFeatured(root));
   disposers.push(initApplicationScroll(root));
   disposers.push(initSectionAnchors(root));
-  disposers.push(initFooterReveal(root));
-  disposers.push(initQualityScroll(root, { getLenis }));
   disposers.push(initQualitySkip(root, { getLenis }));
-  disposers.push(initIntroSectionScroll(root));
-  disposers.push(initIntroBgEntranceScale(root));
-  disposers.push(initIntroExitBlur(root));
-  disposers.push(initProductContentLineDraw(root));
   disposers.push(initIsgButtonHover(root));
   disposers.push(initRfqCustomSelects(root));
   disposers.push(initMobileHorizontalDrag(root));
   disposers.push(initLightbox(root));
-  disposers.push(initTitleAnim(root));
-  disposers.push(initFilledItemsAnim(root));
   disposers.push(initSectionSurfaceOverlap(root));
-  disposers.push(initProductContentParallax(root));
-  disposers.push(initProductSizeItemsReveal(root));
-  disposers.push(initBodyCopyReveal(root));
+  if (!disableMobileGsapAnimations) {
+    disposers.push(initScrollReveal(root));
+    disposers.push(initHeaderScrollVisibility(root));
+    disposers.push(initDigitsFeatured(root));
+    disposers.push(initFooterReveal(root));
+    disposers.push(initQualityScroll(root, { getLenis }));
+    disposers.push(initIntroSectionScroll(root));
+    disposers.push(initIntroBgEntranceScale(root));
+    disposers.push(initIntroExitBlur(root));
+    disposers.push(initProductContentLineDraw(root));
+    disposers.push(initTitleAnim(root));
+    disposers.push(initFilledItemsAnim(root));
+    disposers.push(initProductContentParallax(root));
+    disposers.push(initProductSizeItemsReveal(root));
+    disposers.push(initBodyCopyReveal(root));
+  }
   await stabilizeScrollLayout(2);
 }
 
