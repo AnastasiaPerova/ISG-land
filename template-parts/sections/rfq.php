@@ -86,6 +86,7 @@ $intro_cta_lbl  = (string) ($section['intro_cta_label'] ?? 'Download catalogue')
 $intro_cta_url  = (string) ($section['intro_cta_url'] ?? '#');
 $aside_kicker   = (string) ($section['aside_kicker'] ?? 'RFQ');
 $aside_accent   = (string) ($section['aside_title_accent'] ?? '');
+$aside_text     = (string) ($section['aside_title_text'] ?? '');
 
 $aside_heading  = (string) ($section['aside_heading'] ?? ($section['form_heading'] ?? 'Request a quotation'));
 $form_labels    = is_array($section['form_labels'] ?? null) ? $section['form_labels'] : $default_labels;
@@ -137,15 +138,12 @@ $label = static function (array $labels, string $key, string $fallback = ''): st
 							<span class="isg-subtitle__swatch" aria-hidden="true"></span>
 						</div>
 
-						<p class="isg-rfq-aside__text">
-							<?php echo esc_html($aside_accent); ?>
-						</p>
 					</div>
 				</aside>
 
 				<div class="isg-rfq-copy">
-					<?php if ($aside_heading !== '') : ?>
-						<h3 class="isg-rfq-copy__heading"><?php echo esc_html($aside_heading); ?></h3>
+					<?php if ($aside_accent !== '' || $aside_text !== '') : ?>
+						<h3 class="isg-rfq-copy__heading"><?php echo esc_html(trim($aside_accent . ' ' . $aside_text)); ?></h3>
 					<?php endif; ?>
 
 			
