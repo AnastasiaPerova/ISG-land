@@ -142,8 +142,11 @@ $label = static function (array $labels, string $key, string $fallback = ''): st
 				</aside>
 
 				<div class="isg-rfq-copy">
-					<?php if ($aside_accent !== '' || $aside_text !== '') : ?>
-						<h3 class="isg-rfq-copy__heading"><?php echo esc_html(trim($aside_accent . ' ' . $aside_text)); ?></h3>
+					<?php if ($aside_accent !== '') : ?>
+						<h3 class="isg-rfq-copy__heading"><?php echo esc_html($aside_accent); ?></h3>
+					<?php endif; ?>
+					<?php if ($aside_text !== '') : ?>
+						<p class="isg-rfq-copy__lead"><?php echo esc_html($aside_text); ?></p>
 					<?php endif; ?>
 
 			
