@@ -24,6 +24,20 @@ function map01(value, start, end) {
   return clamp01((value - start) / (end - start));
 }
 
+function warmAccordionMedia(item, priority = "low") {
+  item?.querySelectorAll?.(".isg-accordion__img").forEach((img) => {
+    if (!(img instanceof HTMLImageElement)) return;
+    img.loading = "eager";
+    img.decoding = "async";
+    if ("fetchPriority" in img) {
+      img.fetchPriority = priority;
+    }
+    if (!img.complete && typeof img.decode === "function") {
+      img.decode().catch(() => {});
+    }
+  });
+}
+
 
 // Длина скролл-трека в высотах экрана (3.45 * 100vh).
 // Конфиг таймингов секции: видео (секунды), скролл-фазы [0..1], смещения (px).
@@ -272,6 +286,10 @@ export function initApplicationScroll(root = document) {
 
     if (!video || !scene || !stageBody) return;
 
+    items.forEach((item, index) => {
+      warmAccordionMedia(item, index === 0 ? "high" : "low");
+    });
+
     const titleH2s = Array.from(scene.querySelectorAll(".isg-title-group h2.isg-display"));
 
     // Нормализуем диапазоны появления/исчезновения заголовка под реальную длину видео.
@@ -382,6 +400,22 @@ export function initApplicationScroll(root = document) {
     let st = null;
     let currentMode = "";
     let glFx = null;
+    let titleSplit = false;
+
+    const ensureDesktopEffects = () => {
+      if (!glFx) {
+        glFx = createAppWebGLEffect(mediaEl, section);
+      }
+      if (!titleSplit) {
+        titleH2s.forEach((h2) => splitHeadingIntoChars(h2));
+        titleSplit = true;
+      }
+    };
+
+    const destroyDesktopEffects = () => {
+      glFx?.destroy();
+      glFx = null;
+    };
 
     // Реальный seek выполняем в rAF, чтобы снизить дерганье currentTime.
     const flushVideoSeek = () => {
@@ -488,6 +522,7 @@ export function initApplicationScroll(root = document) {
       if (!mqDesktop.matches) {
         const isOpen = item.classList.contains("isg-accordion__item--open");
         if (isOpen) return;
+        warmAccordionMedia(item, "high");
         items.forEach((entry) => {
           const open = entry === item;
           entry.classList.toggle("isg-accordion__item--open", open);
@@ -497,6 +532,7 @@ export function initApplicationScroll(root = document) {
       }
       const isOpen = item.classList.contains("isg-accordion__item--open");
       if (isOpen) return;
+      warmAccordionMedia(item, "high");
       accordionManual = false;
       manualAccordionIdx = -1;
       setAccordionIndex(idx);
@@ -534,10 +570,6 @@ export function initApplicationScroll(root = document) {
       disposers.push(() => clearMobileStaticMedia());
       return;
     }
-
-    glFx = createAppWebGLEffect(mediaEl, section);
-
-    titleH2s.forEach((h2) => splitHeadingIntoChars(h2));
 
     video.pause();
     video.muted = true;
@@ -599,6 +631,7 @@ export function initApplicationScroll(root = document) {
       manualAccordionIdx = -1;
       accordionAutoStartP = null;
       pendingVideoTime = null;
+      destroyDesktopEffects();
       applyMobileStaticMedia();
       try {
         video.pause();
@@ -626,6 +659,7 @@ export function initApplicationScroll(root = document) {
 
     // Основная desktop-сцена со ScrollTrigger и scrub-синхронизацией.
     const buildDesktopScene = () => {
+      ensureDesktopEffects();
       stageIntro?.style.removeProperty("display");
       applyTrackHeights();
       applyInitialFrame();
@@ -706,8 +740,8 @@ export function initApplicationScroll(root = document) {
       if (nextMode === currentMode && (nextMode !== "desktop" || st)) {
         if (nextMode === "desktop") {
           applyTrackHeights();
+          ScrollTrigger.refresh();
         }
-        ScrollTrigger.refresh();
         return;
       }
 
@@ -723,7 +757,11 @@ export function initApplicationScroll(root = document) {
 
     rebuild();
 
+    let lastLayoutWidth = window.innerWidth;
     const onResize = () => {
+      const width = window.innerWidth;
+      if (!mqDesktop.matches && width === lastLayoutWidth) return;
+      lastLayoutWidth = width;
       rebuild();
     };
     window.addEventListener("resize", onResize);
@@ -733,7 +771,9 @@ export function initApplicationScroll(root = document) {
     };
     mqDesktop.addEventListener("change", onDesktopChange);
 
-    requestAnimationFrame(() => ScrollTrigger.refresh());
+    if (mqDesktop.matches) {
+      requestAnimationFrame(() => ScrollTrigger.refresh());
+    }
 
     // Полный cleanup: listeners, стили, raf, WebGL, ScrollTrigger.
     disposers.push(() => {
@@ -754,8 +794,7 @@ export function initApplicationScroll(root = document) {
       gsap.set(stageBody, { clearProps: "opacity,visibility,transform,pointerEvents" });
       if (appLeft) gsap.set(appLeft, { clearProps: "opacity,transform" });
       if (appRight) gsap.set(appRight, { clearProps: "opacity,transform" });
-      glFx?.destroy();
-      glFx = null;
+      destroyDesktopEffects();
       st?.kill();
       st = null;
     });

@@ -224,9 +224,14 @@ function initOneQualityScrollTrack(track, options = {}) {
       track.querySelectorAll(".isg-about-feature-card__content-stack--mobile"),
     );
 
-    if (!aboutTrack || !contentStackSlides.length || mq.matches) {
+    if (!aboutTrack || mq.matches) {
       existingMobileStacks.forEach((el) => el.remove());
       mobileContentStacks = [];
+      return;
+    }
+
+    if (!contentStackSlides.length) {
+      mobileContentStacks = existingMobileStacks;
       return;
     }
 

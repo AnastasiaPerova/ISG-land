@@ -183,6 +183,10 @@ $text_lead    = $normalize_wrap_text($text_lead);
 							</div>
 							<div class="isg-about-feature-card">
 								<div class="isg-quality-visual">
+									<div class="isg-subtitle isg-quality-visual__mobile-subtitle">
+										<p class="isg-subtitle__text"><?php echo esc_html($values_kicker); ?></p>
+										<span class="isg-subtitle__swatch" aria-hidden="true"></span>
+									</div>
 									<div class="isg-quality-visual__slides" data-isg-quality-mobile-slider>
 										<?php foreach ($values_items as $i => $item) : ?>
 											<?php
@@ -194,6 +198,20 @@ $text_lead    = $normalize_wrap_text($text_lead);
 												<img class="isg-quality-visual__slide-img" src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($image_alt); ?>" loading="lazy" decoding="async" />
 												<div class="isg-quality-visual__caption">
 													<h3 class="isg-quality-visual__caption-title"><?php echo esc_html($title); ?></h3>
+												</div>
+												<div class="isg-about-feature-card__content-stack isg-about-feature-card__content-stack--mobile">
+													<?php
+													$icon = isg_image_url($item['icon'] ?? '', '');
+													$body = (string) ($item['body'] ?? '');
+													?>
+													<div class="isg-about-feature-card__content-slide isg-about-feature-card__content-slide--active">
+														<?php if ($icon !== '') : ?>
+															<span class="isg-about-feature-card__icon" aria-hidden="true">
+																<img src="<?php echo esc_url($icon); ?>" width="40" height="40" alt="" loading="lazy" decoding="async" />
+															</span>
+														<?php endif; ?>
+														<p class="isg-body isg-about-feature-card__text"><?php echo esc_html($body); ?></p>
+													</div>
 												</div>
 											</div>
 										<?php endforeach; ?>

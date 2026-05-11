@@ -1,6 +1,19 @@
 import gsap from "gsap";
 import Swiper from "swiper";
-import { Autoplay, FreeMode, Navigation } from "swiper/modules";
+import { Navigation } from "swiper/modules";
+
+const COMPACT_SLIDER_QUERY = "(max-width: 1099px)";
+
+function isCompactSliderViewport() {
+  return window.matchMedia(COMPACT_SLIDER_QUERY).matches;
+}
+
+function shouldUseStaticSliderReveal() {
+  return (
+    isCompactSliderViewport() ||
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
+}
 
 function setupSliderDragCursor() {
   const finePointer = matchMedia("(hover: hover) and (pointer: fine)");
@@ -271,14 +284,21 @@ function syncNavThumb(thumb, state) {
 }
 
 function teamOptions(gapPx, prev, next) {
+  const compact = isCompactSliderViewport();
   return {
     modules: [Navigation],
-    speed: 400,
+    speed: compact ? 300 : 400,
     loop: false,
     rewind: true,
     grabCursor: true,
+    passiveListeners: true,
+    touchStartPreventDefault: false,
+    threshold: compact ? 8 : 4,
+    resistanceRatio: compact ? 0.42 : 0.85,
     watchOverflow: true,
-    slidesPerView: 1.1,
+    slidesPerView: compact ? 1.1 : 1.1,
+    slidesPerGroup: 1,
+    longSwipesRatio: compact ? 0.18 : 0.5,
     spaceBetween: gapPx,
     navigation:
       prev && next
@@ -287,36 +307,51 @@ function teamOptions(gapPx, prev, next) {
             nextEl: next,
           }
         : undefined,
-    breakpoints: {
-      560: { slidesPerView: 2.2, spaceBetween: gapPx },
-      1100: { slidesPerView: 3, spaceBetween: gapPx },
-    },
+    breakpoints: compact
+      ? {}
+      : {
+          560: { slidesPerView: 2.2, spaceBetween: gapPx },
+          1100: { slidesPerView: 3, spaceBetween: gapPx },
+        },
   };
 }
 
 function galleryOptions(gapPx, prev, next) {
+  const compact = isCompactSliderViewport();
   return {
-    modules: [Navigation, FreeMode],
-    speed: 520,
-    loop: true,
-    rewind: false,
+    modules: [Navigation],
+    speed: compact ? 300 : 420,
+    loop: false,
+    rewind: true,
     grabCursor: true,
     allowTouchMove: true,
+    passiveListeners: true,
+    touchStartPreventDefault: false,
+    threshold: compact ? 6 : 4,
+    resistanceRatio: compact ? 0.35 : 0.45,
     watchOverflow: true,
-    freeMode: {
-      enabled: true,
-      momentum: false,
-      minimumVelocity: 0.02,
-      sticky: false,
-    },
+    freeMode: false,
     centeredSlides: false,
+    slidesPerGroup: 1,
+    slidesPerGroupSkip: 0,
+    followFinger: true,
+    shortSwipes: true,
+    longSwipes: true,
+    longSwipesRatio: compact ? 0.18 : 0.22,
+    longSwipesMs: 220,
+    touchRatio: compact ? 1.12 : 1,
+    touchAngle: 36,
+    nested: true,
+    preventClicks: true,
+    preventClicksPropagation: true,
+    slideToClickedSlide: false,
     slidesPerView: 1.18,
     
     
     focusableElements: "input, select, option, textarea, label",
     spaceBetween: gapPx,
-    slidesOffsetBefore: 16,
-    slidesOffsetAfter: 20,
+    slidesOffsetBefore: 0,
+    slidesOffsetAfter: 0,
     navigation:
       prev && next
         ? {
@@ -325,10 +360,10 @@ function galleryOptions(gapPx, prev, next) {
           }
         : undefined,
     breakpoints: {
-      480: { slidesPerView: 1.35, slidesOffsetBefore: 24, slidesOffsetAfter: 36, spaceBetween: gapPx },
-      768: { slidesPerView: 1.5, slidesOffsetBefore: 16, slidesOffsetAfter: 64, spaceBetween: gapPx },
-      1100: { slidesPerView: 2.14, slidesOffsetBefore: 16, slidesOffsetAfter: 96, spaceBetween: gapPx },
-      1440: { slidesPerView: 2.18, slidesOffsetBefore: 30, slidesOffsetAfter: 120, spaceBetween: gapPx },
+      480: { slidesPerView: 1.28, slidesOffsetBefore: 0, slidesOffsetAfter: 0, spaceBetween: gapPx },
+      768: { slidesPerView: 1.5, slidesOffsetBefore: 0, slidesOffsetAfter: 0, spaceBetween: gapPx },
+      1100: { slidesPerView: 2.12, slidesOffsetBefore: 0, slidesOffsetAfter: 0, spaceBetween: gapPx },
+      1440: { slidesPerView: 2.18, slidesOffsetBefore: 0, slidesOffsetAfter: 0, spaceBetween: gapPx },
     },
   };
 }
@@ -337,6 +372,12 @@ function bindSliderReveal(slider, swiper, onReady = () => {}) {
   const items = Array.from(slider.querySelectorAll(".isg-slider__item.swiper-slide")).filter(
     (el) => !el.classList.contains("swiper-slide-duplicate"),
   );
+  if (shouldUseStaticSliderReveal()) {
+    gsap.set(slider, { clearProps: "opacity" });
+    gsap.set(items, { clearProps: "opacity,transform,filter,transformOrigin" });
+    onReady();
+    return () => {};
+  }
   if (!items.length) {
     onReady();
     return () => {};
@@ -416,6 +457,11 @@ function bindSliderReveal(slider, swiper, onReady = () => {}) {
 
 function bindTeamReveal(slider, onReady = () => {}) {
   const cards = Array.from(slider.querySelectorAll(".isg-slider__item.swiper-slide"));
+  if (shouldUseStaticSliderReveal()) {
+    gsap.set(cards, { clearProps: "opacity,transform,filter,transformOrigin" });
+    onReady();
+    return () => {};
+  }
   if (!cards.length) {
     onReady();
     return () => {};
@@ -524,6 +570,7 @@ export async function initSliders(root = document) {
   const disposers = [];
   const gapPx = getCssVarPx("--isg-card-gap", 16);
   const dragCursorApi = setupSliderDragCursor();
+  const compactUi = window.matchMedia(COMPACT_SLIDER_QUERY);
 
   root.querySelectorAll(".isg-slider").forEach((slider) => {
     const track = slider.querySelector(".isg-slider__track");
@@ -558,6 +605,16 @@ export async function initSliders(root = document) {
 
     const syncBar = () => {
       const state = getSliderUiState(swiper);
+      if (compactUi.matches) {
+        if (bar) {
+          bar.remove();
+          bar = null;
+          barPrev = null;
+          barNext = null;
+        }
+        syncNavThumb(thumb, state);
+        return;
+      }
       const hasNav = state.total > 3;
 
       if (!hasNav) {

@@ -150,7 +150,8 @@ if ($video_url === '') {
 															<div class="isg-accordion__media">
 																<img class="isg-accordion__img"
 																	src="<?php echo esc_url($image_url); ?>"
-																	alt="<?php echo esc_attr($image_alt); ?>" loading="lazy"
+																	alt="<?php echo esc_attr($image_alt); ?>" width="640"
+																	height="320" loading="eager"
 																	decoding="async" />
 																<?php if (!empty($item_hint)): ?>
 																	<p

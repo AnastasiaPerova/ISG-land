@@ -20,6 +20,14 @@ function initRail(rail, itemSelector) {
   rail.dataset.isgMobileDragInit = "1";
   rail.classList.add("isg-mobile-draggable-rail");
 
+  if (window.matchMedia("(pointer: coarse)").matches) {
+    return () => {
+      unwrapTrack(rail);
+      rail.classList.remove("isg-mobile-draggable-rail", "isg-mobile-draggable--dragging");
+      delete rail.dataset.isgMobileDragInit;
+    };
+  }
+
   let pointerId = null;
   let startX = 0;
   let startY = 0;
@@ -246,6 +254,7 @@ export function initMobileHorizontalDrag(root = document) {
   const mq = window.matchMedia(MOBILE_QUERY);
   
   let disposers = [];
+  let lastLayoutWidth = window.innerWidth;
 
   const destroyRails = () => {
     while (disposers.length) {
@@ -278,16 +287,24 @@ export function initMobileHorizontalDrag(root = document) {
   };
 
   const onChange = () => {
+    lastLayoutWidth = window.innerWidth;
+    buildRails();
+  };
+
+  const onResize = () => {
+    const width = window.innerWidth;
+    if (width === lastLayoutWidth) return;
+    lastLayoutWidth = width;
     buildRails();
   };
 
   buildRails();
   mq.addEventListener("change", onChange);
-  window.addEventListener("resize", onChange);
+  window.addEventListener("resize", onResize);
 
   return () => {
     mq.removeEventListener("change", onChange);
-    window.removeEventListener("resize", onChange);
+    window.removeEventListener("resize", onResize);
     destroyRails();
   };
 }

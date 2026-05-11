@@ -296,6 +296,7 @@ export async function initIsgPage(root = document.body) {
   disposers.push(initLangNav(root));
   disposers.push(initApplicationScroll(root));
   disposers.push(initSectionAnchors(root));
+  disposers.push(initQualityScroll(root, { getLenis }));
   disposers.push(initQualitySkip(root, { getLenis }));
   disposers.push(initIsgButtonHover(root));
   disposers.push(initRfqCustomSelects(root));
@@ -307,7 +308,6 @@ export async function initIsgPage(root = document.body) {
     disposers.push(initHeaderScrollVisibility(root));
     disposers.push(initDigitsFeatured(root));
     disposers.push(initFooterReveal(root));
-    disposers.push(initQualityScroll(root, { getLenis }));
     disposers.push(initIntroSectionScroll(root));
     disposers.push(initIntroBgEntranceScale(root));
     disposers.push(initIntroExitBlur(root));

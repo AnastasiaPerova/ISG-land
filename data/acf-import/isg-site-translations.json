@@ -1,0 +1,1362 @@
+{
+  "generated_at": "2026-04-10T16:12:39.252814+00:00",
+  "source_xlsx": "c:\\Users\\sinda\\Downloads\\ISG_text_web_en_pl_de.xlsx",
+  "default_language": "en",
+  "front_page": {
+    "use_current_front_page_as_default": true,
+    "translations": {
+      "en": {
+        "post": {
+          "title": "Industrial Steel Group",
+          "slug": "home",
+          "status": "publish"
+        },
+        "acf": {
+          "hero_title": "Industrial Steel Group",
+          "hero_subtitle": "Large-Diameter Spiral-Welded Pipes\nfor Infrastructure and Industrial Projects",
+          "application_section": {
+            "intro_kicker": "Application Areas",
+            "intro_title": "Spiral-welded pipes are used in various industries, such as:",
+            "items": [
+              {
+                "title": "Oil, gas and industrial pipeline systems",
+                "description": "Oil, gas and industrial pipeline systems",
+                "hint": "Spiral-welded steel pipes for the transportation of oil, gas and other industrial media, as well as for selected process and utility systems in industrial facilities."
+              },
+              {
+                "title": "Water and utility infrastructure",
+                "description": "Water and utility infrastructure",
+                "hint": "Pipe solutions for water supply, drainage, sewerage, heating and other municipal or utility infrastructure systems."
+              },
+              {
+                "title": "Civil engineering and construction",
+                "description": "Civil engineering and construction",
+                "hint": "Steel pipes for civil engineering, structural and infrastructure projects where durability, dimensional reliability and project-based supply are required."
+              },
+              {
+                "title": "Hydraulic and coastal protection",
+                "description": "Hydraulic and coastal protection",
+                "hint": "Applications for shoreline reinforcement, slope stabilization, erosion control and other hydraulic or geotechnical works."
+              },
+              {
+                "title": "Agricultural water systems",
+                "description": "Agricultural water systems",
+                "hint": "Pipe solutions for irrigation networks and agricultural water supply infrastructure."
+              }
+            ]
+          },
+          "digits_section": {
+            "title": "advantages"
+          },
+          "product_section": {
+            "intro_kicker": "PRODUCT RANGE",
+            "intro_title": "We manufacture spiral-welded steel pipes in a wide dimensional range to meet the requirements of infrastructure and industrial applications",
+            "spec_cards": [
+              {
+                "label": "Outer Diameter",
+                "value": "406,4 mm – 2235 mm",
+                "meta": ""
+              },
+              {
+                "label": "Wall Thickness",
+                "value": "starts from 6,3mm up to 25 mm",
+                "meta": ""
+              },
+              {
+                "label": "Pipe Length",
+                "value": "6 m – 32 m",
+                "meta": ""
+              },
+              {
+                "label": "Steel Strength Grade",
+                "value": "up to X70 (485 MPa)",
+                "meta": ""
+              }
+            ],
+            "content_kicker": "MAIN STEEL GRADES",
+            "content_heading": "We use the highest-quality steel from the best European manufacturers to ensure the uncompromising quality of our products.",
+            "grades_intro": "Typical steel grades include:",
+            "structural_label": "Structural",
+            "structural_items": [
+              {
+                "text": "S235JRH"
+              },
+              {
+                "text": "S275J0H"
+              },
+              {
+                "text": "S275J2H"
+              },
+              {
+                "text": "S355J0H"
+              },
+              {
+                "text": "S355J2H"
+              },
+              {
+                "text": "S355K2+N"
+              },
+              {
+                "text": "S420ML"
+              },
+              {
+                "text": "S460NH"
+              }
+            ],
+            "pressure_label": "Pressure",
+            "pressure_items": [
+              {
+                "text": "P195TR1"
+              },
+              {
+                "text": "P195TR2"
+              },
+              {
+                "text": "P235TR1"
+              },
+              {
+                "text": "P235TR2"
+              },
+              {
+                "text": "P265TR1"
+              },
+              {
+                "text": "P265TR2"
+              },
+              {
+                "text": "P235GH"
+              },
+              {
+                "text": "P265GH"
+              },
+              {
+                "text": "P275NL1"
+              },
+              {
+                "text": "P275NL2"
+              },
+              {
+                "text": "P355N"
+              },
+              {
+                "text": "P355NL1"
+              },
+              {
+                "text": "P355NL2"
+              }
+            ],
+            "pipeline_label": "Pipeline",
+            "pipeline_items": [
+              {
+                "text": "L245M"
+              },
+              {
+                "text": "L290M (X42M)"
+              },
+              {
+                "text": "L320M(X46M)"
+              },
+              {
+                "text": "L360M(X52M)"
+              },
+              {
+                "text": "L415(X60)"
+              },
+              {
+                "text": "L450(X65)"
+              },
+              {
+                "text": "L485 (X70)"
+              }
+            ],
+            "sizes_lead": "We produce spiral-welded steel pipes in the following size range:",
+            "sizes_head_left": "Outside diameter (mm)",
+            "sizes_head_right": "Wall thickness (mm)",
+            "size_rows": [
+              {
+                "left": "406,4",
+                "right": "6,3-12,5"
+              },
+              {
+                "left": "457",
+                "right": "6,3-12,5"
+              },
+              {
+                "left": "508",
+                "right": "6,3-16"
+              },
+              {
+                "left": "610",
+                "right": "6,3-18"
+              },
+              {
+                "left": "711",
+                "right": "6,3-18"
+              },
+              {
+                "left": "813",
+                "right": "8-19"
+              },
+              {
+                "left": "914",
+                "right": "8-20"
+              },
+              {
+                "left": "1016",
+                "right": "8-20"
+              },
+              {
+                "left": "1067",
+                "right": "8-20"
+              },
+              {
+                "left": "1118",
+                "right": "8-22"
+              },
+              {
+                "left": "1219",
+                "right": "8-25"
+              },
+              {
+                "left": "1422",
+                "right": "8-25"
+              },
+              {
+                "left": "1626",
+                "right": "8-25"
+              },
+              {
+                "left": "1829",
+                "right": "8-25"
+              },
+              {
+                "left": "2032",
+                "right": "8-25"
+              },
+              {
+                "left": "2235",
+                "right": "8,8-25"
+              }
+            ]
+          },
+          "quality_section": {
+            "intro_kicker": "QUALITY CONTROL",
+            "intro_title": "Quality control is an essential part of the production process. All pipes undergo inspection and testing procedures to ensure compliance with international standards and project requirements",
+            "focus_kicker": "Quality assurance includes:",
+            "skip_label": "Skip",
+            "items": [
+              {
+                "title": "dimensional inspection",
+                "body": "dimensional inspection"
+              },
+              {
+                "title": "welding quality control",
+                "body": "welding quality control"
+              },
+              {
+                "title": "destructive testing",
+                "body": "destructive testing"
+              },
+              {
+                "title": "non‑destructive testing (NDT)",
+                "body": "non‑destructive testing (NDT)"
+              },
+              {
+                "title": "material certification, documentation and traceability",
+                "body": "material certification, documentation and traceability"
+              }
+            ]
+          },
+          "about_section": {
+            "intro_kicker": "ABOUT US",
+            "intro_title": "Industrial Steel Group manufactures large-diameter spiral-welded steel pipes for technical and infrastructure applications.",
+            "textgrid_kicker": "OUR POSITION",
+            "textgrid_left": "We believe that sustainable growth is based on fair competition, technical reliability, and trusted partnerships. ISG is focused on becoming one of Europe’s leading suppliers of large-diameter electric-welded pipes. Our strategy includes the expansion of production capacity, continuous quality improvement, and a stronger presence across European markets.",
+            "textgrid_heading": "Industrial Steel Group manufactures large-diameter spiral-welded steel pipes for technical and infrastructure applications.",
+            "textgrid_lead": "Production is located in Poland and is focused on the European market, where consistent quality, compliance with regulatory requirements, production transparency, and reliability of supply are critically important. For 2 years, the company has been operating in the European market, developing its production processes and strengthening its position as a reliable supplier. Industrial Steel Group’s approach is based on a combination of technological discipline and production capacity.",
+            "values_kicker": "WHY WE",
+            "values_skip_label": "Skip",
+            "values_items": [
+              {
+                "title": "Modern manufacturing",
+                "body": "We use advanced production technologies and proven manufacturing processes to ensure reliable quality and compliance with technical requirements."
+              },
+              {
+                "title": "Practical efficiency",
+                "body": "Our solutions help customers reduce unnecessary costs, improve project planning and increase operational efficiency."
+              },
+              {
+                "title": "Digital coordination",
+                "body": "We apply digital tools to simplify ordering, communication and logistics, making cooperation faster and more efficient."
+              }
+            ],
+            "team_kicker": "Our team",
+            "team_heading": "Our team comprises seasoned professionals with extensive experience in steel pipe manufacturing and distribution.",
+            "team_lead": "With a deep understanding of industry intricacies and cutting-edge technologies, our experts deliver uncompromising quality and reliability for your projects.",
+            "team_slides": [
+              {
+                "name": "Oleksandr Bryk",
+                "role": "CEO"
+              },
+              {
+                "name": "Yurii Melnyk",
+                "role": "Production Director"
+              },
+              {
+                "name": "Dmytro Melnyk",
+                "role": "Sales Director"
+              },
+              {
+                "name": "Danylo Uhnich",
+                "role": "Chief Technologist"
+              },
+              {
+                "name": "Serhii Kudria",
+                "role": "Production Manager"
+              },
+              {
+                "name": "Volodymyr Fedorov",
+                "role": "Head of Testing Laboratory / NDT Inspector"
+              }
+            ],
+            "certs_lead": "Production and product scope supported by applicable European and international standards and management systems:",
+            "cert_badges": [
+              {
+                "label": "EN 10217 / EN 10219 / ISO 3183"
+              },
+              {
+                "label": "ISO 9001 / ISO 14001 / ISO 50001"
+              },
+              {
+                "label": "EPD / ISO 14025 / EN 15804"
+              }
+            ],
+            "gallery_kicker": "Gallery"
+          },
+          "rfq_section": {
+            "intro_kicker": "ENGINEERING & CUSTOM ORDERS",
+            "intro_title": "We offer flexible manufacturing tailored to project needs",
+            "intro_body": "We provide flexible manufacturing solutions tailored to project requirements. Production parameters can be adapted to technical specifications, including diameter, wall thickness, steel grade, pipe length, applicable standards and documentation. Custom orders are manufactured in accordance with customer specifications.",
+            "intro_cta_label": "Download catalogue",
+            "aside_kicker": "RFQ",
+            "aside_title_accent": "Please send your project specifications for review.",
+            "aside_title_text": "Our team will assess the requirements and prepare a quotation based on the provided information.",
+            "form_labels": {
+              "company": "company name",
+              "email": "email address",
+              "phone": "phone number",
+              "project_type": "project type",
+              "pipe_diameter": "pipe diameter",
+              "wall_thickness": "wall thickness",
+              "steel_grade": "steel grade",
+              "quantity": "quantity",
+              "delivery": "delivery location",
+              "message": "message",
+              "terms_prefix": "I have read and accept the",
+              "terms_link": "Terms & Conditions",
+              "submit": "Submit form"
+            },
+            "diameter_options": [
+              {
+                "value": "406",
+                "label": "406 mm"
+              },
+              {
+                "value": "508",
+                "label": "508 mm"
+              },
+              {
+                "value": "610",
+                "label": "610 mm"
+              },
+              {
+                "value": "762",
+                "label": "762 mm"
+              },
+              {
+                "value": "914",
+                "label": "914 mm"
+              },
+              {
+                "value": "1067",
+                "label": "1067 mm"
+              },
+              {
+                "value": "1219",
+                "label": "1219 mm"
+              },
+              {
+                "value": "custom",
+                "label": "Custom"
+              }
+            ],
+            "wall_options": [
+              {
+                "value": "6",
+                "label": "6 mm"
+              },
+              {
+                "value": "8",
+                "label": "8 mm"
+              },
+              {
+                "value": "10",
+                "label": "10 mm"
+              },
+              {
+                "value": "12",
+                "label": "12 mm"
+              },
+              {
+                "value": "14",
+                "label": "14 mm"
+              },
+              {
+                "value": "16",
+                "label": "16 mm"
+              },
+              {
+                "value": "custom",
+                "label": "Custom"
+              }
+            ],
+            "steel_options": [
+              {
+                "value": "s235",
+                "label": "S235 / S235JR"
+              },
+              {
+                "value": "s275",
+                "label": "S275 / S275J0"
+              },
+              {
+                "value": "s355",
+                "label": "S355 / S355J2"
+              },
+              {
+                "value": "api5l-b",
+                "label": "API 5L Grade B"
+              },
+              {
+                "value": "api5l-x52",
+                "label": "API 5L X52"
+              },
+              {
+                "value": "api5l-x65",
+                "label": "API 5L X65"
+              },
+              {
+                "value": "en10219",
+                "label": "EN 10219 S355J2H"
+              },
+              {
+                "value": "custom",
+                "label": "Custom"
+              }
+            ]
+          }
+        }
+      },
+      "pl": {
+        "post": {
+          "title": "Industrial Steel Group",
+          "slug": "strona-glowna",
+          "status": "publish"
+        },
+        "acf": {
+          "hero_title": "Industrial Steel Group",
+          "hero_subtitle": "Rury spiralnie spawane o dużej średnicy do projektów infrastrukturalnych i przemysłowych",
+          "application_section": {
+            "intro_kicker": "Obszary zastosowania",
+            "intro_title": "Rury spiralnie spawane są używane w wielu branżach, takich jak:",
+            "items": [
+              {
+                "title": "Przemysł petrochemiczny, gazownictwo i systemy rurociągów przemysłowych",
+                "description": "Przemysł petrochemiczny, gazownictwo i systemy rurociągów przemysłowych",
+                "hint": "Rury stalowe spiralnie spawane do transportowania ropy naftowej, gazu i innych mediów przemysłowych oraz do wybranych systemów procesowych i technicznych w zakładach przemysłowych."
+              },
+              {
+                "title": "Infrastruktura wodna i techniczna",
+                "description": "Infrastruktura wodna i techniczna",
+                "hint": "Rury wodociągowe, do systemów odwadniających, kanalizacji, ciepłownictwa oraz innych systemów komunalnych lub infrastruktury technicznej."
+              },
+              {
+                "title": "Inżynieria lądowa i budownictwo",
+                "description": "Inżynieria lądowa i budownictwo",
+                "hint": "Rury stalowe do projektów budowlanych, konstrukcyjnych i infrastrukturalnych, w których wymagane są wytrzymałość, powtarzalność wymiarów oraz regularne dostawy w ramach projektu."
+              },
+              {
+                "title": "Zabezpieczenie hydrauliczne i ochrona wybrzeża",
+                "description": "Zabezpieczenie hydrauliczne i ochrona wybrzeża",
+                "hint": "Zastosowania w umacnianiu linii brzegowej, wzmacnianiu zboczy, kontroli erozji oraz innych pracach hydraulicznych i geotechnicznych."
+              },
+              {
+                "title": "Wodociągi rolnicze",
+                "description": "Wodociągi rolnicze",
+                "hint": "Rury do sieci melioracyjnych oraz wodociągów rolniczych."
+              }
+            ]
+          },
+          "digits_section": {
+            "title": "korzyści"
+          },
+          "product_section": {
+            "intro_kicker": "ZAKRES PRODUKCJI",
+            "intro_title": "Produkujemy spawane spiralnie rury stalowe w szerokim zakresie wymiarów, aby spełnić wymagania zastosowań infrastrukturalnych i przemysłowych",
+            "spec_cards": [
+              {
+                "label": "średnice zewnętrzne",
+                "value": "406,4 mm – 2235 mm",
+                "meta": ""
+              },
+              {
+                "label": "grubości ścianki od 6,3mm do 25 mm",
+                "value": "długości rur",
+                "meta": ""
+              },
+              {
+                "label": "6 m – 32 m",
+                "value": "wytrzymałość stali do X70 (485 MPa)",
+                "meta": ""
+              }
+            ],
+            "content_kicker": "GŁÓWNE GATUNKI STALI",
+            "content_heading": "Do produkcji używamy najwyższej jakości stali od najlepszych europejskich producentów, aby zapewnić bezkompromisową jakość naszych produktów.",
+            "grades_intro": "Najczęściej stosowane gatunki stali:",
+            "structural_label": "Konstrukcyjne",
+            "structural_items": [
+              {
+                "text": "S235JRH"
+              },
+              {
+                "text": "S275J0H"
+              },
+              {
+                "text": "S275J2H"
+              },
+              {
+                "text": "S355J0H"
+              },
+              {
+                "text": "S355J2H"
+              },
+              {
+                "text": "S355K2+N"
+              },
+              {
+                "text": "S420ML"
+              },
+              {
+                "text": "S460NH"
+              }
+            ],
+            "pressure_label": "Ciśnieniowe",
+            "pressure_items": [
+              {
+                "text": "P195TR1"
+              },
+              {
+                "text": "P195TR2"
+              },
+              {
+                "text": "P235TR1"
+              },
+              {
+                "text": "P235TR2"
+              },
+              {
+                "text": "P265TR1"
+              },
+              {
+                "text": "P265TR2"
+              },
+              {
+                "text": "P235GH"
+              },
+              {
+                "text": "P265GH"
+              },
+              {
+                "text": "P275NL1"
+              },
+              {
+                "text": "P275NL2"
+              },
+              {
+                "text": "P355N"
+              },
+              {
+                "text": "P355NL1"
+              },
+              {
+                "text": "P355NL2"
+              }
+            ],
+            "pipeline_label": "Rurociągowe",
+            "pipeline_items": [
+              {
+                "text": "L245M"
+              },
+              {
+                "text": "L290M (X42M)"
+              },
+              {
+                "text": "L320M(X46M)"
+              },
+              {
+                "text": "L360M(X52M)"
+              },
+              {
+                "text": "L415(X60)"
+              },
+              {
+                "text": "L450(X65)"
+              },
+              {
+                "text": "L485 (X70)"
+              }
+            ],
+            "sizes_lead": "Produkujemy rury stalowe spiralnie spawane w następujących rozmiarach:",
+            "sizes_head_left": "Średnica zewnętrzna (mm)",
+            "sizes_head_right": "Grubość ścianki (mm)",
+            "size_rows": [
+              {
+                "left": "406,4",
+                "right": "6,3-12,5"
+              },
+              {
+                "left": "457",
+                "right": "6,3-12,5"
+              },
+              {
+                "left": "508",
+                "right": "6,3-16"
+              },
+              {
+                "left": "610",
+                "right": "6,3-18"
+              },
+              {
+                "left": "711",
+                "right": "6,3-18"
+              },
+              {
+                "left": "813",
+                "right": "8-19"
+              },
+              {
+                "left": "914",
+                "right": "8-20"
+              },
+              {
+                "left": "1016",
+                "right": "8-20"
+              },
+              {
+                "left": "1067",
+                "right": "8-20"
+              },
+              {
+                "left": "1118",
+                "right": "8-22"
+              },
+              {
+                "left": "1219",
+                "right": "8-25"
+              },
+              {
+                "left": "1422",
+                "right": "8-25"
+              },
+              {
+                "left": "1626",
+                "right": "8-25"
+              },
+              {
+                "left": "1829",
+                "right": "8-25"
+              },
+              {
+                "left": "2032",
+                "right": "8-25"
+              },
+              {
+                "left": "2235",
+                "right": "8,8-25"
+              }
+            ]
+          },
+          "quality_section": {
+            "intro_kicker": "KONTROLA JAKOŚCI",
+            "intro_title": "Kontrola jakości jest niezwykle istotną częścią procesu produkcyjnego. Wszystkie rury poddajemy inspekcji i testom, aby zapewnić ich zgodność z międzynarodowymi normami i wymaganiami projektowymi",
+            "focus_kicker": "Kontrola jakości obejmuje:",
+            "skip_label": "Pomiń",
+            "items": [
+              {
+                "title": "kontrolę wymiarową",
+                "body": "kontrolę wymiarową"
+              },
+              {
+                "title": "kontrolę jakości spawania",
+                "body": "kontrolę jakości spawania"
+              },
+              {
+                "title": "badania niszczące",
+                "body": "badania niszczące"
+              },
+              {
+                "title": "badania nieniszczące",
+                "body": "badania nieniszczące"
+              },
+              {
+                "title": "certyfikację materiałów, dokumentację i śledzenie",
+                "body": "certyfikację materiałów, dokumentację i śledzenie"
+              }
+            ]
+          },
+          "about_section": {
+            "intro_kicker": "O NAS",
+            "intro_title": "Industrial Steel Group  produkuje rury spiralnie spawane o dużych średnicach do zastosowań technicznych i infrastrukturalnych.",
+            "textgrid_kicker": "NASZE STANOWISKO",
+            "textgrid_left": "Wierzymy, że podstawą zrównoważonego wzrostu są uczciwa konkurencja, techniczna niezawodność oraz zaufani partnerzy. Ambicją ISG jest zostanie jednym z największych dostawców spawanych elektrycznie rur o dużych średnicach. Nasza strategia obejmuje zwiększanie mocy produkcyjnych, stałą poprawę jakości oraz coraz wyraźniejszą obecność na europejskich rynkach.",
+            "textgrid_heading": "Industrial Steel Group  produkuje rury spiralnie spawane o dużych średnicach do zastosowań technicznych i infrastrukturalnych.",
+            "textgrid_lead": "Produkcja znajduje się w Polsce i skupia się na europejskim rynku, na którym ogromne znaczenie mają powtarzalna jakość, spełnianie wymogów regulacyjnych, przejrzystość i regularność dostaw. Od dwóch lat działamy na europejskim rynku, rozwijamy nasze procesy produkcyjne i wzmacniamy naszą pozycję jako solidny dostawca. Nasze podejście to połączenie technologicznej dyscypliny i mocy przerobowych.",
+            "values_kicker": "DLACZEGO MY?",
+            "values_skip_label": "Pomiń",
+            "values_items": [
+              {
+                "title": "Nowoczesna produkcja",
+                "body": "Stosujemy zaawansowane technologie produkcyjne oraz sprawdzone procesy wytwarzania, aby zapewnić stałą jakość oraz zgodność z wymaganiami technicznymi."
+              },
+              {
+                "title": "Praktyczna wydajność",
+                "body": "Dzięki naszym rozwiązaniom klienci unikają niepotrzebnych kosztów, udoskonalają planowanie projektowe i zwiększają efektywność operacyjną."
+              },
+              {
+                "title": "Cyfrowa koordynacja",
+                "body": "Używamy cyfrowych narzędzi do upraszczania zamówień, komunikacji i logistyki, dzięki czemu współpraca jest szybsza i bardziej efektywna."
+              }
+            ],
+            "team_kicker": "Nasz zespół",
+            "team_heading": "Nasz zespół składa się ze specjalistów z wieloletnim doświadczeniem w produkcji i dystrybucji rur stalowych.",
+            "team_lead": "Dzięki głębokiemu zrozumieniu specyfiki przemysłu oraz najnowocześniejszych technologii nasi eksperci zapewniają bezkompromisową jakość oraz solidną realizację projektów.",
+            "team_slides": [
+              {
+                "name": "Oleksandr Bryk",
+                "role": "CEO"
+              },
+              {
+                "name": "Yurii Melnyk",
+                "role": "Kierownik produkcji"
+              },
+              {
+                "name": "Dmytro Melnyk",
+                "role": "Kierownik działu sprzedaży"
+              },
+              {
+                "name": "Danylo Uhnich",
+                "role": "Kierownik działu technologicznego"
+              },
+              {
+                "name": "Serhii Kudria",
+                "role": "Manager produkcji"
+              },
+              {
+                "name": "Volodymyr Fedorov",
+                "role": "Kierownik laboratorium badawczego / inspektor badań nieniszczących"
+              }
+            ],
+            "certs_lead": "Zakres produkcji i produktów obsługiwany przez ważne europejskie i międzynarodowe normy i systemy zarządzania:",
+            "cert_badges": [
+              {
+                "label": "EN 10217 / EN 10219 / ISO 3183"
+              },
+              {
+                "label": "ISO 9001 / ISO 14001 / ISO 50001"
+              },
+              {
+                "label": "EPD / ISO 14025 / EN 15804"
+              }
+            ],
+            "gallery_kicker": "Galeria"
+          },
+          "rfq_section": {
+            "intro_kicker": "PROJEKTY I ZAMÓWIENIA SPECJALNE",
+            "intro_title": "Oferujemy elastyczną produkcję dopasowaną do potrzeb projektu",
+            "intro_body": "Oferujemy elastyczne rozwiązania produkcyjne, które spełniają wymagania projektowe. Parametry produkcyjne można dostosować do specyfikacji technicznej obejmującej średnicę, grubość ścianki, gatunek stali, długość rury, obowiązujące normy i dokumentację. Zamówienia specjalne realizujemy zgodnie ze specyfikacją dostarczoną przez klienta.",
+            "intro_cta_label": "Pobierz katalog",
+            "aside_kicker": "RFQ",
+            "aside_title_accent": "Prosimy o przekazanie nam do wglądu specyfikacji projektowej.",
+            "aside_title_text": "Nasz zespół oceni wymagania i przygotuje ofertę na podstawie przekazanych informacji.",
+            "form_labels": {
+              "company": "nazwa firmy",
+              "email": "adres e-mail",
+              "phone": "numer telefonu",
+              "project_type": "rodzaj projektu",
+              "pipe_diameter": "średnica rury",
+              "wall_thickness": "grubość ścianki",
+              "steel_grade": "gatunek stali",
+              "quantity": "ilość",
+              "delivery": "adres dostawy",
+              "message": "wiadomość",
+              "terms_prefix": "Zapoznałem się i akceptuję",
+              "terms_link": "Warunki i postanowienia",
+              "submit": "Wyślij formularz"
+            },
+            "diameter_options": [
+              {
+                "value": "406",
+                "label": "406 mm"
+              },
+              {
+                "value": "508",
+                "label": "508 mm"
+              },
+              {
+                "value": "610",
+                "label": "610 mm"
+              },
+              {
+                "value": "762",
+                "label": "762 mm"
+              },
+              {
+                "value": "914",
+                "label": "914 mm"
+              },
+              {
+                "value": "1067",
+                "label": "1067 mm"
+              },
+              {
+                "value": "1219",
+                "label": "1219 mm"
+              },
+              {
+                "value": "custom",
+                "label": "Niestandardowe"
+              }
+            ],
+            "wall_options": [
+              {
+                "value": "6",
+                "label": "6 mm"
+              },
+              {
+                "value": "8",
+                "label": "8 mm"
+              },
+              {
+                "value": "10",
+                "label": "10 mm"
+              },
+              {
+                "value": "12",
+                "label": "12 mm"
+              },
+              {
+                "value": "14",
+                "label": "14 mm"
+              },
+              {
+                "value": "16",
+                "label": "16 mm"
+              },
+              {
+                "value": "custom",
+                "label": "Niestandardowe"
+              }
+            ],
+            "steel_options": [
+              {
+                "value": "s235",
+                "label": "S235 / S235JR"
+              },
+              {
+                "value": "s275",
+                "label": "S275 / S275J0"
+              },
+              {
+                "value": "s355",
+                "label": "S355 / S355J2"
+              },
+              {
+                "value": "api5l-b",
+                "label": "API 5L Grade B"
+              },
+              {
+                "value": "api5l-x52",
+                "label": "API 5L X52"
+              },
+              {
+                "value": "api5l-x65",
+                "label": "API 5L X65"
+              },
+              {
+                "value": "en10219",
+                "label": "EN 10219 S355J2H"
+              },
+              {
+                "value": "custom",
+                "label": "Niestandardowe"
+              }
+            ]
+          }
+        }
+      },
+      "de": {
+        "post": {
+          "title": "Industrial Steel Group",
+          "slug": "startseite",
+          "status": "publish"
+        },
+        "acf": {
+          "hero_title": "Industrial Steel Group",
+          "hero_subtitle": "Spiralgeschweißte Rohre mit großen Durchmessern für Infrastruktur- und Industrie-Projekte",
+          "application_section": {
+            "intro_kicker": "Anwendungsbereiche",
+            "intro_title": "Spiralgeschweißte Rohre werden in vielen Branchen verwendet, beispielsweise:",
+            "items": [
+              {
+                "title": "Öl- und Gasindustrie sowie industrielle Rohrleitungssysteme",
+                "description": "Öl- und Gasindustrie sowie industrielle Rohrleitungssysteme",
+                "hint": "Spiralgeschweißte Rohre zum Transportieren von Erdöl, Gas und anderen industriellen Medien sowie für ausgewählte verfahrens- und versorgungstechnische Systeme in Industriebetrieben"
+              },
+              {
+                "title": "Wasser- und Versorgungsinfrastruktur",
+                "description": "Wasser- und Versorgungsinfrastruktur",
+                "hint": "Rohre für Wasserleitungen, Drainage, Abwassersysteme, Fernwärme und andere kommunale und versorgungstechnische Systeme."
+              },
+              {
+                "title": "Hoch- und Tiefbau",
+                "description": "Hoch- und Tiefbau",
+                "hint": "Stahlrohre für Hochbau-, Tiefbau- und Infrastrukturprojekte, in denen Haltbarkeit, Maßhaltigkeit und projektbezogene Lieferung erforderlich sind."
+              },
+              {
+                "title": "Hydraulische Sicherung und Küstenschutz",
+                "description": "Hydraulische Sicherung und Küstenschutz",
+                "hint": "Anwendungen in der Uferbefestigung, Hangsicherung, Erosionsbekämpfung und anderen hydraulischen und geotechnischen Arbeiten."
+              },
+              {
+                "title": "Landwirtschaftliche Wasseranlagen",
+                "description": "Landwirtschaftliche Wasseranlagen",
+                "hint": "Rohre für Bewässerungsnetzwerke und landwirtschaftliche Wasserversorgungssysteme."
+              }
+            ]
+          },
+          "digits_section": {
+            "title": "Vorteile"
+          },
+          "product_section": {
+            "intro_kicker": "PRODUKTSPEKTRUM",
+            "intro_title": "Wir fertigen spiralgeschweißte Stahlrohre in einem breiten Maßspektrum, um die Anforderungen der infrastrukturellen und industriellen Anwendungen zu erfüllen.",
+            "spec_cards": [
+              {
+                "label": "Außendurchmesser",
+                "value": "406,4 mm – 2235 mm",
+                "meta": ""
+              },
+              {
+                "label": "Wandstärken von 6,3mm bis 25 mm",
+                "value": "Rohrlänge",
+                "meta": ""
+              },
+              {
+                "label": "6 m – 32 m",
+                "value": "Festigkeit des Stahls bis X70 (485 MPa)",
+                "meta": ""
+              }
+            ],
+            "content_kicker": "WICHTIGE STAHLGÜTEN",
+            "content_heading": "Bei der Fertigung setzen wir hochwertigen Stahl von den besten europäischen Herstellern, um eine kompromisslose Qualität unserer Produkte sicherzustellen.",
+            "grades_intro": "Typischerweise setzen wir folgende Stahlsorten ein:",
+            "structural_label": "Konstruktion",
+            "structural_items": [
+              {
+                "text": "S235JRH"
+              },
+              {
+                "text": "S275J0H"
+              },
+              {
+                "text": "S275J2H"
+              },
+              {
+                "text": "S355J0H"
+              },
+              {
+                "text": "S355J2H"
+              },
+              {
+                "text": "S355K2+N"
+              },
+              {
+                "text": "S420ML"
+              },
+              {
+                "text": "S460NH"
+              }
+            ],
+            "pressure_label": "Druck",
+            "pressure_items": [
+              {
+                "text": "P195TR1"
+              },
+              {
+                "text": "P195TR2"
+              },
+              {
+                "text": "P235TR1"
+              },
+              {
+                "text": "P235TR2"
+              },
+              {
+                "text": "P265TR1"
+              },
+              {
+                "text": "P265TR2"
+              },
+              {
+                "text": "P235GH"
+              },
+              {
+                "text": "P265GH"
+              },
+              {
+                "text": "P275NL1"
+              },
+              {
+                "text": "P275NL2"
+              },
+              {
+                "text": "P355N"
+              },
+              {
+                "text": "P355NL1"
+              },
+              {
+                "text": "P355NL2"
+              }
+            ],
+            "pipeline_label": "Pipeline",
+            "pipeline_items": [
+              {
+                "text": "L245M"
+              },
+              {
+                "text": "L290M (X42M)"
+              },
+              {
+                "text": "L320M(X46M)"
+              },
+              {
+                "text": "L360M(X52M)"
+              },
+              {
+                "text": "L415(X60)"
+              },
+              {
+                "text": "L450(X65)"
+              },
+              {
+                "text": "L485 (X70)"
+              }
+            ],
+            "sizes_lead": "Wir fertigen spiralgeschweißte Stahlrohre in folgenden Größen:",
+            "sizes_head_left": "Außendurchmesser (mm)",
+            "sizes_head_right": "Wanddicke (mm)",
+            "size_rows": [
+              {
+                "left": "406,4",
+                "right": "6,3-12,5"
+              },
+              {
+                "left": "457",
+                "right": "6,3-12,5"
+              },
+              {
+                "left": "508",
+                "right": "6,3-16"
+              },
+              {
+                "left": "610",
+                "right": "6,3-18"
+              },
+              {
+                "left": "711",
+                "right": "6,3-18"
+              },
+              {
+                "left": "813",
+                "right": "8-19"
+              },
+              {
+                "left": "914",
+                "right": "8-20"
+              },
+              {
+                "left": "1016",
+                "right": "8-20"
+              },
+              {
+                "left": "1067",
+                "right": "8-20"
+              },
+              {
+                "left": "1118",
+                "right": "8-22"
+              },
+              {
+                "left": "1219",
+                "right": "8-25"
+              },
+              {
+                "left": "1422",
+                "right": "8-25"
+              },
+              {
+                "left": "1626",
+                "right": "8-25"
+              },
+              {
+                "left": "1829",
+                "right": "8-25"
+              },
+              {
+                "left": "2032",
+                "right": "8-25"
+              },
+              {
+                "left": "2235",
+                "right": "8,8-25"
+              }
+            ]
+          },
+          "quality_section": {
+            "intro_kicker": "QUALITÄTSKONTROLLE",
+            "intro_title": "Die Qualitätskontrolle stellt einen essenziellen Teil des Fertigungsprozesses dar. Alle Rohre werden Inspektionen und Versuchsverfahren unterzogen, um die Konformität mit internationalen Normen und Projektanforderungen sicherzustellen",
+            "focus_kicker": "Die Qualitätssicherung umfasst:",
+            "skip_label": "Überspringen",
+            "items": [
+              {
+                "title": "die Maßkontrolle",
+                "body": "die Maßkontrolle"
+              },
+              {
+                "title": "die Kontrolle der Schweißqualität",
+                "body": "die Kontrolle der Schweißqualität"
+              },
+              {
+                "title": "zerstörende Prüfung",
+                "body": "zerstörende Prüfung"
+              },
+              {
+                "title": "zerstörungsfreie Prüfung",
+                "body": "zerstörungsfreie Prüfung"
+              },
+              {
+                "title": "Materialzertifizierung, Dokumentation und Rückverfolgbarkeit",
+                "body": "Materialzertifizierung, Dokumentation und Rückverfolgbarkeit"
+              }
+            ]
+          },
+          "about_section": {
+            "intro_kicker": "ÜBER UNS",
+            "intro_title": "Industrial Steel Group fertigt spiralgeschweißte Rohre mit großen Durchmessern für technische und infrastrukturelle Anwendungen.",
+            "textgrid_kicker": "UNSER ANSATZ",
+            "textgrid_left": "Wir glauben, dass nachhaltiges Wachstum auf ehrlichem Wettbewerb, technischer Zuverlässigkeit und vertrauensvollen Partnerschaften basiert. ISG strebt an, einer der führenden europäischen Lieferanten für elektrisch geschweißte Rohre mit großen Durchmessern zu werden. Unsere Strategie umfasst die Erweiterung von Fertigungskapazitäten, kontinuierliche Verbesserung der Qualität sowie stärkere Präsenz auf europäischen Märkten.",
+            "textgrid_heading": "Industrial Steel Group fertigt spiralgeschweißte Rohre mit großen Durchmessern für technische und infrastrukturelle Anwendungen.",
+            "textgrid_lead": "Der Fertigungsstandort befindet sich in Polen und richtet sich auf den europäischen Markt aus, auf dem konsistente Qualität, Erfüllung regulatorischer Anforderungen, Produktionstransparenz und zuverlässige Lieferung die Schlüsselfaktoren sind. Seit 2 Jahren sind wir auf dem europäischen Markt tätig. Wir entwickeln unsere Fertigungsverfahren und stärken unsere Position als zuverlässiger Lieferant. Unser Ansatz basiert auf einer Kombination von technologischer Disziplin und Fertigungskapazitäten.",
+            "values_kicker": "WARUM WIR?",
+            "values_skip_label": "Überspringen",
+            "values_items": [
+              {
+                "title": "Moderne Produktion",
+                "body": "Wir setzen fortgeschrittene Produktionstechnologien und bewährte Fertigungsverfahren ein, um zuverlässige Qualität und Einhaltung von technischen Anforderungen sicherzustellen."
+              },
+              {
+                "title": "Praktische Effizienz",
+                "body": "Dank unserer Lösungen können die Kunden unnötige Kosten vermeiden, Projektplanung verbessern und die operative Effizienz steigern."
+              },
+              {
+                "title": "Digitale Koordination",
+                "body": "Wir nutzen digitale Tools zur Vereinfachung der Bestellabwicklung, Kommunikation und Logistik, damit die Zusammenarbeit schneller und effektiver wird."
+              }
+            ],
+            "team_kicker": "Unser Team",
+            "team_heading": "Unser Team besteht aus Spezialisten mit mehrjähriger Erfahrung in der Fertigung und dem Vertrieb von Stahlrohren.",
+            "team_lead": "Mit einem tiefen Verständnis der Komplexität der Branche sowie der modernen Technologien liefern unsere Experten kompromisslose Qualität und bearbeiten zuverlässig die Projekte unserer Kunden.",
+            "team_slides": [
+              {
+                "name": "Oleksandr Bryk",
+                "role": "CEO"
+              },
+              {
+                "name": "Yurii Melnyk",
+                "role": "Produktionsleiter"
+              },
+              {
+                "name": "Dmytro Melnyk",
+                "role": "Vertriebsleiter"
+              },
+              {
+                "name": "Danylo Uhnich",
+                "role": "Leiter Technologieabteilung"
+              },
+              {
+                "name": "Serhii Kudria",
+                "role": "Produktionsmanager"
+              },
+              {
+                "name": "Volodymyr Fedorov",
+                "role": "Leiter des Prüflabors / Inspektor für zerstörungsfreie Prüfung"
+              }
+            ],
+            "certs_lead": "Produktions- und Produktumfang unterstützt von gültigen europäischen und internationalen Normen und Managementsystemen:",
+            "cert_badges": [
+              {
+                "label": "EN 10217 / EN 10219 / ISO 3183"
+              },
+              {
+                "label": "ISO 9001 / ISO 14001 / ISO 50001"
+              },
+              {
+                "label": "EPD / ISO 14025 / EN 15804"
+              }
+            ],
+            "gallery_kicker": "Galerie"
+          },
+          "rfq_section": {
+            "intro_kicker": "ENGINEERING & SONDERBESTELLUNGEN",
+            "intro_title": "Wir bieten flexible Fertigung nach Projektanforderungen",
+            "intro_body": "Wir bieten flexible Fertigungslösungen, die auf die Projektanforderungen zugeschnitten sind. Die Fertigungsparameter können an die technische Spezifikation angepasst werden, die die Durchmesser, die Wandstärke, die Stahlgüte, die Rohrlänge, die gültigen Normen sowie die Dokumentation umfassen kann. Sonderbestellungen bearbeiten wir nach der Kundenspezifikation.",
+            "intro_cta_label": "Katalog herunterladen",
+            "aside_kicker": "RFQ",
+            "aside_title_accent": "Bitte lassen Sie uns Ihre Fertigungsspezifikation zur Einsicht zukommen.",
+            "aside_title_text": "Unser Team wird die Anforderungen einschätzen und auf Basis der übermittelten Informationen ein Angebot erstellen.",
+            "form_labels": {
+              "company": "Firmenname",
+              "email": "E-Mail-Adresse",
+              "phone": "Telefonnummer",
+              "project_type": "Projekttyp",
+              "pipe_diameter": "Rohrdurchmesser",
+              "wall_thickness": "Wandstärke",
+              "steel_grade": "Stahlgüte",
+              "quantity": "Menge",
+              "delivery": "Lieferort",
+              "message": "nachricht",
+              "terms_prefix": "Ich habe gelesen und akzeptiere die",
+              "terms_link": "Geschäftsbedingungen",
+              "submit": "Formular senden"
+            },
+            "diameter_options": [
+              {
+                "value": "406",
+                "label": "406 mm"
+              },
+              {
+                "value": "508",
+                "label": "508 mm"
+              },
+              {
+                "value": "610",
+                "label": "610 mm"
+              },
+              {
+                "value": "762",
+                "label": "762 mm"
+              },
+              {
+                "value": "914",
+                "label": "914 mm"
+              },
+              {
+                "value": "1067",
+                "label": "1067 mm"
+              },
+              {
+                "value": "1219",
+                "label": "1219 mm"
+              },
+              {
+                "value": "custom",
+                "label": "Sonderausführung"
+              }
+            ],
+            "wall_options": [
+              {
+                "value": "6",
+                "label": "6 mm"
+              },
+              {
+                "value": "8",
+                "label": "8 mm"
+              },
+              {
+                "value": "10",
+                "label": "10 mm"
+              },
+              {
+                "value": "12",
+                "label": "12 mm"
+              },
+              {
+                "value": "14",
+                "label": "14 mm"
+              },
+              {
+                "value": "16",
+                "label": "16 mm"
+              },
+              {
+                "value": "custom",
+                "label": "Sonderausführung"
+              }
+            ],
+            "steel_options": [
+              {
+                "value": "s235",
+                "label": "S235 / S235JR"
+              },
+              {
+                "value": "s275",
+                "label": "S275 / S275J0"
+              },
+              {
+                "value": "s355",
+                "label": "S355 / S355J2"
+              },
+              {
+                "value": "api5l-b",
+                "label": "API 5L Grade B"
+              },
+              {
+                "value": "api5l-x52",
+                "label": "API 5L X52"
+              },
+              {
+                "value": "api5l-x65",
+                "label": "API 5L X65"
+              },
+              {
+                "value": "en10219",
+                "label": "EN 10219 S355J2H"
+              },
+              {
+                "value": "custom",
+                "label": "Sonderausführung"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "notes": [
+    "The workbook does not contain translated header/footer option-page strings, so this payload updates only front-page ACF fields.",
+    "Workbook rows 6 and 9 have no exact ACF slot in the current theme schema and were left out of the payload.",
+    "Certificate rows 57-59 were condensed into shorter badge labels to fit the existing UI component.",
+    "RFQ labels not present in the workbook, such as message/terms/submit, were added as supporting UI translations."
+  ]
+}
