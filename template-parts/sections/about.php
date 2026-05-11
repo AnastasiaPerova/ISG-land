@@ -63,30 +63,32 @@ $default_gallery_slides = array(
 $section = isg_acf_group(
 	'about_section',
 	array(
-		'intro_background'   => isg_asset_uri('img/about-us-intro.jpg'),
-		'intro_kicker'       => 'PRODUCT RANGE',
-		'intro_title'        => 'ISG modern spiral-welded pipe production with reliable quality and competitive service',
-		'textgrid_kicker'    => 'our position',
-		'textgrid_left'      => 'We believe that sustainable growth is based on fair competition, technical reliability, and trusted partnerships. ISG is focused on becoming one of Europe leading suppliers of large-diameter electric-welded pipes. Our strategy includes the expansion of production capacity, continuous quality improvement, and a stronger presence across European markets.',
-		'textgrid_heading'   => 'ISG Industrial Steel Group is a Polish company that launched a new, modern production of large-diameter spiral-welded pipes in 2024',
-		'textgrid_lead'      => 'ISG Industrial Steel Group provides maximum advantage to partners by offering quality pipe products in the metallurgical industry and convenient service at a competitive price.',
-		'values_kicker'      => 'PRODUCT RANGE',
-		'values_skip_label'  => 'Skip',
-		'values_items'       => $default_values_items,
-		'team_kicker'        => 'our position',
-		'team_heading'       => 'Our team comprises seasoned professionals with extensive experience in steel pipe manufacturing and distribution',
-		'team_lead'          => 'With a deep understanding of industry intricacies and cutting-edge technologies, our experts deliver uncompromising quality and reliability for your projects',
-		'certs_lead'         => 'Typical steel grades include:',
-		'team_slides'        => $default_team_slides,
-		'cert_badges'        => $default_cert_badges,
-		'gallery_kicker'     => 'Gallery',
-		'gallery_heading'    => 'Our team comprises seasoned professionals with extensive experience in steel pipe manufacturing and distribution',
-		'gallery_slides'     => $default_gallery_slides,
+		'intro_background'        => isg_asset_uri('img/about-us-intro.jpg'),
+		'intro_mobile_background' => '',
+		'intro_kicker'            => 'PRODUCT RANGE',
+		'intro_title'             => 'ISG modern spiral-welded pipe production with reliable quality and competitive service',
+		'textgrid_kicker'         => 'our position',
+		'textgrid_left'           => 'We believe that sustainable growth is based on fair competition, technical reliability, and trusted partnerships. ISG is focused on becoming one of Europe leading suppliers of large-diameter electric-welded pipes. Our strategy includes the expansion of production capacity, continuous quality improvement, and a stronger presence across European markets.',
+		'textgrid_heading'        => 'ISG Industrial Steel Group is a Polish company that launched a new, modern production of large-diameter spiral-welded pipes in 2024',
+		'textgrid_lead'           => 'ISG Industrial Steel Group provides maximum advantage to partners by offering quality pipe products in the metallurgical industry and convenient service at a competitive price.',
+		'values_kicker'           => 'PRODUCT RANGE',
+		'values_skip_label'       => 'Skip',
+		'values_items'            => $default_values_items,
+		'team_kicker'             => 'our position',
+		'team_heading'            => 'Our team comprises seasoned professionals with extensive experience in steel pipe manufacturing and distribution',
+		'team_lead'               => 'With a deep understanding of industry intricacies and cutting-edge technologies, our experts deliver uncompromising quality and reliability for your projects',
+		'certs_lead'              => 'Typical steel grades include:',
+		'team_slides'             => $default_team_slides,
+		'cert_badges'             => $default_cert_badges,
+		'gallery_kicker'          => 'Gallery',
+		'gallery_heading'         => 'Our team comprises seasoned professionals with extensive experience in steel pipe manufacturing and distribution',
+		'gallery_slides'          => $default_gallery_slides,
 	),
 	$page_id
 );
 
 $intro_bg        = isg_image_url($section['intro_background'] ?? '', isg_asset_uri('img/about-us-intro.jpg'));
+$intro_mobile_bg = isg_image_url($section['intro_mobile_background'] ?? '', '');
 $intro_kicker    = (string) ($section['intro_kicker'] ?? 'PRODUCT RANGE');
 $intro_title     = (string) ($section['intro_title'] ?? '');
 $text_kicker     = (string) ($section['textgrid_kicker'] ?? 'our position');
@@ -117,7 +119,17 @@ $text_heading = $normalize_wrap_text($text_heading);
 $text_lead    = $normalize_wrap_text($text_lead);
 ?>
 <div class="isg-intro-pin isg-intro-pin--about">
-	<section class="isg-intro-section isg-intro-section--align-center isg-about-intro" style="background-image: url('<?php echo esc_url($intro_bg); ?>');" data-isg-intro-scroll>
+	<section class="isg-intro-section isg-intro-section--align-center isg-about-intro" data-isg-intro-scroll>
+		<div class="isg-intro-media" aria-hidden="true">
+			<div class="isg-intro-media__inner">
+				<picture>
+					<?php if ($intro_mobile_bg !== '') : ?>
+						<source media="(max-width: 1099px)" srcset="<?php echo esc_url($intro_mobile_bg); ?>" />
+					<?php endif; ?>
+					<img class="isg-intro-media__img" src="<?php echo esc_url($intro_bg); ?>" alt="" loading="lazy" decoding="async" />
+				</picture>
+			</div>
+		</div>
 		<div class="isg-intro-section__container isg-about-intro__conteiner container">
 			<div class="isg-intro-section__content isg-about-intro__content">
 				<div class="isg-title-group">

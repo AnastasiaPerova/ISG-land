@@ -48,29 +48,31 @@ $default_size_rows_right = array(
 $section = isg_acf_group(
 	'product_section',
 	array(
-		'intro_background' => isg_asset_uri('img/product-range-intro.jpg'),
-		'intro_kicker'     => 'PRODUCT RANGE',
-		'intro_title'      => 'We produce spiral-welded pipes in a wide range',
-		'spec_cards'       => $default_spec_cards,
-		'content_kicker'   => 'our position',
-		'content_heading'  => 'We use high-quality steel grades in accordance with international standards and project requirements',
-		'grades_intro'     => 'Typical steel grades include:',
-		'structural_label' => 'Structural:',
-		'structural_items' => $default_structural,
-		'pressure_label'   => 'Pressure:',
-		'pressure_items'   => $default_pressure,
-		'pipeline_label'   => 'Pipeline:',
-		'pipeline_items'   => $default_pipeline,
-		'sizes_lead'       => 'We produce spiral-welded steel pipes in the following size range:',
-		'sizes_head_left'  => 'Outside diameter (mm)',
-		'sizes_head_right' => 'Wall thickness (mm)',
-		'size_rows_left'   => $default_size_rows_left,
-		'size_rows_right'  => $default_size_rows_right,
+		'intro_background'        => isg_asset_uri('img/product-range-intro.jpg'),
+		'intro_mobile_background' => '',
+		'intro_kicker'            => 'PRODUCT RANGE',
+		'intro_title'             => 'We produce spiral-welded pipes in a wide range',
+		'spec_cards'              => $default_spec_cards,
+		'content_kicker'          => 'our position',
+		'content_heading'         => 'We use high-quality steel grades in accordance with international standards and project requirements',
+		'grades_intro'            => 'Typical steel grades include:',
+		'structural_label'        => 'Structural:',
+		'structural_items'        => $default_structural,
+		'pressure_label'          => 'Pressure:',
+		'pressure_items'          => $default_pressure,
+		'pipeline_label'          => 'Pipeline:',
+		'pipeline_items'          => $default_pipeline,
+		'sizes_lead'              => 'We produce spiral-welded steel pipes in the following size range:',
+		'sizes_head_left'         => 'Outside diameter (mm)',
+		'sizes_head_right'        => 'Wall thickness (mm)',
+		'size_rows_left'          => $default_size_rows_left,
+		'size_rows_right'         => $default_size_rows_right,
 	),
 	$page_id
 );
 
 $intro_bg        = isg_image_url($section['intro_background'] ?? '', isg_asset_uri('img/product-range-intro.jpg'));
+$intro_mobile_bg = isg_image_url($section['intro_mobile_background'] ?? '', '');
 $intro_kicker    = (string) ($section['intro_kicker'] ?? 'PRODUCT RANGE');
 $intro_title     = (string) ($section['intro_title'] ?? 'We produce spiral-welded pipes in a wide range');
 $spec_cards      = is_array($section['spec_cards'] ?? null) ? $section['spec_cards'] : $default_spec_cards;
@@ -147,13 +149,18 @@ $render_size_table = static function (array $rows, string $left_head, string $ri
 	>
 		<div class="isg-intro-media isg-product-intro__media" aria-hidden="true">
 			<div class="isg-intro-media__inner isg-product-intro__media-inner">
-				<img
-					class="isg-product-intro__image"
-					src="<?php echo esc_url($intro_bg); ?>"
-					alt=""
-					loading="lazy"
-					decoding="async"
-				/>
+				<picture>
+					<?php if ($intro_mobile_bg !== '') : ?>
+						<source media="(max-width: 1099px)" srcset="<?php echo esc_url($intro_mobile_bg); ?>" />
+					<?php endif; ?>
+					<img
+						class="isg-product-intro__image"
+						src="<?php echo esc_url($intro_bg); ?>"
+						alt=""
+						loading="lazy"
+						decoding="async"
+					/>
+				</picture>
 			</div>
 		</div>
 		<div class="isg-intro-section__container isg-product-intro__conteiner container">

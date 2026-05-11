@@ -478,6 +478,7 @@ function isg_register_acf_fields(): void {
 					'layout'     => 'block',
 					'sub_fields' => array(
 						isg_acf_image_field('field_isg_product_intro_bg', 'Intro Background', 'intro_background'),
+						isg_acf_image_field('field_isg_product_intro_mobile_bg', 'Mobile Intro Background', 'intro_mobile_background'),
 						isg_acf_text_field('field_isg_product_intro_kicker', 'Intro Kicker', 'intro_kicker', 'PRODUCT RANGE'),
 						isg_acf_textarea_field('field_isg_product_intro_title', 'Intro Title', 'intro_title', 'We produce spiral-welded pipes in a wide range'),
 						array(
@@ -575,6 +576,7 @@ function isg_register_acf_fields(): void {
 					'layout'     => 'block',
 					'sub_fields' => array(
 						isg_acf_image_field('field_isg_quality_intro_bg', 'Intro Background', 'intro_background'),
+						isg_acf_image_field('field_isg_quality_intro_mobile_bg', 'Mobile Intro Background', 'intro_mobile_background'),
 						isg_acf_text_field('field_isg_quality_intro_kicker', 'Intro Kicker', 'intro_kicker', 'PRODUCT RANGE'),
 						isg_acf_textarea_field('field_isg_quality_intro_title', 'Intro Title', 'intro_title', 'Quality control is an essential part of the production process'),
 						isg_acf_text_field('field_isg_quality_focus_kicker', 'Focus Kicker', 'focus_kicker', 'Focus areas'),
@@ -610,6 +612,7 @@ function isg_register_acf_fields(): void {
 					'layout'     => 'block',
 					'sub_fields' => array(
 						isg_acf_image_field('field_isg_about_intro_bg', 'Intro Background', 'intro_background'),
+						isg_acf_image_field('field_isg_about_intro_mobile_bg', 'Mobile Intro Background', 'intro_mobile_background'),
 						isg_acf_text_field('field_isg_about_intro_kicker', 'Intro Kicker', 'intro_kicker', 'PRODUCT RANGE'),
 						isg_acf_textarea_field('field_isg_about_intro_title', 'Intro Title', 'intro_title', 'ISG modern spiral-welded pipe production with reliable quality and competitive service'),
 						isg_acf_text_field('field_isg_about_text_kicker', 'Text Grid Kicker', 'textgrid_kicker', 'our position'),
@@ -690,6 +693,7 @@ function isg_register_acf_fields(): void {
 					'layout'     => 'block',
 					'sub_fields' => array(
 						isg_acf_image_field('field_isg_rfq_intro_bg', 'Intro Background', 'intro_background'),
+						isg_acf_image_field('field_isg_rfq_intro_mobile_bg', 'Mobile Intro Background', 'intro_mobile_background'),
 						isg_acf_text_field('field_isg_rfq_intro_kicker', 'Intro Kicker', 'intro_kicker', 'ENGINEERING & CUSTOM ORDERS'),
 						isg_acf_textarea_field('field_isg_rfq_intro_title', 'Intro Title', 'intro_title'),
 						isg_acf_textarea_field('field_isg_rfq_intro_body', 'Intro Body', 'intro_body'),

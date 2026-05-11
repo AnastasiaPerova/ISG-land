@@ -318,6 +318,7 @@ function teamOptions(gapPx, prev, next) {
 
 function galleryOptions(gapPx, prev, next) {
   const compact = isCompactSliderViewport();
+  const edgePx = compact ? getCssVarPx("--container-offset", gapPx) : 0;
   return {
     modules: [Navigation],
     speed: compact ? 300 : 420,
@@ -351,7 +352,7 @@ function galleryOptions(gapPx, prev, next) {
     focusableElements: "input, select, option, textarea, label",
     spaceBetween: gapPx,
     slidesOffsetBefore: 0,
-    slidesOffsetAfter: 0,
+    slidesOffsetAfter: edgePx,
     navigation:
       prev && next
         ? {
@@ -360,12 +361,94 @@ function galleryOptions(gapPx, prev, next) {
           }
         : undefined,
     breakpoints: {
-      480: { slidesPerView: 1.28, slidesOffsetBefore: 0, slidesOffsetAfter: 0, spaceBetween: gapPx },
-      768: { slidesPerView: 1.5, slidesOffsetBefore: 0, slidesOffsetAfter: 0, spaceBetween: gapPx },
+      480: { slidesPerView: 1.28, slidesOffsetBefore: 0, slidesOffsetAfter: edgePx, spaceBetween: gapPx },
+      768: { slidesPerView: 1.5, slidesOffsetBefore: 0, slidesOffsetAfter: edgePx, spaceBetween: gapPx },
       1100: { slidesPerView: 2.12, slidesOffsetBefore: 0, slidesOffsetAfter: 0, spaceBetween: gapPx },
       1440: { slidesPerView: 2.18, slidesOffsetBefore: 0, slidesOffsetAfter: 0, spaceBetween: gapPx },
     },
   };
+}
+
+function bindCompactGalleryWrap(slider, swiper) {
+  if (!slider || !swiper) return () => {};
+
+  let startX = 0;
+  let startAtEnd = false;
+  let startAtBeginning = false;
+  let activePointerId = null;
+
+  const goFirst = () => {
+    requestAnimationFrame(() => {
+      swiper.slideTo(0, 300);
+    });
+  };
+
+  const goLast = () => {
+    requestAnimationFrame(() => {
+      const last = Math.max(0, (swiper.slides?.length || 1) - 1);
+      swiper.slideTo(last, 300);
+    });
+  };
+
+  const onPointerDown = (e) => {
+    if (!compactUiMatch()) return;
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+    activePointerId = e.pointerId;
+    startX = e.clientX;
+    startAtEnd = swiper.isEnd;
+    startAtBeginning = swiper.isBeginning;
+  };
+
+  const onPointerUp = (e) => {
+    if (activePointerId !== e.pointerId) return;
+    const dx = startX - e.clientX;
+    activePointerId = null;
+    if (!compactUiMatch() || Math.abs(dx) < 28) return;
+    if (startAtEnd && dx > 0) {
+      goFirst();
+    } else if (startAtBeginning && dx < 0) {
+      goLast();
+    }
+  };
+
+  const onPointerCancel = (e) => {
+    if (activePointerId === e.pointerId) {
+      activePointerId = null;
+    }
+  };
+
+  const onNextClick = () => {
+    if (compactUiMatch() && swiper.isEnd) {
+      goFirst();
+    }
+  };
+
+  const onPrevClick = () => {
+    if (compactUiMatch() && swiper.isBeginning) {
+      goLast();
+    }
+  };
+
+  const next = slider.querySelector(".isg-slider__btn--next");
+  const prev = slider.querySelector(".isg-slider__btn--prev");
+
+  slider.addEventListener("pointerdown", onPointerDown, { passive: true });
+  slider.addEventListener("pointerup", onPointerUp, { passive: true });
+  slider.addEventListener("pointercancel", onPointerCancel, { passive: true });
+  next?.addEventListener("click", onNextClick);
+  prev?.addEventListener("click", onPrevClick);
+
+  return () => {
+    slider.removeEventListener("pointerdown", onPointerDown);
+    slider.removeEventListener("pointerup", onPointerUp);
+    slider.removeEventListener("pointercancel", onPointerCancel);
+    next?.removeEventListener("click", onNextClick);
+    prev?.removeEventListener("click", onPrevClick);
+  };
+}
+
+function compactUiMatch() {
+  return window.matchMedia(COMPACT_SLIDER_QUERY).matches;
 }
 
 function bindSliderReveal(slider, swiper, onReady = () => {}) {
@@ -672,10 +755,12 @@ export async function initSliders(root = document) {
       : isTeam
         ? bindTeamReveal(slider)
         : () => {};
+    const unbindCompactGalleryWrap = isGallery ? bindCompactGalleryWrap(slider, swiper) : () => {};
 
     disposers.push(() => {
       unbindDragCursor();
       unbindSliderReveal();
+      unbindCompactGalleryWrap();
       try {
         swiper?.off("slideChange", syncBar);
         swiper?.off("transitionEnd", syncBar);

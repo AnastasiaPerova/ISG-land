@@ -522,6 +522,56 @@ function initOneQualityScrollTrack(track, options = {}) {
     slidesScrollEl.addEventListener("scroll", onSlidesScroll, { passive: true });
     mobileOff.push(() => slidesScrollEl.removeEventListener("scroll", onSlidesScroll));
 
+    let activePointerId = null;
+    let startX = 0;
+    let startAtBeginning = false;
+    let startAtEnd = false;
+    let wrapTimer = 0;
+
+    const wrapToIndex = (idx) => {
+      clearTimeout(wrapTimer);
+      wrapTimer = window.setTimeout(() => {
+        goToIndex(idx);
+      }, 80);
+    };
+
+    const onPointerDown = (e) => {
+      if (e.pointerType === "mouse" && e.button !== 0) return;
+      activePointerId = e.pointerId;
+      startX = e.clientX;
+      const best = findBestIndexCentered(slidesScrollEl, slides);
+      startAtBeginning = best === 0;
+      startAtEnd = best === n - 1;
+    };
+
+    const onPointerUp = (e) => {
+      if (activePointerId !== e.pointerId) return;
+      activePointerId = null;
+      const dx = startX - e.clientX;
+      if (Math.abs(dx) < 28) return;
+      if (startAtEnd && dx > 0) {
+        wrapToIndex(0);
+      } else if (startAtBeginning && dx < 0) {
+        wrapToIndex(n - 1);
+      }
+    };
+
+    const onPointerCancel = (e) => {
+      if (activePointerId === e.pointerId) {
+        activePointerId = null;
+      }
+    };
+
+    slidesScrollEl.addEventListener("pointerdown", onPointerDown, { passive: true });
+    slidesScrollEl.addEventListener("pointerup", onPointerUp, { passive: true });
+    slidesScrollEl.addEventListener("pointercancel", onPointerCancel, { passive: true });
+    mobileOff.push(() => {
+      slidesScrollEl.removeEventListener("pointerdown", onPointerDown);
+      slidesScrollEl.removeEventListener("pointerup", onPointerUp);
+      slidesScrollEl.removeEventListener("pointercancel", onPointerCancel);
+      clearTimeout(wrapTimer);
+    });
+
     if (listScrollEl) {
       let listTicking = false;
       const onListScroll = () => {

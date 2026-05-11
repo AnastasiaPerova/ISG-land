@@ -43,28 +43,39 @@ $default_items = array(
 $section = isg_acf_group(
 	'quality_section',
 	array(
-		'intro_background' => isg_asset_uri('img/guality-control-intro.jpg'),
-		'intro_kicker'     => 'PRODUCT RANGE',
-		'intro_title'      => 'Quality control is an essential part of the production process',
-		'focus_kicker'     => 'Focus areas',
-		'focus_heading'    => 'Quality control focus areas cover every stage from production to final delivery',
-		'skip_label'       => 'Skip',
-		'items'            => $default_items,
+		'intro_background'        => isg_asset_uri('img/guality-control-intro.jpg'),
+		'intro_mobile_background' => '',
+		'intro_kicker'            => 'PRODUCT RANGE',
+		'intro_title'             => 'Quality control is an essential part of the production process',
+		'focus_kicker'            => 'Focus areas',
+		'focus_heading'           => 'Quality control focus areas cover every stage from production to final delivery',
+		'skip_label'              => 'Skip',
+		'items'                   => $default_items,
 	),
 	$page_id
 );
 
-$intro_bg     = isg_image_url($section['intro_background'] ?? '', isg_asset_uri('img/guality-control-intro.jpg'));
-$intro_kicker = (string) ($section['intro_kicker'] ?? 'PRODUCT RANGE');
-$intro_title  = (string) ($section['intro_title'] ?? 'Quality control is an essential part of the production process');
-$focus_kicker = (string) ($section['focus_kicker'] ?? 'Focus areas');
+$intro_bg        = isg_image_url($section['intro_background'] ?? '', isg_asset_uri('img/guality-control-intro.jpg'));
+$intro_mobile_bg = isg_image_url($section['intro_mobile_background'] ?? '', '');
+$intro_kicker    = (string) ($section['intro_kicker'] ?? 'PRODUCT RANGE');
+$intro_title     = (string) ($section['intro_title'] ?? 'Quality control is an essential part of the production process');
+$focus_kicker    = (string) ($section['focus_kicker'] ?? 'Focus areas');
 $focus_heading = (string) ($section['focus_heading'] ?? 'Quality control focus areas cover every stage from production to final delivery');
 $items        = is_array($section['items'] ?? null) ? $section['items'] : $default_items;
 $items        = array_slice($items, 0, 4);
 ?>
 <div id="isg-quality" class="isg-quality-section" data-isg-block="quality">
-	<section class="isg-intro-section isg-intro-section--align-center isg-quality-intro" style="background-image: url('<?php echo esc_url($intro_bg); ?>');"
-		data-isg-intro-scroll>
+	<section class="isg-intro-section isg-intro-section--align-center isg-quality-intro" data-isg-intro-scroll>
+		<div class="isg-intro-media" aria-hidden="true">
+			<div class="isg-intro-media__inner">
+				<picture>
+					<?php if ($intro_mobile_bg !== '') : ?>
+						<source media="(max-width: 1099px)" srcset="<?php echo esc_url($intro_mobile_bg); ?>" />
+					<?php endif; ?>
+					<img class="isg-intro-media__img" src="<?php echo esc_url($intro_bg); ?>" alt="" loading="lazy" decoding="async" />
+				</picture>
+			</div>
+		</div>
 		<div class="isg-intro-section__container isg-quality-intro__conteiner container">
 			<div class="isg-intro-section__content isg-quality-intro__content">
 				<div class="isg-title-group">

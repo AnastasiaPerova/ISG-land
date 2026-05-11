@@ -58,35 +58,37 @@ $default_labels = array(
 $section = isg_acf_group(
 	'rfq_section',
 	array(
-		'intro_background'  => isg_asset_uri('img/engenereeng-intro.jpg'),
-		'intro_kicker'      => 'ENGINEERING & CUSTOM ORDERS',
-		'intro_title'       => 'We offer flexible manufacturing tailored to project needs',
-		'intro_body'        => 'Production parameters can be adapted to technical specifications, including diameter, wall thickness, steel grade, pipe length, applicable standards and documentation. Custom orders are manufactured in accordance with customer specifications.',
-		'intro_cta_label'   => 'Download catalogue',
-		'intro_cta_url'     => '#',
-		'aside_kicker'      => 'RFQ',
-		'aside_title_accent'=> 'Please send your project specifications for review.',
-		'aside_title_text'  => 'Our team will assess the requirements and prepare a quotation based on the provided information',
-		'aside_heading'     => 'Request a quotation',
-		'form_labels'       => $default_labels,
-		'cf7_shortcode'     => '',
-		'terms_url'         => '#',
-		'diameter_options'  => $default_diameter_options,
-		'wall_options'      => $default_wall_options,
-		'steel_options'     => $default_steel_options,
+		'intro_background'        => isg_asset_uri('img/engenereeng-intro.jpg'),
+		'intro_mobile_background' => '',
+		'intro_kicker'            => 'ENGINEERING & CUSTOM ORDERS',
+		'intro_title'             => 'We offer flexible manufacturing tailored to project needs',
+		'intro_body'              => 'Production parameters can be adapted to technical specifications, including diameter, wall thickness, steel grade, pipe length, applicable standards and documentation. Custom orders are manufactured in accordance with customer specifications.',
+		'intro_cta_label'         => 'Download catalogue',
+		'intro_cta_url'           => '#',
+		'aside_kicker'            => 'RFQ',
+		'aside_title_accent'      => 'Please send your project specifications for review.',
+		'aside_title_text'        => 'Our team will assess the requirements and prepare a quotation based on the provided information',
+		'aside_heading'           => 'Request a quotation',
+		'form_labels'             => $default_labels,
+		'cf7_shortcode'           => '',
+		'terms_url'               => '#',
+		'diameter_options'        => $default_diameter_options,
+		'wall_options'            => $default_wall_options,
+		'steel_options'           => $default_steel_options,
 	),
 	$page_id
 );
 
-$intro_bg       = isg_image_url($section['intro_background'] ?? '', isg_asset_uri('img/engenereeng-intro.jpg'));
-$intro_kicker   = (string) ($section['intro_kicker'] ?? 'ENGINEERING & CUSTOM ORDERS');
-$intro_title    = (string) ($section['intro_title'] ?? '');
-$intro_body     = (string) ($section['intro_body'] ?? '');
-$intro_cta_lbl  = (string) ($section['intro_cta_label'] ?? 'Download catalogue');
-$intro_cta_url  = (string) ($section['intro_cta_url'] ?? '#');
-$aside_kicker   = (string) ($section['aside_kicker'] ?? 'RFQ');
-$aside_accent   = (string) ($section['aside_title_accent'] ?? '');
-$aside_text     = (string) ($section['aside_title_text'] ?? '');
+$intro_bg        = isg_image_url($section['intro_background'] ?? '', isg_asset_uri('img/engenereeng-intro.jpg'));
+$intro_mobile_bg = isg_image_url($section['intro_mobile_background'] ?? '', '');
+$intro_kicker    = (string) ($section['intro_kicker'] ?? 'ENGINEERING & CUSTOM ORDERS');
+$intro_title     = (string) ($section['intro_title'] ?? '');
+$intro_body      = (string) ($section['intro_body'] ?? '');
+$intro_cta_lbl   = (string) ($section['intro_cta_label'] ?? 'Download catalogue');
+$intro_cta_url   = (string) ($section['intro_cta_url'] ?? '#');
+$aside_kicker    = (string) ($section['aside_kicker'] ?? 'RFQ');
+$aside_accent    = (string) ($section['aside_title_accent'] ?? '');
+$aside_text      = (string) ($section['aside_title_text'] ?? '');
 
 $aside_heading  = (string) ($section['aside_heading'] ?? ($section['form_heading'] ?? 'Request a quotation'));
 $form_labels    = is_array($section['form_labels'] ?? null) ? $section['form_labels'] : $default_labels;
@@ -106,7 +108,17 @@ $label = static function (array $labels, string $key, string $fallback = ''): st
 ?>
 <div id="isg-rfq" class="isg-rfq-section" data-isg-block="rfq">
 	<section class="isg-intro-section isg-intro-section--align-start isg-rfq-intro isg-section-surface"
-		style="background-image: url('<?php echo esc_url($intro_bg); ?>');" data-isg-intro-scroll>
+		data-isg-intro-scroll>
+		<div class="isg-intro-media" aria-hidden="true">
+			<div class="isg-intro-media__inner">
+				<picture>
+					<?php if ($intro_mobile_bg !== '') : ?>
+						<source media="(max-width: 1099px)" srcset="<?php echo esc_url($intro_mobile_bg); ?>" />
+					<?php endif; ?>
+					<img class="isg-intro-media__img" src="<?php echo esc_url($intro_bg); ?>" alt="" loading="lazy" decoding="async" />
+				</picture>
+			</div>
+		</div>
 		<div class="isg-intro-section__container isg-rfq-intro__conteiner container">
 			<div class="isg-intro-section__content isg-rfq-intro__content isg-text-light">
 				<div class="isg-title-group">
