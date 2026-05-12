@@ -398,6 +398,7 @@ export function initApplicationScroll(root = document) {
     let leftOffscreenX = -Math.max(window.innerWidth + 48, 420);
     let accordionOffscreenX = Math.max(window.innerWidth + 48, 420);
     let accordionHeightCleanup = 0;
+    let accordionHeightRaf = 0;
     let st = null;
     let currentMode = "";
     let glFx = null;
@@ -472,6 +473,73 @@ export function initApplicationScroll(root = document) {
       });
     };
 
+    const applyMobileAccordionStableHeight = () => {
+      if (!acc) return;
+      if (mqDesktop.matches) {
+        acc.style.removeProperty("height");
+        acc.style.removeProperty("min-height");
+        acc.style.removeProperty("overflow");
+        acc.style.removeProperty("transition");
+        return;
+      }
+
+      const itemList = Array.from(items);
+      if (!itemList.length) return;
+
+      const itemStates = itemList.map((item) => item.classList.contains("isg-accordion__item--open"));
+      const bodyTransitions = itemList.map((item) => {
+        const body = item.querySelector(".isg-accordion__body");
+        const prev = body instanceof HTMLElement ? body.style.transition : "";
+        if (body instanceof HTMLElement) body.style.transition = "none";
+        return { body, prev };
+      });
+      const prevHeight = acc.style.height;
+      const prevMinHeight = acc.style.minHeight;
+      const prevTransition = acc.style.transition;
+
+      acc.style.height = "auto";
+      acc.style.minHeight = "0px";
+      acc.style.transition = "none";
+
+      let maxHeight = 0;
+      itemList.forEach((target) => {
+        itemList.forEach((item) => {
+          const open = item === target;
+          item.classList.toggle("isg-accordion__item--open", open);
+          item.querySelector(".isg-accordion__trigger")?.setAttribute("aria-expanded", open ? "true" : "false");
+        });
+        maxHeight = Math.max(maxHeight, acc.scrollHeight, acc.offsetHeight);
+      });
+
+      itemList.forEach((item, i) => {
+        item.classList.toggle("isg-accordion__item--open", itemStates[i]);
+        item.querySelector(".isg-accordion__trigger")?.setAttribute("aria-expanded", itemStates[i] ? "true" : "false");
+      });
+      bodyTransitions.forEach(({ body, prev }) => {
+        if (body instanceof HTMLElement) body.style.transition = prev;
+      });
+
+      if (maxHeight > 0) {
+        const stableHeight = `${Math.ceil(maxHeight)}px`;
+        acc.style.height = stableHeight;
+        acc.style.minHeight = stableHeight;
+        acc.style.overflow = "hidden";
+      } else {
+        acc.style.height = prevHeight;
+        acc.style.minHeight = prevMinHeight;
+      }
+      acc.style.transition = prevTransition;
+    };
+
+    const requestMobileAccordionStableHeight = () => {
+      if (!acc || mqDesktop.matches) return;
+      if (accordionHeightRaf) cancelAnimationFrame(accordionHeightRaf);
+      accordionHeightRaf = requestAnimationFrame(() => {
+        accordionHeightRaf = 0;
+        applyMobileAccordionStableHeight();
+      });
+    };
+
     const lockMobileAccordionHeight = (mutate) => {
       if (!acc || mqDesktop.matches || reduced) {
         mutate();
@@ -479,26 +547,8 @@ export function initApplicationScroll(root = document) {
       }
 
       window.clearTimeout(accordionHeightCleanup);
-      const from = acc.offsetHeight;
-      acc.style.height = `${from}px`;
-      acc.style.overflow = "hidden";
-      acc.style.transition = "height 0.52s cubic-bezier(0.22, 1, 0.36, 1)";
-
       mutate();
-
-      requestAnimationFrame(() => {
-        const to = acc.scrollHeight;
-        acc.style.height = `${Math.max(from, to)}px`;
-        requestAnimationFrame(() => {
-          acc.style.height = `${to}px`;
-        });
-      });
-
-      accordionHeightCleanup = window.setTimeout(() => {
-        acc.style.removeProperty("height");
-        acc.style.removeProperty("overflow");
-        acc.style.removeProperty("transition");
-      }, 620);
+      applyMobileAccordionStableHeight();
     };
 
     const applyMobileStaticMedia = () => {
@@ -589,6 +639,7 @@ export function initApplicationScroll(root = document) {
       if (appLeft) gsap.set(appLeft, { clearProps: "opacity,transform" });
       if (appRight) gsap.set(appRight, { clearProps: "opacity,transform" });
       setAccordionIndex(items.length ? 0 : -1);
+      requestMobileAccordionStableHeight();
       const onEnd = () => {
         try {
           const d = video.duration;
@@ -682,6 +733,7 @@ export function initApplicationScroll(root = document) {
       if (appLeft) gsap.set(appLeft, { opacity: 1, x: 0 });
       if (appRight) gsap.set(appRight, { opacity: 1, x: 0 });
       setAccordionIndex(items.length ? 0 : -1);
+      requestMobileAccordionStableHeight();
       try {
         if (video.duration && Number.isFinite(video.duration)) {
           video.currentTime = 0;
@@ -780,6 +832,16 @@ export function initApplicationScroll(root = document) {
       currentMode = nextMode;
 
       if (nextMode === "desktop") {
+        if (accordionHeightRaf) {
+          cancelAnimationFrame(accordionHeightRaf);
+          accordionHeightRaf = 0;
+        }
+        if (acc) {
+          acc.style.removeProperty("height");
+          acc.style.removeProperty("min-height");
+          acc.style.removeProperty("overflow");
+          acc.style.removeProperty("transition");
+        }
         clearMobileStaticMedia();
         buildDesktopScene();
       } else {
@@ -795,6 +857,9 @@ export function initApplicationScroll(root = document) {
       if (!mqDesktop.matches && width === lastLayoutWidth) return;
       lastLayoutWidth = width;
       rebuild();
+      if (!mqDesktop.matches) {
+        requestMobileAccordionStableHeight();
+      }
     };
     window.addEventListener("resize", onResize);
 
@@ -816,8 +881,10 @@ export function initApplicationScroll(root = document) {
       window.removeEventListener("resize", onResize);
       mqDesktop.removeEventListener("change", onDesktopChange);
       window.clearTimeout(accordionHeightCleanup);
+      if (accordionHeightRaf) cancelAnimationFrame(accordionHeightRaf);
       if (acc) {
         acc.style.removeProperty("height");
+        acc.style.removeProperty("min-height");
         acc.style.removeProperty("overflow");
         acc.style.removeProperty("transition");
       }
