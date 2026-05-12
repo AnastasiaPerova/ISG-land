@@ -49,6 +49,7 @@ let disposers = [];
 let qualityCardsRevealDisposer = null;
 let specCardsRevealDisposer = null;
 const MOBILE_GSAP_DISABLE_MQ = "(max-width: 1099px)";
+const MOBILE_VIEWPORT_STABLE_MQ = "(max-width: 1099px)";
 const PRELOADER_STEPS = {
   partials: { from: 0, to: 45, label: "Loading sections" },
   init: { from: 45, to: 70, label: "Initializing interface" },
@@ -191,6 +192,67 @@ function shouldDisableMobileGsapAnimations() {
   return window.matchMedia(MOBILE_GSAP_DISABLE_MQ).matches;
 }
 
+function initStableMobileViewportUnit() {
+  const root = document.documentElement;
+  const mq = window.matchMedia(MOBILE_VIEWPORT_STABLE_MQ);
+  let lastWidth = 0;
+  let raf = 0;
+  let orientationTimer = 0;
+
+  const viewportHeight = () =>
+    window.visualViewport?.height || window.innerHeight || root.clientHeight || 0;
+
+  const apply = ({ force = false } = {}) => {
+    if (!mq.matches) {
+      root.style.removeProperty("--isg-stable-vh");
+      lastWidth = window.innerWidth || root.clientWidth || 0;
+      return;
+    }
+
+    const width = window.innerWidth || root.clientWidth || 0;
+    if (!force && lastWidth && width === lastWidth) {
+      return;
+    }
+
+    lastWidth = width;
+    const height = viewportHeight();
+    if (height > 0) {
+      root.style.setProperty("--isg-stable-vh", `${height * 0.01}px`);
+    }
+  };
+
+  const scheduleApply = (force = false) => {
+    if (raf) cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(() => {
+      raf = 0;
+      apply({ force });
+    });
+  };
+
+  const onResize = () => scheduleApply(false);
+  const onOrientationChange = () => {
+    window.clearTimeout(orientationTimer);
+    orientationTimer = window.setTimeout(() => scheduleApply(true), 260);
+  };
+  const onMqChange = () => scheduleApply(true);
+
+  apply({ force: true });
+  window.addEventListener("resize", onResize, { passive: true });
+  window.visualViewport?.addEventListener("resize", onResize, { passive: true });
+  window.addEventListener("orientationchange", onOrientationChange, { passive: true });
+  mq.addEventListener?.("change", onMqChange);
+
+  return () => {
+    if (raf) cancelAnimationFrame(raf);
+    window.clearTimeout(orientationTimer);
+    window.removeEventListener("resize", onResize);
+    window.visualViewport?.removeEventListener("resize", onResize);
+    window.removeEventListener("orientationchange", onOrientationChange);
+    mq.removeEventListener?.("change", onMqChange);
+    root.style.removeProperty("--isg-stable-vh");
+  };
+}
+
 function bootQualityCardsReveal(root = document) {
   try {
     qualityCardsRevealDisposer?.();
@@ -282,6 +344,7 @@ function scheduleSpecCardsRevealBoot() {
 export async function initIsgPage(root = document.body) {
   disposeInternals();
   const disableMobileGsapAnimations = shouldDisableMobileGsapAnimations();
+  disposers.push(initStableMobileViewportUnit());
   if (!disableMobileGsapAnimations) {
     bootSpecCardsReveal(root);
     bootQualityCardsReveal(root);
