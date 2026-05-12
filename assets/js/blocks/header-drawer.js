@@ -1,28 +1,34 @@
 const CLOSE_EVENT = "isg-close-nav-drawer";
 
 let lockedScrollY = 0;
+let scrollLockState = null;
 
 function lockBodyScroll() {
+  if (scrollLockState) return;
   lockedScrollY = window.scrollY || window.pageYOffset || 0;
+  scrollLockState = {
+    htmlOverflow: document.documentElement.style.overflow,
+    bodyOverflow: document.body.style.overflow,
+    bodyTouchAction: document.body.style.touchAction,
+  };
   document.body.classList.add("isg-nav-drawer-open");
-  document.body.style.position = "fixed";
-  document.body.style.top = `-${lockedScrollY}px`;
-  document.body.style.left = "0";
-  document.body.style.right = "0";
-  document.body.style.width = "100%";
+  document.documentElement.style.overflow = "hidden";
+  document.body.style.overflow = "hidden";
+  document.body.style.touchAction = "none";
 }
 
-function unlockBodyScroll() {
+function unlockBodyScroll({ restoreScroll = true } = {}) {
   const shouldRestore = document.body.classList.contains("isg-nav-drawer-open");
 
   document.body.classList.remove("isg-nav-drawer-open");
-  document.body.style.removeProperty("position");
-  document.body.style.removeProperty("top");
-  document.body.style.removeProperty("left");
-  document.body.style.removeProperty("right");
-  document.body.style.removeProperty("width");
+  if (scrollLockState) {
+    document.documentElement.style.overflow = scrollLockState.htmlOverflow;
+    document.body.style.overflow = scrollLockState.bodyOverflow;
+    document.body.style.touchAction = scrollLockState.bodyTouchAction;
+  }
+  scrollLockState = null;
 
-  if (shouldRestore) {
+  if (shouldRestore && restoreScroll) {
     window.scrollTo({ top: lockedScrollY, left: 0, behavior: "auto" });
   }
 }
@@ -44,12 +50,12 @@ export function initHeaderDrawer(root = document) {
     lockBodyScroll();
   };
 
-  const close = () => {
+  const close = ({ restoreScroll = true } = {}) => {
     drawer.classList.remove("isg-nav-drawer--open");
     btn.setAttribute("aria-expanded", "false");
     btn.setAttribute("aria-label", "Open menu");
     drawer.setAttribute("aria-hidden", "true");
-    unlockBodyScroll();
+    unlockBodyScroll({ restoreScroll });
   };
 
   const onBurgerClick = () => {
@@ -57,8 +63,12 @@ export function initHeaderDrawer(root = document) {
     else open();
   };
 
-  const onCloseEvent = () => close();
-  const onNavLinkClick = () => close();
+  const onCloseEvent = (e) => close({ restoreScroll: e?.detail?.restoreScroll !== false });
+  const onNavLinkClick = (e) => {
+    const href = e.currentTarget?.getAttribute?.("href") || "";
+    if (href.startsWith("#")) return;
+    close();
+  };
 
   const onEsc = (e) => {
     if (e.key === "Escape" && drawer.classList.contains("isg-nav-drawer--open")) {

@@ -17,6 +17,11 @@ const SECTION_IDS = [
 
 const DEFAULT_HEADER_OFFSET = 96;
 const ANCHOR_SETTLE_EPSILON = 2;
+const COMPACT_ANCHOR_QUERY = "(max-width: 1099px)";
+
+function isCompactAnchorViewport() {
+  return window.matchMedia(COMPACT_ANCHOR_QUERY).matches;
+}
 
 function stickyHeaderEl(root) {
   return root.querySelector("[data-isg-sticky-header]") || document.querySelector("[data-isg-sticky-header]");
@@ -217,6 +222,17 @@ export function initSectionAnchors(root = document) {
     });
   };
 
+  const closeDrawerThenScroll = (id) => {
+    document.dispatchEvent(new CustomEvent(CLOSE_EVENT));
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        syncPublishedOffset();
+        scrollToSection(id, { behavior: "smooth", updateHash: false });
+        setActiveSectionLinkAll(root, id);
+      });
+    });
+  };
+
   const navHrefIdSet = () => {
     const ids = new Set();
     sectionNavs(root).forEach((nav) => {
@@ -279,20 +295,22 @@ export function initSectionAnchors(root = document) {
     if (!href?.startsWith("#")) return;
     const id = href.slice(1);
     if (!id || !document.getElementById(id)) return;
+    const inDrawer = Boolean(a.closest("#isg-nav-drawer"));
     const current = nav.querySelector(".isg-btn--active")?.getAttribute("href");
     if (current === href) {
       e.preventDefault();
-      if (a.closest("#isg-nav-drawer")) {
+      if (inDrawer) {
         document.dispatchEvent(new CustomEvent(CLOSE_EVENT));
       }
       return;
     }
     e.preventDefault();
     lockAnchorNavigation(id);
-    scrollToSection(id, { behavior: "smooth", updateHash: false });
-    setActiveSectionLinkAll(root, id);
-    if (a.closest("#isg-nav-drawer")) {
-      document.dispatchEvent(new CustomEvent(CLOSE_EVENT));
+    if (inDrawer) {
+      closeDrawerThenScroll(id);
+    } else {
+      scrollToSection(id, { behavior: "smooth", updateHash: false });
+      setActiveSectionLinkAll(root, id);
     }
   };
 
@@ -305,7 +323,7 @@ export function initSectionAnchors(root = document) {
   const ro = sticky
     ? new ResizeObserver(() => {
         syncPublishedOffset();
-        if (activeAnchorId) {
+        if (activeAnchorId && !isCompactAnchorViewport()) {
           syncAnchorLayout(activeAnchorId);
         }
       })
@@ -314,7 +332,7 @@ export function initSectionAnchors(root = document) {
 
   const onWinResize = () => {
     syncPublishedOffset();
-    if (activeAnchorId) {
+    if (activeAnchorId && !isCompactAnchorViewport()) {
       syncAnchorLayout(activeAnchorId);
     }
     applyActiveFromScroll();
@@ -356,7 +374,7 @@ export function initSectionAnchors(root = document) {
 
   document.fonts?.ready
     ?.then(() => {
-      if (activeAnchorId || hash) {
+      if ((activeAnchorId || hash) && !isCompactAnchorViewport()) {
         syncAnchorLayout(activeAnchorId || hash, {
           behavior: "auto",
           updateHash: false,
