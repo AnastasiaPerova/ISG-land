@@ -229,7 +229,7 @@ body {
   font-size: var(--isg-type-body);
   line-height: 1.5;
   color: #111111;
-  background: #ffffff;
+  background: rgb(29, 29, 29);
   overflow-x: clip;
   max-width: 100%;
 }
@@ -7610,11 +7610,12 @@ button.isg-slider-item__img,
 .isg-footer {
   background: rgb(29, 29, 29);
   color: #e8e6e0;
-  padding: var(--isg-space-md) 0;
+  padding: var(--isg-space-md) 0 calc(var(--isg-space-md) + env(safe-area-inset-bottom, 0px));
   display: flex;
   flex-direction: column;
   gap: 332px;
   position: relative;
+  margin-top: -1px;
   overflow: hidden;
 }
 
@@ -8515,7 +8516,7 @@ d {
 
   .isg-footer {
     padding-top: var(--isg-mobile-section-y);
-    padding-bottom: var(--isg-mobile-section-y);
+    padding-bottom: calc(var(--isg-mobile-section-y) + env(safe-area-inset-bottom, 0px));
     gap: var(--isg-mobile-section-y);
   }
 
