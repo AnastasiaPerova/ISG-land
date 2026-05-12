@@ -1382,11 +1382,12 @@ body.isg-nav-drawer-open {
 
 .isg-hero__partner-logos {
   position: absolute;
-  z-index: 3;
-  top: calc(env(safe-area-inset-top, 0px) + clamp(88px, 8.4vw, 136px));
+  z-index: 4;
+  top: calc(env(safe-area-inset-top, 0px) + clamp(104px, 7.2vw, 138px));
   right: var(--container-offset);
-  width: clamp(320px, 28vw, 580px);
-  max-width: calc(100% - (var(--container-offset) * 2));
+  display: block;
+  width: clamp(430px, 27vw, 467px);
+  // max-width: calc(100% - (var(--container-offset) * 2));
   opacity: 1;
   pointer-events: none;
 }
@@ -2243,9 +2244,9 @@ body.isg-nav-drawer-open {
     padding-bottom: 0;
   }
   .isg-hero__partner-logos {
-    top: calc(env(safe-area-inset-top, 0px) + 76px);
+    top: calc(env(safe-area-inset-top, 0px) + 82px);
     right: var(--container-offset);
-    width: clamp(150px, 54vw, 260px);
+    width: clamp(300px, 88vw, 385px);
   }
 }
 
