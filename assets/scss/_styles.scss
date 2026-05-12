@@ -151,7 +151,7 @@ body.isg-lightbox-open {
 
 @media (max-width: 1099px) {
   :root {
-    --container-offset: calc(min(5.333vw, 24px) * 0.5);
+    --container-offset: calc(min(7.2vw, 32px) * 0.5);
     --isg-item-gap: min(2.778vw, 11.5px);
 
     --isg-card-gap: min(2.778vw, 11.5px);
@@ -178,6 +178,7 @@ body.isg-lightbox-open {
     --isg-type-title-lg: min(4.8vw, 17px);
 
     --isg-type-subtitle: min(2.564vw, 11.5px);
+    --isg-type-body-sm: max(14px, min(3.75vw, 16px));
 
     --isg-type-button: min(3.889vw, 12.075pt);
     --isg-btn-height: min(10.256vw, 46px);
@@ -408,7 +409,7 @@ select {
   gap: var(--isg-space-md);
   box-sizing: border-box;
   height: max(0.44in, min(3.333vw, 3.99pc));
-  line-height: max(0.44in, min(3.333vw, 3.99pc));
+  line-height: 1.22;
   padding: 0 var(--isg-btn-padding);
   border: 1px solid #ffffff;
   border-radius: var(--isg-ui-br);
@@ -441,15 +442,22 @@ select {
 }
 
 .isg-btn .isg-btn__scroll-track {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex: 1 1 auto;
   min-width: 0;
   max-width: 100%;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: visible;
   text-align: center;
+  line-height: 1.22;
 }
 
 .isg-btn .isg-btn__scroll-inner {
   display: inline-block;
+  line-height: 1.22;
+  padding-block: 0.08em;
   white-space: nowrap;
 }
 
@@ -479,7 +487,7 @@ select {
 @media (max-width: 1099px) {
   .isg-btn {
     height: min(10.256vw, 46px);
-    line-height: min(10.256vw, 46px);
+    line-height: 1.22;
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1372,6 +1380,24 @@ body.isg-nav-drawer-open {
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.62) 0%, rgba(0, 0, 0, 0.38) 38%, rgba(0, 0, 0, 0.55) 100%);
 }
 
+.isg-hero__partner-logos {
+  position: absolute;
+  z-index: 3;
+  top: calc(env(safe-area-inset-top, 0px) + clamp(88px, 8.4vw, 136px));
+  right: var(--container-offset);
+  width: clamp(320px, 28vw, 580px);
+  max-width: calc(100% - (var(--container-offset) * 2));
+  opacity: 1;
+  pointer-events: none;
+}
+
+.isg-hero__partner-logos-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.28));
+}
+
 .isg-hero .isg-display,
 .isg-hero .isg-lead {
   color: #ffffff;
@@ -1405,7 +1431,7 @@ body.isg-nav-drawer-open {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  line-height: 1;
+  line-height: 1.22;
 }
 
 .isg-hero .isg-btn-group--hero-actions > .isg-hero-watch-btn {
@@ -2215,6 +2241,11 @@ body.isg-nav-drawer-open {
       var(--isg-sticky-header-offset, var(--isg-space-13xl)) + var(--isg-space-4xl) + var(--isg-space-xl)
     );
     padding-bottom: 0;
+  }
+  .isg-hero__partner-logos {
+    top: calc(env(safe-area-inset-top, 0px) + 76px);
+    right: var(--container-offset);
+    width: clamp(150px, 54vw, 260px);
   }
 }
 
@@ -3896,6 +3927,20 @@ body.isg-nav-drawer-open {
   .isg-product-intro .isg-spec-card__meta {
     font-size: max(14px, min(3.8vw, 17px));
     line-height: 1.25;
+  }
+}
+
+@media (max-width: 560px) {
+  .isg-product-intro .isg-spec-cards {
+    grid-template-columns: minmax(0, min(100%, 320px));
+    justify-content: center;
+    justify-items: stretch;
+    align-self: center;
+  }
+
+  .isg-product-intro .isg-spec-card {
+    min-height: clamp(178px, 46vw, 220px);
+    padding: clamp(20px, 5vw, 24px);
   }
 }
 
@@ -8290,8 +8335,8 @@ body.isg-404-page {
 
 @media (max-width: 1099px) {
   :root {
-    --isg-mobile-section-y: min(11vw, 52px);
-    --isg-mobile-section-gap: min(7vw, 30px);
+    --isg-mobile-section-y: min(12vw, 60px);
+    --isg-mobile-section-gap: min(8vw, 36px);
     --isg-mobile-content-gap: var(--isg-space-sm);
     --isg-mobile-card-pad: min(4.8vw, 20px);
     --isg-mobile-viewport-h: calc(var(--isg-stable-vh, 1vh) * 100);

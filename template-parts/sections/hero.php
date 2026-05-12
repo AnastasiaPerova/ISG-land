@@ -40,6 +40,10 @@ $watch_text   = (string) isg_acf_value('hero_watch_label', 'Watch video', $page_
 		</video>
 	</div>
 
+	<div class="isg-hero__partner-logos" aria-hidden="true">
+		<img class="isg-hero__partner-logos-img" src="<?php echo esc_url(isg_asset_uri('img/logos.svg')); ?>" alt="" loading="eager" decoding="async" />
+	</div>
+
 	<div class="isg-hero__conteiner container">
 		<div class="isg-hero__content">
 			<div class="isg-title-group">
