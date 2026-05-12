@@ -1,0 +1,14 @@
+
+> dev:serve
+> browser-sync start --server . --startPath /preview.html --files assets/css/main.css --files preview.html --files assets/js --files partials --no-notify --port 5173
+
+[Browsersync] Access URLs:
+ ---------------------------------------------------
+       Local: http://localhost:5173/preview.html
+    External: http://192.168.30.56:5173/preview.html
+ ---------------------------------------------------
+          UI: http://localhost:3001
+ UI External: http://192.168.30.56:3001
+ ---------------------------------------------------
+[Browsersync] Serving files from: .
+[Browsersync] Watching files...

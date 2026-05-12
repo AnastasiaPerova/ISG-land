@@ -1,5 +1,32 @@
 const CLOSE_EVENT = "isg-close-nav-drawer";
 
+let lockedScrollY = 0;
+
+function lockBodyScroll() {
+  lockedScrollY = window.scrollY || window.pageYOffset || 0;
+  document.body.classList.add("isg-nav-drawer-open");
+  document.body.style.position = "fixed";
+  document.body.style.top = `-${lockedScrollY}px`;
+  document.body.style.left = "0";
+  document.body.style.right = "0";
+  document.body.style.width = "100%";
+}
+
+function unlockBodyScroll() {
+  const shouldRestore = document.body.classList.contains("isg-nav-drawer-open");
+
+  document.body.classList.remove("isg-nav-drawer-open");
+  document.body.style.removeProperty("position");
+  document.body.style.removeProperty("top");
+  document.body.style.removeProperty("left");
+  document.body.style.removeProperty("right");
+  document.body.style.removeProperty("width");
+
+  if (shouldRestore) {
+    window.scrollTo({ top: lockedScrollY, left: 0, behavior: "auto" });
+  }
+}
+
 
 
 
@@ -14,7 +41,7 @@ export function initHeaderDrawer(root = document) {
     btn.setAttribute("aria-expanded", "true");
     btn.setAttribute("aria-label", "Close menu");
     drawer.setAttribute("aria-hidden", "false");
-    document.body.classList.add("isg-nav-drawer-open");
+    lockBodyScroll();
   };
 
   const close = () => {
@@ -22,7 +49,7 @@ export function initHeaderDrawer(root = document) {
     btn.setAttribute("aria-expanded", "false");
     btn.setAttribute("aria-label", "Open menu");
     drawer.setAttribute("aria-hidden", "true");
-    document.body.classList.remove("isg-nav-drawer-open");
+    unlockBodyScroll();
   };
 
   const onBurgerClick = () => {
