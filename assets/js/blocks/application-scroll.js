@@ -397,6 +397,7 @@ export function initApplicationScroll(root = document) {
     let accordionAutoStartP = null;
     let leftOffscreenX = -Math.max(window.innerWidth + 48, 420);
     let accordionOffscreenX = Math.max(window.innerWidth + 48, 420);
+    let accordionHeightCleanup = 0;
     let st = null;
     let currentMode = "";
     let glFx = null;
@@ -471,6 +472,35 @@ export function initApplicationScroll(root = document) {
       });
     };
 
+    const lockMobileAccordionHeight = (mutate) => {
+      if (!acc || mqDesktop.matches || reduced) {
+        mutate();
+        return;
+      }
+
+      window.clearTimeout(accordionHeightCleanup);
+      const from = acc.offsetHeight;
+      acc.style.height = `${from}px`;
+      acc.style.overflow = "hidden";
+      acc.style.transition = "height 0.52s cubic-bezier(0.22, 1, 0.36, 1)";
+
+      mutate();
+
+      requestAnimationFrame(() => {
+        const to = acc.scrollHeight;
+        acc.style.height = `${Math.max(from, to)}px`;
+        requestAnimationFrame(() => {
+          acc.style.height = `${to}px`;
+        });
+      });
+
+      accordionHeightCleanup = window.setTimeout(() => {
+        acc.style.removeProperty("height");
+        acc.style.removeProperty("overflow");
+        acc.style.removeProperty("transition");
+      }, 620);
+    };
+
     const applyMobileStaticMedia = () => {
       section.classList.add("isg-app--mobile-static");
       if (mediaEl && mobileBg) {
@@ -523,10 +553,12 @@ export function initApplicationScroll(root = document) {
         const isOpen = item.classList.contains("isg-accordion__item--open");
         if (isOpen) return;
         warmAccordionMedia(item, "high");
-        items.forEach((entry) => {
-          const open = entry === item;
-          entry.classList.toggle("isg-accordion__item--open", open);
-          entry.querySelector(".isg-accordion__trigger")?.setAttribute("aria-expanded", open ? "true" : "false");
+        lockMobileAccordionHeight(() => {
+          items.forEach((entry) => {
+            const open = entry === item;
+            entry.classList.toggle("isg-accordion__item--open", open);
+            entry.querySelector(".isg-accordion__trigger")?.setAttribute("aria-expanded", open ? "true" : "false");
+          });
         });
         return;
       }
@@ -783,6 +815,12 @@ export function initApplicationScroll(root = document) {
       } catch (_) {}
       window.removeEventListener("resize", onResize);
       mqDesktop.removeEventListener("change", onDesktopChange);
+      window.clearTimeout(accordionHeightCleanup);
+      if (acc) {
+        acc.style.removeProperty("height");
+        acc.style.removeProperty("overflow");
+        acc.style.removeProperty("transition");
+      }
       titleH2s.forEach((h2) => {
         restoreHeading(h2);
       });

@@ -291,9 +291,9 @@ export function initLangNav(root = document) {
       if (!nav.contains(option)) return;
       const code = option.getAttribute("data-isg-lang");
       if (!code) return;
-      const nextUrl =
-        option.getAttribute("data-isg-lang-url") ||
-        (option instanceof HTMLAnchorElement ? option.href : "");
+      const dataUrl = option.getAttribute("data-isg-lang-url")?.trim() || "";
+      const hrefAttr = option instanceof HTMLAnchorElement ? option.getAttribute("href")?.trim() || "" : "";
+      const nextUrl = dataUrl || (hrefAttr && hrefAttr !== "#" ? option.href : "");
       if (nextUrl) {
         e.preventDefault();
         window.location.assign(nextUrl);

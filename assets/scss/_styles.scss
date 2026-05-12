@@ -2917,6 +2917,7 @@ body.isg-nav-drawer-open {
   position: relative;
   gap: 0;
   overflow: hidden;
+  overflow-anchor: none;
   border-radius: var(--isg-card-br);
   background: rgba(18, 87, 166, 0.88);
   -webkit-backdrop-filter: none;

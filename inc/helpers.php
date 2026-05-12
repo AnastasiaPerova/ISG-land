@@ -220,6 +220,13 @@ function isg_language_root_url(string $lang_slug = ''): string {
 		return $home_url;
 	}
 
+	if (function_exists('pll_home_url')) {
+		$polylang_home_url = pll_home_url($lang_slug);
+		if (is_string($polylang_home_url) && $polylang_home_url !== '') {
+			return isg_normalize_site_url($polylang_home_url);
+		}
+	}
+
 	$default_lang = '';
 	if (function_exists('pll_default_language')) {
 		$default_lang = strtolower(trim((string) pll_default_language('slug')));
@@ -286,6 +293,10 @@ function isg_language_switch_url(string $lang_slug, string $fallback = ''): stri
 	}
 
 	if (isg_is_current_front_page()) {
+		if ($fallback !== '') {
+			return isg_normalize_site_url($fallback);
+		}
+
 		return isg_language_root_url($lang_slug);
 	}
 
