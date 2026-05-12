@@ -710,15 +710,11 @@ export function initLightbox(root = document.body) {
   
   const onPtrUp = (e) => {
     if (!ptr || e.pointerId !== ptr.pid) return;
-    const swiper = getSliderSwiper(ptr.t);
-    if (swiper && swiper.allowClick === false) {
-      ptr = null;
-      return;
-    }
     const moved = Math.hypot(e.clientX - ptr.x, e.clientY - ptr.y);
     if (moved <= DRAG_PX) {
       const src = ptr.t.getAttribute("data-isg-lightbox");
       if (src && isAllowedLightboxSrc(src)) {
+        resetSwiperInteraction(getSliderSwiper(ptr.t));
         suppressSliderClickUntil = performance.now() + 350;
         openLightbox(ptr.t);
       }
@@ -753,7 +749,7 @@ export function initLightbox(root = document.body) {
   root.addEventListener("pointerdown", onPtrDown);
   document.addEventListener("pointerup", onPtrUp);
   document.addEventListener("pointercancel", onPtrCancel);
-  root.addEventListener("click", onClick);
+  root.addEventListener("click", onClick, true);
   return () => {
     if (!overlay.classList.contains("isg-lightbox--inactive")) {
       overlay._isgFinalizeClose?.();
@@ -763,6 +759,6 @@ export function initLightbox(root = document.body) {
     root.removeEventListener("pointerdown", onPtrDown);
     document.removeEventListener("pointerup", onPtrUp);
     document.removeEventListener("pointercancel", onPtrCancel);
-    root.removeEventListener("click", onClick);
+    root.removeEventListener("click", onClick, true);
   };
 }
