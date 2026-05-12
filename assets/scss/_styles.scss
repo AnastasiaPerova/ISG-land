@@ -120,13 +120,13 @@ body.isg-lightbox-open {
 
   --isg-section-br: max(2.2pc, min(2.778vw, 53.2px));
   --isg-card-br: max(1.1pc, min(1.389vw, 26.6px));
-  --isg-ui-br: max(9.9pt, min(1.042vw, 19.950000000000003px));
+  --isg-ui-br: max(9pt, min(0.94vw, 18px));
   --isg-section-margin-top: calc(max(2.2pc, min(2.778vw, 53.2px)) * -1);
 
   --isg-type-display: max(4.4pc, min(5.556vw, 6.65pc));
   --isg-type-lead: max(1.65pc, min(2.05vw, 39px));
   --isg-type-stat: max(44px, min(3.472vw, 66.5px));
-  --isg-type-nav: max(9.9pt, min(1.042vw, 19.950000000000003px));
+  --isg-type-nav:max(9pt, min(0.94vw, 18px));
   --isg-type-body-lg: max(0.99pc, min(1.25vw, 23.94px));
   --isg-type-body: max(0.77pc, min(0.972vw, 18.62px));
   --isg-type-body-sm: max(0.66pc, min(0.833vw, 15.96px));
@@ -1842,8 +1842,8 @@ body.isg-nav-drawer-open {
 
 .isg-site-header__chrome .isg-hero__logo {
   height: var(--isg-header-item-h);
-  max-width: 14rem;
-  padding: 0 var(--isg-space-xs);
+  max-width: 100%;
+  padding: 0 var(--isg-space-sm) 0 var(--isg-space-xs);
 
   display: inline-flex;
   align-items: center;
@@ -1853,8 +1853,9 @@ body.isg-nav-drawer-open {
 }
 
 .isg-site-header__chrome .isg-hero__logo .isg-hero__logo-img {
-  max-width: 11rem;
-  max-height: 3rem;
+  max-width: 100%;
+  width: 19.5rem;
+
 }
 
 .isg-site-header__chrome .isg-header-nav {
