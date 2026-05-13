@@ -81,6 +81,16 @@ function isg_disable_upload_image_subsizes(array $sizes): array {
 }
 add_filter('intermediate_image_sizes_advanced', 'isg_disable_upload_image_subsizes');
 
+function isg_disable_upload_displayable_image_processing($result, $path = '') {
+	$extension = strtolower(pathinfo((string) $path, PATHINFO_EXTENSION));
+	if (in_array($extension, array('jpg', 'jpeg', 'png', 'webp', 'gif', 'avif', 'heic'), true)) {
+		return false;
+	}
+
+	return $result;
+}
+add_filter('file_is_displayable_image', 'isg_disable_upload_displayable_image_processing', 10, 2);
+
 function isg_body_classes(array $classes): array {
 	$classes[] = 'isg-wp-theme';
 	$classes[] = 'isg-preloader-active';
