@@ -194,6 +194,8 @@ $contact_phone_href    = $contact_phone_display !== '' ? preg_replace('/(?!^\+)[
 			<img class="isg-header-mobile-logo__img" src="<?php echo esc_url($mobile_logo_url); ?>" alt="" width="170" height="62" decoding="async" />
 		</a>
 
+		<img class="isg-header-mobile-eu-logo" src="<?php echo esc_url($eu_logo_url); ?>" alt="<?php esc_attr_e('Dofinansowane przez Unię Europejską', 'isg'); ?>" width="360" height="78" decoding="async" />
+
 		<button type="button" class="isg-burger" data-isg-burger aria-controls="isg-nav-drawer" aria-expanded="false" aria-label="<?php esc_attr_e('Open menu', 'isg'); ?>">
 			<span class="isg-burger__bars" aria-hidden="true"></span>
 		</button>

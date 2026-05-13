@@ -76,6 +76,7 @@ $phone_href = preg_replace('/[^\d+]/', '', $phone);
 		<div class="isg-footer__row isg-footer__row--bottom">
 			<div class="isg-footer__col isg-footer__col--logo">
 				<img class="isg-footer__logo" src="<?php echo esc_url($footer_logo); ?>" alt="ISG" width="170" height="62" loading="lazy" />
+				<img class="isg-footer__eu-logo" src="<?php echo esc_url($eu_logo); ?>" alt="<?php esc_attr_e('Dofinansowane przez Unię Europejską', 'isg'); ?>" width="360" height="78" loading="lazy" />
 			</div>
 
 			<div class="isg-footer__col">
@@ -94,7 +95,6 @@ $phone_href = preg_replace('/[^\d+]/', '', $phone);
 			</div>
 
 			<div class="isg-footer__col">
-				<img class="isg-footer__eu-logo" src="<?php echo esc_url($eu_logo); ?>" alt="<?php esc_attr_e('Dofinansowane przez Unię Europejską', 'isg'); ?>" width="360" height="78" loading="lazy" />
 				<div class="isg-footer__legal">
 					<a href="<?php echo esc_url($privacy_url); ?>"><?php echo esc_html($privacy_label_text); ?></a>
 					<span aria-hidden="true">|</span>
