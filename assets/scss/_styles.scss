@@ -7728,8 +7728,8 @@ button.isg-slider-item__img,
   }
   .isg-footer__row--bottom > .isg-footer__col--logo {
     order: 2;
-    flex-direction: row;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
   }
   .isg-footer__row--bottom > .isg-footer__col:nth-child(3) {
     order: 3;
