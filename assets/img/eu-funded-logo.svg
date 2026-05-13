@@ -1,0 +1,26 @@
+<svg width="360" height="78" viewBox="0 0 360 78" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="eu-funded-logo-title">
+  <title id="eu-funded-logo-title">Dofinansowane przez Unie Europejska</title>
+  <g fill="#fff">
+    <text x="0" y="31" font-family="Plus Jakarta Sans, Arial, sans-serif" font-size="21" font-weight="700" letter-spacing="0">
+      Dofinansowane przez
+    </text>
+    <text x="42" y="61" font-family="Plus Jakarta Sans, Arial, sans-serif" font-size="21" font-weight="700" letter-spacing="0">
+      Uni&#281; Europejsk&#261;
+    </text>
+  </g>
+  <rect x="260" y="3" width="96" height="72" stroke="#fff" stroke-width="4"/>
+  <g fill="#fff" transform="translate(308 39)">
+    <path d="M0 -28l1.5 4.5h4.7l-3.8 2.7 1.4 4.5L0 -19l-3.8 2.7 1.4 -4.5 -3.8 -2.7h4.7L0 -28z"/>
+    <path d="M0 -28l1.5 4.5h4.7l-3.8 2.7 1.4 4.5L0 -19l-3.8 2.7 1.4 -4.5 -3.8 -2.7h4.7L0 -28z" transform="rotate(30)"/>
+    <path d="M0 -28l1.5 4.5h4.7l-3.8 2.7 1.4 4.5L0 -19l-3.8 2.7 1.4 -4.5 -3.8 -2.7h4.7L0 -28z" transform="rotate(60)"/>
+    <path d="M0 -28l1.5 4.5h4.7l-3.8 2.7 1.4 4.5L0 -19l-3.8 2.7 1.4 -4.5 -3.8 -2.7h4.7L0 -28z" transform="rotate(90)"/>
+    <path d="M0 -28l1.5 4.5h4.7l-3.8 2.7 1.4 4.5L0 -19l-3.8 2.7 1.4 -4.5 -3.8 -2.7h4.7L0 -28z" transform="rotate(120)"/>
+    <path d="M0 -28l1.5 4.5h4.7l-3.8 2.7 1.4 4.5L0 -19l-3.8 2.7 1.4 -4.5 -3.8 -2.7h4.7L0 -28z" transform="rotate(150)"/>
+    <path d="M0 -28l1.5 4.5h4.7l-3.8 2.7 1.4 4.5L0 -19l-3.8 2.7 1.4 -4.5 -3.8 -2.7h4.7L0 -28z" transform="rotate(180)"/>
+    <path d="M0 -28l1.5 4.5h4.7l-3.8 2.7 1.4 4.5L0 -19l-3.8 2.7 1.4 -4.5 -3.8 -2.7h4.7L0 -28z" transform="rotate(210)"/>
+    <path d="M0 -28l1.5 4.5h4.7l-3.8 2.7 1.4 4.5L0 -19l-3.8 2.7 1.4 -4.5 -3.8 -2.7h4.7L0 -28z" transform="rotate(240)"/>
+    <path d="M0 -28l1.5 4.5h4.7l-3.8 2.7 1.4 4.5L0 -19l-3.8 2.7 1.4 -4.5 -3.8 -2.7h4.7L0 -28z" transform="rotate(270)"/>
+    <path d="M0 -28l1.5 4.5h4.7l-3.8 2.7 1.4 4.5L0 -19l-3.8 2.7 1.4 -4.5 -3.8 -2.7h4.7L0 -28z" transform="rotate(300)"/>
+    <path d="M0 -28l1.5 4.5h4.7l-3.8 2.7 1.4 4.5L0 -19l-3.8 2.7 1.4 -4.5 -3.8 -2.7h4.7L0 -28z" transform="rotate(330)"/>
+  </g>
+</svg>

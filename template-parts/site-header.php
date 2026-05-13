@@ -102,6 +102,7 @@ $current_language = strtoupper((string) ($languages[$active_index]['code'] ?? 'E
 
 $logo_url        = isg_acf_image_url('header_logo', 'option', isg_asset_uri('img/logo_footer.svg'));
 $mobile_logo_url = isg_acf_image_url('header_mobile_logo', 'option', isg_asset_uri('img/logo_footer.svg'));
+$eu_logo_url     = isg_asset_uri('img/eu-funded-logo.svg');
 $home_hero_url   = isg_anchor_url('#isg-hero', '#isg-hero');
 
 $contact_line_1 = (string) isg_acf_option('header_contact_line_1', 'Mon-Fri | 8:00-16:00');
@@ -143,6 +144,7 @@ $contact_phone_href    = $contact_phone_display !== '' ? preg_replace('/(?!^\+)[
 				</div>
 
 				<div class="isg-header-contact" aria-label="<?php esc_attr_e('Contact information', 'isg'); ?>">
+					<img class="isg-header-contact__eu-logo" src="<?php echo esc_url($eu_logo_url); ?>" alt="<?php esc_attr_e('Dofinansowane przez Unię Europejską', 'isg'); ?>" width="360" height="78" decoding="async" />
 					<span class="isg-header-contact__dot" aria-hidden="true"></span>
 					<div class="isg-header-contact__text">
 						<span><?php echo esc_html($contact_line_1); ?></span>

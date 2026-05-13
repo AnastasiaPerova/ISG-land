@@ -6,6 +6,7 @@
  */
 
 $footer_logo = isg_acf_image_url('footer_logo', 'option', isg_asset_uri('img/logo_footer.svg'));
+$eu_logo     = isg_asset_uri('img/eu-funded-logo.svg');
 
 $production_address = (string) isg_acf_option('footer_production_address', "Sucharskiego 49\n97-500 Radomsko, Poland");
 $production_map_url = (string) isg_acf_option('footer_production_map_url', 'https://www.google.com/maps/search/?api=1&query=Sucharskiego+49+97-500+Radomsko+Poland');
@@ -93,6 +94,7 @@ $phone_href = preg_replace('/[^\d+]/', '', $phone);
 			</div>
 
 			<div class="isg-footer__col">
+				<img class="isg-footer__eu-logo" src="<?php echo esc_url($eu_logo); ?>" alt="<?php esc_attr_e('Dofinansowane przez Unię Europejską', 'isg'); ?>" width="360" height="78" loading="lazy" />
 				<div class="isg-footer__legal">
 					<a href="<?php echo esc_url($privacy_url); ?>"><?php echo esc_html($privacy_label_text); ?></a>
 					<span aria-hidden="true">|</span>
