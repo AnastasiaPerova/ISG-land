@@ -70,6 +70,17 @@ function isg_check_svg_filetype(array $data, string $file, string $filename, arr
 }
 add_filter('wp_check_filetype_and_ext', 'isg_check_svg_filetype', 10, 4);
 
+function isg_disable_upload_image_processing($threshold = false) {
+	unset($threshold);
+	return false;
+}
+add_filter('big_image_size_threshold', 'isg_disable_upload_image_processing');
+
+function isg_disable_upload_image_subsizes(array $sizes): array {
+	return array();
+}
+add_filter('intermediate_image_sizes_advanced', 'isg_disable_upload_image_subsizes');
+
 function isg_body_classes(array $classes): array {
 	$classes[] = 'isg-wp-theme';
 	$classes[] = 'isg-preloader-active';
