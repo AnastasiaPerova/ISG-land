@@ -121,9 +121,11 @@ $contact_phone_href = $contact_phone_display !== '' ? preg_replace('/(?!^\+)[^\d
 	<div class="isg-site-header__chrome">
 		<div class="isg-hero__nav-wrap isg-header-desktop-only">
 			<nav class="isg-nav-pill" aria-label="<?php esc_attr_e('Primary', 'isg'); ?>" data-isg-section-nav>
-				<!-- <a class="isg-hero__logo isg-nav-pill__brand" href="<?php echo esc_url($home_hero_url); ?>" aria-label="<?php esc_attr_e('ISG - Home', 'isg'); ?>">
-					<img class="isg-hero__logo-img" src="<?php echo esc_url($logo_url); ?>" alt="" width="170" height="62" decoding="async" />
-				</a> -->
+				<a class="isg-hero__logo isg-nav-pill__brand" href="<?php echo esc_url($home_hero_url); ?>"
+					aria-label="<?php esc_attr_e('ISG - Home', 'isg'); ?>">
+					<img class="isg-hero__logo-img" src="<?php echo esc_url($logo_url); ?>" alt="" width="170"
+						height="62" decoding="async" />
+				</a>
 
 				<div class="isg-nav-pill__inner">
 					<div class="isg-nav-pill__row isg-nav-pill__row--slider isg-nav-pill__row--sections isg-nav-pill__row--slider--init isg-header-nav"
