@@ -44,9 +44,18 @@ function isg_acf_image_field(string $key, string $label, string $name): array {
 
 function isg_acf_logo_field(string $key, string $label, string $name): array {
 	return array_merge(
-		isg_acf_image_field($key, $label, $name),
+		isg_acf_file_field($key, $label, $name),
 		array(
 			'mime_types' => 'svg,png,jpg,jpeg,webp',
+		)
+	);
+}
+
+function isg_acf_svg_file_field(string $key, string $label, string $name): array {
+	return array_merge(
+		isg_acf_file_field($key, $label, $name),
+		array(
+			'mime_types' => 'svg',
 		)
 	);
 }
@@ -190,10 +199,9 @@ function isg_register_acf_fields(): void {
 				isg_acf_logo_field('field_isg_header_logo', 'Header Logo', 'header_logo'),
 				isg_acf_logo_field('field_isg_header_mobile_logo', 'Mobile Header Logo', 'header_mobile_logo'),
 				array_merge(
-					isg_acf_image_field('field_isg_header_eu_logo', 'Header EU Logo', 'header_eu_logo'),
+					isg_acf_svg_file_field('field_isg_header_eu_logo', 'Header EU Logo', 'header_eu_logo'),
 					array(
 						'instructions' => 'Optional per language. If empty for this language, the EU logo is not shown in the header.',
-						'mime_types'   => 'svg',
 					)
 				),
 				array_merge(
@@ -243,10 +251,9 @@ function isg_register_acf_fields(): void {
 					)
 				),
 				array_merge(
-					isg_acf_image_field('field_isg_footer_eu_logo', 'Footer EU Logo', 'footer_eu_logo'),
+					isg_acf_svg_file_field('field_isg_footer_eu_logo', 'Footer EU Logo', 'footer_eu_logo'),
 					array(
 						'instructions' => 'Optional per language. If empty for this language, the EU logo is not shown in the footer.',
-						'mime_types'   => 'svg',
 					)
 				),
 				array_merge(
