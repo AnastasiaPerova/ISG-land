@@ -103,7 +103,7 @@ $current_language = strtoupper((string) ($languages[$active_index]['code'] ?? 'E
 $logo_url        = isg_acf_image_url('header_logo', 'option', isg_asset_uri('img/logo_footer.svg'));
 $mobile_logo_url = isg_acf_image_url('header_mobile_logo', 'option', isg_asset_uri('img/logo-short.svg'));
 $eu_logo_url     = isg_acf_current_option_image_url('header_eu_logo');
-$eu_logo_link    = (string) isg_acf_current_option('header_eu_logo_page_link', '');
+$eu_logo_link    = isg_link_url(isg_acf_current_option('header_eu_logo_page_link', ''));
 $home_hero_url   = isg_anchor_url('#isg-hero', '#isg-hero');
 
 $contact_line_1 = (string) isg_acf_option('header_contact_line_1', 'Mon-Fri | 8:00-16:00');
@@ -145,10 +145,16 @@ $contact_phone_href    = $contact_phone_display !== '' ? preg_replace('/(?!^\+)[
 				</div>
 
 				<div class="isg-header-contact" aria-label="<?php esc_attr_e('Contact information', 'isg'); ?>">
-					<?php if ($eu_logo_url !== '' && $eu_logo_link !== '') : ?>
-						<a class="isg-header-contact__eu-link" href="<?php echo esc_url($eu_logo_link); ?>" aria-label="<?php esc_attr_e('Dofinansowane przez Unię Europejską', 'isg'); ?>">
-							<img class="isg-header-contact__eu-logo" src="<?php echo esc_url($eu_logo_url); ?>" alt="" width="360" height="78" decoding="async" />
-						</a>
+					<?php if ($eu_logo_url !== '') : ?>
+						<?php if ($eu_logo_link !== '') : ?>
+							<a class="isg-header-contact__eu-link" href="<?php echo esc_url($eu_logo_link); ?>" aria-label="<?php esc_attr_e('Dofinansowane przez Unię Europejską', 'isg'); ?>">
+								<img class="isg-header-contact__eu-logo" src="<?php echo esc_url($eu_logo_url); ?>" alt="" width="360" height="78" decoding="async" />
+							</a>
+						<?php else : ?>
+							<span class="isg-header-contact__eu-link">
+								<img class="isg-header-contact__eu-logo" src="<?php echo esc_url($eu_logo_url); ?>" alt="" width="360" height="78" decoding="async" />
+							</span>
+						<?php endif; ?>
 						<span class="isg-header-contact__dot" aria-hidden="true"></span>
 					<?php endif; ?>
 					<div class="isg-header-contact__text">
@@ -199,10 +205,16 @@ $contact_phone_href    = $contact_phone_display !== '' ? preg_replace('/(?!^\+)[
 			<img class="isg-header-mobile-logo__img" src="<?php echo esc_url($mobile_logo_url); ?>" alt="" width="66" height="23" decoding="async" />
 		</a>
 
-		<?php if ($eu_logo_url !== '' && $eu_logo_link !== '') : ?>
-			<a class="isg-header-mobile-eu-logo" href="<?php echo esc_url($eu_logo_link); ?>" aria-label="<?php esc_attr_e('Dofinansowane przez Unię Europejską', 'isg'); ?>">
-				<img class="isg-header-mobile-eu-logo__img" src="<?php echo esc_url($eu_logo_url); ?>" alt="" width="360" height="78" decoding="async" />
-			</a>
+		<?php if ($eu_logo_url !== '') : ?>
+			<?php if ($eu_logo_link !== '') : ?>
+				<a class="isg-header-mobile-eu-logo" href="<?php echo esc_url($eu_logo_link); ?>" aria-label="<?php esc_attr_e('Dofinansowane przez Unię Europejską', 'isg'); ?>">
+					<img class="isg-header-mobile-eu-logo__img" src="<?php echo esc_url($eu_logo_url); ?>" alt="" width="360" height="78" decoding="async" />
+				</a>
+			<?php else : ?>
+				<span class="isg-header-mobile-eu-logo">
+					<img class="isg-header-mobile-eu-logo__img" src="<?php echo esc_url($eu_logo_url); ?>" alt="" width="360" height="78" decoding="async" />
+				</span>
+			<?php endif; ?>
 		<?php endif; ?>
 
 		<button type="button" class="isg-burger" data-isg-burger aria-controls="isg-nav-drawer" aria-expanded="false" aria-label="<?php esc_attr_e('Open menu', 'isg'); ?>">

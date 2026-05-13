@@ -145,6 +145,28 @@ function isg_image_alt($image, string $default = ''): string {
 	return $default;
 }
 
+function isg_link_url($link, string $default = ''): string {
+	if (is_array($link)) {
+		if (!empty($link['url'])) {
+			return (string) $link['url'];
+		}
+
+		$first_link = reset($link);
+		return isg_link_url($first_link, $default);
+	}
+
+	if (is_numeric($link)) {
+		$url = get_permalink((int) $link);
+		return $url ? (string) $url : $default;
+	}
+
+	if (is_string($link) && trim($link) !== '') {
+		return trim($link);
+	}
+
+	return $default;
+}
+
 function isg_acf_group(string $field_name, array $default = array(), $post_id = null): array {
 	$value = isg_acf_value($field_name, $default, $post_id);
 	return is_array($value) ? $value : $default;
