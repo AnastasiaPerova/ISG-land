@@ -73,6 +73,28 @@ function isg_acf_option(string $field_name, $default = '') {
 	return $default;
 }
 
+function isg_acf_current_option_post_id(): string {
+	$lang_slug = isg_current_language_slug();
+	if ($lang_slug !== '') {
+		return 'options_' . $lang_slug;
+	}
+
+	return 'option';
+}
+
+function isg_acf_current_option(string $field_name, $default = '') {
+	return isg_acf_value($field_name, $default, isg_acf_current_option_post_id());
+}
+
+function isg_acf_current_option_image_url(string $field_name, string $default = ''): string {
+	if (!function_exists('get_field')) {
+		return $default;
+	}
+
+	$image = get_field($field_name, isg_acf_current_option_post_id());
+	return isg_image_url($image, $default);
+}
+
 function isg_acf_image_url(string $field_name, string $context = 'option', string $default = ''): string {
 	if (!function_exists('get_field')) {
 		return $default;

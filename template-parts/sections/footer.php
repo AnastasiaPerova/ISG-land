@@ -5,8 +5,10 @@
  * @package ISG
  */
 
-$footer_logo = isg_acf_image_url('footer_logo', 'option', isg_asset_uri('img/logo-short.svg'));
-$eu_logo     = isg_asset_uri('img/eu-funded-logo.svg');
+$footer_logo        = isg_acf_image_url('footer_logo', 'option', isg_asset_uri('img/logo-short.svg'));
+$footer_mobile_logo = isg_acf_image_url('footer_mobile_logo', 'option', $footer_logo);
+$eu_logo            = isg_acf_current_option_image_url('footer_eu_logo');
+$eu_logo_link       = (string) isg_acf_current_option('footer_eu_logo_page_link', '');
 
 $production_address = (string) isg_acf_option('footer_production_address', "Sucharskiego 49\n97-500 Radomsko, Poland");
 $production_map_url = (string) isg_acf_option('footer_production_map_url', 'https://www.google.com/maps/search/?api=1&query=Sucharskiego+49+97-500+Radomsko+Poland');
@@ -75,8 +77,15 @@ $phone_href = preg_replace('/[^\d+]/', '', $phone);
 
 		<div class="isg-footer__row isg-footer__row--bottom">
 			<div class="isg-footer__col isg-footer__col--logo">
-				<img class="isg-footer__logo" src="<?php echo esc_url($footer_logo); ?>" alt="ISG" width="66" height="23" loading="lazy" />
-				<img class="isg-footer__eu-logo" src="<?php echo esc_url($eu_logo); ?>" alt="<?php esc_attr_e('Dofinansowane przez Unię Europejską', 'isg'); ?>" width="360" height="78" loading="lazy" />
+				<picture class="isg-footer__logo-media">
+					<source media="(max-width: 1099px)" srcset="<?php echo esc_url($footer_mobile_logo); ?>" />
+					<img class="isg-footer__logo" src="<?php echo esc_url($footer_logo); ?>" alt="ISG" width="66" height="23" loading="lazy" />
+				</picture>
+				<?php if ($eu_logo !== '' && $eu_logo_link !== '') : ?>
+					<a class="isg-footer__eu-link" href="<?php echo esc_url($eu_logo_link); ?>" aria-label="<?php esc_attr_e('Dofinansowane przez Unię Europejską', 'isg'); ?>">
+						<img class="isg-footer__eu-logo" src="<?php echo esc_url($eu_logo); ?>" alt="" width="360" height="78" loading="lazy" />
+					</a>
+				<?php endif; ?>
 			</div>
 
 			<div class="isg-footer__col">
