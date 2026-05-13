@@ -40,9 +40,13 @@ $privacy_label_text = (string) isg_acf_option('footer_privacy_label', 'Privacy P
 $terms_label_text   = (string) isg_acf_option('footer_terms_label', 'Terms of use');
 
 $phone_href = preg_replace('/[^\d+]/', '', $phone);
+$is_reveal_footer = !isset($args['reveal']) || (bool) $args['reveal'];
+$footer_classes   = 'isg-footer' . ($is_reveal_footer ? ' isg-footer--reveal' : ' isg-footer--static');
 ?>
-<div class="isg-footer-spacer" data-isg-footer-spacer aria-hidden="true"></div>
-<footer id="isg-footer" class="isg-footer isg-footer--reveal" data-isg-block="footer">
+<?php if ($is_reveal_footer) : ?>
+	<div class="isg-footer-spacer" data-isg-footer-spacer aria-hidden="true"></div>
+<?php endif; ?>
+<footer id="isg-footer" class="<?php echo esc_attr($footer_classes); ?>" data-isg-block="footer">
 	<div class="isg-footer__inner container">
 		<div class="isg-footer__row isg-footer__row--locations">
 			<div class="isg-footer__col">

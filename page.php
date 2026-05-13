@@ -29,6 +29,7 @@ get_template_part('template-parts/site-header');
 			</article>
 		<?php endwhile; ?>
 	</div>
+	<?php get_template_part('template-parts/sections/footer', null, array('reveal' => false)); ?>
 </main>
 <?php
 get_footer();

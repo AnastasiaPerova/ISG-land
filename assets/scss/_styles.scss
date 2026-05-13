@@ -373,7 +373,7 @@ select {
 }
 
 .isg-info-page__inner {
-  padding-top: clamp(120px, 14vw, 220px);
+  // padding-top: clamp(120px, 14vw, 220px);
   padding-bottom: clamp(72px, 9vw, 140px);
 }
 
@@ -8056,6 +8056,14 @@ button.isg-slider-item__img,
   bottom: 0;
   width: 100%;
   z-index: 0;
+}
+
+.isg-footer--static {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  gap: var(--isg-space-md);
+  margin-top: 0;
 }
 
 @media (max-width: 1099px) {
