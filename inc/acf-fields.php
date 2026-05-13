@@ -184,6 +184,7 @@ function isg_register_acf_fields(): void {
 					isg_acf_image_field('field_isg_header_eu_logo', 'Header EU Logo', 'header_eu_logo'),
 					array(
 						'instructions' => 'Optional per language. If empty for this language, the EU logo is not shown in the header.',
+						'mime_types'   => 'svg',
 					)
 				),
 				array_merge(
@@ -236,6 +237,7 @@ function isg_register_acf_fields(): void {
 					isg_acf_image_field('field_isg_footer_eu_logo', 'Footer EU Logo', 'footer_eu_logo'),
 					array(
 						'instructions' => 'Optional per language. If empty for this language, the EU logo is not shown in the footer.',
+						'mime_types'   => 'svg',
 					)
 				),
 				array_merge(

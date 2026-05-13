@@ -35,26 +35,36 @@ function isg_theme_setup(): void {
 }
 add_action('after_setup_theme', 'isg_theme_setup');
 
+function isg_can_upload_svg(): bool {
+	return current_user_can('manage_options');
+}
+
 function isg_allow_svg_uploads(array $mimes): array {
-	if (current_user_can('upload_files')) {
-		$mimes['svg'] = 'image/svg+xml';
+	if (!isg_can_upload_svg()) {
+		return $mimes;
 	}
+
+	$mimes['svg'] = 'image/svg+xml';
 
 	return $mimes;
 }
 add_filter('upload_mimes', 'isg_allow_svg_uploads');
 
 function isg_check_svg_filetype(array $data, string $file, string $filename, array $mimes): array {
-	unset($file, $mimes);
+	unset($mimes);
 
-	if (!current_user_can('upload_files')) {
+	if (!isg_can_upload_svg() || strtolower(pathinfo($filename, PATHINFO_EXTENSION)) !== 'svg') {
 		return $data;
 	}
 
-	if (strtolower(pathinfo($filename, PATHINFO_EXTENSION)) === 'svg') {
-		$data['ext']  = 'svg';
-		$data['type'] = 'image/svg+xml';
+	$contents = is_readable($file) ? file_get_contents($file, false, null, 0, 2048) : false;
+	if (!is_string($contents) || stripos($contents, '<svg') === false) {
+		return $data;
 	}
+
+	$data['ext']             = 'svg';
+	$data['type']            = 'image/svg+xml';
+	$data['proper_filename'] = false;
 
 	return $data;
 }
