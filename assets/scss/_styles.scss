@@ -933,7 +933,7 @@ select {
 
 .eu-project-summary strong {
   display: block;
-  font-size: calc((--isg-type-body-lg) * 1.7);
+  font-size: calc(var(--isg-type-body-lg) * 1.4);
   line-height: 1.15;
   letter-spacing: -0.03em;
   color: #151719;
