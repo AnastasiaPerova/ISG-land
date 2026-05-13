@@ -44,7 +44,7 @@ function isg_allow_svg_uploads(array $mimes): array {
 		return $mimes;
 	}
 
-	$mimes['svg'] = 'image/svg+xml';
+	$mimes['svg'] = 'application/svg+xml';
 
 	return $mimes;
 }
@@ -63,7 +63,7 @@ function isg_check_svg_filetype(array $data, string $file, string $filename, arr
 	}
 
 	$data['ext']             = 'svg';
-	$data['type']            = 'image/svg+xml';
+	$data['type']            = 'application/svg+xml';
 	$data['proper_filename'] = false;
 
 	return $data;
@@ -73,7 +73,7 @@ add_filter('wp_check_filetype_and_ext', 'isg_check_svg_filetype', 10, 4);
 function isg_fix_svg_upload_data(array $upload): array {
 	$file = isset($upload['file']) ? (string) $upload['file'] : '';
 	if ($file !== '' && isg_is_svg_file($file)) {
-		$upload['type'] = 'image/svg+xml';
+		$upload['type'] = 'application/svg+xml';
 	}
 
 	return $upload;
@@ -85,21 +85,17 @@ function isg_is_svg_file(string $file): bool {
 }
 
 function isg_is_svg_attachment(int $attachment_id): bool {
-	return get_post_mime_type($attachment_id) === 'image/svg+xml';
+	return in_array(get_post_mime_type($attachment_id), array('image/svg+xml', 'application/svg+xml'), true);
 }
 
-function isg_disable_svg_big_image_threshold($threshold, $imagesize = array(), string $file = '', int $attachment_id = 0) {
-	unset($imagesize);
+function isg_disable_big_image_threshold($threshold, $imagesize = array(), string $file = '', int $attachment_id = 0) {
+	unset($threshold, $imagesize, $file, $attachment_id);
 
-	if (($file !== '' && isg_is_svg_file($file)) || ($attachment_id > 0 && isg_is_svg_attachment($attachment_id))) {
-		return false;
-	}
-
-	return $threshold;
+	return false;
 }
-add_filter('big_image_size_threshold', 'isg_disable_svg_big_image_threshold', 10, 4);
+add_filter('big_image_size_threshold', 'isg_disable_big_image_threshold', 10, 4);
 
-function isg_svg_is_not_displayable_image(bool $result, string $path = ''): bool {
+function isg_svg_is_not_displayable_image($result, string $path = '') {
 	if ($path !== '' && isg_is_svg_file($path)) {
 		return false;
 	}
@@ -183,7 +179,7 @@ add_filter('wp_generate_attachment_metadata', 'isg_svg_attachment_metadata', 10,
 function isg_prepare_svg_attachment_for_js(array $response, WP_Post $attachment, $meta = array()): array {
 	unset($meta);
 
-	if (get_post_mime_type($attachment) !== 'image/svg+xml') {
+	if (!isg_is_svg_attachment((int) $attachment->ID)) {
 		return $response;
 	}
 
