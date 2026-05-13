@@ -400,8 +400,8 @@ select {
 
 .isg-info-content {
   width: 100%;
-  max-width: 86rem;
-  color: #303943;
+  max-width: 100%;
+
   font-size: var(--isg-type-body-lg);
   line-height: 1.58;
   letter-spacing: -0.012em;
@@ -459,7 +459,9 @@ select {
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 0.18em;
-  transition: color 0.2s ease, opacity 0.2s ease;
+  transition:
+    color 0.2s ease,
+    opacity 0.2s ease;
 }
 
 .isg-info-content a:hover {
@@ -813,9 +815,10 @@ select {
   color: #111111;
 }
 .eu-project-page {
-  padding: clamp(56px, 7vw, 110px) 20px;
+  padding: var(--isg-card-padding);
   background: #f7f8f8;
-  color: #151719;
+  border-radius: var(--isg-section-br);
+  // color: #151719;
 }
 
 .eu-project-page__container {
