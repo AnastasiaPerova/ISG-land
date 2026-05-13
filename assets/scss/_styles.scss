@@ -413,11 +413,13 @@ select {
 .isg-info-content header p {
   color: #697078;
   font-size: var(--isg-type-body-sm);
-  margin-bottom: var(--isg-space-sm);
+  margin-bottom: var(--isg-space-xs);
 }
 .isg-info-content h1 {
-  font-size: var(--isg-type-h3);
+  font-size: var(--isg-type-h4);
   font-weight: 460;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
 }
 .isg-info-content > *:first-child {
   margin-top: 0;
@@ -445,9 +447,10 @@ select {
 .isg-info-content h6 {
   margin: var(--isg-space-md) 0 var(--isg-space-sm);
   color: #111111;
-  font-weight: 400;
-  line-height: 1.18;
-  letter-spacing: -0.03em;
+  font-size: var(--isg-type-h4);
+  font-weight: 460;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
 }
 
 .isg-info-content h2 {
@@ -906,14 +909,15 @@ select {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--isg-item-gap);
-  margin-top: var(--isg-space-lg);
-  background: #d8dddf;
-  border-radius: var(--isg-card-br);
+  margin-top: var(--isg-space-md);
 }
 
 .eu-project-summary div {
+  display: flex;
   padding: var(--isg-card-sm-padding);
-  background: #ffffff;
+  background: #fff;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .eu-project-summary span {
@@ -933,8 +937,8 @@ select {
 }
 
 .eu-project-logos {
-  margin-top: var(--isg-space-lg);
-  padding-top: var(--isg-space-lg);
+  margin-top: var(--isg-space-md);
+  padding-top: var(--isg-space-md);
   border-top: 1px solid #d8dddf;
 }
 
@@ -2365,7 +2369,7 @@ body.isg-nav-drawer-open {
 
 .isg-header-contact__eu-link {
   display: block;
-  width: clamp(92px, 7.2vw, 130px);
+  width: clamp(100px, 7.8vw, 142px);
   flex: 0 0 auto;
   margin-right: var(--isg-space-xs);
   line-height: 0;
@@ -2375,7 +2379,7 @@ body.isg-nav-drawer-open {
   display: block;
   width: 100%;
   height: auto;
-  max-height: 32px;
+
   object-fit: contain;
 }
 
