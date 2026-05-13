@@ -70,6 +70,129 @@ function isg_check_svg_filetype(array $data, string $file, string $filename, arr
 }
 add_filter('wp_check_filetype_and_ext', 'isg_check_svg_filetype', 10, 4);
 
+function isg_is_svg_file(string $file): bool {
+	return strtolower(pathinfo($file, PATHINFO_EXTENSION)) === 'svg';
+}
+
+function isg_is_svg_attachment(int $attachment_id): bool {
+	return get_post_mime_type($attachment_id) === 'image/svg+xml';
+}
+
+function isg_disable_svg_big_image_threshold($threshold, $imagesize = array(), string $file = '', int $attachment_id = 0) {
+	unset($imagesize);
+
+	if (($file !== '' && isg_is_svg_file($file)) || ($attachment_id > 0 && isg_is_svg_attachment($attachment_id))) {
+		return false;
+	}
+
+	return $threshold;
+}
+add_filter('big_image_size_threshold', 'isg_disable_svg_big_image_threshold', 10, 4);
+
+function isg_disable_svg_intermediate_sizes(array $sizes, array $metadata, int $attachment_id): array {
+	unset($metadata);
+
+	if (isg_is_svg_attachment($attachment_id)) {
+		return array();
+	}
+
+	return $sizes;
+}
+add_filter('intermediate_image_sizes_advanced', 'isg_disable_svg_intermediate_sizes', 10, 3);
+
+function isg_disable_svg_missing_image_subsizes(array $missing_sizes, int $attachment_id): array {
+	if (isg_is_svg_attachment($attachment_id)) {
+		return array();
+	}
+
+	return $missing_sizes;
+}
+add_filter('wp_get_missing_image_subsizes', 'isg_disable_svg_missing_image_subsizes', 10, 2);
+
+function isg_extract_svg_dimensions(string $file): array {
+	if (!is_readable($file)) {
+		return array(0, 0);
+	}
+
+	$contents = file_get_contents($file, false, null, 0, 4096);
+	if (!is_string($contents)) {
+		return array(0, 0);
+	}
+
+	$width = 0;
+	$height = 0;
+
+	if (preg_match('/\bwidth=["\']?([0-9.]+)/i', $contents, $width_match)) {
+		$width = (int) round((float) $width_match[1]);
+	}
+	if (preg_match('/\bheight=["\']?([0-9.]+)/i', $contents, $height_match)) {
+		$height = (int) round((float) $height_match[1]);
+	}
+
+	if (($width <= 0 || $height <= 0) && preg_match('/\bviewBox=["\']\s*[-0-9.]+\s+[-0-9.]+\s+([0-9.]+)\s+([0-9.]+)/i', $contents, $viewbox_match)) {
+		$width = $width > 0 ? $width : (int) round((float) $viewbox_match[1]);
+		$height = $height > 0 ? $height : (int) round((float) $viewbox_match[2]);
+	}
+
+	return array(max(1, $width), max(1, $height));
+}
+
+function isg_svg_attachment_metadata($metadata, int $attachment_id) {
+	if (!isg_is_svg_attachment($attachment_id)) {
+		return $metadata;
+	}
+
+	$file = get_attached_file($attachment_id);
+	if (!is_string($file) || $file === '') {
+		return $metadata;
+	}
+
+	list($width, $height) = isg_extract_svg_dimensions($file);
+	$relative_file = function_exists('_wp_relative_upload_path') ? _wp_relative_upload_path($file) : basename($file);
+
+	return array(
+		'width'  => $width,
+		'height' => $height,
+		'file'   => $relative_file,
+		'sizes'  => array(),
+	);
+}
+add_filter('wp_generate_attachment_metadata', 'isg_svg_attachment_metadata', 10, 2);
+
+function isg_prepare_svg_attachment_for_js(array $response, WP_Post $attachment, array $meta): array {
+	unset($meta);
+
+	if (get_post_mime_type($attachment) !== 'image/svg+xml') {
+		return $response;
+	}
+
+	$url = wp_get_attachment_url($attachment->ID);
+	if (!$url) {
+		return $response;
+	}
+
+	$file = get_attached_file($attachment->ID);
+	list($width, $height) = is_string($file) ? isg_extract_svg_dimensions($file) : array(1, 1);
+
+	$response['image'] = array(
+		'src'    => $url,
+		'width'  => $width,
+		'height' => $height,
+	);
+	$response['sizes'] = array(
+		'full' => array(
+			'url'         => $url,
+			'width'       => $width,
+			'height'      => $height,
+			'orientation' => $width >= $height ? 'landscape' : 'portrait',
+		),
+	);
+	$response['icon'] = $url;
+
+	return $response;
+}
+add_filter('wp_prepare_attachment_for_js', 'isg_prepare_svg_attachment_for_js', 10, 3);
+
 function isg_body_classes(array $classes): array {
 	$classes[] = 'isg-wp-theme';
 	$classes[] = 'isg-preloader-active';
