@@ -101,7 +101,7 @@ $languages        = $normalized_languages;
 $current_language = strtoupper((string) ($languages[$active_index]['code'] ?? 'EN'));
 
 $logo_url        = isg_acf_image_url('header_logo', 'option', isg_asset_uri('img/logo_footer.svg'));
-$mobile_logo_url = isg_acf_image_url('header_mobile_logo', 'option', isg_asset_uri('img/logo_footer.svg'));
+$mobile_logo_url = isg_acf_image_url('header_mobile_logo', 'option', isg_asset_uri('img/logo-short.svg'));
 $eu_logo_url     = isg_asset_uri('img/eu-funded-logo.svg');
 $home_hero_url   = isg_anchor_url('#isg-hero', '#isg-hero');
 
@@ -191,7 +191,7 @@ $contact_phone_href    = $contact_phone_display !== '' ? preg_replace('/(?!^\+)[
 		</div>
 
 		<a class="isg-header-mobile-logo" href="<?php echo esc_url($home_hero_url); ?>" aria-label="<?php esc_attr_e('ISG - Home', 'isg'); ?>">
-			<img class="isg-header-mobile-logo__img" src="<?php echo esc_url($mobile_logo_url); ?>" alt="" width="170" height="62" decoding="async" />
+			<img class="isg-header-mobile-logo__img" src="<?php echo esc_url($mobile_logo_url); ?>" alt="" width="66" height="23" decoding="async" />
 		</a>
 
 		<img class="isg-header-mobile-eu-logo" src="<?php echo esc_url($eu_logo_url); ?>" alt="<?php esc_attr_e('Dofinansowane przez Unię Europejską', 'isg'); ?>" width="360" height="78" decoding="async" />

@@ -5,7 +5,7 @@
  * @package ISG
  */
 
-$footer_logo = isg_acf_image_url('footer_logo', 'option', isg_asset_uri('img/logo_footer.svg'));
+$footer_logo = isg_acf_image_url('footer_logo', 'option', isg_asset_uri('img/logo-short.svg'));
 $eu_logo     = isg_asset_uri('img/eu-funded-logo.svg');
 
 $production_address = (string) isg_acf_option('footer_production_address', "Sucharskiego 49\n97-500 Radomsko, Poland");
@@ -75,7 +75,7 @@ $phone_href = preg_replace('/[^\d+]/', '', $phone);
 
 		<div class="isg-footer__row isg-footer__row--bottom">
 			<div class="isg-footer__col isg-footer__col--logo">
-				<img class="isg-footer__logo" src="<?php echo esc_url($footer_logo); ?>" alt="ISG" width="170" height="62" loading="lazy" />
+				<img class="isg-footer__logo" src="<?php echo esc_url($footer_logo); ?>" alt="ISG" width="66" height="23" loading="lazy" />
 				<img class="isg-footer__eu-logo" src="<?php echo esc_url($eu_logo); ?>" alt="<?php esc_attr_e('Dofinansowane przez Unię Europejską', 'isg'); ?>" width="360" height="78" loading="lazy" />
 			</div>
 

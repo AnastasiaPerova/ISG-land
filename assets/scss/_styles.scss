@@ -1057,7 +1057,7 @@ select {
   display: none;
   position: relative;
   z-index: 3;
-  width: max(60px, min(5vw, 95px));
+  width: clamp(66px, 16vw, 110px);
 
   line-height: 0;
   color: inherit;
@@ -1388,25 +1388,6 @@ body.isg-nav-drawer-open {
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.62) 0%, rgba(0, 0, 0, 0.38) 38%, rgba(0, 0, 0, 0.55) 100%);
 }
 
-.isg-hero__partner-logos {
-  position: absolute;
-  z-index: 4;
-  top: calc(env(safe-area-inset-top, 0px) + clamp(104px, 7.2vw, 138px));
-  right: var(--container-offset);
-  display: block;
-  width: clamp(430px, 27vw, 467px);
-  // max-width: calc(100% - (var(--container-offset) * 2));
-  opacity: 1;
-  pointer-events: none;
-}
-
-.isg-hero__partner-logos-img {
-  display: block;
-  width: 100%;
-  height: auto;
-  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.28));
-}
-
 .isg-hero .isg-display,
 .isg-hero .isg-lead {
   color: #ffffff;
@@ -1656,7 +1637,7 @@ body.isg-nav-drawer-open {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--isg-space-8xl);
+
   width: 100%;
   min-width: 0;
   color: #fff;
@@ -2194,7 +2175,7 @@ body.isg-nav-drawer-open {
   .isg-site-header__chrome {
     flex-wrap: nowrap;
     border-radius: var(--isg-ui-br);
-    gap: var(--isg-space-sm);
+    gap: calc(var(--isg-space-sm) / 2);
     justify-content: space-between;
     width: var(--container-width);
     max-width: var(--container-width);
@@ -2208,10 +2189,11 @@ body.isg-nav-drawer-open {
   .isg-header-mobile-logo {
     display: inline-flex;
     align-items: center;
+    flex-grow: 1;
   }
   .isg-header-mobile-eu-logo {
     display: block;
-    width: min(42vw, 240px);
+    width: min(32vw, 180px);
     max-width: calc(100% - 10rem);
   }
   .isg-site-logo {
@@ -2264,11 +2246,6 @@ body.isg-nav-drawer-open {
       var(--isg-sticky-header-offset, var(--isg-space-13xl)) + var(--isg-space-4xl) + var(--isg-space-xl)
     );
     padding-bottom: 0;
-  }
-  .isg-hero__partner-logos {
-    top: calc(env(safe-area-inset-top, 0px) + 82px);
-    right: var(--container-offset);
-    width: clamp(300px, 88vw, 385px);
   }
 }
 
@@ -7727,8 +7704,8 @@ button.isg-slider-item__img,
 }
 .isg-footer__logo {
   display: block;
-  width: auto;
-  max-width: 120px;
+  width: 100%;
+  max-width: 110px;
   height: auto;
 }
 
