@@ -441,6 +441,9 @@ select {
 .isg-info-content .wp-block-table {
   margin: 0 0 var(--isg-space-sm);
 }
+.isg-info-content h2:first-child {
+  margin-top: var(--isg-space-xs);
+}
 
 .isg-info-content h2,
 .isg-info-content h3,
