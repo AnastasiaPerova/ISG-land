@@ -42,6 +42,15 @@ function isg_acf_image_field(string $key, string $label, string $name): array {
 	);
 }
 
+function isg_acf_logo_field(string $key, string $label, string $name): array {
+	return array_merge(
+		isg_acf_image_field($key, $label, $name),
+		array(
+			'mime_types' => 'svg,png,jpg,jpeg,webp',
+		)
+	);
+}
+
 function isg_acf_text_field(string $key, string $label, string $name, string $default = ''): array {
 	return array(
 		'key'           => $key,
@@ -178,8 +187,8 @@ function isg_register_acf_fields(): void {
 					'name'  => '',
 					'type'  => 'tab',
 				),
-				isg_acf_image_field('field_isg_header_logo', 'Header Logo', 'header_logo'),
-				isg_acf_image_field('field_isg_header_mobile_logo', 'Mobile Header Logo', 'header_mobile_logo'),
+				isg_acf_logo_field('field_isg_header_logo', 'Header Logo', 'header_logo'),
+				isg_acf_logo_field('field_isg_header_mobile_logo', 'Mobile Header Logo', 'header_mobile_logo'),
 				array_merge(
 					isg_acf_image_field('field_isg_header_eu_logo', 'Header EU Logo', 'header_eu_logo'),
 					array(
@@ -190,7 +199,7 @@ function isg_register_acf_fields(): void {
 				array_merge(
 					isg_acf_page_link_field('field_isg_header_eu_logo_page_link', 'Header EU Logo Page Link', 'header_eu_logo_page_link'),
 					array(
-						'instructions' => 'Select the page opened by the header EU logo.',
+						'instructions' => 'Optional per language. Select the page opened by the header EU logo. If empty for this language, the EU logo is not shown in the header.',
 					)
 				),
 				array(
@@ -226,9 +235,9 @@ function isg_register_acf_fields(): void {
 					'name'  => '',
 					'type'  => 'tab',
 				),
-				isg_acf_image_field('field_isg_footer_logo', 'Footer Logo', 'footer_logo'),
+				isg_acf_logo_field('field_isg_footer_logo', 'Footer Logo', 'footer_logo'),
 				array_merge(
-					isg_acf_image_field('field_isg_footer_mobile_logo', 'Mobile Footer Logo', 'footer_mobile_logo'),
+					isg_acf_logo_field('field_isg_footer_mobile_logo', 'Mobile Footer Logo', 'footer_mobile_logo'),
 					array(
 						'instructions' => 'Used on screens up to 1099px. If empty, Footer Logo will be used.',
 					)
@@ -243,7 +252,7 @@ function isg_register_acf_fields(): void {
 				array_merge(
 					isg_acf_page_link_field('field_isg_footer_eu_logo_page_link', 'Footer EU Logo Page Link', 'footer_eu_logo_page_link'),
 					array(
-						'instructions' => 'Select the page opened by the footer EU logo.',
+						'instructions' => 'Optional per language. Select the page opened by the footer EU logo. If empty for this language, the EU logo is not shown in the footer.',
 					)
 				),
 				isg_acf_text_field('field_isg_footer_label_production', 'Footer Label: Production', 'footer_label_production', 'Production'),
