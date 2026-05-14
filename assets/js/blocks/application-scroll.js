@@ -74,9 +74,9 @@ const C_BODY_IN_END = 0.9;
 const C_ACCORDION_START = C_BODY_IN_END;
 // Прогресс скролла [0..1]: здесь автопереключение вкладок аккордеона заканчивается.
 const C_ACCORDION_END = 1;
-const BUBBLE_INSET_X_PX = 54;
-const BUBBLE_INSET_Y_PX = 22;
-const BUBBLE_RADIUS_PX = 34;
+const BUBBLE_INSET_X_PX = 24;
+const BUBBLE_INSET_Y_PX = BUBBLE_INSET_X_PX;
+const BUBBLE_RADIUS_PX = 24;
 
 // Компиляция шейдера. При ошибке возвращаем null и отключаем WebGL-эффект.
 function createShader(gl, type, source) {

@@ -1523,7 +1523,8 @@ select {
   line-height: 0;
 }
 
-.isg-header-mobile-eu-logo__img {
+.isg-header-mobile-eu-logo__img,
+.isg-header-mobile-eu-logo > img {
   display: block;
   width: 100%;
   height: auto;
@@ -2386,6 +2387,7 @@ display: block;
 .isg-header-contact__eu-logo {
   display: block;
   width: 100%;
+  max-width: clamp(100px, 8.6vw, 180px);
   height: auto;
 
   object-fit: contain;
@@ -2393,8 +2395,9 @@ display: block;
 
 .isg-header-contact__dot {
   width: max(4px, min(0.35vw, 6.6px));
+  align-self: flex-start;
   height: max(4px, min(0.35vw, 6.6px));
-  margin-top: 0.32em;
+  margin-top: 0.72em;
   border-radius: 999px;
   background: #63d13b;
   flex: 0 0 auto;
@@ -2712,7 +2715,7 @@ display: block;
   box-sizing: border-box;
   padding-bottom: var(--isg-digits-pad-bottom);
   overflow-x: clip;
-  background-color: #f3f2ee;
+  background-color: #1a1a1a;
   min-height: min(100vh, 1080px);
   min-height: min(100dvh, 1080px);
   min-height: min(100svh, 1080px);
@@ -2750,8 +2753,11 @@ display: block;
   z-index: 0;
   --isg-digits-img-effect: 0;
   --isg-digits-image-x: 0px;
-  transform: translate3d(var(--isg-digits-image-x), 0, 0);
-  will-change: transform;
+  --isg-digits-image-scale: 1;
+  --isg-digits-image-radius: 0px;
+  transform: translate3d(var(--isg-digits-image-x), 0, 0) scale(var(--isg-digits-image-scale));
+  border-radius: var(--isg-digits-image-radius);
+  will-change: transform, border-radius;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   transform-style: preserve-3d;
@@ -2767,9 +2773,6 @@ display: block;
 .isg-digits-section.component--featured .isg-digits-featured__image-media {
   position: absolute;
   inset: 0;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
   transform: translate3d(var(--isg-digits-img-shift-x, 0px), 0, 0)
     scale(calc(1.03 + var(--isg-digits-img-effect, 0) * 0.015));
   transform-origin: center center;
@@ -2778,6 +2781,13 @@ display: block;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   transform-style: preserve-3d;
+}
+
+.isg-digits-section.component--featured .isg-digits-featured__image-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -3272,6 +3282,7 @@ display: block;
   position: relative;
   width: 100%;
   flex: 1 1 auto;
+  padding: var(--isg-space-md);
   min-height: min(78vh, 52rem);
   height: 100%;
   display: flex;
@@ -3901,6 +3912,7 @@ padding: var(--isg-space-md);
   border-radius: var(--isg-card-br);
   overflow: hidden;
   isolation: isolate;
+  margin-top: calc(var(--isg-space-xs) * 1.7);
   // aspect-ratio: 1.849122807;
   aspect-ratio: 1.999123;
   background: transparent;
@@ -3908,7 +3920,7 @@ padding: var(--isg-space-md);
 }
 
 .isg-accordion__media .isg-accordion__img {
-  border-radius: 0;
+
   display: block;
 }
 
@@ -3947,8 +3959,15 @@ padding: var(--isg-space-md);
   color: #ffffff;
   font-size: var(--isg-type-body-sm);
   line-height: 1.35;
-  background: linear-gradient(180deg, rgba(7, 20, 36, 0) 0%, rgba(7, 20, 36, 0.72) 68%, rgba(7, 20, 36, 0.86) 100%);
-  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.34);
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(4, 10, 18, 0.38) 34%, rgba(4, 10, 18, 0.84) 100%),
+    linear-gradient(0deg, rgba(18, 87, 166, 0.34) 0%, rgba(18, 87, 166, 0.12) 42%, rgba(18, 87, 166, 0) 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+  -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.34) 24%, rgb(0, 0, 0) 54%);
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.34) 24%, rgb(0, 0, 0) 54%);
+  text-shadow: 0 0.06em 0.42em rgba(0, 0, 0, 0.52);
   pointer-events: none;
 }
 
@@ -3959,8 +3978,8 @@ padding: var(--isg-space-md);
   max-width: 100%;
   height: 100%;
   display: block;
-  border-radius: 1.8rem;
-  background: #555;
+  border-radius: var(--isg-card-br);
+  background: transparent;
   object-fit: cover;
   object-position: center;
   transform: none !important;

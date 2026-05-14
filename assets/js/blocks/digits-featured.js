@@ -4,6 +4,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 const FEATURED_MIN_WIDTH = 1101;
+const IMAGE_ZOOM_START_SCALE = 0.46;
+const IMAGE_ZOOM_WHEEL_VH = 0.82;
 function clamp01(v) {
   return Math.max(0, Math.min(1, v));
 }
@@ -54,6 +56,8 @@ function buildFeaturedTween(section, scrollEl, cardsEl, imageEl, mm, killTween) 
     imageEl?.style.setProperty("--isg-digits-img-effect", "0");
     imageEl?.style.setProperty("--isg-digits-image-x", "0px");
     imageEl?.style.setProperty("--isg-digits-img-shift-x", "0px");
+    imageEl?.style.setProperty("--isg-digits-image-scale", "1");
+    imageEl?.style.setProperty("--isg-digits-image-radius", "0px");
     return null;
   }
 
@@ -63,6 +67,8 @@ function buildFeaturedTween(section, scrollEl, cardsEl, imageEl, mm, killTween) 
     imageEl?.style.setProperty("--isg-digits-img-effect", "0");
     imageEl?.style.setProperty("--isg-digits-image-x", "0px");
     imageEl?.style.setProperty("--isg-digits-img-shift-x", "0px");
+    imageEl?.style.setProperty("--isg-digits-image-scale", "1");
+    imageEl?.style.setProperty("--isg-digits-image-radius", "0px");
     return null;
   }
   const viewportHeight = Math.max(
@@ -72,16 +78,23 @@ function buildFeaturedTween(section, scrollEl, cardsEl, imageEl, mm, killTween) 
   const rootStyle = window.getComputedStyle(document.documentElement);
   const sectionMarginTopRaw = parseFloat(rootStyle.getPropertyValue("--isg-section-margin-top")) || 0;
   const sectionOverlapCompensation = Math.max(0, Math.round(Math.abs(sectionMarginTopRaw)));
-  const pinDistance = Math.max(total, viewportHeight) + sectionOverlapCompensation;
+  const zoomDistance = Math.round(viewportHeight * IMAGE_ZOOM_WHEEL_VH);
+  const contentDistance = Math.max(total, viewportHeight) + sectionOverlapCompensation;
+  const pinDistance = zoomDistance + contentDistance;
   const imageBlockShiftMaxPx = Math.min(260, Math.max(64, Math.round(panel * 0.17)));
 
   const syncImageEffect = (self) => {
-    const pFull = clamp01(self.progress);
-    const pEnterRaw = panel > 0 ? clamp01((pFull * total) / panel) : pFull;
+    const px = clamp01(self.progress) * pinDistance;
+    const pZoom = easeOutCubic(clamp01(px / Math.max(1, zoomDistance)));
+    const pContent = clamp01((px - zoomDistance) / Math.max(1, contentDistance));
+    const pEnterRaw = panel > 0 ? clamp01((pContent * total) / panel) : pContent;
     const pEnter = easeOutCubic(clamp01((pEnterRaw - 0.035) / 0.965));
+    const scale = IMAGE_ZOOM_START_SCALE + (1 - IMAGE_ZOOM_START_SCALE) * pZoom;
     imageEl?.style.setProperty("--isg-digits-img-effect", pEnter.toFixed(5));
     imageEl?.style.setProperty("--isg-digits-image-x", `${(-imageBlockShiftMaxPx * pEnter).toFixed(2)}px`);
     imageEl?.style.setProperty("--isg-digits-img-shift-x", "0px");
+    imageEl?.style.setProperty("--isg-digits-image-scale", scale.toFixed(5));
+    imageEl?.style.setProperty("--isg-digits-image-radius", "0px");
   };
 
   const tl = gsap.timeline({
@@ -99,6 +112,7 @@ function buildFeaturedTween(section, scrollEl, cardsEl, imageEl, mm, killTween) 
     },
   });
 
+  tl.to(imageEl, { duration: zoomDistance, ease: "none" });
   tl.fromTo(cardsEl, { x: 0 }, { x: -panel, duration: panel, ease: "none" });
 
   if (overflow > 0) {
@@ -139,6 +153,8 @@ export function initDigitsFeatured(root = document) {
       imageEl?.style.setProperty("--isg-digits-img-effect", "0");
       imageEl?.style.setProperty("--isg-digits-image-x", "0px");
       imageEl?.style.setProperty("--isg-digits-img-shift-x", "0px");
+      imageEl?.style.setProperty("--isg-digits-image-scale", "1");
+      imageEl?.style.setProperty("--isg-digits-image-radius", "0px");
     };
 
     const rebuild = () => {
@@ -234,6 +250,8 @@ export function initDigitsFeatured(root = document) {
       window.removeEventListener("resize", onChange);
       ro.disconnect();
       section.style.removeProperty("--isg-featured-slide");
+      imageEl?.style.removeProperty("--isg-digits-image-scale");
+      imageEl?.style.removeProperty("--isg-digits-image-radius");
       cardsEl.removeAttribute("data-lenis-prevent");
       colsEl?.removeAttribute("data-lenis-prevent");
       killTween();

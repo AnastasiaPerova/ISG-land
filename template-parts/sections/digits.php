@@ -98,11 +98,9 @@ $cards = $normalized_cards;
 	<div class="scroll" data-isg-featured-scroll>
 		<div class="inner" data-isg-featured-inner>
 			<div class="image isg-digits-featured__image" role="img" aria-label="">
-				<div
-					class="isg-digits-featured__image-media"
-					style="background-image: url('<?php echo esc_url($bg_image); ?>');"
-					aria-hidden="true"
-				></div>
+				<div class="isg-digits-featured__image-media" aria-hidden="true">
+					<img class="isg-digits-featured__image-img" src="<?php echo esc_url($bg_image); ?>" alt="" loading="eager" decoding="async" />
+				</div>
 			</div>
 			<div class="cards" data-isg-featured-cards>
 				<div class="center">
