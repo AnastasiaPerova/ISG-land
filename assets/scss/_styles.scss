@@ -3196,12 +3196,22 @@ display: block;
 }
 
 .isg-app__scene-reveal {
+  --isg-app-bubble-inset-x: 0px;
+  --isg-app-bubble-inset-y: 0px;
+  --isg-app-bubble-radius: 0px;
   position: relative;
   width: 100%;
   min-height: inherit;
   height: inherit;
   max-height: inherit;
   box-sizing: border-box;
+  overflow: hidden;
+  clip-path: inset(
+    var(--isg-app-bubble-inset-y) var(--isg-app-bubble-inset-x) var(--isg-app-bubble-inset-y)
+      var(--isg-app-bubble-inset-x) round var(--isg-app-bubble-radius)
+  );
+  box-shadow: 0 calc(var(--isg-app-bubble-inset-y) * 0.7) 48px rgba(0, 0, 0, 0.22);
+  will-change: clip-path;
 }
 
 .isg-app__media {

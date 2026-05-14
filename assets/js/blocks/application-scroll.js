@@ -74,6 +74,9 @@ const C_BODY_IN_END = 0.9;
 const C_ACCORDION_START = C_BODY_IN_END;
 // Прогресс скролла [0..1]: здесь автопереключение вкладок аккордеона заканчивается.
 const C_ACCORDION_END = 1;
+const BUBBLE_INSET_X_PX = 54;
+const BUBBLE_INSET_Y_PX = 22;
+const BUBBLE_RADIUS_PX = 34;
 
 // Компиляция шейдера. При ошибке возвращаем null и отключаем WebGL-эффект.
 function createShader(gl, type, source) {
@@ -273,6 +276,7 @@ export function initApplicationScroll(root = document) {
   root.querySelectorAll("[data-isg-app-scroll]").forEach((section) => {
     const postEl = section.querySelector(".isg-app__post");
     const scene = section.querySelector(".isg-app__scene");
+    const sceneReveal = section.querySelector(".isg-app__scene-reveal");
     const mediaEl = section.querySelector(".isg-app__media");
     const video = section.querySelector(".isg-app__video");
     const head = section.querySelector(".isg-app-scroll__head");
@@ -592,6 +596,21 @@ export function initApplicationScroll(root = document) {
       });
     };
 
+    const setBubbleFrame = (progress) => {
+      if (!(sceneReveal instanceof HTMLElement)) return;
+      const t = easeOutCubic(progress);
+      sceneReveal.style.setProperty("--isg-app-bubble-inset-x", `${(BUBBLE_INSET_X_PX * t).toFixed(2)}px`);
+      sceneReveal.style.setProperty("--isg-app-bubble-inset-y", `${(BUBBLE_INSET_Y_PX * t).toFixed(2)}px`);
+      sceneReveal.style.setProperty("--isg-app-bubble-radius", `${(BUBBLE_RADIUS_PX * t).toFixed(2)}px`);
+    };
+
+    const clearBubbleFrame = () => {
+      if (!(sceneReveal instanceof HTMLElement)) return;
+      sceneReveal.style.removeProperty("--isg-app-bubble-inset-x");
+      sceneReveal.style.removeProperty("--isg-app-bubble-inset-y");
+      sceneReveal.style.removeProperty("--isg-app-bubble-radius");
+    };
+
     // Ручной клик переводит аккордеон в manual-mode.
     const onAccordionClick = (e) => {
       const btn = e.target.closest(".isg-accordion__trigger");
@@ -636,6 +655,7 @@ export function initApplicationScroll(root = document) {
       if (head) gsap.set(head, { clearProps: "opacity,visibility,transform" });
       if (stageIntro) gsap.set(stageIntro, { clearProps: "opacity,visibility,transform" });
       gsap.set(stageBody, { clearProps: "opacity,visibility,transform,pointerEvents" });
+      clearBubbleFrame();
       if (appLeft) gsap.set(appLeft, { clearProps: "opacity,transform" });
       if (appRight) gsap.set(appRight, { clearProps: "opacity,transform" });
       setAccordionIndex(items.length ? 0 : -1);
@@ -702,6 +722,7 @@ export function initApplicationScroll(root = document) {
       titleHidden();
       setTitleWordsByVideoTime(0, video.duration);
       glFx?.update({ progress: 0, titleOpacity: 0 });
+      setBubbleFrame(0);
       setBodyLayer(0, 0);
       if (appLeft) gsap.set(appLeft, { opacity: 1, x: leftOffscreenX });
       if (appRight) gsap.set(appRight, { opacity: 1, x: accordionOffscreenX });
@@ -729,6 +750,7 @@ export function initApplicationScroll(root = document) {
       if (stageIntro) gsap.set(stageIntro, { opacity: 1, visibility: "visible", y: 0 });
       setTitleWordsStaticVisible();
       glFx?.update({ progress: 0, titleOpacity: 0 });
+      clearBubbleFrame();
       setBodyLayer(1, 0);
       if (appLeft) gsap.set(appLeft, { opacity: 1, x: 0 });
       if (appRight) gsap.set(appRight, { opacity: 1, x: 0 });
@@ -780,6 +802,7 @@ export function initApplicationScroll(root = document) {
 
           // 3) Ввод body-блока и сдвиг аккордеона.
           const bodyIn = getBodyInFromVideoTime(targetVideoTime, video.duration);
+          setBubbleFrame(bodyIn);
           const bodyOp = bodyIn;
           const bodyY = 0;
           setBodyLayer(bodyOp, bodyY);
@@ -897,6 +920,7 @@ export function initApplicationScroll(root = document) {
       if (head) gsap.set(head, { clearProps: "opacity,visibility,transform" });
       if (stageIntro) gsap.set(stageIntro, { clearProps: "opacity,visibility,transform" });
       gsap.set(stageBody, { clearProps: "opacity,visibility,transform,pointerEvents" });
+      clearBubbleFrame();
       if (appLeft) gsap.set(appLeft, { clearProps: "opacity,transform" });
       if (appRight) gsap.set(appRight, { clearProps: "opacity,transform" });
       destroyDesktopEffects();
