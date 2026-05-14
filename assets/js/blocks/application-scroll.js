@@ -24,6 +24,13 @@ function map01(value, start, end) {
   return clamp01((value - start) / (end - start));
 }
 
+function getStableViewportHeight() {
+  const raw = getComputedStyle(document.documentElement).getPropertyValue("--isg-stable-vh").trim();
+  const unit = parseFloat(raw);
+  if (Number.isFinite(unit) && unit > 0) return unit * 100;
+  return window.visualViewport?.height || window.innerHeight || document.documentElement.clientHeight || 1;
+}
+
 function warmAccordionMedia(item, priority = "low") {
   item?.querySelectorAll?.(".isg-accordion__img").forEach((img) => {
     if (!(img instanceof HTMLImageElement)) return;
@@ -287,6 +294,10 @@ export function initApplicationScroll(root = document) {
     const items = section.querySelectorAll(".isg-accordion__item");
     const acc = section.querySelector(".isg-accordion--app-scroll");
     const mobileBg = section.dataset.isgMobileBg || "";
+    const fallbackMobileBg = () => {
+      const img = section.querySelector(".isg-accordion__img");
+      return img instanceof HTMLImageElement ? img.currentSrc || img.src || "" : "";
+    };
 
     if (!video || !scene || !stageBody) return;
 
@@ -410,6 +421,7 @@ export function initApplicationScroll(root = document) {
     let waitingForDesktopMetadata = false;
     let desktopMetadataTimer = 0;
     let desktopMetadataCleanup = null;
+    let mobileIntroPlaceholder = null;
 
     const hasVideoMetadata = () => {
       const duration = video.duration;
@@ -565,8 +577,9 @@ export function initApplicationScroll(root = document) {
 
     const applyMobileStaticMedia = () => {
       section.classList.add("isg-app--mobile-static");
-      if (mediaEl && mobileBg) {
-        mediaEl.style.backgroundImage = `url("${mobileBg}")`;
+      const bg = mobileBg || fallbackMobileBg();
+      if (mediaEl && bg) {
+        mediaEl.style.backgroundImage = `url("${bg}")`;
         mediaEl.style.backgroundSize = "cover";
         mediaEl.style.backgroundPosition = "center";
       }
@@ -574,12 +587,21 @@ export function initApplicationScroll(root = document) {
         video.style.opacity = "0";
         video.style.visibility = "hidden";
       }
+      if (mediaEl && stageIntro && !mediaEl.contains(stageIntro)) {
+        mobileIntroPlaceholder = mobileIntroPlaceholder || document.createComment("isg-app-stage-intro");
+        stageIntro.parentNode?.insertBefore(mobileIntroPlaceholder, stageIntro);
+        mediaEl.appendChild(stageIntro);
+      }
       const glCanvas = mediaEl?.querySelector(".isg-app__glfx");
       if (glCanvas) glCanvas.style.display = "none";
     };
 
     const clearMobileStaticMedia = () => {
       section.classList.remove("isg-app--mobile-static");
+      if (stageIntro && mobileIntroPlaceholder?.parentNode) {
+        mobileIntroPlaceholder.parentNode.insertBefore(stageIntro, mobileIntroPlaceholder);
+        mobileIntroPlaceholder.remove();
+      }
       if (mediaEl) {
         mediaEl.style.removeProperty("background-image");
         mediaEl.style.removeProperty("background-size");
@@ -689,7 +711,7 @@ export function initApplicationScroll(root = document) {
 
     // Расчет длины scroll-трека секции в пикселях.
     const applyTrackHeights = () => {
-      const H = window.innerHeight;
+      const H = getStableViewportHeight();
       const scrubPx = Math.round(H * APP_SCROLL_SCRUB_VH);
       if (postEl) postEl.style.height = `${scrubPx}px`;
       section.style.minHeight = "";
@@ -701,7 +723,7 @@ export function initApplicationScroll(root = document) {
       section.style.minHeight = "";
     };
 
-    const scrubEndPx = () => Math.round(window.innerHeight * APP_SCROLL_SCRUB_VH);
+    const scrubEndPx = () => Math.round(getStableViewportHeight() * APP_SCROLL_SCRUB_VH);
 
     const clearDesktopMetadataWait = () => {
       window.clearTimeout(desktopMetadataTimer);

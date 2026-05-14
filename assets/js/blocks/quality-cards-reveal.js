@@ -1,7 +1,4 @@
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
 
 const instances = new WeakMap();
 
@@ -40,8 +37,7 @@ export function initQualityCardsReveal(root = document) {
   if (!wraps.length) return () => {};
 
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const disabledViewport = window.matchMedia("(max-width: 1099px)").matches;
-  if (reduced || disabledViewport) {
+  if (reduced) {
     wraps.forEach((wrap) => {
       instances.get(wrap)?.();
       instances.delete(wrap);
@@ -103,14 +99,8 @@ export function initQualityCardsReveal(root = document) {
     });
 
     const tl = gsap.timeline({
-      defaults: { ease: "none" },
-      scrollTrigger: {
-        trigger: wrap,
-        start: "top 100%",
-        end: "top 35%",
-        scrub: mobile ? 1.15 : 1.85,
-        invalidateOnRefresh: true,
-      },
+      paused: true,
+      defaults: { ease: "power3.out" },
     });
 
     tl.to(
@@ -126,10 +116,10 @@ export function initQualityCardsReveal(root = document) {
         yPercent: 0,
         scale: 1,
         stagger: {
-          each: mobile ? 0.09 : 0.075,
+          each: mobile ? 0.09 : 0.08,
           from: "start",
         },
-        duration: 1.22,
+        duration: 1.12,
       },
       0,
     )
@@ -140,10 +130,10 @@ export function initQualityCardsReveal(root = document) {
           yPercent: 0,
           filter: "saturate(1) contrast(1) brightness(1)",
           stagger: {
-            each: mobile ? 0.09 : 0.075,
+            each: mobile ? 0.09 : 0.08,
             from: "start",
           },
-          duration: 1.22,
+          duration: 1.12,
         },
         0,
       )
@@ -157,18 +147,32 @@ export function initQualityCardsReveal(root = document) {
             each: mobile ? 0.07 : 0.055,
             from: "start",
           },
-          duration: 0.78,
+          duration: 0.76,
         },
         0.42,
       );
 
-    const syncInitialProgress = () => ScrollTrigger.refresh();
-    requestAnimationFrame(() => requestAnimationFrame(syncInitialProgress));
-    window.addEventListener("load", syncInitialProgress, { once: true });
+    let observer = null;
+    const play = () => {
+      tl.play();
+      observer?.disconnect();
+      observer = null;
+    };
+
+    if ("IntersectionObserver" in window) {
+      observer = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((entry) => entry.isIntersecting)) play();
+        },
+        { rootMargin: "0px 0px -8% 0px", threshold: 0.05 },
+      );
+      observer.observe(wrap);
+    } else {
+      requestAnimationFrame(play);
+    }
 
     const cleanup = () => {
-      window.removeEventListener("load", syncInitialProgress);
-      tl.scrollTrigger?.kill();
+      observer?.disconnect();
       tl.kill();
       if (instances.get(wrap) !== cleanup) return;
       clearRevealState(wrap);

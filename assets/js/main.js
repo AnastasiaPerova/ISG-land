@@ -160,6 +160,7 @@ async function stabilizeScrollLayout(passes = 2) {
     ScrollTrigger.refresh();
     await nextFrame();
   }
+  window.dispatchEvent(new CustomEvent("isg:layout-ready"));
 }
 
 function disposeInternals() {
@@ -196,6 +197,7 @@ function initStableMobileViewportUnit() {
   const root = document.documentElement;
   const mq = window.matchMedia(MOBILE_VIEWPORT_STABLE_MQ);
   let lastWidth = 0;
+  let lastHeight = 0;
   let raf = 0;
   let orientationTimer = 0;
 
@@ -203,19 +205,15 @@ function initStableMobileViewportUnit() {
     window.visualViewport?.height || window.innerHeight || root.clientHeight || 0;
 
   const apply = ({ force = false } = {}) => {
-    if (!mq.matches) {
-      root.style.removeProperty("--isg-stable-vh");
-      lastWidth = window.innerWidth || root.clientWidth || 0;
-      return;
-    }
-
     const width = window.innerWidth || root.clientWidth || 0;
-    if (!force && lastWidth && width === lastWidth) {
-      return;
-    }
+    const height = viewportHeight();
+    const compact = mq.matches;
+    const sameCompactLayout = compact && lastWidth && width === lastWidth;
+    const sameDesktopLayout = !compact && lastWidth && lastHeight && width === lastWidth && Math.abs(height - lastHeight) < 1;
+    if (!force && (sameCompactLayout || sameDesktopLayout)) return;
 
     lastWidth = width;
-    const height = viewportHeight();
+    lastHeight = height;
     if (height > 0) {
       root.style.setProperty("--isg-stable-vh", `${height * 0.01}px`);
     }
@@ -259,10 +257,6 @@ function bootQualityCardsReveal(root = document) {
   } catch (_) {
     
   }
-  if (shouldDisableMobileGsapAnimations()) {
-    qualityCardsRevealDisposer = null;
-    return () => {};
-  }
   qualityCardsRevealDisposer = initQualityCardsReveal(root);
   return qualityCardsRevealDisposer;
 }
@@ -273,82 +267,14 @@ function bootSpecCardsReveal(root = document) {
   } catch (_) {
     
   }
-  if (shouldDisableMobileGsapAnimations()) {
-    specCardsRevealDisposer = null;
-    return () => {};
-  }
   specCardsRevealDisposer = initSpecCardsReveal(root);
   return specCardsRevealDisposer;
 }
-
-function scheduleQualityCardsRevealBoot() {
-  const run = () => {
-    const root = isServerRenderedMode() ? document : document.getElementById("isg-main") || document;
-    if (root.querySelector?.(".isg-quality-cards")) {
-      bootQualityCardsReveal(root);
-      return true;
-    }
-    return false;
-  };
-
-  if (run()) return;
-
-  const observer = new MutationObserver(() => {
-    if (run()) observer.disconnect();
-  });
-  observer.observe(document.documentElement, { childList: true, subtree: true });
-
-  window.addEventListener(
-    "load",
-    () => {
-      run();
-      setTimeout(run, 300);
-      setTimeout(run, 1200);
-    },
-    { once: true },
-  );
-}
-
-function scheduleSpecCardsRevealBoot() {
-  const run = () => {
-    const root = isServerRenderedMode() ? document : document.getElementById("isg-main") || document;
-    if (root.querySelector?.(".isg-spec-cards")) {
-      bootSpecCardsReveal(root);
-      return true;
-    }
-    return false;
-  };
-
-  if (run()) return;
-
-  const observer = new MutationObserver(() => {
-    if (run()) observer.disconnect();
-  });
-  observer.observe(document.documentElement, { childList: true, subtree: true });
-
-  window.addEventListener(
-    "load",
-    () => {
-      run();
-      setTimeout(run, 300);
-      setTimeout(run, 1200);
-    },
-    { once: true },
-  );
-}
-
-
-
-
 
 export async function initIsgPage(root = document.body) {
   disposeInternals();
   const disableMobileGsapAnimations = shouldDisableMobileGsapAnimations();
   disposers.push(initStableMobileViewportUnit());
-  if (!disableMobileGsapAnimations) {
-    bootSpecCardsReveal(root);
-    bootQualityCardsReveal(root);
-  }
   disposers.push(initLenisSmoothScroll());
   disposers.push(initAccordions(root));
   disposers.push(await initSliders(root));
@@ -381,6 +307,8 @@ export async function initIsgPage(root = document.body) {
     disposers.push(initProductSizeItemsReveal(root));
     disposers.push(initBodyCopyReveal(root));
   }
+  bootSpecCardsReveal(root);
+  bootQualityCardsReveal(root);
   await stabilizeScrollLayout(2);
 }
 
@@ -481,9 +409,6 @@ function isServerRenderedMode() {
     document.documentElement.hasAttribute("data-isg-server-rendered")
   );
 }
-
-scheduleQualityCardsRevealBoot();
-scheduleSpecCardsRevealBoot();
 
 async function reinitIsgPage() {
   const main = document.getElementById("isg-main");

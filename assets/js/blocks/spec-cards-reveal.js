@@ -1,7 +1,4 @@
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
 
 const instances = new WeakMap();
 
@@ -41,8 +38,7 @@ export function initSpecCardsReveal(root = document) {
   if (!wraps.length) return () => {};
 
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const disabledViewport = window.matchMedia("(max-width: 1099px)").matches;
-  if (reduced || disabledViewport) {
+  if (reduced) {
     wraps.forEach((wrap) => {
       instances.get(wrap)?.();
       instances.delete(wrap);
@@ -97,14 +93,8 @@ export function initSpecCardsReveal(root = document) {
     });
 
     const tl = gsap.timeline({
-      defaults: { ease: "none" },
-      scrollTrigger: {
-        trigger: wrap,
-        start: "top 115%",
-        end: "top 68%",
-        scrub: mobile ? 1.15 : 1.6,
-        invalidateOnRefresh: true,
-      },
+      paused: true,
+      defaults: { ease: "power3.out" },
     });
 
     tl.to(
@@ -120,10 +110,10 @@ export function initSpecCardsReveal(root = document) {
         yPercent: 0,
         scale: 1,
         stagger: {
-          each: mobile ? 0.08 : 0.065,
+          each: mobile ? 0.08 : 0.07,
           from: "start",
         },
-        duration: 1.12,
+        duration: 1.05,
       },
       0,
     ).to(
@@ -136,18 +126,32 @@ export function initSpecCardsReveal(root = document) {
           each: mobile ? 0.045 : 0.035,
           from: "start",
         },
-        duration: 0.75,
+        duration: 0.7,
       },
       0.28,
     );
 
-    const syncInitialProgress = () => ScrollTrigger.refresh();
-    requestAnimationFrame(() => requestAnimationFrame(syncInitialProgress));
-    window.addEventListener("load", syncInitialProgress, { once: true });
+    let observer = null;
+    const play = () => {
+      tl.play();
+      observer?.disconnect();
+      observer = null;
+    };
+
+    if ("IntersectionObserver" in window) {
+      observer = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((entry) => entry.isIntersecting)) play();
+        },
+        { rootMargin: "0px 0px -8% 0px", threshold: 0.05 },
+      );
+      observer.observe(wrap);
+    } else {
+      requestAnimationFrame(play);
+    }
 
     const cleanup = () => {
-      window.removeEventListener("load", syncInitialProgress);
-      tl.scrollTrigger?.kill();
+      observer?.disconnect();
       tl.kill();
       if (instances.get(wrap) !== cleanup) return;
       clearRevealState(wrap);
