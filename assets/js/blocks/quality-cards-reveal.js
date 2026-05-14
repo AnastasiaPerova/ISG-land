@@ -3,11 +3,23 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const instances = new WeakMap();
+
 function getParts(wrap) {
   const cards = Array.from(wrap.querySelectorAll(".isg-quality-card"));
   const images = cards.map((card) => card.querySelector(".isg-quality-card__img")).filter(Boolean);
   const contents = cards.map((card) => card.querySelector(".isg-quality-card__content")).filter(Boolean);
   return { cards, images, contents };
+}
+
+function clearRevealState(wrap) {
+  const { cards, images, contents } = getParts(wrap);
+  gsap.killTweensOf([wrap, ...cards, ...images, ...contents]);
+  gsap.set([wrap, ...cards, ...images, ...contents], {
+    clearProps:
+      "opacity,visibility,transform,clipPath,webkitClipPath,filter,willChange,transformStyle,perspective",
+  });
+  delete wrap.dataset.isgQualityCardsRevealInit;
 }
 
 function getCardVars(index, total, mobile, compact) {
@@ -24,18 +36,27 @@ function getCardVars(index, total, mobile, compact) {
 }
 
 export function initQualityCardsReveal(root = document) {
-  const wraps = Array.from(root.querySelectorAll(".isg-quality-cards")).filter(
-    (wrap) => wrap instanceof HTMLElement && wrap.dataset.isgQualityCardsRevealInit !== "1",
-  );
+  const wraps = Array.from(root.querySelectorAll(".isg-quality-cards")).filter((wrap) => wrap instanceof HTMLElement);
   if (!wraps.length) return () => {};
 
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return () => {};
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const disabledViewport = window.matchMedia("(max-width: 1099px)").matches;
+  if (reduced || disabledViewport) {
+    wraps.forEach((wrap) => {
+      instances.get(wrap)?.();
+      instances.delete(wrap);
+      clearRevealState(wrap);
+    });
+    return () => {};
+  }
 
   const mobile = window.matchMedia("(max-width: 640px)").matches;
   const compact = window.matchMedia("(max-width: 1099px)").matches;
   const cleanups = [];
 
   wraps.forEach((wrap) => {
+    instances.get(wrap)?.();
+    instances.delete(wrap);
     wrap.dataset.isgQualityCardsRevealInit = "1";
 
     const { cards, images, contents } = getParts(wrap);
@@ -145,17 +166,16 @@ export function initQualityCardsReveal(root = document) {
     requestAnimationFrame(() => requestAnimationFrame(syncInitialProgress));
     window.addEventListener("load", syncInitialProgress, { once: true });
 
-    cleanups.push(() => {
+    const cleanup = () => {
       window.removeEventListener("load", syncInitialProgress);
       tl.scrollTrigger?.kill();
       tl.kill();
-      gsap.killTweensOf([wrap, ...cards, ...images, ...contents]);
-      gsap.set([wrap, ...cards, ...images, ...contents], {
-        clearProps:
-          "opacity,visibility,transform,clipPath,webkitClipPath,filter,willChange,transformStyle,perspective",
-      });
-      delete wrap.dataset.isgQualityCardsRevealInit;
-    });
+      if (instances.get(wrap) !== cleanup) return;
+      clearRevealState(wrap);
+      instances.delete(wrap);
+    };
+    instances.set(wrap, cleanup);
+    cleanups.push(cleanup);
   });
 
   requestAnimationFrame(() => ScrollTrigger.refresh());

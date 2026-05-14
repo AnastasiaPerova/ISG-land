@@ -3,6 +3,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const instances = new WeakMap();
+
 function getCardVars(index, total, mobile) {
   const center = (total - 1) / 2;
   const side = index - center;
@@ -16,30 +18,52 @@ function getCardVars(index, total, mobile) {
   };
 }
 
-export function initSpecCardsReveal(root = document) {
-  const wraps = Array.from(root.querySelectorAll(".isg-spec-cards")).filter(
-    (wrap) => wrap instanceof HTMLElement && wrap.dataset.isgSpecCardsRevealInit !== "1",
+function getParts(wrap) {
+  const cards = Array.from(wrap.querySelectorAll(".isg-spec-card"));
+  const contentNodes = cards.flatMap((card) =>
+    Array.from(card.querySelectorAll(".isg-spec-card__head, .isg-spec-card__value, .isg-spec-card__meta")),
   );
+  return { cards, contentNodes };
+}
+
+function clearRevealState(wrap) {
+  const { cards, contentNodes } = getParts(wrap);
+  gsap.killTweensOf([wrap, ...cards, ...contentNodes]);
+  gsap.set([wrap, ...cards, ...contentNodes], {
+    clearProps:
+      "opacity,visibility,transform,clipPath,webkitClipPath,filter,backfaceVisibility,willChange,transformStyle,perspective",
+  });
+  delete wrap.dataset.isgSpecCardsRevealInit;
+}
+
+export function initSpecCardsReveal(root = document) {
+  const wraps = Array.from(root.querySelectorAll(".isg-spec-cards")).filter((wrap) => wrap instanceof HTMLElement);
   if (!wraps.length) return () => {};
 
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (reduced) return () => {};
+  const disabledViewport = window.matchMedia("(max-width: 1099px)").matches;
+  if (reduced || disabledViewport) {
+    wraps.forEach((wrap) => {
+      instances.get(wrap)?.();
+      instances.delete(wrap);
+      clearRevealState(wrap);
+    });
+    return () => {};
+  }
 
   const mobile = window.matchMedia("(max-width: 640px)").matches;
   const cleanups = [];
 
   wraps.forEach((wrap) => {
+    instances.get(wrap)?.();
+    instances.delete(wrap);
     wrap.dataset.isgSpecCardsRevealInit = "1";
 
-    const cards = Array.from(wrap.querySelectorAll(".isg-spec-card"));
+    const { cards, contentNodes } = getParts(wrap);
     if (!cards.length) {
       delete wrap.dataset.isgSpecCardsRevealInit;
       return;
     }
-
-    const contentNodes = cards.flatMap((card) =>
-      Array.from(card.querySelectorAll(".isg-spec-card__head, .isg-spec-card__value, .isg-spec-card__meta")),
-    );
 
     gsap.set(wrap, {
       perspective: mobile ? 900 : 1400,
@@ -76,8 +100,8 @@ export function initSpecCardsReveal(root = document) {
       defaults: { ease: "none" },
       scrollTrigger: {
         trigger: wrap,
-        start: "top 75%",
-        end: "top 35%",
+        start: "top 115%",
+        end: "top 68%",
         scrub: mobile ? 1.15 : 1.6,
         invalidateOnRefresh: true,
       },
@@ -121,17 +145,16 @@ export function initSpecCardsReveal(root = document) {
     requestAnimationFrame(() => requestAnimationFrame(syncInitialProgress));
     window.addEventListener("load", syncInitialProgress, { once: true });
 
-    cleanups.push(() => {
+    const cleanup = () => {
       window.removeEventListener("load", syncInitialProgress);
       tl.scrollTrigger?.kill();
       tl.kill();
-      gsap.killTweensOf([wrap, ...cards, ...contentNodes]);
-      gsap.set([wrap, ...cards, ...contentNodes], {
-        clearProps:
-          "opacity,visibility,transform,clipPath,webkitClipPath,filter,backfaceVisibility,willChange,transformStyle,perspective",
-      });
-      delete wrap.dataset.isgSpecCardsRevealInit;
-    });
+      if (instances.get(wrap) !== cleanup) return;
+      clearRevealState(wrap);
+      instances.delete(wrap);
+    };
+    instances.set(wrap, cleanup);
+    cleanups.push(cleanup);
   });
 
   requestAnimationFrame(() => ScrollTrigger.refresh());
