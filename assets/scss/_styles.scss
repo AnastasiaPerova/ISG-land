@@ -2831,7 +2831,7 @@ display: block;
 .isg-digits-section.component--featured .scroll .inner .cards .center {
   width: 100%;
   max-width: 100%;
-  padding: 0 var(--isg-digits-pad-right) 0 var(--isg-space-md);
+  padding: 0 var(--isg-space-md) 0 var(--isg-space-md);
   box-sizing: border-box;
   flex: 1 1 auto;
   display: flex;
@@ -3544,6 +3544,7 @@ display: block;
   .isg-app-scroll__overlap {
     min-height: 0;
     height: auto;
+    padding: 0;
   }
   .isg-app-scroll__rows,
   .isg-app-scroll__stage,
@@ -3556,7 +3557,7 @@ display: block;
   .isg-app-scroll__stage-body {
     position: relative;
     z-index: 1;
-    padding: var(--isg-space-md) clamp(16px, 5vw, 24px);
+    // padding: var(--isg-space-md) clamp(16px, 5vw, 24px);
     background: linear-gradient(180deg, #1a1a1a 0%, #1a1a1a 72%, #0c1629 100%);
     box-shadow: none;
     isolation: isolate;
@@ -8948,7 +8949,7 @@ body.isg-404-page {
   }
 
   .isg-digits-section.component--featured .scroll .inner .cards .center {
-    padding-bottom: 0;
+    padding-bottom: var(--isg-mobile-section-gap);
     padding-top: var(--isg-mobile-section-gap);
   }
 

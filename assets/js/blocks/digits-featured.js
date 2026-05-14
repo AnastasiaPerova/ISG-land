@@ -62,8 +62,6 @@ function buildFeaturedTween(section, scrollEl, cardsEl, imageEl, mm, killTween) 
     imageEl?.style.setProperty("--isg-digits-img-effect", "0");
     imageEl?.style.setProperty("--isg-digits-image-x", "0px");
     imageEl?.style.setProperty("--isg-digits-img-shift-x", "0px");
-    imageEl?.style.setProperty("--isg-digits-image-scale", "1");
-    imageEl?.style.setProperty("--isg-digits-image-radius", "0px");
     return null;
   }
 
@@ -73,8 +71,6 @@ function buildFeaturedTween(section, scrollEl, cardsEl, imageEl, mm, killTween) 
     imageEl?.style.setProperty("--isg-digits-img-effect", "0");
     imageEl?.style.setProperty("--isg-digits-image-x", "0px");
     imageEl?.style.setProperty("--isg-digits-img-shift-x", "0px");
-    imageEl?.style.setProperty("--isg-digits-image-scale", "1");
-    imageEl?.style.setProperty("--isg-digits-image-radius", "0px");
     return null;
   }
   const viewportHeight = Math.max(
@@ -94,8 +90,6 @@ function buildFeaturedTween(section, scrollEl, cardsEl, imageEl, mm, killTween) 
     imageEl?.style.setProperty("--isg-digits-img-effect", pEnter.toFixed(5));
     imageEl?.style.setProperty("--isg-digits-image-x", `${(-imageBlockShiftMaxPx * pEnter).toFixed(2)}px`);
     imageEl?.style.setProperty("--isg-digits-img-shift-x", "0px");
-    imageEl?.style.setProperty("--isg-digits-image-scale", "1");
-    imageEl?.style.setProperty("--isg-digits-image-radius", "0px");
   };
 
   const tl = gsap.timeline({
@@ -188,8 +182,6 @@ export function initDigitsFeatured(root = document) {
       imageEl?.style.setProperty("--isg-digits-img-effect", "0");
       imageEl?.style.setProperty("--isg-digits-image-x", "0px");
       imageEl?.style.setProperty("--isg-digits-img-shift-x", "0px");
-      imageEl?.style.setProperty("--isg-digits-image-scale", "1");
-      imageEl?.style.setProperty("--isg-digits-image-radius", "0px");
     };
 
     const rebuild = () => {
