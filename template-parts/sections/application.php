@@ -88,7 +88,7 @@ if ($video_url === '') {
 	<div class="isg-app__scene">
 		<div class="isg-app__scene-reveal">
 			<div class="isg-app__media" aria-hidden="true">
-				<video class="isg-app__video" muted playsinline preload="metadata"
+				<video class="isg-app__video" muted playsinline preload="auto"
 					src="<?php echo esc_url($video_url); ?>" <?php if (!empty($video_poster)): ?>
 						poster="<?php echo esc_url($video_poster); ?>" <?php endif; ?>></video>
 			</div>

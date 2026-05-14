@@ -407,6 +407,14 @@ export function initApplicationScroll(root = document) {
     let currentMode = "";
     let glFx = null;
     let titleSplit = false;
+    let waitingForDesktopMetadata = false;
+    let desktopMetadataTimer = 0;
+    let desktopMetadataCleanup = null;
+
+    const hasVideoMetadata = () => {
+      const duration = video.duration;
+      return video.readyState >= 1 && duration && Number.isFinite(duration);
+    };
 
     const ensureDesktopEffects = () => {
       if (!glFx) {
@@ -695,6 +703,14 @@ export function initApplicationScroll(root = document) {
 
     const scrubEndPx = () => Math.round(window.innerHeight * APP_SCROLL_SCRUB_VH);
 
+    const clearDesktopMetadataWait = () => {
+      window.clearTimeout(desktopMetadataTimer);
+      desktopMetadataTimer = 0;
+      desktopMetadataCleanup?.();
+      desktopMetadataCleanup = null;
+      waitingForDesktopMetadata = false;
+    };
+
     // Сброс секции в стартовый кадр.
     const applyInitialFrame = () => {
       accordionManual = false;
@@ -765,6 +781,9 @@ export function initApplicationScroll(root = document) {
 
     // Основная desktop-сцена со ScrollTrigger и scrub-синхронизацией.
     const buildDesktopScene = () => {
+      clearDesktopMetadataWait();
+      st?.kill();
+      st = null;
       ensureDesktopEffects();
       stageIntro?.style.removeProperty("display");
       applyTrackHeights();
@@ -842,6 +861,41 @@ export function initApplicationScroll(root = document) {
     };
 
     // Пересборка режима при resize/смене брейкпоинта.
+    const holdDesktopInitialFrameUntilMetadata = () => {
+      ensureDesktopEffects();
+      stageIntro?.style.removeProperty("display");
+      applyTrackHeights();
+      applyInitialFrame();
+
+      if (waitingForDesktopMetadata) return;
+      waitingForDesktopMetadata = true;
+
+      const finish = () => {
+        clearDesktopMetadataWait();
+        if (currentMode !== "desktop" || !mqDesktop.matches || reduced) return;
+        buildDesktopScene();
+        requestAnimationFrame(() => ScrollTrigger.refresh());
+      };
+
+      const onReady = () => finish();
+      const onError = () => finish();
+      video.addEventListener("loadedmetadata", onReady, { once: true });
+      video.addEventListener("loadeddata", onReady, { once: true });
+      video.addEventListener("error", onError, { once: true });
+      desktopMetadataCleanup = () => {
+        video.removeEventListener("loadedmetadata", onReady);
+        video.removeEventListener("loadeddata", onReady);
+        video.removeEventListener("error", onError);
+      };
+
+      desktopMetadataTimer = window.setTimeout(finish, 8000);
+
+      try {
+        video.preload = "auto";
+        video.load();
+      } catch (_) {}
+    };
+
     const rebuild = () => {
       const nextMode = reduced ? "reduced" : mqDesktop.matches ? "desktop" : "mobile";
       if (nextMode === currentMode && (nextMode !== "desktop" || st)) {
@@ -866,8 +920,13 @@ export function initApplicationScroll(root = document) {
           acc.style.removeProperty("transition");
         }
         clearMobileStaticMedia();
-        buildDesktopScene();
+        if (hasVideoMetadata()) {
+          buildDesktopScene();
+        } else {
+          holdDesktopInitialFrameUntilMetadata();
+        }
       } else {
+        clearDesktopMetadataWait();
         setStaticFrame();
       }
     };
@@ -924,6 +983,7 @@ export function initApplicationScroll(root = document) {
       if (appLeft) gsap.set(appLeft, { clearProps: "opacity,transform" });
       if (appRight) gsap.set(appRight, { clearProps: "opacity,transform" });
       destroyDesktopEffects();
+      clearDesktopMetadataWait();
       st?.kill();
       st = null;
     });
