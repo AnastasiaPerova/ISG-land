@@ -403,6 +403,7 @@ export function initApplicationScroll(root = document) {
     let accordionOffscreenX = Math.max(window.innerWidth + 48, 420);
     let accordionHeightCleanup = 0;
     let accordionHeightRaf = 0;
+    let accordionScrollRaf = 0;
     let st = null;
     let currentMode = "";
     let glFx = null;
@@ -461,6 +462,27 @@ export function initApplicationScroll(root = document) {
     };
 
     // Держим открытой только одну вкладку.
+    const keepAccordionItemVisible = (idx) => {
+      if (!mqDesktop.matches || !(appRight instanceof HTMLElement) || idx < 0) return;
+      const item = items[idx];
+      if (!(item instanceof HTMLElement)) return;
+      if (accordionScrollRaf) cancelAnimationFrame(accordionScrollRaf);
+      accordionScrollRaf = requestAnimationFrame(() => {
+        accordionScrollRaf = 0;
+        const wrapRect = appRight.getBoundingClientRect();
+        const itemRect = item.getBoundingClientRect();
+        const gap = 14;
+        const topLimit = wrapRect.top + gap;
+        const bottomLimit = wrapRect.bottom - gap;
+
+        if (itemRect.top < topLimit) {
+          appRight.scrollTop += itemRect.top - topLimit;
+        } else if (itemRect.bottom > bottomLimit) {
+          appRight.scrollTop += itemRect.bottom - bottomLimit;
+        }
+      });
+    };
+
     const setAccordionIndex = (idx) => {
       const nextIdx = idx < 0 && items.length ? 0 : idx;
       items.forEach((item, i) => {
@@ -468,6 +490,7 @@ export function initApplicationScroll(root = document) {
         item.classList.toggle("isg-accordion__item--open", on);
         item.querySelector(".isg-accordion__trigger")?.setAttribute("aria-expanded", on ? "true" : "false");
       });
+      keepAccordionItemVisible(nextIdx);
     };
 
     const clearAccordionIndex = () => {
@@ -905,6 +928,7 @@ export function initApplicationScroll(root = document) {
       mqDesktop.removeEventListener("change", onDesktopChange);
       window.clearTimeout(accordionHeightCleanup);
       if (accordionHeightRaf) cancelAnimationFrame(accordionHeightRaf);
+      if (accordionScrollRaf) cancelAnimationFrame(accordionScrollRaf);
       if (acc) {
         acc.style.removeProperty("height");
         acc.style.removeProperty("min-height");
