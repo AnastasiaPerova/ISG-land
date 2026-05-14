@@ -4,8 +4,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 const FEATURED_MIN_WIDTH = 1101;
-const IMAGE_ZOOM_START_SCALE = 0.46;
-const IMAGE_ZOOM_WHEEL_VH = 0.82;
+const IMAGE_ZOOM_START_SCALE = 0.62;
+const IMAGE_ZOOM_START = "top 74%";
+const IMAGE_ZOOM_END = "top top";
 function clamp01(v) {
   return Math.max(0, Math.min(1, v));
 }
@@ -13,6 +14,11 @@ function clamp01(v) {
 function easeOutCubic(v) {
   const t = clamp01(v);
   return 1 - (1 - t) ** 3;
+}
+
+function smootherstep(v) {
+  const t = clamp01(v);
+  return t * t * t * (t * (t * 6 - 15) + 10);
 }
 
 function setSlideWidthPx(section, scrollEl) {
@@ -78,22 +84,17 @@ function buildFeaturedTween(section, scrollEl, cardsEl, imageEl, mm, killTween) 
   const rootStyle = window.getComputedStyle(document.documentElement);
   const sectionMarginTopRaw = parseFloat(rootStyle.getPropertyValue("--isg-section-margin-top")) || 0;
   const sectionOverlapCompensation = Math.max(0, Math.round(Math.abs(sectionMarginTopRaw)));
-  const zoomDistance = Math.round(viewportHeight * IMAGE_ZOOM_WHEEL_VH);
-  const contentDistance = Math.max(total, viewportHeight) + sectionOverlapCompensation;
-  const pinDistance = zoomDistance + contentDistance;
+  const pinDistance = Math.max(total, viewportHeight) + sectionOverlapCompensation;
   const imageBlockShiftMaxPx = Math.min(260, Math.max(64, Math.round(panel * 0.17)));
 
   const syncImageEffect = (self) => {
-    const px = clamp01(self.progress) * pinDistance;
-    const pZoom = easeOutCubic(clamp01(px / Math.max(1, zoomDistance)));
-    const pContent = clamp01((px - zoomDistance) / Math.max(1, contentDistance));
-    const pEnterRaw = panel > 0 ? clamp01((pContent * total) / panel) : pContent;
+    const pFull = clamp01(self.progress);
+    const pEnterRaw = panel > 0 ? clamp01((pFull * total) / panel) : pFull;
     const pEnter = easeOutCubic(clamp01((pEnterRaw - 0.035) / 0.965));
-    const scale = IMAGE_ZOOM_START_SCALE + (1 - IMAGE_ZOOM_START_SCALE) * pZoom;
     imageEl?.style.setProperty("--isg-digits-img-effect", pEnter.toFixed(5));
     imageEl?.style.setProperty("--isg-digits-image-x", `${(-imageBlockShiftMaxPx * pEnter).toFixed(2)}px`);
     imageEl?.style.setProperty("--isg-digits-img-shift-x", "0px");
-    imageEl?.style.setProperty("--isg-digits-image-scale", scale.toFixed(5));
+    imageEl?.style.setProperty("--isg-digits-image-scale", "1");
     imageEl?.style.setProperty("--isg-digits-image-radius", "0px");
   };
 
@@ -112,7 +113,6 @@ function buildFeaturedTween(section, scrollEl, cardsEl, imageEl, mm, killTween) 
     },
   });
 
-  tl.to(imageEl, { duration: zoomDistance, ease: "none" });
   tl.fromTo(cardsEl, { x: 0 }, { x: -panel, duration: panel, ease: "none" });
 
   if (overflow > 0) {
@@ -141,7 +141,42 @@ export function initDigitsFeatured(root = document) {
 
     const mm = window.matchMedia(`(min-width: ${FEATURED_MIN_WIDTH}px)`);
     let tween = null;
+    let imageZoomTrigger = null;
     let layoutKey = "";
+
+    const killImageZoom = () => {
+      imageZoomTrigger?.kill();
+      imageZoomTrigger = null;
+    };
+
+    const buildImageZoom = () => {
+      killImageZoom();
+      if (!imageEl) return;
+
+      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (!mm.matches || reduced) {
+        imageEl.style.setProperty("--isg-digits-image-scale", "1");
+        imageEl.style.setProperty("--isg-digits-image-radius", "0px");
+        return;
+      }
+
+      const syncZoom = (self) => {
+        const p = smootherstep(self.progress);
+        const scale = IMAGE_ZOOM_START_SCALE + (1 - IMAGE_ZOOM_START_SCALE) * p;
+        imageEl.style.setProperty("--isg-digits-image-scale", scale.toFixed(5));
+        imageEl.style.setProperty("--isg-digits-image-radius", p >= 0.995 ? "0px" : "var(--isg-card-br)");
+      };
+
+      imageZoomTrigger = ScrollTrigger.create({
+        trigger: section,
+        start: IMAGE_ZOOM_START,
+        end: IMAGE_ZOOM_END,
+        scrub: 2.6,
+        invalidateOnRefresh: true,
+        onUpdate: syncZoom,
+        onRefresh: syncZoom,
+      });
+    };
 
     const killTween = () => {
       tween?.scrollTrigger?.kill();
@@ -169,6 +204,7 @@ export function initDigitsFeatured(root = document) {
       if (nextKey === layoutKey && tween) return;
       layoutKey = nextKey;
       tween = buildFeaturedTween(section, scrollEl, cardsEl, imageEl, mm, killTween);
+      buildImageZoom();
     };
 
     const syncMobileSwipeAttrs = () => {
@@ -249,6 +285,7 @@ export function initDigitsFeatured(root = document) {
       mm.removeEventListener("change", onChange);
       window.removeEventListener("resize", onChange);
       ro.disconnect();
+      killImageZoom();
       section.style.removeProperty("--isg-featured-slide");
       imageEl?.style.removeProperty("--isg-digits-image-scale");
       imageEl?.style.removeProperty("--isg-digits-image-radius");

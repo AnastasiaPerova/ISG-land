@@ -3556,7 +3556,7 @@ display: block;
   .isg-app-scroll__stage-body {
     position: relative;
     z-index: 1;
-padding: var(--isg-space-md);
+    padding: var(--isg-space-md) clamp(16px, 5vw, 24px);
     background: linear-gradient(180deg, #1a1a1a 0%, #1a1a1a 72%, #0c1629 100%);
     box-shadow: none;
     isolation: isolate;
@@ -3573,9 +3573,11 @@ padding: var(--isg-space-md);
   .isg-app-row {
     display: flex;
     flex-direction: column;
+    align-items: stretch;
     gap: var(--isg-space-md);
     margin: 0 auto;
     width: 100%;
+    max-width: min(100%, 560px);
   }
   .isg-app-left {
     width: 100%;
@@ -3584,14 +3586,17 @@ padding: var(--isg-space-md);
   }
 
   .isg-app-final-title {
-    width: min(100%, 12em);
+    width: 100%;
+    max-width: 12em;
     font-size: var(--isg-type-h4);
     line-height: 1.1;
   }
 
   .isg-app-right {
-    width: 100%;
-    max-width: 100%;
+    width: min(100%, 560px);
+    min-width: min(calc(100vw - 32px), 320px);
+    max-width: min(100%, 560px);
+    align-self: stretch;
     justify-self: auto;
     overflow-y: visible;
     overflow-x: hidden;
@@ -3683,6 +3688,7 @@ padding: var(--isg-space-md);
   }
   .isg-app-right .isg-accordion {
     width: 100%;
+    min-width: 0;
     // min-height: min(146vw, 680px);
   }
 
@@ -3959,12 +3965,12 @@ padding: var(--isg-space-md);
   color: #ffffff;
   font-size: var(--isg-type-body-sm);
   line-height: 1.35;
-  background:
-    linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(4, 10, 18, 0.38) 34%, rgba(4, 10, 18, 0.84) 100%),
-    linear-gradient(0deg, rgba(18, 87, 166, 0.34) 0%, rgba(18, 87, 166, 0.12) 42%, rgba(18, 87, 166, 0) 100%);
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(7px);
-  -webkit-backdrop-filter: blur(7px);
+  // background:
+  //   linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(4, 10, 18, 0.38) 34%, rgba(4, 10, 18, 0.84) 100%),
+  //   linear-gradient(0deg, rgba(18, 87, 166, 0.34) 0%, rgba(18, 87, 166, 0.12) 42%, rgba(18, 87, 166, 0) 100%);
+  // border-top: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.34) 24%, rgb(0, 0, 0) 54%);
   mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.34) 24%, rgb(0, 0, 0) 54%);
   text-shadow: 0 0.06em 0.42em rgba(0, 0, 0, 0.52);
