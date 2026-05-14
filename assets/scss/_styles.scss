@@ -3930,6 +3930,28 @@ padding: var(--isg-space-md);
   display: none;
 }
 
+.isg-app-right .isg-accordion__desc--on-media {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  width: auto;
+  max-width: none;
+  margin: 0;
+  min-height: clamp(64px, 8vw, 118px);
+  display: flex;
+  align-items: flex-end;
+  box-sizing: border-box;
+  padding: clamp(18px, 2.1vw, 32px);
+  color: #ffffff;
+  font-size: var(--isg-type-body-sm);
+  line-height: 1.35;
+  background: linear-gradient(180deg, rgba(7, 20, 36, 0) 0%, rgba(7, 20, 36, 0.72) 68%, rgba(7, 20, 36, 0.86) 100%);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.34);
+  pointer-events: none;
+}
+
 .isg-accordion__img {
   position: absolute;
   inset: 0;

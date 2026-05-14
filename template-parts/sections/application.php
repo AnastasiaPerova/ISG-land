@@ -159,14 +159,14 @@ if ($video_url === '') {
 																		<?php echo esc_html($item_hint); ?>
 																	</p>
 																<?php endif; ?>
+																<?php if (!empty($item_desc)): ?>
+																	<p class="isg-accordion__desc isg-accordion__desc--on-media">
+																		<?php echo esc_html($item_desc); ?>
+																	</p>
+																<?php endif; ?>
 															</div>
-															<?php if (!empty($item_desc)): ?>
-																<p class="isg-accordion__desc">
-																	<?php echo esc_html($item_desc); ?>
-																</p>
-															<?php endif; ?>
-														</div>
 													</div>
+												</div>
 												</div>
 											<?php endforeach; ?>
 										</div>
