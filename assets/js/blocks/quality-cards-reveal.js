@@ -85,7 +85,7 @@ export function initQualityCardsReveal(root = document) {
       defaults: { ease: "none" },
       scrollTrigger: {
         trigger: wrap,
-        start: "top 112%",
+        start: "top 100%",
         end: "top 35%",
         scrub: mobile ? 1.15 : 1.85,
         invalidateOnRefresh: true,
