@@ -1879,7 +1879,7 @@ body.isg-nav-drawer-open {
 
 .isg-site-header.isg-hero__header {
   position: fixed;
-  top: calc(env(safe-area-inset-top, 0px) + var(--isg-space-2-2));
+  top: calc(env(safe-area-inset-top, 0px) + var(--isg-sticky-header-top, 2.6rem));
   left: 0;
   right: 0;
   z-index: 200;
