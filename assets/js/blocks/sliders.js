@@ -307,13 +307,10 @@ function teamOptions(gapPx, prev, next) {
             nextEl: next,
           }
         : undefined,
-    breakpoints: compact
-      ? {}
-      : {
-          560: { slidesPerView: 2.2, spaceBetween: gapPx },
-          768: { slidesPerView: 2,spaceBetween: gapPx },
-          1099: { slidesPerView: 3, spaceBetween: gapPx },
-        },
+    breakpoints: {
+      768: { slidesPerView: 2.2, spaceBetween: gapPx },
+      1100: { slidesPerView: 3, spaceBetween: gapPx },
+    },
   };
 }
 

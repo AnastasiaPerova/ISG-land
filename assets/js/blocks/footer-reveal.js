@@ -11,7 +11,11 @@ export function initFooterReveal(root = document) {
   if (!footer || !spacer) return () => {};
 
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (reduced) return () => {};
+  const compact = window.matchMedia("(max-width: 1099px)");
+  if (reduced || compact.matches) {
+    spacer.style.height = "";
+    return () => {};
+  }
 
   const apply = () => {
     const h = footer.offsetHeight;
