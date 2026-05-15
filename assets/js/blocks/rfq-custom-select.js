@@ -26,8 +26,12 @@ function optionMatchesQuery(optionText, queryRaw) {
 }
 
 export function initRfqCustomSelects(root = document) {
-  const form = root.querySelector(".isg-rfq-form");
+  const form =
+    root.querySelector(".isg-rfq-form") ||
+    root.querySelector(".isg-rfq-form-wrap .wpcf7 form") ||
+    root.querySelector(".isg-rfq-form-wrap form");
   if (!form) return () => {};
+  form.classList.add("isg-rfq-form");
 
   const labels = form.querySelectorAll("label.isg-field--select");
   if (!labels.length) return () => {};

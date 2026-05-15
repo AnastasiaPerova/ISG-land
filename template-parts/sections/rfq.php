@@ -168,7 +168,9 @@ $label = static function (array $labels, string $key, string $fallback = ''): st
 			<div class="isg-rfq-form-row">
 				<div class="isg-rfq-form-wrap">
 					<?php if ($use_cf7) : ?>
-						<?php echo do_shortcode($cf7_shortcode); ?>
+						<div class="isg-rfq-form isg-rfq-form--cf7" data-isg-rfq-form>
+							<?php echo do_shortcode($cf7_shortcode); ?>
+						</div>
 					<?php else : ?>
 						<form class="isg-rfq-form" data-isg-rfq-form method="post" action="<?php echo $form_action; ?>">
 							<input type="hidden" name="action" value="isg_submit_rfq" />

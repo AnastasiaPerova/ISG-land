@@ -49,6 +49,7 @@ function warmAccordionMedia(item, priority = "low") {
 // Длина скролл-трека в высотах экрана (3.45 * 100vh).
 // Конфиг таймингов секции: видео (секунды), скролл-фазы [0..1], смещения (px).
 const APP_SCROLL_SCRUB_VH = 3.2;
+document.documentElement.style.setProperty("--isg-app-scroll-scrub-vh", String(APP_SCROLL_SCRUB_VH));
 
 // Время видео (сек): когда слова заголовка начинают появляться.
 const TITLE_WORD_IN_START_SEC = 1.01;
