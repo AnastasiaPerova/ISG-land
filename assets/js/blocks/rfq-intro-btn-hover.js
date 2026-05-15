@@ -79,63 +79,66 @@ export function initIsgButtonHover(root = document) {
   btns.forEach(wrapPlainButtonLabel);
 
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const compact = window.matchMedia("(max-width: 1099px)").matches;
+  if (reduced || compact) {
+    return () => {};
+  }
+
   const cleanups = [];
 
-  if (!reduced) {
-    btns.forEach((btn) => {
-      const track = btn.querySelector(".isg-btn__scroll-track");
-      const inner = btn.querySelector(".isg-btn__scroll-inner");
-      if (!track || !inner) return;
+  btns.forEach((btn) => {
+    const track = btn.querySelector(".isg-btn__scroll-track");
+    const inner = btn.querySelector(".isg-btn__scroll-inner");
+    if (!track || !inner) return;
 
-      let tl;
+    let tl;
 
-      const onEnter = () => {
-        gsap.killTweensOf([btn, inner]);
-        if (tl) tl.kill();
+    const onEnter = () => {
+      gsap.killTweensOf([btn, inner]);
+      if (tl) tl.kill();
 
-        gsap.to(btn, BTN_SHIFT_ENTER);
+      gsap.to(btn, BTN_SHIFT_ENTER);
 
-        const ow = Math.max(0, inner.scrollWidth - track.clientWidth);
-        const dur = Math.min(2.35, Math.max(0.72, ow / 115));
+      const ow = Math.max(0, inner.scrollWidth - track.clientWidth);
+      const dur = Math.min(2.35, Math.max(0.72, ow / 115));
 
-        if (ow > 6) {
-          tl = gsap.timeline({ repeat: -1, repeatDelay: 0.22 });
-          tl.to(inner, { x: -ow, duration: dur, ease: "power1.inOut" });
-          tl.to(inner, { x: 0, duration: dur, ease: "power1.inOut" });
-        } else {
-          tl = gsap.timeline({ repeat: -1, yoyo: true, repeatDelay: 0.18 });
-          tl.to(inner, { x: -8, duration: 1.05, ease: "sine.inOut" });
-        }
-      };
+      if (ow > 6) {
+        tl = gsap.timeline({ repeat: -1, repeatDelay: 0.22 });
+        tl.to(inner, { x: -ow, duration: dur, ease: "power1.inOut" });
+        tl.to(inner, { x: 0, duration: dur, ease: "power1.inOut" });
+      } else {
+        tl = gsap.timeline({ repeat: -1, yoyo: true, repeatDelay: 0.18 });
+        tl.to(inner, { x: -8, duration: 1.05, ease: "sine.inOut" });
+      }
+    };
 
-      const onLeave = () => {
-        if (tl) tl.kill();
-        tl = null;
-        gsap.killTweensOf([btn, inner]);
-        gsap.to(btn, BTN_SHIFT_LEAVE);
-        gsap.to(inner, { x: 0, duration: 0.32, ease: "power2.out" });
-      };
+    const onLeave = () => {
+      if (tl) tl.kill();
+      tl = null;
+      gsap.killTweensOf([btn, inner]);
+      gsap.to(btn, BTN_SHIFT_LEAVE);
+      gsap.to(inner, { x: 0, duration: 0.32, ease: "power2.out" });
+    };
 
-      btn.addEventListener("mouseenter", onEnter);
-      btn.addEventListener("mouseleave", onLeave);
-      btn.addEventListener("focus", onEnter);
-      btn.addEventListener("blur", onLeave);
+    btn.addEventListener("mouseenter", onEnter);
+    btn.addEventListener("mouseleave", onLeave);
+    btn.addEventListener("focus", onEnter);
+    btn.addEventListener("blur", onLeave);
 
-      cleanups.push(() => {
-        btn.removeEventListener("mouseenter", onEnter);
-        btn.removeEventListener("mouseleave", onLeave);
-        btn.removeEventListener("focus", onEnter);
-        btn.removeEventListener("blur", onLeave);
-        if (tl) tl.kill();
-        gsap.killTweensOf([btn, inner]);
-        gsap.set([btn, inner], { clearProps: "transform" });
-      });
+    cleanups.push(() => {
+      btn.removeEventListener("mouseenter", onEnter);
+      btn.removeEventListener("mouseleave", onLeave);
+      btn.removeEventListener("focus", onEnter);
+      btn.removeEventListener("blur", onLeave);
+      if (tl) tl.kill();
+      gsap.killTweensOf([btn, inner]);
+      gsap.set([btn, inner], { clearProps: "transform" });
     });
+  });
 
-    heroWatchBtns.forEach((btn) => {
-      cleanups.push(bindHeroWatchShift(btn));
-    });
-  }
+  heroWatchBtns.forEach((btn) => {
+    cleanups.push(bindHeroWatchShift(btn));
+  });
 
   return () => cleanups.forEach((fn) => fn());
 }

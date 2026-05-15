@@ -575,6 +575,35 @@ export function initApplicationScroll(root = document) {
       applyMobileAccordionStableHeight();
     };
 
+    const clearStageIntroInlineState = () => {
+      if (!(stageIntro instanceof HTMLElement)) return;
+      [
+        "display",
+        "opacity",
+        "visibility",
+        "transform",
+        "translate",
+        "rotate",
+        "scale",
+      ].forEach((prop) => stageIntro.style.removeProperty(prop));
+    };
+
+    const clearMobileStaticInlineState = () => {
+      [head, stageIntro, stageBody, appLeft, appRight].forEach((node) => {
+        if (!(node instanceof HTMLElement)) return;
+        [
+          "display",
+          "opacity",
+          "visibility",
+          "transform",
+          "translate",
+          "rotate",
+          "scale",
+          "pointer-events",
+        ].forEach((prop) => node.style.removeProperty(prop));
+      });
+    };
+
     const applyMobileStaticMedia = () => {
       section.classList.add("isg-app--mobile-static");
       const bg = mobileBg || fallbackMobileBg();
@@ -591,6 +620,9 @@ export function initApplicationScroll(root = document) {
         mobileIntroPlaceholder = mobileIntroPlaceholder || document.createComment("isg-app-stage-intro");
         stageIntro.parentNode?.insertBefore(mobileIntroPlaceholder, stageIntro);
         mediaEl.appendChild(stageIntro);
+      }
+      if (!mqDesktop.matches) {
+        clearMobileStaticInlineState();
       }
       const glCanvas = mediaEl?.querySelector(".isg-app__glfx");
       if (glCanvas) glCanvas.style.display = "none";
@@ -783,15 +815,10 @@ export function initApplicationScroll(root = document) {
         st.kill();
         st = null;
       }
-      stageIntro?.style.setProperty("display", "block");
-      if (head) gsap.set(head, { opacity: 0, visibility: "hidden", y: 0 });
-      if (stageIntro) gsap.set(stageIntro, { opacity: 1, visibility: "visible", y: 0 });
+      clearMobileStaticInlineState();
       setTitleWordsStaticVisible();
       glFx?.update({ progress: 0, titleOpacity: 0 });
       clearBubbleFrame();
-      setBodyLayer(1, 0);
-      if (appLeft) gsap.set(appLeft, { opacity: 1, x: 0 });
-      if (appRight) gsap.set(appRight, { opacity: 1, x: 0 });
       setAccordionIndex(items.length ? 0 : -1);
       requestMobileAccordionStableHeight();
       try {

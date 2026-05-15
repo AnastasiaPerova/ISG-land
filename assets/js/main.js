@@ -306,9 +306,14 @@ export async function initIsgPage(root = document.body) {
     disposers.push(initProductContentParallax(root));
     disposers.push(initProductSizeItemsReveal(root));
     disposers.push(initBodyCopyReveal(root));
+    bootSpecCardsReveal(root);
+    bootQualityCardsReveal(root);
+  } else {
+    specCardsRevealDisposer?.();
+    specCardsRevealDisposer = null;
+    qualityCardsRevealDisposer?.();
+    qualityCardsRevealDisposer = null;
   }
-  bootSpecCardsReveal(root);
-  bootQualityCardsReveal(root);
   await stabilizeScrollLayout(2);
 }
 
@@ -410,6 +415,22 @@ function isServerRenderedMode() {
   );
 }
 
+function isHomePage() {
+  return (
+    document.body?.classList.contains("home") ||
+    document.body?.classList.contains("front-page") ||
+    document.documentElement.hasAttribute("data-isg-home") ||
+    !!document.getElementById("isg-hero") ||
+    (!isServerRenderedMode() && !!document.getElementById("isg-main"))
+  );
+}
+
+function removePreloaderWithoutWait() {
+  window.ISG_PRELOADER_DONE = true;
+  setPreloaderScrollLock(false);
+  document.getElementById("isg-preloader")?.remove();
+}
+
 async function reinitIsgPage() {
   const main = document.getElementById("isg-main");
   const root = isServerRenderedMode() ? document : (main || document.body);
@@ -422,42 +443,68 @@ async function bootOnDomReady() {
   const serverRendered = isServerRenderedMode();
   if (!main && !serverRendered) return;
 
-  setPreloaderScrollLock(true);
-  const preloader = createPreloaderController();
+  let preloader = null;
+  let usePreloader = isHomePage();
+
+  if (usePreloader) {
+    setPreloaderScrollLock(true);
+    preloader = createPreloaderController();
+  } else {
+    removePreloaderWithoutWait();
+  }
 
   if (!serverRendered) {
     try {
-      await fetchPartialsInto(main, (ratio) => preloader.setStepProgress(PRELOADER_STEPS.partials, ratio));
+      await fetchPartialsInto(main, (ratio) => preloader?.setStepProgress(PRELOADER_STEPS.partials, ratio));
+      usePreloader = isHomePage();
+      if (usePreloader && !preloader) {
+        setPreloaderScrollLock(true);
+        preloader = createPreloaderController();
+      } else if (!usePreloader) {
+        removePreloaderWithoutWait();
+      }
     } catch (e) {
       console.error(e);
       main.innerHTML =
         "<p style=\"padding:2rem;font-family:sans-serif\">Start a local server from the theme folder (<code>npx serve .</code>) so partials can be loaded via fetch.</p>";
-      preloader.setProgress(100, "Failed to load page");
-      await hidePreloader(preloader, { complete: false });
+      preloader?.setProgress(100, "Failed to load page");
+      if (preloader) {
+        await hidePreloader(preloader, { complete: false });
+      }
       return;
     }
   }
 
   try {
     const root = serverRendered ? document : main;
-    preloader.setStepProgress(PRELOADER_STEPS.init, 0);
+    preloader?.setStepProgress(PRELOADER_STEPS.init, 0);
     await initIsgPage(root);
-    preloader.setStepProgress(PRELOADER_STEPS.init, 1);
-    await waitForFonts((ratio) => preloader.setStepProgress(PRELOADER_STEPS.fonts, ratio));
-    await waitForImages(root, 12000, (ratio) => preloader.setStepProgress(PRELOADER_STEPS.images, ratio));
-    preloader.setStepProgress(PRELOADER_STEPS.finalize, 0.35);
+    preloader?.setStepProgress(PRELOADER_STEPS.init, 1);
+    if (usePreloader) {
+      await waitForFonts((ratio) => preloader?.setStepProgress(PRELOADER_STEPS.fonts, ratio));
+      await waitForImages(root, 12000, (ratio) => preloader?.setStepProgress(PRELOADER_STEPS.images, ratio));
+    }
+    preloader?.setStepProgress(PRELOADER_STEPS.finalize, 0.35);
     await stabilizeScrollLayout(3);
-    preloader.setStepProgress(PRELOADER_STEPS.finalize, 1);
+    preloader?.setStepProgress(PRELOADER_STEPS.finalize, 1);
   } catch (e) {
     console.error(e);
     const root = serverRendered ? document : main;
-    bootSpecCardsReveal(root);
-    bootQualityCardsReveal(root);
+    if (!shouldDisableMobileGsapAnimations()) {
+      bootSpecCardsReveal(root);
+      bootQualityCardsReveal(root);
+    }
   } finally {
-    await hidePreloader(preloader);
+    if (preloader) {
+      await hidePreloader(preloader);
+    } else {
+      removePreloaderWithoutWait();
+    }
     const root = serverRendered ? document : main;
-    bootSpecCardsReveal(root);
-    bootQualityCardsReveal(root);
+    if (!shouldDisableMobileGsapAnimations()) {
+      bootSpecCardsReveal(root);
+      bootQualityCardsReveal(root);
+    }
     await stabilizeScrollLayout(3);
   }
 }

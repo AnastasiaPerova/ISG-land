@@ -1,6 +1,6 @@
 import gsap from "gsap";
 import Swiper from "swiper";
-import { Navigation } from "swiper/modules";
+import { Autoplay, FreeMode, Navigation } from "swiper/modules";
 
 const COMPACT_SLIDER_QUERY = "(max-width: 1099px)";
 
@@ -170,10 +170,10 @@ function setupSliderDragCursor() {
   document.addEventListener("visibilitychange", onVisibilityChange);
 
   return {
-    bind(slider) {
+    bind(slider, options = {}) {
       if (destroyed) return () => {};
 
-      const label = "Drag";
+      const label = options.label || "Drag";
       const sliderTargets = Array.from(
         new Set(
           Array.from(
@@ -316,50 +316,55 @@ function teamOptions(gapPx, prev, next) {
   };
 }
 
-function galleryOptions(gapPx, prev, next) {
+function galleryOptions(gapPx) {
   const compact = isCompactSliderViewport();
   const edgePx = compact ? getCssVarPx("--container-offset", gapPx) : 0;
   return {
-    modules: [Navigation],
-    speed: compact ? 300 : 420,
+    modules: [Autoplay, FreeMode],
+    speed: compact ? 4200 : 5200,
     loop: false,
-    rewind: true,
-    grabCursor: true,
-    allowTouchMove: true,
+    rewind: false,
+    grabCursor: false,
+    allowTouchMove: false,
+    simulateTouch: false,
     passiveListeners: true,
     touchStartPreventDefault: false,
-    threshold: compact ? 6 : 4,
-    resistanceRatio: compact ? 0.35 : 0.45,
+    threshold: 999,
+    resistanceRatio: 0,
     watchOverflow: true,
-    freeMode: false,
+    freeMode: {
+      enabled: true,
+      momentum: false,
+    },
     centeredSlides: false,
     slidesPerGroup: 1,
     slidesPerGroupSkip: 0,
-    followFinger: true,
-    shortSwipes: true,
-    longSwipes: true,
-    longSwipesRatio: compact ? 0.18 : 0.22,
-    longSwipesMs: 220,
-    touchRatio: compact ? 1.12 : 1,
+    followFinger: false,
+    shortSwipes: false,
+    longSwipes: false,
+    longSwipesRatio: 0,
+    longSwipesMs: 0,
+    touchRatio: 0,
     touchAngle: 36,
     nested: true,
-    preventClicks: true,
-    preventClicksPropagation: true,
+    preventClicks: false,
+    preventClicksPropagation: false,
     slideToClickedSlide: false,
     slidesPerView: 1.18,
+    autoplay: {
+      delay: 0,
+      disableOnInteraction: false,
+      pauseOnMouseEnter: true,
+      waitForTransition: true,
+      stopOnLastSlide: false,
+      reverseDirection: false,
+    },
     
     
     focusableElements: "input, select, option, textarea, label",
     spaceBetween: gapPx,
     slidesOffsetBefore: 0,
     slidesOffsetAfter: edgePx,
-    navigation:
-      prev && next
-        ? {
-            prevEl: prev,
-            nextEl: next,
-          }
-        : undefined,
     breakpoints: {
       480: { slidesPerView: 1.28, slidesOffsetBefore: 0, slidesOffsetAfter: edgePx, spaceBetween: gapPx },
       768: { slidesPerView: 1.5, slidesOffsetBefore: 0, slidesOffsetAfter: edgePx, spaceBetween: gapPx },
@@ -449,6 +454,95 @@ function bindCompactGalleryWrap(slider, swiper) {
 
 function compactUiMatch() {
   return window.matchMedia(COMPACT_SLIDER_QUERY).matches;
+}
+
+function isLightboxOpen() {
+  return document.documentElement.classList.contains("isg-lightbox-open");
+}
+
+function bindGalleryLightboxAutoplay(swiper) {
+  if (!swiper) return () => {};
+
+  const sliderEl = swiper.el;
+  let hovered = false;
+
+  const setReverse = (reverse) => {
+    if (!swiper?.params?.autoplay) return;
+    swiper.params.autoplay.reverseDirection = reverse;
+  };
+  const syncDirection = () => {
+    if (swiper?.isEnd) {
+      setReverse(true);
+    } else if (swiper?.isBeginning) {
+      setReverse(false);
+    }
+  };
+  const stop = () => {
+    swiper?.autoplay?.stop?.();
+  };
+  const start = () => {
+    if (isLightboxOpen()) return;
+    if (hovered) return;
+    if (swiper?.destroyed) return;
+    syncDirection();
+    if (!swiper.autoplay?.running) {
+      swiper?.autoplay?.start?.();
+    }
+  };
+
+  const onOpen = () => stop();
+  const onClose = () => start();
+  const onPointerEnter = () => {
+    hovered = true;
+    stop();
+  };
+  const onPointerLeave = () => {
+    hovered = false;
+    start();
+  };
+  const onLightboxClassChange = () => {
+    if (isLightboxOpen()) {
+      stop();
+    } else {
+      start();
+    }
+  };
+  const onEdge = () => {
+    syncDirection();
+    start();
+  };
+  const watchdog = window.setInterval(() => {
+    if (isLightboxOpen()) return;
+    if (swiper?.destroyed) return;
+    syncDirection();
+    if (!swiper.autoplay?.running) {
+      start();
+    }
+  }, 1000);
+
+  document.addEventListener("isg:lightbox:open", onOpen);
+  document.addEventListener("isg:lightbox:close", onClose);
+  sliderEl?.addEventListener("pointerenter", onPointerEnter);
+  sliderEl?.addEventListener("pointerleave", onPointerLeave);
+  swiper.on("reachEnd", onEdge);
+  swiper.on("reachBeginning", onEdge);
+  const lightboxObserver = new MutationObserver(onLightboxClassChange);
+  lightboxObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+
+  if (isLightboxOpen()) {
+    stop();
+  }
+
+  return () => {
+    window.clearInterval(watchdog);
+    lightboxObserver.disconnect();
+    document.removeEventListener("isg:lightbox:open", onOpen);
+    document.removeEventListener("isg:lightbox:close", onClose);
+    sliderEl?.removeEventListener("pointerenter", onPointerEnter);
+    sliderEl?.removeEventListener("pointerleave", onPointerLeave);
+    swiper.off("reachEnd", onEdge);
+    swiper.off("reachBeginning", onEdge);
+  };
 }
 
 function bindSliderReveal(slider, swiper, onReady = () => {}) {
@@ -675,7 +769,7 @@ export async function initSliders(root = document) {
     try {
       swiper = new Swiper(
         slider,
-        isGallery ? galleryOptions(gapPx, prev, next) : teamOptions(gapPx, prev, next),
+        isGallery ? galleryOptions(gapPx) : teamOptions(gapPx, prev, next),
       );
     } catch (err) {
       console.error("[ISG] swiper init:", err);
@@ -686,27 +780,30 @@ export async function initSliders(root = document) {
     let barPrev = null;
     let barNext = null;
 
+    const clearBar = () => {
+      if (!bar) return;
+      bar.remove();
+      bar = null;
+      barPrev = null;
+      barNext = null;
+    };
+
     const syncBar = () => {
       const state = getSliderUiState(swiper);
+      if (isGallery) {
+        clearBar();
+        syncNavThumb(thumb, { total: 0, current: 1, progress: 1 });
+        return;
+      }
       if (compactUi.matches) {
-        if (bar) {
-          bar.remove();
-          bar = null;
-          barPrev = null;
-          barNext = null;
-        }
+        clearBar();
         syncNavThumb(thumb, state);
         return;
       }
       const hasNav = state.total > 3;
 
       if (!hasNav) {
-        if (bar) {
-          bar.remove();
-          bar = null;
-          barPrev = null;
-          barNext = null;
-        }
+        clearBar();
         syncNavThumb(thumb, state);
         return;
       }
@@ -749,16 +846,24 @@ export async function initSliders(root = document) {
     swiper.on("breakpoint", syncBar);
     syncBar();
 
-    const unbindDragCursor = dragCursorApi.bind(slider);
+    const unbindDragCursor = dragCursorApi.bind(slider, { label: isGallery ? "Click" : "Drag" });
+    const unbindGalleryLightboxAutoplay = isGallery
+      ? bindGalleryLightboxAutoplay(swiper)
+      : () => {};
+    const startGalleryAutoplay = () => {
+      if (!isGallery || isLightboxOpen()) return;
+      swiper?.autoplay?.start?.();
+    };
     const unbindSliderReveal = isGallery
-      ? bindSliderReveal(slider, swiper)
+      ? bindSliderReveal(slider, swiper, startGalleryAutoplay)
       : isTeam
         ? bindTeamReveal(slider)
         : () => {};
-    const unbindCompactGalleryWrap = isGallery ? bindCompactGalleryWrap(slider, swiper) : () => {};
+    const unbindCompactGalleryWrap = () => {};
 
     disposers.push(() => {
       unbindDragCursor();
+      unbindGalleryLightboxAutoplay();
       unbindSliderReveal();
       unbindCompactGalleryWrap();
       try {

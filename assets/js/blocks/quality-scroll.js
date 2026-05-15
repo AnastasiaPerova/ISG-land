@@ -71,6 +71,9 @@ function slideTFromProgress01(pFloat, n) {
 
 
 function getViewportHeight() {
+  const raw = getComputedStyle(document.documentElement).getPropertyValue("--isg-stable-vh").trim();
+  const unit = parseFloat(raw);
+  if (Number.isFinite(unit) && unit > 0) return unit * 100;
   if (typeof window !== "undefined" && window.visualViewport?.height) {
     return window.visualViewport.height;
   }

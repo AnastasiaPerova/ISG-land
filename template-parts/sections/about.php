@@ -118,7 +118,7 @@ $normalize_wrap_text = static function ($value) {
 $text_heading = $normalize_wrap_text($text_heading);
 $text_lead    = $normalize_wrap_text($text_lead);
 ?>
-<div class="isg-intro-pin isg-intro-pin--about">
+<div id="isg-about" class="isg-intro-pin isg-intro-pin--about">
 	<section class="isg-intro-section isg-intro-section--align-center isg-about-intro" data-isg-intro-scroll>
 		<div class="isg-intro-media" aria-hidden="true">
 			<div class="isg-intro-media__inner">
@@ -144,7 +144,7 @@ $text_lead    = $normalize_wrap_text($text_lead);
 	</section>
 </div>
 
-<div id="isg-about" class="isg-about-intro-block isg-section-surface" data-isg-block="about">
+<div  class="isg-about-intro-block isg-section-surface" data-isg-block="about">
 	<div class="isg-about-main">
 		<div class="container isg-about-text-grid">
 			<div class="isg-about-text-grid__row isg-grid-row">

@@ -10,6 +10,16 @@ import { getLenis } from "./smooth-scroll.js";
 const LB_ID = "isg-lightbox";
 const LIGHTBOX_OPEN_CLASS = "isg-lightbox-open";
 
+function emitLightboxEvent(type, overlay, originSwiper = null) {
+  document.dispatchEvent(
+    new CustomEvent(`isg:lightbox:${type}`, {
+      detail: {
+        overlay,
+        originSwiper,
+      },
+    }),
+  );
+}
 
 function normalizeSrcAttr(s) {
   if (!s || typeof s !== "string") return "";
@@ -164,6 +174,7 @@ function unlockDocumentScroll(overlay) {
 
 function resetOverlayState(overlay, opts = {}) {
   const { restoreFocus = false, resumeAutoplay = false } = opts;
+  const wasOpen = !overlay.classList.contains("isg-lightbox--inactive");
   const img = overlay.querySelector(".isg-lightbox__img");
   const vid = overlay.querySelector(".isg-lightbox__video");
   const frame = overlay.querySelector(".isg-lightbox__embed");
@@ -222,6 +233,7 @@ function resetOverlayState(overlay, opts = {}) {
 
   resetSwiperInteraction(originSwiper);
   if (resumeAutoplay) originSwiper?.autoplay?.start?.();
+  if (wasOpen) emitLightboxEvent("close", overlay, originSwiper);
   if (restoreFocus && originAnchor instanceof HTMLElement && originAnchor.isConnected) {
     try {
       originAnchor.focus({ preventScroll: true });
@@ -671,6 +683,7 @@ export function openLightbox(anchor) {
   overlay.setAttribute("aria-hidden", "false");
   lockDocumentScroll(overlay);
   overlay._isgOriginSwiper?.autoplay?.stop?.();
+  emitLightboxEvent("open", overlay, overlay._isgOriginSwiper || null);
   if (hk) document.addEventListener("keydown", hk);
   try {
     overlay.querySelector(".isg-lightbox__close")?.focus({ preventScroll: true });
