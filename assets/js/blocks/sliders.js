@@ -311,7 +311,8 @@ function teamOptions(gapPx, prev, next) {
       ? {}
       : {
           560: { slidesPerView: 2.2, spaceBetween: gapPx },
-          1100: { slidesPerView: 3, spaceBetween: gapPx },
+          768: { slidesPerView: 4, spaceBetween: gapPx },
+          1099: { slidesPerView: 3, spaceBetween: gapPx },
         },
   };
 }
