@@ -4,7 +4,9 @@
     <div class="isg-app__scene-reveal">
 
       <div class="isg-app__media" aria-hidden="true">
-        <video class="isg-app__video" muted playsinline preload="auto" src="assets/video/test.mp4"></video>
+        <video class="isg-app__video" muted playsinline webkit-playsinline preload="auto">
+          <source src="/assets/video/test.mp4" type="video/mp4" />
+        </video>
       </div>
 
       <div class="isg-app__inner container">

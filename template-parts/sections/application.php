@@ -82,15 +82,18 @@ if (is_array($video_file) && !empty($video_file['url']) && is_string($video_file
 if ($video_url === '') {
 	$video_url = isg_asset_uri('video/test.mp4');
 }
+
+$video_url = isg_absolute_url($video_url, isg_asset_uri('video/test.mp4'));
 ?>
 <section id="isg-application" class="isg-app isg-app--scroll" data-isg-block="application" data-isg-app-scroll
 	data-isg-mobile-bg="<?php echo esc_url($mobile_bg); ?>">
 	<div class="isg-app__scene">
 		<div class="isg-app__scene-reveal">
 			<div class="isg-app__media" aria-hidden="true">
-				<video class="isg-app__video" muted playsinline preload="auto"
-					src="<?php echo esc_url($video_url); ?>" <?php if (!empty($video_poster)): ?>
-						poster="<?php echo esc_url($video_poster); ?>" <?php endif; ?>></video>
+				<video class="isg-app__video" muted playsinline webkit-playsinline preload="auto" <?php if (!empty($video_poster)): ?>
+						poster="<?php echo esc_url($video_poster); ?>" <?php endif; ?>>
+					<source src="<?php echo esc_url($video_url); ?>" type="video/mp4" />
+				</video>
 			</div>
 
 			<div class="isg-app__inner container">

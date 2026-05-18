@@ -247,6 +247,24 @@ body {
     min-height: 0 !important;
   }
 }
+
+html.is-safari [data-parallax],
+html.is-safari .parallax,
+html.is-safari .scroll-speed {
+  transform: none !important;
+  background-attachment: scroll !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
 img,
 video {
   max-width: 100%;
@@ -354,11 +372,16 @@ input[type="search"]::-webkit-search-results-decoration {
   color: #000000;
 }
 
-// @media (min-width: 768px) and (max-width: 1099px) {
-//   .isg-lead {
-//     font-size: 2.3rem;
-//   }
-// }
+.gsap-pin,
+.pin-spacer,
+[data-scroll],
+.hero,
+.section {
+  transform: translate3d(0,0,0);
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
 
 .isg-body-lg {
   font-size: var(--isg-type-body-lg);
@@ -3264,7 +3287,7 @@ background: linear-gradient(180deg, rgba(0, 0, 0, 0.16) 0%, rgba(0, 0, 0, 0) 38%
 }
 
 .isg-app__scene {
-  position: sticky;
+  position: relative;
   top: 0;
   min-height: 100vh;
   height: 100vh;
@@ -9696,12 +9719,17 @@ body.isg-404-page {
     --isg-quality-container-pad: calc((100vw - var(--container-width)) * 0.5);
   }
 
+  .isg-about-content-block .isg-quality-visual,
+  [data-isg-quality-about] .isg-quality-visual {
+    padding-left: var(--isg-quality-container-pad);
+    box-sizing: border-box;
+  }
+
   .isg-about-content-block .isg-quality-visual__slides,
   [data-isg-quality-about] .isg-quality-visual__slides {
-    width: calc(100% - var(--isg-quality-container-pad)) !important;
-    max-width: calc(100% - var(--isg-quality-container-pad)) !important;
-    margin-left: var(--isg-quality-container-pad) !important;
-    margin-right: 0 !important;
+    width: calc(100% + var(--isg-quality-container-pad)) !important;
+    max-width: none !important;
+    margin: 0 calc(var(--isg-quality-container-pad) * -1) 0 0 !important;
     padding-left: 0 !important;
     padding-right: var(--isg-quality-container-pad) !important;
     scroll-padding-left: 0 !important;
@@ -9710,9 +9738,9 @@ body.isg-404-page {
 
   .isg-about-content-block .isg-quality-visual__slides::after,
   [data-isg-quality-about] .isg-quality-visual__slides::after {
-    flex-basis: max(0px, calc(var(--isg-quality-container-pad) - var(--isg-card-gap))) !important;
-    width: max(0px, calc(var(--isg-quality-container-pad) - var(--isg-card-gap))) !important;
-    min-width: max(0px, calc(var(--isg-quality-container-pad) - var(--isg-card-gap))) !important;
+    flex-basis: 0 !important;
+    width: 0 !important;
+    min-width: 0 !important;
   }
 
   .isg-about-content-block .isg-quality-row,

@@ -741,12 +741,13 @@ export function initApplicationScroll(root = document) {
     video.muted = true;
     video.setAttribute("muted", "");
     video.setAttribute("playsinline", "");
+    video.setAttribute("webkit-playsinline", "");
 
     // Расчет длины scroll-трека секции в пикселях.
     const applyTrackHeights = () => {
       const H = getStableViewportHeight();
       const scrubPx = Math.round(H * APP_SCROLL_SCRUB_VH);
-      if (postEl) postEl.style.height = `${scrubPx}px`;
+      if (postEl) postEl.style.height = mqDesktop.matches ? "0px" : `${scrubPx}px`;
       section.style.minHeight = "";
       leftOffscreenX = getLeftOffscreenX();
       accordionOffscreenX = getRightOffscreenX();
@@ -846,6 +847,11 @@ export function initApplicationScroll(root = document) {
         trigger: scrollTriggerEl,
         start: scrollStart,
         end: () => "+=" + scrubEndPx(),
+        pin: scene,
+        pinType: "fixed",
+        pinSpacing: true,
+        anticipatePin: 1,
+        refreshPriority: 1,
         scrub: 0.68,
         invalidateOnRefresh: true,
         onLeaveBack: () => {

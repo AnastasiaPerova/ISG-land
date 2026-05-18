@@ -21,6 +21,27 @@ function isg_asset_uri(string $path = ''): string {
 	return isg_theme_uri('assets/' . ltrim($path, '/'));
 }
 
+function isg_absolute_url(string $url, string $default = ''): string {
+	$url = trim($url);
+	if ($url === '') {
+		return $default;
+	}
+
+	if (preg_match('#^(?:[a-z][a-z0-9+.-]*:)?//#i', $url)) {
+		return $url;
+	}
+
+	if (strpos($url, 'assets/') === 0) {
+		return isg_asset_uri(substr($url, strlen('assets/')));
+	}
+
+	if ($url[0] === '/') {
+		return home_url($url);
+	}
+
+	return home_url('/' . ltrim($url, '/'));
+}
+
 function isg_file_version(string $relative_path): string {
 	$full_path = isg_theme_path($relative_path);
 	if (file_exists($full_path)) {
