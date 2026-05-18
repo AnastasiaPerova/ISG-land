@@ -93,7 +93,9 @@ $intro_title = (string) ($section['intro_title'] ?? 'Spiral-welded pipes are use
 $final_heading = (string) ($section['final_heading'] ?? 'Application areas for large-diameter spiral-welded pipes');
 $video_file = $section['video_file'] ?? '';
 $video_url = (string) ($section['video_url'] ?? '');
-$video_poster = isg_image_url($section['video_poster'] ?? '', '');
+$video_poster_source = $section['video_poster'] ?? '';
+$video_poster = isg_image_url($video_poster_source, '');
+$video_size = isg_image_dimensions($video_poster_source, 1920, 1080);
 $mobile_bg = isg_image_url($section['mobile_bg_image'] ?? '', isg_asset_uri('img/advantages_1.jpg'));
 $items = is_array($section['items'] ?? null) ? $section['items'] : $default_items;
 
@@ -118,7 +120,7 @@ $video_url = isg_absolute_url($video_url, isg_asset_uri('video/test.mp4'));
 	<div class="isg-app__scene">
 		<div class="isg-app__scene-reveal">
 			<div class="isg-app__media" aria-hidden="true">
-				<video class="isg-app__video" muted playsinline webkit-playsinline preload="auto" width="1920" height="1080" <?php if (!empty($video_poster)): ?>
+				<video class="isg-app__video" muted playsinline webkit-playsinline preload="auto" width="<?php echo esc_attr((string) $video_size['width']); ?>" height="<?php echo esc_attr((string) $video_size['height']); ?>" <?php if (!empty($video_poster)): ?>
 						poster="<?php echo esc_url($video_poster); ?>" <?php endif; ?>>
 					<source src="<?php echo esc_url($video_url); ?>" type="video/mp4" />
 				</video>
@@ -152,13 +154,14 @@ $video_url = isg_absolute_url($video_url, isg_asset_uri('video/test.mp4'));
 									</div>
 									<div class="isg-app-right">
 										<div class="isg-accordion isg-accordion--app-scroll">
-											<?php foreach ($items as $item): ?>
+											<?php foreach ($items as $item_index => $item): ?>
 												<?php
 												$icon_url = isg_image_url($item['icon'] ?? '', '');
 												$item_title = (string) ($item['title'] ?? '');
 												$image_url = isg_image_url($item['image'] ?? '', isg_asset_uri('img/advantages_1.jpg'));
 												$image_alt = isg_image_alt($item['image'] ?? '', '');
 												$image_size = isg_image_dimensions($item['image'] ?? '', 640, 320);
+												$image_priority = (int) $item_index === 0 ? 'high' : 'low';
 												$item_hint = (string) ($item['hint'] ?? '');
 												$item_desc = (string) ($item['description'] ?? '');
 												?>
@@ -185,7 +188,7 @@ $video_url = isg_absolute_url($video_url, isg_asset_uri('video/test.mp4'));
 																	alt="<?php echo esc_attr($image_alt); ?>"
 																	width="<?php echo esc_attr((string) $image_size['width']); ?>"
 																	height="<?php echo esc_attr((string) $image_size['height']); ?>" loading="eager"
-																	decoding="async" />
+																	decoding="async" fetchpriority="<?php echo esc_attr($image_priority); ?>" />
 																<?php if (!empty($item_hint)): ?>
 																	<p
 																		class="isg-accordion__hint isg-accordion__hint--on-media">
