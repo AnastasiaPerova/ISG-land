@@ -2952,14 +2952,14 @@ body.isg-nav-drawer-open {
 	padding-bottom: 0;
 	overflow-x: clip;
 	background-color: #e8e6e0;
-	height: var(--isg-digits-featured-height);
+	height: auto;
 	min-height: var(--isg-digits-featured-height);
 }
 
 .isg-digits-section.component--featured .scroll {
 	display: block;
-	height: 100%;
-	min-height: inherit;
+	height: var(--isg-digits-featured-height);
+	min-height: var(--isg-digits-featured-height);
 	width: 100%;
 	max-width: 100%;
 	overflow-x: clip;
