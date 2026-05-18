@@ -228,8 +228,18 @@ export function initDigitsFeatured(root = document) {
       });
     };
 
+    let observedLayoutWidth = Math.round(scrollEl.getBoundingClientRect().width || scrollEl.clientWidth || 0);
+    const shouldRebuildForLayoutWidth = () => {
+      const width = Math.round(scrollEl.getBoundingClientRect().width || scrollEl.clientWidth || 0);
+      if (width === observedLayoutWidth) return false;
+      observedLayoutWidth = width;
+      return true;
+    };
+
     const ro = new ResizeObserver(() => {
-      scheduleRebuild();
+      if (shouldRebuildForLayoutWidth()) {
+        scheduleRebuild();
+      }
     });
     ro.observe(scrollEl);
     ro.observe(inner);
@@ -264,7 +274,22 @@ export function initDigitsFeatured(root = document) {
       document.fonts.ready.then(onFonts).catch(() => {});
     }
 
+    section.querySelectorAll("img").forEach((img) => {
+      if (!(img instanceof HTMLImageElement) || img.complete) return;
+      img.addEventListener("load", scheduleRebuild, { once: true });
+      img.addEventListener("error", scheduleRebuild, { once: true });
+      cleanups.push(() => {
+        img.removeEventListener("load", scheduleRebuild);
+        img.removeEventListener("error", scheduleRebuild);
+      });
+    });
+
+    let lastLayoutWidth = window.innerWidth;
     const onChange = () => {
+      const width = window.innerWidth;
+      if (width === lastLayoutWidth) return;
+      lastLayoutWidth = width;
+      observedLayoutWidth = Math.round(scrollEl.getBoundingClientRect().width || scrollEl.clientWidth || 0);
       setSlideWidthPx(section, scrollEl);
       syncMobileSwipeAttrs();
       scheduleRebuild();

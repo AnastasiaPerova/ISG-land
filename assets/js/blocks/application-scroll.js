@@ -747,7 +747,7 @@ export function initApplicationScroll(root = document) {
     const applyTrackHeights = () => {
       const H = getStableViewportHeight();
       const scrubPx = Math.round(H * APP_SCROLL_SCRUB_VH);
-      if (postEl) postEl.style.height = mqDesktop.matches ? "0px" : `${scrubPx}px`;
+      if (postEl) postEl.style.height = `${scrubPx}px`;
       section.style.minHeight = "";
       leftOffscreenX = getLeftOffscreenX();
       accordionOffscreenX = getRightOffscreenX();
@@ -847,11 +847,6 @@ export function initApplicationScroll(root = document) {
         trigger: scrollTriggerEl,
         start: scrollStart,
         end: () => "+=" + scrubEndPx(),
-        pin: scene,
-        pinType: "fixed",
-        pinSpacing: true,
-        anticipatePin: 1,
-        refreshPriority: 1,
         scrub: 0.68,
         invalidateOnRefresh: true,
         onLeaveBack: () => {
@@ -992,7 +987,7 @@ export function initApplicationScroll(root = document) {
     let lastLayoutWidth = window.innerWidth;
     const onResize = () => {
       const width = window.innerWidth;
-      if (!mqDesktop.matches && width === lastLayoutWidth) return;
+      if (width === lastLayoutWidth) return;
       lastLayoutWidth = width;
       rebuild();
       if (!mqDesktop.matches) {

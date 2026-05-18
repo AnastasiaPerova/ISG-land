@@ -209,7 +209,7 @@ function initStableMobileViewportUnit() {
     const height = viewportHeight();
     const compact = mq.matches;
     const sameCompactLayout = compact && lastWidth && width === lastWidth;
-    const sameDesktopLayout = !compact && lastWidth && lastHeight && width === lastWidth && Math.abs(height - lastHeight) < 1;
+    const sameDesktopLayout = !compact && lastWidth && width === lastWidth;
     if (!force && (sameCompactLayout || sameDesktopLayout)) return;
 
     lastWidth = width;
