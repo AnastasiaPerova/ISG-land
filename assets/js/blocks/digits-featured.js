@@ -274,16 +274,6 @@ export function initDigitsFeatured(root = document) {
       document.fonts.ready.then(onFonts).catch(() => {});
     }
 
-    section.querySelectorAll("img").forEach((img) => {
-      if (!(img instanceof HTMLImageElement) || img.complete) return;
-      img.addEventListener("load", scheduleRebuild, { once: true });
-      img.addEventListener("error", scheduleRebuild, { once: true });
-      cleanups.push(() => {
-        img.removeEventListener("load", scheduleRebuild);
-        img.removeEventListener("error", scheduleRebuild);
-      });
-    });
-
     let lastLayoutWidth = window.innerWidth;
     const onChange = () => {
       const width = window.innerWidth;
