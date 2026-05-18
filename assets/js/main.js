@@ -58,6 +58,8 @@ const PRELOADER_STEPS = {
   finalize: { from: 96, to: 100, label: "Finalizing page" },
 };
 const PRELOADER_LOCK_CLASS = "isg-preloader-active";
+const PRELOADER_FONT_WAIT_MS = 2600;
+const PRELOADER_IMAGE_WAIT_MS = 4800;
 
 function setPreloaderScrollLock(locked) {
   document.documentElement.classList.toggle(PRELOADER_LOCK_CLASS, locked);
@@ -351,8 +353,23 @@ async function fetchPartialsInto(target, onProgress = () => {}) {
 
 
 
-function waitForImages(root, perImageCapMs = 12000, onProgress = () => {}) {
-  const images = [...root.querySelectorAll("img")];
+function withTimeout(promise, ms) {
+  return Promise.race([
+    promise,
+    new Promise((resolve) => {
+      window.setTimeout(resolve, ms);
+    }),
+  ]);
+}
+
+function shouldWaitForPreloaderImage(img) {
+  const loading = (img.getAttribute("loading") || "").toLowerCase();
+  const fetchPriority = (img.getAttribute("fetchpriority") || img.fetchPriority || "").toLowerCase();
+  return loading !== "lazy" || fetchPriority === "high";
+}
+
+function waitForImages(root, perImageCapMs = PRELOADER_IMAGE_WAIT_MS, onProgress = () => {}) {
+  const images = [...root.querySelectorAll("img")].filter(shouldWaitForPreloaderImage);
   if (!images.length) {
     onProgress(1);
     return Promise.resolve();
@@ -393,7 +410,7 @@ function waitForImages(root, perImageCapMs = 12000, onProgress = () => {}) {
 async function waitForFonts(onProgress = () => {}) {
   onProgress(0);
   try {
-    if (document.fonts?.ready) await document.fonts.ready;
+    if (document.fonts?.ready) await withTimeout(document.fonts.ready, PRELOADER_FONT_WAIT_MS);
   } catch (_) {
     
   }
@@ -492,7 +509,7 @@ async function bootOnDomReady() {
     preloader?.setStepProgress(PRELOADER_STEPS.init, 1);
     if (usePreloader) {
       await waitForFonts((ratio) => preloader?.setStepProgress(PRELOADER_STEPS.fonts, ratio));
-      await waitForImages(root, 12000, (ratio) => preloader?.setStepProgress(PRELOADER_STEPS.images, ratio));
+      await waitForImages(root, PRELOADER_IMAGE_WAIT_MS, (ratio) => preloader?.setStepProgress(PRELOADER_STEPS.images, ratio));
     }
     preloader?.setStepProgress(PRELOADER_STEPS.finalize, 0.35);
     await stabilizeScrollLayout(3);

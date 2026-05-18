@@ -2688,14 +2688,16 @@ body.isg-nav-drawer-open {
 .isg-digits-section.component--featured {
   --isg-digits-pad-right: var(--isg-card-gap);
   --isg-digits-pad-bottom: var(--isg-card-gap);
+  --isg-digits-featured-height: min(100vh, 1080px);
+  --isg-digits-featured-height: min(100dvh, 1080px);
+  --isg-digits-featured-height: min(100svh, 1080px);
   position: relative;
   box-sizing: border-box;
-  padding-bottom: var(--isg-digits-pad-bottom);
+  padding-bottom: 0;
   overflow-x: clip;
   background-color: #e8e6e0;
-  min-height: min(100vh, 1080px);
-  min-height: min(100dvh, 1080px);
-  min-height: min(100svh, 1080px);
+  height: var(--isg-digits-featured-height);
+  min-height: var(--isg-digits-featured-height);
 }
 
 .isg-digits-section.component--featured .scroll {
@@ -2733,6 +2735,7 @@ body.isg-nav-drawer-open {
   --isg-digits-image-scale: 1;
   --isg-digits-image-radius: 0px;
   transform: translate3d(var(--isg-digits-image-x), 0, 0) scale(var(--isg-digits-image-scale));
+  transform-origin: center center;
   border-radius: var(--isg-digits-image-radius);
   will-change: transform, border-radius;
   backface-visibility: hidden;
@@ -2972,6 +2975,7 @@ body.isg-nav-drawer-open {
     --isg-digits-pad-right: var(--isg-space-sm);
     --isg-digits-pad-bottom: var(--isg-space-sm);
     overflow-x: visible;
+    height: auto;
     min-height: 0;
   }
   .isg-digits-section.component--featured .scroll {
@@ -4296,7 +4300,7 @@ body.isg-nav-drawer-open {
   height: clamp(200px, 13.3vw, 285px);
   padding: var(--isg-card-sm-padding);
   border-radius: var(--isg-card-br);
-  background: rgba(218, 218, 218, 0.12);
+  background: rgba(237, 231, 221, 0.16);
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -5876,7 +5880,7 @@ body.isg-nav-drawer-open {
   width: max(36px, min(2.8vw, 52px));
   height: max(36px, min(2.8vw, 52px));
   border-radius: max(8px, min(0.7vw, 14px));
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(237, 231, 221, 0.2);
   overflow: hidden;
   flex: 0 0 auto;
   margin-bottom: auto;
@@ -5886,7 +5890,6 @@ body.isg-nav-drawer-open {
   width: 58%;
   height: 58%;
   object-fit: contain;
-  filter: brightness(0) invert(1);
 }
 
 .isg-quality-card__title {
@@ -8239,7 +8242,7 @@ button.isg-slider-item__img,
 .isg-footer__logo-media {
   display: block;
   width: 100%;
-  max-width: 260px;
+  max-width: 220px;
   line-height: 0;
 }
 
