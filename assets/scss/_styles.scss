@@ -1956,8 +1956,8 @@ body.isg-nav-drawer-open {
 
 .isg-hero-watch-btn__thumb {
   position: relative;
-  width: max(2.09pc, min(2.639vw, 37.90500000000001pt));
-  height: max(2.09pc, min(2.639vw, 37.90500000000001pt));
+  width: calc(var(--isg-hero-action-height) - (max(4.4px, min(0.347vw, 6.65px)) * 2));
+    height: calc(var(--isg-hero-action-height) - (max(4.4px, min(0.347vw, 6.65px)) * 2));
   border-radius: 11px;
   overflow: hidden;
   flex-shrink: 0;
@@ -3732,7 +3732,7 @@ background: linear-gradient(180deg, rgba(0, 0, 0, 0.16) 0%, rgba(0, 0, 0, 0) 38%
           (var(--isg-app-mobile-media-gap) * 2) - env(safe-area-inset-bottom, 0px)
       )
     );
-    margin: calc((100vw - var(--container-width)) * 0.5) auto 0;
+    margin: var(--isg-mobile-section-y)  auto 0;
     border-radius: var(--isg-card-br);
     overflow: hidden;
     background-color: #0c1629;
@@ -6480,10 +6480,16 @@ height: auto;
   {
     grid-column: 1/5;
   }
+  .isg-info-hero__title.isg-h2 {
+    max-width: min(100%, 20ch);
+  }
 }
 
 @media (max-width: 768px) {
- 
+  .isg-info-hero__title.isg-h2 {
+    max-width: min(100%, 22ch);
+  }
+
   .isg-about-team-block__lead.isg-grid-col--left, .isg-about-team-block__lead,
   .isg-about-team-block__certs-lead.isg-grid-col--left
   {
