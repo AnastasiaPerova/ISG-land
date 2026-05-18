@@ -45,20 +45,48 @@ $default_items = array(
 	),
 );
 
-$section = isg_acf_group(
-	'application_section',
-	array(
-		'intro_kicker' => 'Application Areas',
-		'intro_title' => 'Spiral-welded pipes are used in various industries, such as:',
-		'final_heading' => 'Application areas for large-diameter spiral-welded pipes',
-		'video_file' => '',
-		'video_url' => isg_asset_uri('video/test.mp4'),
-		'video_poster' => '',
-		'mobile_bg_image' => isg_asset_uri('img/advantages_1.jpg'),
-		'items' => $default_items,
-	),
-	$page_id
+$section_defaults = array(
+	'intro_kicker' => 'Application Areas',
+	'intro_title' => 'Spiral-welded pipes are used in various industries, such as:',
+	'final_heading' => 'Application areas for large-diameter spiral-welded pipes',
+	'video_file' => '',
+	'video_url' => isg_asset_uri('video/test.mp4'),
+	'video_poster' => '',
+	'mobile_bg_image' => isg_asset_uri('img/advantages_1.jpg'),
+	'items' => $default_items,
 );
+
+$section = array_replace(
+	$section_defaults,
+	isg_acf_group('application_section', $section_defaults, $page_id)
+);
+
+$is_empty_media_value = static function ($value): bool {
+	if (is_array($value)) {
+		return empty($value['url']) && empty($value['ID']) && empty($value['id']);
+	}
+	if (is_numeric($value)) {
+		return (int) $value <= 0;
+	}
+	return trim((string) $value) === '';
+};
+
+if (function_exists('pll_default_language') && function_exists('pll_get_post')) {
+	$default_lang = (string) pll_default_language('slug');
+	$default_page_id = $default_lang !== '' ? (int) pll_get_post((int) $page_id, $default_lang) : 0;
+	if ($default_page_id > 0 && $default_page_id !== (int) $page_id) {
+		$default_section = isg_acf_group('application_section', array(), $default_page_id);
+		foreach (array('video_file', 'video_url', 'video_poster', 'mobile_bg_image') as $media_key) {
+			if (
+				array_key_exists($media_key, $default_section)
+				&& $is_empty_media_value($section[$media_key] ?? '')
+				&& !$is_empty_media_value($default_section[$media_key])
+			) {
+				$section[$media_key] = $default_section[$media_key];
+			}
+		}
+	}
+}
 
 $intro_kicker = (string) ($section['intro_kicker'] ?? 'Application Areas');
 $intro_title = (string) ($section['intro_title'] ?? 'Spiral-welded pipes are used in various industries, such as:');
@@ -90,7 +118,7 @@ $video_url = isg_absolute_url($video_url, isg_asset_uri('video/test.mp4'));
 	<div class="isg-app__scene">
 		<div class="isg-app__scene-reveal">
 			<div class="isg-app__media" aria-hidden="true">
-				<video class="isg-app__video" muted playsinline webkit-playsinline preload="auto" <?php if (!empty($video_poster)): ?>
+				<video class="isg-app__video" muted playsinline webkit-playsinline preload="auto" width="1920" height="1080" <?php if (!empty($video_poster)): ?>
 						poster="<?php echo esc_url($video_poster); ?>" <?php endif; ?>>
 					<source src="<?php echo esc_url($video_url); ?>" type="video/mp4" />
 				</video>
@@ -130,6 +158,7 @@ $video_url = isg_absolute_url($video_url, isg_asset_uri('video/test.mp4'));
 												$item_title = (string) ($item['title'] ?? '');
 												$image_url = isg_image_url($item['image'] ?? '', isg_asset_uri('img/advantages_1.jpg'));
 												$image_alt = isg_image_alt($item['image'] ?? '', '');
+												$image_size = isg_image_dimensions($item['image'] ?? '', 640, 320);
 												$item_hint = (string) ($item['hint'] ?? '');
 												$item_desc = (string) ($item['description'] ?? '');
 												?>
@@ -153,8 +182,9 @@ $video_url = isg_absolute_url($video_url, isg_asset_uri('video/test.mp4'));
 															<div class="isg-accordion__media">
 																<img class="isg-accordion__img"
 																	src="<?php echo esc_url($image_url); ?>"
-																	alt="<?php echo esc_attr($image_alt); ?>" width="640"
-																	height="320" loading="eager"
+																	alt="<?php echo esc_attr($image_alt); ?>"
+																	width="<?php echo esc_attr((string) $image_size['width']); ?>"
+																	height="<?php echo esc_attr((string) $image_size['height']); ?>" loading="eager"
 																	decoding="async" />
 																<?php if (!empty($item_hint)): ?>
 																	<p

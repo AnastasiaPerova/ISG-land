@@ -166,6 +166,31 @@ function isg_image_alt($image, string $default = ''): string {
 	return $default;
 }
 
+function isg_image_dimensions($image, int $default_width = 0, int $default_height = 0): array {
+	$width  = $default_width;
+	$height = $default_height;
+
+	if (is_array($image)) {
+		$raw_width  = isset($image['width']) ? (int) $image['width'] : 0;
+		$raw_height = isset($image['height']) ? (int) $image['height'] : 0;
+		if ($raw_width > 0 && $raw_height > 0) {
+			$width  = $raw_width;
+			$height = $raw_height;
+		}
+	} elseif (is_numeric($image)) {
+		$src = wp_get_attachment_image_src((int) $image, 'full');
+		if (is_array($src) && !empty($src[1]) && !empty($src[2])) {
+			$width  = (int) $src[1];
+			$height = (int) $src[2];
+		}
+	}
+
+	return array(
+		'width'  => max(0, $width),
+		'height' => max(0, $height),
+	);
+}
+
 function isg_link_url($link, string $default = ''): string {
 	if (is_array($link)) {
 		if (!empty($link['url'])) {
