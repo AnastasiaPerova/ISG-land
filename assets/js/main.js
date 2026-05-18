@@ -163,6 +163,16 @@ async function stabilizeScrollLayout(passes = 2) {
   window.dispatchEvent(new CustomEvent("isg:layout-ready"));
 }
 
+function schedulePostPreloaderRefresh() {
+  const delays = [120, 360, 900];
+  delays.forEach((delay) => {
+    window.setTimeout(() => {
+      getLenis()?.resize();
+      ScrollTrigger.refresh();
+    }, delay);
+  });
+}
+
 function disposeInternals() {
   try {
     qualityCardsRevealDisposer?.();
@@ -506,6 +516,7 @@ async function bootOnDomReady() {
       bootQualityCardsReveal(root);
     }
     await stabilizeScrollLayout(3);
+    schedulePostPreloaderRefresh();
   }
 }
 
