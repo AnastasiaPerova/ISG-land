@@ -3708,20 +3708,6 @@ body.isg-nav-drawer-open {
 	.isg-app-scroll__stage-intro {
 		display: none;
 	}
-
-	.isg-app-scroll__stage-body {
-		opacity: 0;
-		visibility: hidden;
-		pointer-events: none;
-	}
-
-	.isg-app-left {
-		transform: translate3d(-110vw, 0, 0);
-	}
-
-	.isg-app-right {
-		transform: translate3d(110vw, 0, 0);
-	}
 }
 .isg-app-scroll__stage {
 	position: relative;
