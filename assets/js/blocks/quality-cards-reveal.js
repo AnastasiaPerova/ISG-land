@@ -1,4 +1,7 @@
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const instances = new WeakMap();
 
@@ -152,27 +155,17 @@ export function initQualityCardsReveal(root = document) {
         0.42,
       );
 
-    let observer = null;
-    const play = () => {
-      tl.play();
-      observer?.disconnect();
-      observer = null;
-    };
-
-    if ("IntersectionObserver" in window) {
-      observer = new IntersectionObserver(
-        (entries) => {
-          if (entries.some((entry) => entry.isIntersecting)) play();
-        },
-        { rootMargin: "0px 0px -8% 0px", threshold: 0.05 },
-      );
-      observer.observe(wrap);
-    } else {
-      requestAnimationFrame(play);
-    }
+    const st = ScrollTrigger.create({
+      trigger: wrap,
+      start: "top 92%",
+      end: "top 48%",
+      animation: tl,
+      scrub: 0.55,
+      invalidateOnRefresh: true,
+    });
 
     const cleanup = () => {
-      observer?.disconnect();
+      st.kill();
       tl.kill();
       if (instances.get(wrap) !== cleanup) return;
       clearRevealState(wrap);

@@ -116,6 +116,15 @@ function isg_acf_current_option_image_url(string $field_name, string $default = 
 	return isg_image_url($image, $default);
 }
 
+function isg_acf_current_option_image_dimensions(string $field_name, int $default_width = 0, int $default_height = 0): array {
+	if (!function_exists('get_field')) {
+		return isg_image_dimensions('', $default_width, $default_height);
+	}
+
+	$image = get_field($field_name, isg_acf_current_option_post_id());
+	return isg_image_dimensions($image, $default_width, $default_height);
+}
+
 function isg_acf_image_url(string $field_name, string $context = 'option', string $default = ''): string {
 	if (!function_exists('get_field')) {
 		return $default;
@@ -143,6 +152,26 @@ function isg_acf_image_url(string $field_name, string $context = 'option', strin
 	}
 
 	return $default;
+}
+
+function isg_acf_image_dimensions(string $field_name, string $context = 'option', int $default_width = 0, int $default_height = 0): array {
+	if (!function_exists('get_field')) {
+		return isg_image_dimensions('', $default_width, $default_height);
+	}
+
+	$contexts = in_array($context, array('option', 'options'), true)
+		? isg_acf_option_post_ids()
+		: array($context);
+
+	foreach ($contexts as $post_id) {
+		$image = get_field($field_name, $post_id);
+
+		if (!empty($image)) {
+			return isg_image_dimensions($image, $default_width, $default_height);
+		}
+	}
+
+	return isg_image_dimensions('', $default_width, $default_height);
 }
 
 function isg_image_url($image, string $default = ''): string {

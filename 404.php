@@ -21,6 +21,7 @@ $email_label = (string) isg_acf_option('404_email_label', 'Email');
 $email = (string) isg_acf_option('404_email', 'office@isg-poland.com');
 
 $footer_logo = isg_acf_image_url('footer_logo', 'option', isg_asset_uri('img/logo_footer.svg'));
+$footer_logo_size = isg_acf_image_dimensions('footer_logo', 'option', 167, 23);
 $linkedin_url = (string) isg_acf_option('footer_linkedin_url', 'https://www.linkedin.com/company/industrial-steel-group/?viewAsMember=true');
 $facebook_url = (string) isg_acf_option('footer_facebook_url', 'https://www.facebook.com/');
 $privacy_url = (string) isg_acf_option('footer_privacy_url', '#');
@@ -80,7 +81,7 @@ $hero_style = sprintf(
 			<div class="isg-404__bottom">
 				<a class="isg-404__logo" href="<?php echo esc_url(isg_front_page_url()); ?>"
 					aria-label="<?php esc_attr_e('ISG home', 'isg'); ?>">
-					<img src="<?php echo esc_url($footer_logo); ?>" alt="ISG" width="170" height="62" loading="lazy"
+					<img src="<?php echo esc_url($footer_logo); ?>" alt="ISG" width="<?php echo esc_attr((string) $footer_logo_size['width']); ?>" height="<?php echo esc_attr((string) $footer_logo_size['height']); ?>" loading="lazy"
 						decoding="async" />
 				</a>
 
@@ -115,4 +116,3 @@ $hero_style = sprintf(
 </main>
 <?php
 get_footer();
-

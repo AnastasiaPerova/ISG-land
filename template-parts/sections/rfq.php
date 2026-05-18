@@ -81,6 +81,7 @@ $section = isg_acf_group(
 
 $intro_bg        = isg_image_url($section['intro_background'] ?? '', isg_asset_uri('img/engenereeng-intro.jpg'));
 $intro_mobile_bg = isg_image_url($section['intro_mobile_background'] ?? '', '');
+$intro_bg_size   = isg_image_dimensions($section['intro_background'] ?? '', 1920, 1140);
 $intro_kicker    = (string) ($section['intro_kicker'] ?? 'ENGINEERING & CUSTOM ORDERS');
 $intro_title     = (string) ($section['intro_title'] ?? '');
 $intro_body      = (string) ($section['intro_body'] ?? '');
@@ -115,7 +116,7 @@ $label = static function (array $labels, string $key, string $fallback = ''): st
 					<?php if ($intro_mobile_bg !== '') : ?>
 						<source media="(max-width: 1099px)" srcset="<?php echo esc_url($intro_mobile_bg); ?>" />
 					<?php endif; ?>
-					<img class="isg-intro-media__img" src="<?php echo esc_url($intro_bg); ?>" alt="" loading="lazy" decoding="async" />
+					<img class="isg-intro-media__img" src="<?php echo esc_url($intro_bg); ?>" alt="" width="<?php echo esc_attr((string) $intro_bg_size['width']); ?>" height="<?php echo esc_attr((string) $intro_bg_size['height']); ?>" loading="lazy" decoding="async" />
 				</picture>
 			</div>
 		</div>

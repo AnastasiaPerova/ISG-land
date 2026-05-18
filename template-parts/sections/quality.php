@@ -57,6 +57,7 @@ $section = isg_acf_group(
 
 $intro_bg        = isg_image_url($section['intro_background'] ?? '', isg_asset_uri('img/guality-control-intro.jpg'));
 $intro_mobile_bg = isg_image_url($section['intro_mobile_background'] ?? '', '');
+$intro_bg_size   = isg_image_dimensions($section['intro_background'] ?? '', 1920, 1140);
 $intro_kicker    = (string) ($section['intro_kicker'] ?? 'PRODUCT RANGE');
 $intro_title     = (string) ($section['intro_title'] ?? 'Quality control is an essential part of the production process');
 $focus_kicker    = (string) ($section['focus_kicker'] ?? 'Focus areas');
@@ -72,7 +73,7 @@ $items        = array_slice($items, 0, 4);
 					<?php if ($intro_mobile_bg !== '') : ?>
 						<source media="(max-width: 1099px)" srcset="<?php echo esc_url($intro_mobile_bg); ?>" />
 					<?php endif; ?>
-					<img class="isg-intro-media__img" src="<?php echo esc_url($intro_bg); ?>" alt="" loading="lazy" decoding="async" />
+					<img class="isg-intro-media__img" src="<?php echo esc_url($intro_bg); ?>" alt="" width="<?php echo esc_attr((string) $intro_bg_size['width']); ?>" height="<?php echo esc_attr((string) $intro_bg_size['height']); ?>" loading="lazy" decoding="async" />
 				</picture>
 			</div>
 		</div>
@@ -108,15 +109,17 @@ $items        = array_slice($items, 0, 4);
 					$body      = (string) ($item['body'] ?? '');
 					$image_url = isg_image_url($item['image'] ?? '', isg_asset_uri('img/isg-quality-content-1.jpg'));
 					$image_alt = isg_image_alt($item['image'] ?? '', '');
+					$image_size = isg_image_dimensions($item['image'] ?? '', 884, 824);
 					$icon_url  = isg_image_url($item['icon'] ?? '', '');
 					$icon_alt  = isg_image_alt($item['icon'] ?? '', '');
+					$icon_size = isg_image_dimensions($item['icon'] ?? '', 32, 32);
 					?>
 					<article class="isg-quality-card">
-						<img class="isg-quality-card__img" src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($image_alt); ?>" loading="lazy" decoding="async" />
+						<img class="isg-quality-card__img" src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($image_alt); ?>" width="<?php echo esc_attr((string) $image_size['width']); ?>" height="<?php echo esc_attr((string) $image_size['height']); ?>" loading="lazy" decoding="async" />
 						<div class="isg-quality-card__content">
 							<?php if ($icon_url !== '') : ?>
 								<span class="isg-quality-card__icon">
-									<img src="<?php echo esc_url($icon_url); ?>" alt="<?php echo esc_attr($icon_alt); ?>" loading="lazy" decoding="async" />
+									<img src="<?php echo esc_url($icon_url); ?>" alt="<?php echo esc_attr($icon_alt); ?>" width="<?php echo esc_attr((string) $icon_size['width']); ?>" height="<?php echo esc_attr((string) $icon_size['height']); ?>" loading="lazy" decoding="async" />
 								</span>
 							<?php endif; ?>
 							<h3 class="isg-quality-card__title"><?php echo esc_html($title); ?></h3>

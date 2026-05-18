@@ -8,6 +8,8 @@
 $footer_logo        = isg_acf_image_url('footer_logo', 'option', isg_asset_uri('img/logo-short.svg'));
 $footer_mobile_logo = isg_acf_image_url('footer_mobile_logo', 'option', $footer_logo);
 $eu_logo            = isg_acf_current_option_image_url('footer_eu_logo');
+$footer_logo_size   = isg_acf_image_dimensions('footer_logo', 'option', 66, 23);
+$eu_logo_size       = isg_acf_current_option_image_dimensions('footer_eu_logo', 1783, 525);
 $eu_logo_link       = isg_link_url(isg_acf_current_option('footer_eu_logo_page_link', ''));
 
 $production_address = (string) isg_acf_option('footer_production_address', "Sucharskiego 49\n97-500 Radomsko, Poland");
@@ -83,16 +85,16 @@ $footer_classes   = 'isg-footer' . ($is_reveal_footer ? ' isg-footer--reveal' : 
 			<div class="isg-footer__col isg-footer__col--logo">
 				<picture class="isg-footer__logo-media">
 					<source media="(max-width: 1099px)" srcset="<?php echo esc_url($footer_mobile_logo); ?>" />
-					<img class="isg-footer__logo" src="<?php echo esc_url($footer_logo); ?>" alt="ISG" width="66" height="23" loading="lazy" />
+					<img class="isg-footer__logo" src="<?php echo esc_url($footer_logo); ?>" alt="ISG" width="<?php echo esc_attr((string) $footer_logo_size['width']); ?>" height="<?php echo esc_attr((string) $footer_logo_size['height']); ?>" loading="lazy" />
 				</picture>
 				<?php if ($eu_logo !== '') : ?>
 					<?php if ($eu_logo_link !== '') : ?>
 						<a class="isg-footer__eu-link" href="<?php echo esc_url($eu_logo_link); ?>" aria-label="<?php esc_attr_e('Dofinansowane przez Unię Europejską', 'isg'); ?>">
-							<img class="isg-footer__eu-logo" src="<?php echo esc_url($eu_logo); ?>" alt="" width="360" height="78" loading="lazy" />
+							<img class="isg-footer__eu-logo" src="<?php echo esc_url($eu_logo); ?>" alt="" width="<?php echo esc_attr((string) $eu_logo_size['width']); ?>" height="<?php echo esc_attr((string) $eu_logo_size['height']); ?>" loading="lazy" />
 						</a>
 					<?php else : ?>
 						<span class="isg-footer__eu-link">
-							<img class="isg-footer__eu-logo" src="<?php echo esc_url($eu_logo); ?>" alt="" width="360" height="78" loading="lazy" />
+							<img class="isg-footer__eu-logo" src="<?php echo esc_url($eu_logo); ?>" alt="" width="<?php echo esc_attr((string) $eu_logo_size['width']); ?>" height="<?php echo esc_attr((string) $eu_logo_size['height']); ?>" loading="lazy" />
 						</span>
 					<?php endif; ?>
 				<?php endif; ?>

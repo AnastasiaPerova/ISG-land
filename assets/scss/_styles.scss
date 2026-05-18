@@ -372,7 +372,7 @@ input[type="search"]::-webkit-search-results-decoration {
 .isg-title-anim {
 	width: 100%;
 	box-sizing: border-box;
-	text-wrap: wrap;
+	text-wrap: balance;
 }
 
 .isg-title-anim .isg-title-anim__line-mask {
@@ -3269,7 +3269,7 @@ body.isg-nav-drawer-open {
 	font-weight: 400;
 	letter-spacing: -0.042em;
 	line-height: 1.15;
-	margin: 0 0 calc(var(--isg-space-xs) * 1.4) 0;
+	margin: 0 0 calc(var(--isg-space-xs) * 1.2) 0;
 
 	color: #ffffff;
 	max-width: 100%;
@@ -3846,7 +3846,7 @@ body.isg-nav-drawer-open {
 }
 
 .isg-app-right .isg-accordion__item:last-child {
-	padding-bottom: calc(var(--isg-space-xs) * 2.6);
+	padding-bottom: calc(var(--isg-space-xs) * 1.8);
 }
 
 .isg-app-right .isg-accordion__item--open {
@@ -4404,7 +4404,7 @@ body.isg-nav-drawer-open {
 	display: flex;
 	align-items: flex-end;
 	box-sizing: border-box;
-	padding: clamp(18px, 2.1vw, 32px);
+	padding: var(--isg-card-sm-padding);
 	color: #ffffff;
 	font-size: var(--isg-type-body-sm);
 	line-height: 1.35;
@@ -4422,8 +4422,7 @@ body.isg-nav-drawer-open {
 			rgba(0, 0, 0, 0.46) 36%,
 			rgba(0, 0, 0, 0) 72%
 		);
-	// -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.34) 24%, rgb(0, 0, 0) 54%);
-	// mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.34) 24%, rgb(0, 0, 0) 54%);
+
 	text-shadow: 0 0.06em 0.42em rgba(0, 0, 0, 0.52);
 	pointer-events: none;
 }
@@ -4801,9 +4800,9 @@ body.isg-nav-drawer-open {
 	height: clamp(200px, 13.3vw, 285px);
 	padding: var(--isg-card-sm-padding);
 	border-radius: var(--isg-card-br);
-	background: rgba(255, 255, 255, 0.05);
-	backdrop-filter: blur(11px);
-	-webkit-backdrop-filter: blur(11px);
+	background: rgb(218 218 218 / 12%);
+	// backdrop-filter: blur(11px);
+	// -webkit-backdrop-filter: blur(11px);
 	display: flex;
 	flex-direction: column;
 
@@ -6584,8 +6583,7 @@ body.isg-nav-drawer-open {
 
 	border-radius: max(8px, min(0.7vw, 14px));
 	background: rgba(255, 255, 255, 0.05);
-	backdrop-filter: blur(11px);
-	-webkit-backdrop-filter: blur(11px);
+	
 	overflow: hidden;
 	flex: 0 0 auto;
 	margin-bottom: auto;
@@ -6599,10 +6597,10 @@ body.isg-nav-drawer-open {
 }
 
 .isg-quality-card__title {
-	max-width: 11ch;
+	max-width: 100%;
 	margin: 0;
 	color: #ffffff;
-	font-size: max(22px, min(1.8vw, 34px));
+	font-size: var(--isg-type-lead);
 	font-weight: 400;
 	line-height: 1.08;
 	letter-spacing: 0;
@@ -8138,7 +8136,7 @@ button.isg-slider-item__img,
 }
 
 .isg-rfq-copy__heading {
-	max-width: min(100%, 18em);
+	max-width: min(100%, 56ch);
 	margin: 0;
 	color: #111111;
 	font-size: var(--isg-type-h3);

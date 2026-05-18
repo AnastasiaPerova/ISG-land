@@ -73,6 +73,7 @@ $section = isg_acf_group(
 
 $intro_bg        = isg_image_url($section['intro_background'] ?? '', isg_asset_uri('img/product-range-intro.jpg'));
 $intro_mobile_bg = isg_image_url($section['intro_mobile_background'] ?? '', '');
+$intro_bg_size   = isg_image_dimensions($section['intro_background'] ?? '', 1920, 1080);
 $intro_kicker    = (string) ($section['intro_kicker'] ?? 'PRODUCT RANGE');
 $intro_title     = (string) ($section['intro_title'] ?? 'We produce spiral-welded pipes in a wide range');
 $spec_cards      = is_array($section['spec_cards'] ?? null) ? $section['spec_cards'] : $default_spec_cards;
@@ -157,6 +158,8 @@ $render_size_table = static function (array $rows, string $left_head, string $ri
 						class="isg-product-intro__image"
 						src="<?php echo esc_url($intro_bg); ?>"
 						alt=""
+						width="<?php echo esc_attr((string) $intro_bg_size['width']); ?>"
+						height="<?php echo esc_attr((string) $intro_bg_size['height']); ?>"
 						loading="lazy"
 						decoding="async"
 					/>

@@ -89,6 +89,7 @@ $section = isg_acf_group(
 
 $intro_bg        = isg_image_url($section['intro_background'] ?? '', isg_asset_uri('img/about-us-intro.jpg'));
 $intro_mobile_bg = isg_image_url($section['intro_mobile_background'] ?? '', '');
+$intro_bg_size   = isg_image_dimensions($section['intro_background'] ?? '', 2870, 1611);
 $intro_kicker    = (string) ($section['intro_kicker'] ?? 'PRODUCT RANGE');
 $intro_title     = (string) ($section['intro_title'] ?? '');
 $text_kicker     = (string) ($section['textgrid_kicker'] ?? 'our position');
@@ -126,7 +127,7 @@ $text_lead    = $normalize_wrap_text($text_lead);
 					<?php if ($intro_mobile_bg !== '') : ?>
 						<source media="(max-width: 1099px)" srcset="<?php echo esc_url($intro_mobile_bg); ?>" />
 					<?php endif; ?>
-					<img class="isg-intro-media__img" src="<?php echo esc_url($intro_bg); ?>" alt="" loading="lazy" decoding="async" />
+					<img class="isg-intro-media__img" src="<?php echo esc_url($intro_bg); ?>" alt="" width="<?php echo esc_attr((string) $intro_bg_size['width']); ?>" height="<?php echo esc_attr((string) $intro_bg_size['height']); ?>" loading="lazy" decoding="async" />
 				</picture>
 			</div>
 		</div>
@@ -205,9 +206,10 @@ $text_lead    = $normalize_wrap_text($text_lead);
 											$title     = (string) ($item['title'] ?? '');
 											$image_url = isg_image_url($item['image'] ?? '', isg_asset_uri('img/isg-quality-content-1.jpg'));
 											$image_alt = isg_image_alt($item['image'] ?? '', '');
+											$image_size = isg_image_dimensions($item['image'] ?? '', 884, 824);
 											?>
 											<div class="isg-quality-visual__slide<?php echo $i === 0 ? ' isg-quality-visual__slide--active' : ''; ?>" data-isg-quality-slide="<?php echo esc_attr((string) $i); ?>" role="img" aria-label="<?php echo esc_attr($title); ?>">
-												<img class="isg-quality-visual__slide-img" src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($image_alt); ?>" loading="lazy" decoding="async" />
+												<img class="isg-quality-visual__slide-img" src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($image_alt); ?>" width="<?php echo esc_attr((string) $image_size['width']); ?>" height="<?php echo esc_attr((string) $image_size['height']); ?>" loading="lazy" decoding="async" />
 												<div class="isg-quality-visual__caption">
 													<h3 class="isg-quality-visual__caption-title"><?php echo esc_html($title); ?></h3>
 												</div>

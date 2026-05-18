@@ -103,6 +103,9 @@ $current_language = strtoupper((string) ($languages[$active_index]['code'] ?? 'E
 $logo_url = isg_acf_image_url('header_logo', 'option', isg_asset_uri('img/logo_footer.svg'));
 $mobile_logo_url = isg_acf_image_url('header_mobile_logo', 'option', isg_asset_uri('img/logo-short.svg'));
 $eu_logo_url = isg_acf_current_option_image_url('header_eu_logo');
+$logo_size = isg_acf_image_dimensions('header_logo', 'option', 167, 23);
+$mobile_logo_size = isg_acf_image_dimensions('header_mobile_logo', 'option', 66, 23);
+$eu_logo_size = isg_acf_current_option_image_dimensions('header_eu_logo', 1783, 525);
 $eu_logo_link = isg_link_url(isg_acf_current_option('header_eu_logo_page_link', ''));
 $home_hero_url = isg_anchor_url('#isg-hero', '#isg-hero');
 
@@ -123,8 +126,8 @@ $contact_phone_href = $contact_phone_display !== '' ? preg_replace('/(?!^\+)[^\d
 			<nav class="isg-nav-pill" aria-label="<?php esc_attr_e('Primary', 'isg'); ?>" data-isg-section-nav>
 				<a class="isg-hero__logo isg-nav-pill__brand" href="<?php echo esc_url($home_hero_url); ?>"
 					aria-label="<?php esc_attr_e('ISG - Home', 'isg'); ?>">
-					<img class="isg-hero__logo-img" src="<?php echo esc_url($logo_url); ?>" alt="" width="170"
-						height="62" decoding="async" />
+					<img class="isg-hero__logo-img" src="<?php echo esc_url($logo_url); ?>" alt="" width="<?php echo esc_attr((string) $logo_size['width']); ?>"
+						height="<?php echo esc_attr((string) $logo_size['height']); ?>" decoding="async" />
 				</a>
 
 				<div class="isg-nav-pill__inner">
@@ -151,12 +154,12 @@ $contact_phone_href = $contact_phone_display !== '' ? preg_replace('/(?!^\+)[^\d
 							<a class="isg-header-contact__eu-link" href="<?php echo esc_url($eu_logo_link); ?>"
 								aria-label="<?php esc_attr_e('Dofinansowane przez Unię Europejską', 'isg'); ?>">
 								<img class="isg-header-contact__eu-logo" src="<?php echo esc_url($eu_logo_url); ?>" alt=""
-									width="360" height="78" decoding="async" />
+									width="<?php echo esc_attr((string) $eu_logo_size['width']); ?>" height="<?php echo esc_attr((string) $eu_logo_size['height']); ?>" decoding="async" />
 							</a>
 						<?php else: ?>
 							<span class="isg-header-contact__eu-link">
 								<img class="isg-header-contact__eu-logo" src="<?php echo esc_url($eu_logo_url); ?>" alt=""
-									width="360" height="78" decoding="async" />
+									width="<?php echo esc_attr((string) $eu_logo_size['width']); ?>" height="<?php echo esc_attr((string) $eu_logo_size['height']); ?>" decoding="async" />
 							</span>
 						<?php endif; ?>
 						<span class="isg-header-contact__dot" aria-hidden="true"></span>
@@ -208,21 +211,21 @@ $contact_phone_href = $contact_phone_display !== '' ? preg_replace('/(?!^\+)[^\d
 
 		<a class="isg-header-mobile-logo" href="<?php echo esc_url($home_hero_url); ?>"
 			aria-label="<?php esc_attr_e('ISG - Home', 'isg'); ?>">
-			<img class="isg-header-mobile-logo__img" src="<?php echo esc_url($mobile_logo_url); ?>" alt="" width="66"
-				height="23" decoding="async" />
+			<img class="isg-header-mobile-logo__img" src="<?php echo esc_url($mobile_logo_url); ?>" alt="" width="<?php echo esc_attr((string) $mobile_logo_size['width']); ?>"
+				height="<?php echo esc_attr((string) $mobile_logo_size['height']); ?>" decoding="async" />
 		</a>
 
 		<?php if ($eu_logo_url !== ''): ?>
 			<?php if ($eu_logo_link !== ''): ?>
 				<a class="isg-header-mobile-eu-logo" href="<?php echo esc_url($eu_logo_link); ?>"
 					aria-label="<?php esc_attr_e('Dofinansowane przez Unię Europejską', 'isg'); ?>">
-					<img class="isg-header-mobile-eu-logo__img" src="<?php echo esc_url($eu_logo_url); ?>" alt="" width="360"
-						height="78" decoding="async" />
+					<img class="isg-header-mobile-eu-logo__img" src="<?php echo esc_url($eu_logo_url); ?>" alt="" width="<?php echo esc_attr((string) $eu_logo_size['width']); ?>"
+						height="<?php echo esc_attr((string) $eu_logo_size['height']); ?>" decoding="async" />
 				</a>
 			<?php else: ?>
 				<span class="isg-header-mobile-eu-logo">
-					<img class="isg-header-mobile-eu-logo__img" src="<?php echo esc_url($eu_logo_url); ?>" alt="" width="360"
-						height="78" decoding="async" />
+					<img class="isg-header-mobile-eu-logo__img" src="<?php echo esc_url($eu_logo_url); ?>" alt="" width="<?php echo esc_attr((string) $eu_logo_size['width']); ?>"
+						height="<?php echo esc_attr((string) $eu_logo_size['height']); ?>" decoding="async" />
 				</span>
 			<?php endif; ?>
 		<?php endif; ?>
