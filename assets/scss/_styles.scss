@@ -6482,6 +6482,14 @@ height: auto;
   }
 }
 
+@media (max-width: 768px) {
+ 
+  .isg-about-team-block__lead.isg-grid-col--left, .isg-about-team-block__lead,
+  .isg-about-team-block__certs-lead.isg-grid-col--left
+  {
+    grid-column: 1/12;
+  }
+}
 @media (max-width: 1099px) {
   .isg-about-team-block__inner.container {
     padding-right: 0;
