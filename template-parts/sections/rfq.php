@@ -61,6 +61,9 @@ $section = isg_acf_group(
 		'intro_background'        => isg_asset_uri('img/engenereeng-intro.jpg'),
 		'intro_mobile_background' => '',
 		'intro_overlay_enabled'   => true,
+		'intro_overlay_color_start' => '#000000',
+		'intro_overlay_color_mid' => '#000000',
+		'intro_overlay_color_end' => '#000000',
 		'intro_kicker'            => 'ENGINEERING & CUSTOM ORDERS',
 		'intro_title'             => 'We offer flexible manufacturing tailored to project needs',
 		'intro_body'              => 'Production parameters can be adapted to technical specifications, including diameter, wall thickness, steel grade, pipe length, applicable standards and documentation. Custom orders are manufactured in accordance with customer specifications.',
@@ -84,6 +87,12 @@ $intro_bg        = isg_image_url($section['intro_background'] ?? '', isg_asset_u
 $intro_mobile_bg = isg_image_url($section['intro_mobile_background'] ?? '', '');
 $intro_bg_size   = isg_image_dimensions($section['intro_background'] ?? '', 1920, 1140);
 $intro_overlay   = !array_key_exists('intro_overlay_enabled', $section) || (bool) $section['intro_overlay_enabled'];
+$intro_overlay_style = sprintf(
+	'--isg-intro-overlay-start:%s;--isg-intro-overlay-mid:%s;--isg-intro-overlay-end:%s;',
+	isg_color_to_rgba($section['intro_overlay_color_start'] ?? '#000000', 0.62),
+	isg_color_to_rgba($section['intro_overlay_color_mid'] ?? '#000000', 0.46),
+	isg_color_to_rgba($section['intro_overlay_color_end'] ?? '#000000', 0.68)
+);
 $intro_kicker    = (string) ($section['intro_kicker'] ?? 'ENGINEERING & CUSTOM ORDERS');
 $intro_title     = (string) ($section['intro_title'] ?? '');
 $intro_body      = (string) ($section['intro_body'] ?? '');
@@ -115,7 +124,7 @@ if ($intro_overlay) {
 }
 ?>
 <div id="isg-rfq" class="isg-rfq-section" data-isg-block="rfq">
-	<section class="<?php echo esc_attr(implode(' ', $intro_classes)); ?>"
+	<section class="<?php echo esc_attr(implode(' ', $intro_classes)); ?>" style="<?php echo esc_attr($intro_overlay_style); ?>"
 		data-isg-intro-scroll>
 		<div class="isg-intro-media" aria-hidden="true">
 			<div class="isg-intro-media__inner">

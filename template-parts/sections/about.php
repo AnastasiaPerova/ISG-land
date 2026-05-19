@@ -66,6 +66,9 @@ $section = isg_acf_group(
 		'intro_background'        => isg_asset_uri('img/about-us-intro.jpg'),
 		'intro_mobile_background' => '',
 		'intro_overlay_enabled'   => true,
+		'intro_overlay_color_start' => '#000000',
+		'intro_overlay_color_mid' => '#000000',
+		'intro_overlay_color_end' => '#000000',
 		'intro_kicker'            => 'PRODUCT RANGE',
 		'intro_title'             => 'ISG modern spiral-welded pipe production with reliable quality and competitive service',
 		'textgrid_kicker'         => 'our position',
@@ -92,6 +95,12 @@ $intro_bg        = isg_image_url($section['intro_background'] ?? '', isg_asset_u
 $intro_mobile_bg = isg_image_url($section['intro_mobile_background'] ?? '', '');
 $intro_bg_size   = isg_image_dimensions($section['intro_background'] ?? '', 2870, 1611);
 $intro_overlay   = !array_key_exists('intro_overlay_enabled', $section) || (bool) $section['intro_overlay_enabled'];
+$intro_overlay_style = sprintf(
+	'--isg-intro-overlay-start:%s;--isg-intro-overlay-mid:%s;--isg-intro-overlay-end:%s;',
+	isg_color_to_rgba($section['intro_overlay_color_start'] ?? '#000000', 0.62),
+	isg_color_to_rgba($section['intro_overlay_color_mid'] ?? '#000000', 0.46),
+	isg_color_to_rgba($section['intro_overlay_color_end'] ?? '#000000', 0.68)
+);
 $intro_kicker    = (string) ($section['intro_kicker'] ?? 'PRODUCT RANGE');
 $intro_title     = (string) ($section['intro_title'] ?? '');
 $text_kicker     = (string) ($section['textgrid_kicker'] ?? 'our position');
@@ -127,7 +136,7 @@ if ($intro_overlay) {
 }
 ?>
 <div id="isg-about" class="isg-intro-pin isg-intro-pin--about">
-	<section class="<?php echo esc_attr(implode(' ', $intro_classes)); ?>" data-isg-intro-scroll>
+	<section class="<?php echo esc_attr(implode(' ', $intro_classes)); ?>" style="<?php echo esc_attr($intro_overlay_style); ?>" data-isg-intro-scroll>
 		<div class="isg-intro-media" aria-hidden="true">
 			<div class="isg-intro-media__inner">
 				<picture>

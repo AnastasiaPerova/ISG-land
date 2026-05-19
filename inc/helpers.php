@@ -220,6 +220,33 @@ function isg_image_dimensions($image, int $default_width = 0, int $default_heigh
 	);
 }
 
+function isg_color_to_rgba($color, float $alpha = 1, string $default = '#000000'): string {
+	$color = trim((string) $color);
+
+	if (function_exists('sanitize_hex_color')) {
+		$color = sanitize_hex_color($color) ?: sanitize_hex_color($default);
+	}
+
+	if (!is_string($color) || !preg_match('/^#([a-f0-9]{3}|[a-f0-9]{6})$/i', $color)) {
+		$color = $default;
+	}
+
+	$hex = ltrim($color, '#');
+	if (strlen($hex) === 3) {
+		$hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+	}
+
+	$alpha = max(0, min(1, $alpha));
+
+	return sprintf(
+		'rgba(%d, %d, %d, %.3F)',
+		hexdec(substr($hex, 0, 2)),
+		hexdec(substr($hex, 2, 2)),
+		hexdec(substr($hex, 4, 2)),
+		$alpha
+	);
+}
+
 function isg_link_url($link, string $default = ''): string {
 	if (is_array($link)) {
 		if (!empty($link['url'])) {

@@ -51,6 +51,9 @@ $section = isg_acf_group(
 		'intro_background'        => isg_asset_uri('img/product-range-intro.jpg'),
 		'intro_mobile_background' => '',
 		'intro_overlay_enabled'   => true,
+		'intro_overlay_color_start' => '#000000',
+		'intro_overlay_color_mid' => '#000000',
+		'intro_overlay_color_end' => '#000000',
 		'intro_kicker'            => 'PRODUCT RANGE',
 		'intro_title'             => 'We produce spiral-welded pipes in a wide range',
 		'spec_cards'              => $default_spec_cards,
@@ -76,6 +79,12 @@ $intro_bg        = isg_image_url($section['intro_background'] ?? '', isg_asset_u
 $intro_mobile_bg = isg_image_url($section['intro_mobile_background'] ?? '', '');
 $intro_bg_size   = isg_image_dimensions($section['intro_background'] ?? '', 1920, 1080);
 $intro_overlay   = !array_key_exists('intro_overlay_enabled', $section) || (bool) $section['intro_overlay_enabled'];
+$intro_overlay_style = sprintf(
+	'--isg-intro-overlay-start:%s;--isg-intro-overlay-mid:%s;--isg-intro-overlay-end:%s;',
+	isg_color_to_rgba($section['intro_overlay_color_start'] ?? '#000000', 0.62),
+	isg_color_to_rgba($section['intro_overlay_color_mid'] ?? '#000000', 0.46),
+	isg_color_to_rgba($section['intro_overlay_color_end'] ?? '#000000', 0.68)
+);
 $intro_kicker    = (string) ($section['intro_kicker'] ?? 'PRODUCT RANGE');
 $intro_title     = (string) ($section['intro_title'] ?? 'We produce spiral-welded pipes in a wide range');
 $spec_cards      = is_array($section['spec_cards'] ?? null) ? $section['spec_cards'] : $default_spec_cards;
@@ -153,6 +162,7 @@ $render_size_table = static function (array $rows, string $left_head, string $ri
 <div id="isg-product" class="isg-product-section" data-isg-block="product-range">
 	<section
 		class="<?php echo esc_attr(implode(' ', $intro_classes)); ?>"
+		style="<?php echo esc_attr($intro_overlay_style); ?>"
 		data-isg-intro-scroll
 	>
 		<div class="isg-intro-media isg-product-intro__media" aria-hidden="true">
