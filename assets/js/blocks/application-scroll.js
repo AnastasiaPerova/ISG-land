@@ -72,6 +72,7 @@ const ACCORDION_IN_X_PX = 56;
 const ACCORDION_IN_START_SEC = 5;
 // Время видео (сек): длительность выезда аккордеона.
 const ACCORDION_IN_DURATION_SEC = 0.9;
+const BODY_IN_TITLE_OVERLAP_SEC = 0.35;
 
 // Прогресс скролла [0..1]: конец опциональной preplay-фазы (0 = отключена).
 const MASTER_PREPLAY_END = 0;
@@ -335,10 +336,11 @@ export function initApplicationScroll(root = document) {
     // Прогресс появления body-контента (аккордеонной части) по времени видео.
     const getBodyInFromVideoTime = (videoTime, duration) => {
       const d = duration && Number.isFinite(duration) ? duration : 0;
-      const { outEnd } = resolveTitleTimeRanges(duration);
-      const safeStart = Math.min(outEnd, Math.max(d - 0.25, 0));
+      const { outStart, outEnd } = resolveTitleTimeRanges(duration);
+      const overlapStart = outStart + BODY_IN_TITLE_OVERLAP_SEC;
+      const safeStart = Math.min(overlapStart, outEnd, Math.max(d - 0.25, 0));
       const safeEnd = Math.min(safeStart + ACCORDION_IN_DURATION_SEC, Math.max(d - 0.04, safeStart + 0.12));
-      return map01(videoTime, safeStart, safeEnd);
+      return easeOutCubic(map01(videoTime, safeStart, safeEnd));
     };
 
     // Прогресс автопереключения вкладок аккордеона в рамках scroll-фазы.
@@ -893,12 +895,12 @@ export function initApplicationScroll(root = document) {
           let idx = -1;
           if (accordionManual) {
             idx = manualAccordionIdx;
-          } else if (n > 0 && bodyIn > 0.98) {
+          } else if (n > 0 && bodyIn > 0.02) {
             if (accordionAutoStartP == null) {
               accordionAutoStartP = contentP;
             }
             const tabP = map01(contentP, accordionAutoStartP, C_ACCORDION_END);
-            if (tabP <= 0) idx = 0;
+            if (bodyIn < 0.98 || tabP <= 0) idx = 0;
             else if (tabP >= 1) idx = n - 1;
             else {
               idx = Math.min(Math.floor(tabP * n), n - 1);

@@ -8286,9 +8286,13 @@ button.isg-slider-item__img,
 	width: 100%;
 	margin-top: 0.6rem;
 	clear: both;
+	font-family: var(--isg-font-body);
 	font-size: var(--isg-type-body-sm);
+	font-weight: 400;
 	line-height: 1.35;
+	letter-spacing: 0;
 	color: #d74234;
+	-webkit-text-fill-color: #d74234;
 }
 
 .isg-rfq-form .wpcf7-spinner {
@@ -9027,7 +9031,8 @@ button.isg-slider-item__img,
 }
 
 .isg-rfq-form .isg-field__req {
-	color: #d74234;
+	color: #d74234 !important;
+	-webkit-text-fill-color: #d74234 !important;
 	text-decoration: none;
 	font-weight: inherit;
 	margin-left: 0.15em;
