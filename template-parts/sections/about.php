@@ -65,6 +65,7 @@ $section = isg_acf_group(
 	array(
 		'intro_background'        => isg_asset_uri('img/about-us-intro.jpg'),
 		'intro_mobile_background' => '',
+		'intro_overlay_enabled'   => true,
 		'intro_kicker'            => 'PRODUCT RANGE',
 		'intro_title'             => 'ISG modern spiral-welded pipe production with reliable quality and competitive service',
 		'textgrid_kicker'         => 'our position',
@@ -90,6 +91,7 @@ $section = isg_acf_group(
 $intro_bg        = isg_image_url($section['intro_background'] ?? '', isg_asset_uri('img/about-us-intro.jpg'));
 $intro_mobile_bg = isg_image_url($section['intro_mobile_background'] ?? '', '');
 $intro_bg_size   = isg_image_dimensions($section['intro_background'] ?? '', 2870, 1611);
+$intro_overlay   = !array_key_exists('intro_overlay_enabled', $section) || (bool) $section['intro_overlay_enabled'];
 $intro_kicker    = (string) ($section['intro_kicker'] ?? 'PRODUCT RANGE');
 $intro_title     = (string) ($section['intro_title'] ?? '');
 $text_kicker     = (string) ($section['textgrid_kicker'] ?? 'our position');
@@ -118,9 +120,14 @@ $normalize_wrap_text = static function ($value) {
 
 $text_heading = $normalize_wrap_text($text_heading);
 $text_lead    = $normalize_wrap_text($text_lead);
+
+$intro_classes = array('isg-intro-section', 'isg-intro-section--align-center', 'isg-about-intro');
+if ($intro_overlay) {
+	$intro_classes[] = 'isg-intro-section--dark-overlay';
+}
 ?>
 <div id="isg-about" class="isg-intro-pin isg-intro-pin--about">
-	<section class="isg-intro-section isg-intro-section--align-center isg-about-intro" data-isg-intro-scroll>
+	<section class="<?php echo esc_attr(implode(' ', $intro_classes)); ?>" data-isg-intro-scroll>
 		<div class="isg-intro-media" aria-hidden="true">
 			<div class="isg-intro-media__inner">
 				<picture>

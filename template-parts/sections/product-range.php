@@ -50,6 +50,7 @@ $section = isg_acf_group(
 	array(
 		'intro_background'        => isg_asset_uri('img/product-range-intro.jpg'),
 		'intro_mobile_background' => '',
+		'intro_overlay_enabled'   => true,
 		'intro_kicker'            => 'PRODUCT RANGE',
 		'intro_title'             => 'We produce spiral-welded pipes in a wide range',
 		'spec_cards'              => $default_spec_cards,
@@ -74,6 +75,7 @@ $section = isg_acf_group(
 $intro_bg        = isg_image_url($section['intro_background'] ?? '', isg_asset_uri('img/product-range-intro.jpg'));
 $intro_mobile_bg = isg_image_url($section['intro_mobile_background'] ?? '', '');
 $intro_bg_size   = isg_image_dimensions($section['intro_background'] ?? '', 1920, 1080);
+$intro_overlay   = !array_key_exists('intro_overlay_enabled', $section) || (bool) $section['intro_overlay_enabled'];
 $intro_kicker    = (string) ($section['intro_kicker'] ?? 'PRODUCT RANGE');
 $intro_title     = (string) ($section['intro_title'] ?? 'We produce spiral-welded pipes in a wide range');
 $spec_cards      = is_array($section['spec_cards'] ?? null) ? $section['spec_cards'] : $default_spec_cards;
@@ -111,6 +113,11 @@ if (!$size_rows_right) {
 	$size_rows_right = $default_size_rows_right;
 }
 
+$intro_classes = array('isg-intro-section', 'isg-intro-section--align-center', 'isg-product-intro');
+if ($intro_overlay) {
+	$intro_classes[] = 'isg-intro-section--dark-overlay';
+}
+
 $render_size_table = static function (array $rows, string $left_head, string $right_head): void {
 	?>
 	<div class="isg-size-spec" role="group" aria-label="Size range">
@@ -145,7 +152,7 @@ $render_size_table = static function (array $rows, string $left_head, string $ri
 ?>
 <div id="isg-product" class="isg-product-section" data-isg-block="product-range">
 	<section
-		class="isg-intro-section isg-intro-section--align-center isg-product-intro"
+		class="<?php echo esc_attr(implode(' ', $intro_classes)); ?>"
 		data-isg-intro-scroll
 	>
 		<div class="isg-intro-media isg-product-intro__media" aria-hidden="true">

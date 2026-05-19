@@ -45,6 +45,7 @@ $section = isg_acf_group(
 	array(
 		'intro_background'        => isg_asset_uri('img/guality-control-intro.jpg'),
 		'intro_mobile_background' => '',
+		'intro_overlay_enabled'   => true,
 		'intro_kicker'            => 'PRODUCT RANGE',
 		'intro_title'             => 'Quality control is an essential part of the production process',
 		'focus_kicker'            => 'Focus areas',
@@ -58,15 +59,21 @@ $section = isg_acf_group(
 $intro_bg        = isg_image_url($section['intro_background'] ?? '', isg_asset_uri('img/guality-control-intro.jpg'));
 $intro_mobile_bg = isg_image_url($section['intro_mobile_background'] ?? '', '');
 $intro_bg_size   = isg_image_dimensions($section['intro_background'] ?? '', 1920, 1140);
+$intro_overlay   = !array_key_exists('intro_overlay_enabled', $section) || (bool) $section['intro_overlay_enabled'];
 $intro_kicker    = (string) ($section['intro_kicker'] ?? 'PRODUCT RANGE');
 $intro_title     = (string) ($section['intro_title'] ?? 'Quality control is an essential part of the production process');
 $focus_kicker    = (string) ($section['focus_kicker'] ?? 'Focus areas');
 $focus_heading = (string) ($section['focus_heading'] ?? 'Quality control focus areas cover every stage from production to final delivery');
 $items        = is_array($section['items'] ?? null) ? $section['items'] : $default_items;
 $items        = array_slice($items, 0, 4);
+
+$intro_classes = array('isg-intro-section', 'isg-intro-section--align-center', 'isg-quality-intro');
+if ($intro_overlay) {
+	$intro_classes[] = 'isg-intro-section--dark-overlay';
+}
 ?>
 <div id="isg-quality" class="isg-quality-section" data-isg-block="quality">
-	<section class="isg-intro-section isg-intro-section--align-center isg-quality-intro" data-isg-intro-scroll>
+	<section class="<?php echo esc_attr(implode(' ', $intro_classes)); ?>" data-isg-intro-scroll>
 		<div class="isg-intro-media" aria-hidden="true">
 			<div class="isg-intro-media__inner">
 				<picture>
