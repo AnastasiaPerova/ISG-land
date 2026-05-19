@@ -8282,7 +8282,10 @@ button.isg-slider-item__img,
 }
 
 .isg-rfq-form .wpcf7-not-valid-tip {
+	display: block;
+	width: 100%;
 	margin-top: 0.6rem;
+	clear: both;
 	font-size: var(--isg-type-body-sm);
 	line-height: 1.35;
 	color: #d74234;
@@ -8868,6 +8871,9 @@ button.isg-slider-item__img,
 	.isg-field--float:has(
 		.isg-custom-select:not(.isg-custom-select--placeholder)
 	)
+	.isg-field__label,
+.isg-rfq-form
+	.isg-field--float:has(.wpcf7-not-valid-tip)
 	.isg-field__label {
 	top: 0;
 	transform: translateY(0) scale(0.68);
@@ -8984,6 +8990,9 @@ button.isg-slider-item__img,
 				.isg-custom-select--placeholder
 			)
 		)
+		.isg-field__label,
+	.isg-rfq-form
+		.isg-field--float:has(.wpcf7-not-valid-tip)
 		.isg-field__label {
 		transform: translateY(0) scale(0.78);
 	}

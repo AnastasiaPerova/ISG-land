@@ -50,8 +50,7 @@ function warmAccordionMedia(item, priority = "low") {
 // Конфиг таймингов секции: видео (секунды), скролл-фазы [0..1], смещения (px).
 const APP_SCROLL_SCRUB_VH = 3.2;
 document.documentElement.style.setProperty("--isg-app-scroll-scrub-vh", String(APP_SCROLL_SCRUB_VH));
-const APP_SCROLL_START = "top 72%";
-const APP_SCROLL_START_OFFSET_VH = 0.72;
+const APP_SCROLL_START = "top 45%";
 
 // Время видео (сек): когда слова заголовка начинают появляться.
 const TITLE_WORD_IN_START_SEC = 1.01;
@@ -748,7 +747,7 @@ export function initApplicationScroll(root = document) {
     // Расчет длины scroll-трека секции в пикселях.
     const applyTrackHeights = () => {
       const H = getStableViewportHeight();
-      const scrubPx = Math.round(H * (APP_SCROLL_SCRUB_VH + APP_SCROLL_START_OFFSET_VH));
+      const scrubPx = Math.round(H * APP_SCROLL_SCRUB_VH);
       if (postEl) postEl.style.height = `${scrubPx}px`;
       section.style.minHeight = "";
       leftOffscreenX = getLeftOffscreenX();
@@ -759,7 +758,7 @@ export function initApplicationScroll(root = document) {
       section.style.minHeight = "";
     };
 
-    const scrubEndPx = () => Math.round(getStableViewportHeight() * (APP_SCROLL_SCRUB_VH + APP_SCROLL_START_OFFSET_VH));
+    const scrubEndPx = () => Math.round(getStableViewportHeight() * APP_SCROLL_SCRUB_VH);
 
     const clearDesktopMetadataWait = () => {
       window.clearTimeout(desktopMetadataTimer);
