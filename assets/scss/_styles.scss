@@ -7805,18 +7805,14 @@ button.isg-slider-item__img,
 }
 
 .isg-lightbox__video {
-	width: min(
-		calc(92vw - 120px),
-		calc(min(78vh, 860px) * 16 / 9),
-		1280px
-	);
-	max-width: 100%;
-	max-height: min(78vh, 860px);
-	height: auto;
-	aspect-ratio: 16 / 9;
-	border-radius: 13px;
-	box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45);
-	background: #000;
+    width: min(100vw - 20px, min(100vh, 860px) * 16 / 9, 1280px);
+    max-width: 100%;
+    max-height: min(78vh, 860px);
+    height: auto;
+    aspect-ratio: 16 / 8;
+    border-radius: 13px;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, .45);
+    background: #000;
 }
 
 .isg-lightbox__embed {
