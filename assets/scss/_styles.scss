@@ -7817,16 +7817,12 @@ button.isg-slider-item__img,
 
 .isg-lightbox__embed {
 	display: block;
-	width: min(
-		calc(92vw - 120px),
-		calc(min(78vh, 860px) * 16 / 9),
-		1280px
-	);
+	width: min(100vw - var(--isg-space-sm), min(90vh,860px)*16/9),1280px;
 	max-width: 100%;
 	max-height: min(78vh, 860px);
 	aspect-ratio: 16 / 9;
 	border: 0;
-	border-radius: 13px;
+	border-radius: var(--isg-card-br);
 	box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45);
 	background: #000;
 }
@@ -7898,10 +7894,7 @@ button.isg-slider-item__img,
 
 	.isg-lightbox__video,
 	.isg-lightbox__embed {
-		width: min(
-			calc(100vw - 112px),
-			calc(min(72vh, 640px) * 16 / 9)
-		);
+		width: min(100vw - var(--isg-space-sm), min(90vh,860px)*16/9, 1280px);
 	}
 }
 .isg-about-certs .isg-filled-items {
