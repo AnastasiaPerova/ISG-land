@@ -8417,7 +8417,7 @@ button.isg-slider-item__img,
 
 .isg-rfq-form .isg-checkbox-row .wpcf7-list-item > label {
 	display: flex;
-	align-items: center;
+
 	gap: var(--isg-card-gap);
 	margin: 0;
 }
@@ -8442,6 +8442,7 @@ button.isg-slider-item__img,
 	width: max(1.4pc, min(1.6vw, 2.1pc));
 	height: max(1.4pc, min(1.6vw, 2.1pc));
 	margin: 0;
+	margin-top: 0.15em;
 	border-radius: 0.8rem;
 	border: 0;
 	outline: none;
