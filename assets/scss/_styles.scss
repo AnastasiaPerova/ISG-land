@@ -9588,7 +9588,7 @@ body.isg-404-page {
 	.isg-footer__row,
 	.isg-footer__social,
 	.isg-footer__legal {
-		gap: var(--isg-space-sm) 0;
+		gap: var(--isg-space-sm) var(--isg-space-xs);
 		padding-bottom: 0;
 	}
 
